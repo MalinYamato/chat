@@ -11,7 +11,7 @@ import (
 	"text/template"
 )
 
-var addr = flag.String("addr", ":9090", "http service address")
+var addr = flag.String("addr", ":8888", "http service address")
 var homeTemplate = template.Must(template.ParseFiles("home.html"))
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
