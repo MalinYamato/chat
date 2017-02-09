@@ -33,7 +33,7 @@ echo "getting, building and installing packages"
 for i in "${packages[@]}"
 do
    echo "Installing $i"
-   go get github.com/$1
+   go get github.com/$i
 done
 
 install -v -m +x $bin $HOME/usr/local/bin
