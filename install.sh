@@ -34,11 +34,17 @@ if [ ! -d "$HOME/babel.krypin.org" ]; then
         mkdir $HOME/babel.krypin.org
 fi
 
+if [ -d "$src/MalinYamato/chat" ]; then
+           echo "deleting package $src/MalinYamato/chat"
+           rm -fr $src/MalinYamato/chat
+fi
+
 echo "getting, building and installing packages"
 
 for i in "${packages[@]}"
 do
    echo "Installing $i"
+
    go get github.com/$i
 done
 
