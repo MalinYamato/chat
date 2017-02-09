@@ -9,12 +9,12 @@ development environment.
 Once you have Go up and running, you can download, build and run the example
 using the following commands.
 
-    # nano.bash_profile
+    $ nano.bash_profile
     export GOPATH=$HOME/usr/local/packages
     export GOROOT=$HOME/usr/local/go
-    # source .bash_profile
+    $ source .bash_profile
     $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
-    $ ./install.sh
+    $ chmod +x install.sh; ./install.sh
     $ cd $HOME/babel.krypin.org
     $ chat
 
