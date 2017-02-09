@@ -40,7 +40,6 @@ done
 install -v -m +x $bin/* $HOME/usr/local/bin
 for i in "${packages[@]}"
 do
-   echo "Installing $i"
    install -v -m +r $src/$i/*.html $HOME/babel.krypin.org
 done
 
