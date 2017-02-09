@@ -1,6 +1,11 @@
 
 #/bin/bash
 
+#
+# (C) 2017 Yamato Digital Audio
+# Author: Malin af Lääkkö
+#
+
 src=$HOME/usr/local/packages/src/github.com
 bin=$HOME/usr/local/packages/bin
 declare -a packages=("gorilla/websocket" "MalinYamato/chat")
