@@ -1,5 +1,8 @@
 # Babel
 
+Babel is a multilingual chat with auto translation into the langugea the user prefers. The installation procedure is written this way
+to be ablee to run the chat server on a Shared Webohosting services where you may not run as root, sudo, or use rpm, yum or apt-get.
+
 ## Running Babel
 
 The example requires a working Go development environment. The [Getting
