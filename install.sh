@@ -4,7 +4,6 @@
 src=$HOME/usr/local/packages/src/github.com
 bin=$HOME/usr/local/packages/bin
 declare -a packages=("gorilla/websocket" "MalinYamato/chat")
-package=MalinYamato/chat
 
 if [ ! -d "$HOME/usr" ]; then
         echo "creating $HOME/usr"
@@ -31,6 +30,7 @@ if [ ! -d "$HOME/babel.krypin.org" ]; then
 fi
 
 echo "getting, building and installing packages"
+
 for i in "${packages[@]}"
 do
    echo "Installing $i"
