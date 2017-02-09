@@ -1,19 +1,40 @@
 
 #/bin/bash
 
-dir=$HOME/usr/local/packages/src/github.com
-package="MalinYamato/chat"
+src=$HOME/usr/local/packages/src/github.com
+bin=$HOME/usr/local/packages/bin
+declare -a packages=("gorilla/websocket" "MalinYamato/chat")
 
-if [ -d "$dir/$package" ]; then
-        echo "removing $dir/$package"
-        rm -fr $dir/$package
+if [ ! -d "$HOME/usr" ]; then
+        echo "creating $HOME/usr"
+        mkdir $HOME/usr
+fi
+if [ ! -d "$HOME/usr/local" ]; then
+        echo "creating $HOME/usr/local"
+        mkdir $HOME/usr/local
 fi
 
-echo "getting $package from github.com"
-go get github.com/$package
+if [ ! -d "$HOME/usr/local/packages" ]; then
+        echo "creating $HOME/usr/packages"
+        mkdir $HOME/usr/local/packages
+fi
 
-echo "building $dir/$package "
-go build -o $HOME/tmp/chat $dir/$package/*.go
+if [ ! -d "$HOME/usr/local/bin" ]; then
+        echo "creating $HOME/usr/local/bin"
+        mkdir $HOME/usr/local/bin
+fi
 
-install -v -m +x $HOME/tmp/chat $HOME/usr/local/bin
-install -v -m +r $dir/$package/*.html $HOME/babel.krypin.org
+if [ ! -d "$HOME/babel.krypin.org" ]; then
+        echo "creating $HOME/babel.krypin.org"
+        mkdir $HOME/babel.krypin.org
+fi
+
+echo "getting, building and installing packages"
+for i in "${packages[@]}"
+do
+   echo "Installing $i"
+   go get github.com/$1
+done
+
+install -v -m +x $bin $HOME/usr/local/bin
+install -v -m +r $src/$package/*.html $HOME/babel.krypin.org
