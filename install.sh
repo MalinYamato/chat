@@ -4,7 +4,7 @@
 src=$HOME/usr/local/packages/src/github.com
 bin=$HOME/usr/local/packages/bin
 declare -a packages=("gorilla/websocket" "MalinYamato/chat")
-$package = "MalinYamato/chat"
+package = "MalinYamato/chat"
 
 if [ ! -d "$HOME/usr" ]; then
         echo "creating $HOME/usr"
