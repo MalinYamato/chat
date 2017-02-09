@@ -9,9 +9,9 @@ development environment.
 Once you have Go up and running, you can download, build and run the example
 using the following commands.
 
-    $ nano.bash_profile
-    export GOPATH=$HOME/usr/local/packages
-    export GOROOT=$HOME/usr/local/go
+    $ nano .bash_profile
+      export GOPATH=$HOME/usr/local/packages
+      export GOROOT=$HOME/usr/local/go
     $ source .bash_profile
     $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
     $ chmod +x install.sh; ./install.sh
