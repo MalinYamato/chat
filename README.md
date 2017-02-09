@@ -6,7 +6,7 @@ The example requires a working Go development environment. The [Getting
 Started](http://golang.org/doc/install) page describes how to install the
 development environment.
 
-Once you have Go up and running, you can download, build and run the example
+Once you have Go up and running, you can download, build and run the babel
 using the following commands.
 
     $ nano .bash_profile
