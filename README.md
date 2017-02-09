@@ -1,10 +1,6 @@
-# Chat Example
+# Babel
 
-This application shows how to use use the
-[websocket](https://github.com/gorilla/websocket) package to implement a simple
-web chat application.
-
-## Running the example
+## Running Babel
 
 The example requires a working Go development environment. The [Getting
 Started](http://golang.org/doc/install) page describes how to install the
@@ -13,9 +9,12 @@ development environment.
 Once you have Go up and running, you can download, build and run the example
 using the following commands.
 
+
     $ go get github.com/gorilla/websocket
-    $ cd `go list -f '{{.Dir}}' github.com/gorilla/websocket/examples/chat`
-    $ go run *.go
+    $ go get github.com/MalinYamato/chat/install.sh
+    $ ./install.sh
+    $ cd $HOME/babel.krypin.org
+    $ chat
 
 To use the chat example, open http://localhost:8080/ in your browser.
 
