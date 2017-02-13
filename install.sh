@@ -39,6 +39,23 @@ if [ -d "$src/MalinYamato/chat" ]; then
            rm -fr $src/MalinYamato/chat
 fi
 
+if [ ! -d "$src/babel.krypin.org/js" ]; then
+           echo "creating $HOME/babel.krypin.org/js"
+           mkdir $HOME/babel.krypin.org/js
+fi
+
+if [ ! -d "$src/babel.krypin.org/imgaes" ]; then
+           echo "creating $HOME/babel.krypin.org/imgaes"
+           mkdir $HOME/babel.krypin.org/images
+fi
+
+if [ ! -d "$src/babel.krypin.org/css" ]; then
+           echo "creating $HOME/babel.krypin.org/css"
+           mkdir $HOME/babel.krypin.org/css
+fi
+
+
+
 echo "getting, building and installing packages"
 
 for i in "${packages[@]}"
@@ -52,6 +69,9 @@ install -v -m +x $bin/* $HOME/usr/local/bin
 for i in "${packages[@]}"
 do
    install -v -m +r $src/$i/*.html $HOME/babel.krypin.org
+   install -v -m +r $src/$i/js/* $HOME/babel.krypin.org/js
+   install -v -m +r $src/$i/css/* $HOME/babel.krypin.org/css
+   install -v -m +r $src/$i/images/* $HOME/babel.krypin.org/images
 done
 
 
