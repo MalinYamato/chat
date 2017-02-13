@@ -1,116 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Chat Example</title>
-<script type="text/javascript">
-window.onload = function () {
-    var conn;
-    var msg = document.getElementById("msg");
-    var log = document.getElementById("log");
+    <title>Chat Example</title>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/interface.js"></script>
 
-    function appendLog(item) {
-        var doScroll = log.scrollTop === log.scrollHeight - log.clientHeight;
-        log.appendChild(item);
-        if (doScroll) {
-            log.scrollTop = log.scrollHeight - log.clientHeight;
-        }
-    }
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
 
-    document.getElementById("form").onsubmit = function () {
-        if (!conn) {
-            return false;
-        }
-        if (!msg.value) {
-            return false;
-        }
-        conn.send(msg.value);
-        msg.value = "";
-        return false;
-    };
+    <script type="text/javascript">
+        window.onload = function () {
+            var conn;
+            var msg = document.getElementById("msg");
+            var log = document.getElementById("log");
 
-    if (window["WebSocket"]) {
-        conn = new WebSocket("ws://{{$}}/ws");
-        conn.onclose = function (evt) {
-            var item = document.createElement("div");
-            item.innerHTML = "<b>Your connection is closed.</b>";
-            appendLog(item);
-        };
-        conn.onmessage = function (evt) {
-            var messages = evt.data.split('\n');
-            for (var i = 0; i < messages.length; i++) {
+            function appendLog(item) {
+                var doScroll = log.scrollTop === log.scrollHeight - log.clientHeight;
+                log.appendChild(item);
+                if (doScroll) {
+                    log.scrollTop = log.scrollHeight - log.clientHeight;
+                }
+            }
+
+            document.getElementById("form").onsubmit = function () {
+                if (!conn) {
+                    return false;
+                }
+                if (!msg.value) {
+                    return false;
+                }
+                conn.send(msg.value);
+                msg.value = "";
+                return false;
+            };
+
+            if (window["WebSocket"]) {
+                conn = new WebSocket("ws://{{$}}/ws");
+                conn.onclose = function (evt) {
+                    var item = document.createElement("div");
+                    item.innerHTML = "<b>Your connection is closed.</b>";
+                    appendLog(item);
+                };
+                conn.onmessage = function (evt) {
+                    var messages = evt.data.split('\n');
+                    for (var i = 0; i < messages.length; i++) {
+                        var item = document.createElement("div");
+                        item.innerText = messages[i];
+                        appendLog(item);
+                    }
+                };
+            } else {
                 var item = document.createElement("div");
-                item.innerText = messages[i];
+                item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
                 appendLog(item);
             }
         };
-    } else {
-        var item = document.createElement("div");
-        item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
-        appendLog(item);
-    }
-};
-</script>
-<style type="text/css">
-html {
-    overflow: hidden;
-}
+    </script>
+    <style type="text/css">
+        html {
+            overflow: hidden;
+        }
 
-body {
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: #ce094c;
-}
+        body {
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: #7994ce;
+        }
 
-#log {
-    font-size: 8mm;
-    background: white;
-    margin: 0;
-    padding: 0.5em 0.5em 0.5em 0.5em;
-    position: absolute;
-    top: 2em;
-    left: 0.5em;
-    right: 0.5em;
-    bottom: 2.5em;
-    overflow: auto;
-}
+        #log {
+            font-size: 8mm;
+            background: white;
+            margin: 0;
+            padding: 0.5em 0.5em 0.5em 0.5em;
+            position: absolute;
+            top: 2em;
+            left: 0.5em;
+            right: 0.5em;
+            bottom: 2.5em;
+            overflow: auto;
+        }
 
-#form {
-    padding: 0 0.5em 0 0.5em;
-    margin: 0;
-    position: absolute;
-    bottom: 1em;
-    left: 0px;
-    width: 100%;
-    overflow: hidden;
-}
-#heading {
-    position: fixed;
-    top: -20px;
-    padding: 5px 5px 5px 5px;
-    color: white;
-}
+        #form {
+            padding: 0 0.5em 0 0.5em;
+            margin: 0;
+            position: absolute;
+            bottom: 1em;
+            left: 0px;
+            width: 100%;
+            overflow: hidden;
+        }
 
-#msg {
-    height: auto;
-    font-size: 6mm;
-}
+        #msg {
+            height: auto;
+            font-size: 6mm;
+            width: 60%;
+        }
 
-#submit {
-    height: auto;
-    font-size: 6mm;
-}
+        #submit {
+            height: auto;
+            font-size: 6mm;
+        }
 
-</style>
+        #header {
+            margin: 0;
+            padding: 0;
+            position: relative;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-size: 230%;
+            right: 100px;
+            top: 10px;
+        }
+
+        li {
+            float: right;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 4em;
+        }
+
+    </style>
 </head>
 <body>
-<h1 id="heading"> Babel Chat -- Reimersholme Hotel</h1>
+<ul>
+    <li>
+    <li>
+        <div class="dock" id="dock2">
+            <div class="dock-container2">
+                <a class="dock-item2" href="#"><img src="images/id_card.png"/></a>
+            </div>
+
+        </div>
+    </li>
+
+    <li>
+        <div class="dock" id="dock">
+            <div class="dock-container">
+                <a class="dock-item" href="#"><img src="images/facebook.png"/></a>
+                <a class="dock-item" href="#"><img src="images/google.png"/></a>
+            </div>
+
+        </div>
+    </li>
+    <li><span id="header">Login with:</span></li>
+</ul>
+<script type="text/javascript">
+
+    $(document).ready(
+        function () {
+            $('#dock').Fisheye(
+                {
+                    maxWidth: 6,
+                    items: 'a',
+                    itemsText: 'span',
+                    container: '.dock-container',
+                    itemWidth: 40,
+                    proximity: 10,
+                    halign: 'center'
+                }
+            )
+            $('#dock2').Fisheye(
+                {
+                    maxWidth: 6,
+                    items: 'a',
+                    itemsText: 'span',
+                    container: '.dock-container2',
+                    itemWidth: 45,
+                    proximity: 10,
+                    alignment : 'left',
+                    valign: 'bottom',
+                    halign : 'left'
+                }
+            )
+        }
+    );
+
+</script>
+
 <div id="log"></div>
 <form id="form">
-    <input id="submit" type="submit" value="Send" />
-    <input  type="text" id="msg" size="64"/>
+    <input id="submit" type="submit" value="Send"/>
+    <input type="text" id="msg" />
 </form>
 </body>
 </html>
