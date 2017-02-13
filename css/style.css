@@ -1,6 +1,6 @@
 body {
 	font: 11px Arial, Helvetica, sans-serif;
-	background: #ffffff url(images/main-bg.gif);
+	background: #ffffff url(http://babel.krypin.org/images/main-bg.gif);
 	padding: 0;
 	margin: 0;
 }
@@ -19,7 +19,7 @@ img {
 .dock-container {
 	position: absolute;
 	height: 50px;
-	background: url(images/dock-bg2.gif);
+	background: url(http://babel.krypin.org/images/dock-bg2.gif);
 	padding-left: 20px;
 }
 a.dock-item {
@@ -54,7 +54,7 @@ a.dock-item {
 .dock-container2 {
 	position: absolute;
 	height: 50px;
-	background: url(images/dock-bg.gif);
+	background: url(http://babel.krypin.org/images/dock-bg.gif);
 	padding-left: 20px;
 }
 a.dock-item2 {
