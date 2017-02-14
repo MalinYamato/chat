@@ -40,17 +40,17 @@ if [ -d "$src/MalinYamato/chat" ]; then
            rm -fr $src/MalinYamato/chat
 fi
 
-if [ ! -d "$src/$domain/js" ]; then
+if [ ! -d "$HOME/$domain/js" ]; then
            echo "creating $HOME/$domain/js"
            mkdir $HOME/$domain/js
 fi
 
-if [ ! -d "$src/$domain/imgaes" ]; then
+if [ ! -d "$HOME/$domain/imgaes" ]; then
            echo "creating $HOME/$domain/imgaes"
            mkdir $HOME/$domain/images
 fi
 
-if [ ! -d "$src/$domain/css" ]; then
+if [ ! -d "$HOME/$domain/css" ]; then
            echo "creating $HOME/$domain/css"
            mkdir $HOME/$domain/css
 fi
