@@ -5,6 +5,7 @@
 package main
 
 import (
+
 	"bytes"
 	"log"
 	"net/http"
@@ -29,7 +30,10 @@ const (
 var (
 	newline = []byte{'\n'}
 	space   = []byte{' '}
+
 )
+
+const noauth = "NOAUTH"
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -69,8 +73,26 @@ func (c *Client) readPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+
+		w, err := c.conn.NextWriter(websocket.TextMessage)
+		if err != nil {
+			return
+		}
+
+		//todo -- verify if client is authorized
+
+		var auth bool = false
+
+		if (auth || message[0] == 'T')  {
+			c.hub.broadcast <- message
+		} else {
+			log.Printf("no auth ")
+			c.hub.broadcast <- []byte{'I','G','N','O','R','E'}
+			w.Write([]byte{'N','O','A','U','T','H'})
+		}
+
 	}
+	log.Printf("for loop exited ")
 }
 
 // writePump pumps messages from the hub to the websocket connection.

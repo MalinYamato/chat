@@ -5,10 +5,11 @@
 # (C) 2017 Yamato Digital Audio
 # Author: Malin af Lääkkö
 #
-
+domain=$HOME/secure.krypin.org
 src=$HOME/usr/local/packages/src/github.com
 bin=$HOME/usr/local/packages/bin
 declare -a packages=("MalinYamato/chat")
+
 
 if [ ! -d "$HOME/usr" ]; then
         echo "creating $HOME/usr"
@@ -29,9 +30,9 @@ if [ ! -d "$HOME/usr/local/bin" ]; then
         mkdir $HOME/usr/local/bin
 fi
 
-if [ ! -d "$HOME/babel.krypin.org" ]; then
-        echo "creating $HOME/babel.krypin.org"
-        mkdir $HOME/babel.krypin.org
+if [ ! -d "$HOME/$domain" ]; then
+        echo "creating $HOME/$domain"
+        mkdir $HOME/$domain
 fi
 
 if [ -d "$src/MalinYamato/chat" ]; then
@@ -39,19 +40,19 @@ if [ -d "$src/MalinYamato/chat" ]; then
            rm -fr $src/MalinYamato/chat
 fi
 
-if [ ! -d "$src/babel.krypin.org/js" ]; then
-           echo "creating $HOME/babel.krypin.org/js"
-           mkdir $HOME/babel.krypin.org/js
+if [ ! -d "$src/$domain/js" ]; then
+           echo "creating $HOME/$domain/js"
+           mkdir $HOME/$domain/js
 fi
 
-if [ ! -d "$src/babel.krypin.org/imgaes" ]; then
-           echo "creating $HOME/babel.krypin.org/imgaes"
-           mkdir $HOME/babel.krypin.org/images
+if [ ! -d "$src/$domain/imgaes" ]; then
+           echo "creating $HOME/$domain/imgaes"
+           mkdir $HOME/$doamin/images
 fi
 
-if [ ! -d "$src/babel.krypin.org/css" ]; then
-           echo "creating $HOME/babel.krypin.org/css"
-           mkdir $HOME/babel.krypin.org/css
+if [ ! -d "$src/$domain/css" ]; then
+           echo "creating $HOME/$domain/css"
+           mkdir $HOME/$domain/css
 fi
 
 
@@ -68,10 +69,10 @@ done
 install -v -m +x $bin/* $HOME/usr/local/bin
 for i in "${packages[@]}"
 do
-   install -v -m +r $src/$i/*.html $HOME/babel.krypin.org
-   install -v -m +r $src/$i/js/* $HOME/babel.krypin.org/js
-   install -v -m +r $src/$i/css/* $HOME/babel.krypin.org/css
-   install -v -m +r $src/$i/images/* $HOME/babel.krypin.org/images
+   install -v -m +r $src/$i/*.html $HOME/$domain
+   install -v -m +r $src/$i/js/* $HOME/$domain/js
+   install -v -m +r $src/$i/css/* $HOME/$domain/css
+   install -v -m +r $src/$i/images/* $HOME/$domain/images
 done
 
 

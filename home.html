@@ -2,10 +2,106 @@
 <html lang="en">
 <head>
     <title>Chat Example</title>
-    <script type="text/javascript" src="http://babel.krypin.org/js/jquery.js"></script>
-    <script type="text/javascript" src="http://babel.krypin.org/js/interface.js"></script>
+    <script type="text/javascript" src="https://secure.krypin.org/js/jquery.js"></script>
+    <script type="text/javascript" src="https://secure.krypin.org/js/interface.js"></script>
 
-    <link href="http://babel.krypin.org/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="https://secure.krypin.org/css/style.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            -webkit-animation-name: fadeIn; /* Fade in the background */
+            -webkit-animation-duration: 0.4s;
+            animation-name: fadeIn;
+            animation-duration: 0.4s
+        }
+
+        /* Modal Content */
+        .modal-content {
+            position: fixed;
+            bottom: 0;
+            background-color: #7994ce;
+            width: 100%;
+            -webkit-animation-name: slideIn;
+            -webkit-animation-duration: 0.4s;
+            animation-name: slideIn;
+            animation-duration: 0.4s
+
+        }
+
+        /* The Close Button */
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #991c35;
+            color: white;
+            font: bold 18px Arial, Helvetica, sans-serif;
+        }
+
+        .modal-body {
+            background-color: #7994ce;
+            padding: 2px 16px;
+            color: black;
+            font: bold 18px Arial, Helvetica, sans-serif;
+        }
+
+        .modal-footer {
+            padding: 2px 16px;
+            background-color: #991c35;
+            color: white;
+            font: bold 12px Arial, Helvetica, sans-serif;
+        }
+
+        /* Add Animation */
+        @-webkit-keyframes slideIn {
+            from {bottom: -300px; opacity: 0}
+            to {bottom: 0; opacity: 1}
+        }
+
+        @keyframes slideIn {
+            from {bottom: -300px; opacity: 0}
+            to {bottom: 0; opacity: 1}
+        }
+
+        @-webkit-keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+        #myBtn {
+            visibility: hidden;
+        }
+    </style>
+
+
 
     <script type="text/javascript">
         window.onload = function () {
@@ -35,6 +131,7 @@
 
             if (window["WebSocket"]) {
                 conn = new WebSocket("ws://{{$}}/ws");
+
                 conn.onclose = function (evt) {
                     var item = document.createElement("div");
                     item.innerHTML = "<b>Your connection is closed.</b>";
@@ -43,6 +140,10 @@
                 conn.onmessage = function (evt) {
                     var messages = evt.data.split('\n');
                     for (var i = 0; i < messages.length; i++) {
+                        if (messages[i] == "NOAUTH")
+                            {modal.style.display = "block"; break}
+                        if (messages[i] == "IGNORE")
+                            {break}
                         var item = document.createElement("div");
                         item.innerText = messages[i];
                         appendLog(item);
@@ -53,8 +154,43 @@
                 item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
                 appendLog(item);
             }
+
+
         };
     </script>
+    <script type="text/javascript">
+
+        $(document).ready(
+            function () {
+                $('#dock').Fisheye(
+                    {
+                        maxWidth: 6,
+                        items: 'a',
+                        itemsText: 'span',
+                        container: '.dock-container',
+                        itemWidth: 40,
+                        proximity: 20,
+                        halign: 'left'
+                    }
+                )
+                $('#dock2').Fisheye(
+                    {
+                        maxWidth: 6,
+                        items: 'a',
+                        itemsText: 'span',
+                        container: '.dock-container2',
+                        itemWidth: 40,
+                        proximity: 10,
+                        /*   alignment: 'right',
+                         #   valign: 'top', */
+                        halign: 'right'
+                    }
+                )
+            }
+        );
+
+    </script>
+
     <style type="text/css">
         html {
             overflow: hidden;
@@ -103,90 +239,165 @@
             font-size: 6mm;
         }
 
-        #header {
-            margin: 0;
-            padding: 0;
-            position: relative;
-            font-family: "Comic Sans MS", cursive, sans-serif;
-            font-size: 230%;
-            right: 100px;
-            top: 10px;
+        #dock {
+            position:  absolute;
+            left: 15px;
+            top: 5px;
+            height: 50px;
+            #text-align: center;
         }
-
-        li {
-            float: right;
-        }
-
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+        #dock2 {
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            width: 200px;
             height: 4em;
         }
 
+        .dock-container {
+            position: absolute;
+            left: 0px;
+            top: 2px;
+        }
+        .dock-container2 {
+            position: absolute;
+            right: 0px;
+            top: 2px;
+        }
+
+        #dock-label {
+            position: relative;
+            top: 8px;
+            text-align: right;
+            text-decoration: none;
+            font: bold 20px "Comic Sans MS", cursive, sans-serif;
+
+        }
+
+        a.dock-item {
+            display: block;
+            float: left;;
+            #width: auto;
+            position: absolute;
+            padding-left: 0px;
+            left: 0px;
+            top: 2px;
+            text-align: right;
+            text-decoration: none;
+            font: bold 12px Arial, Helvetica, sans-serif;
+        }
+
+        a.dock-item2 {
+            position: absolute;
+            #padding-left: 0px;
+            text-align: center;
+            text-decoration: none;
+            font: bold 12px Arial, Helvetica, sans-serif;
+        }
+        .dock-item img {
+            border: none;
+            margin-left: 0px;
+            padding-left: 0px;
+            width: 100%;
+        }
+        .dock-item2 img {
+            border: none;
+
+            padding-left: 0px;
+            width: 100%;
+        }
+
+        .dock-item span {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .dock-item2 span {
+            display: none;
+            padding-left: 20px;
+        }
+        #email {
+            margin: 5px;
+            top: 0px;
+        }
+
     </style>
+
 </head>
 <body>
-<ul>
-    <li>
-    <li>
-        <div class="dock" id="dock2">
-            <div class="dock-container2">
-                <a class="dock-item2" href="#"><img src="http://babel.krypin.org/images/id_card.png"/></a>
-            </div>
-
+<div id="menu">
+    <div class="dock" id="dock">
+        <div class="dock-container">
+            <a class="dock-item" href="#"><img src="http://babel.krypin.org/images/id_card.png"/></a>
         </div>
-    </li>
+    </div>
 
-    <li>
-        <div class="dock" id="dock">
-            <div class="dock-container">
-                <a class="dock-item" href="#"><img src="http://babel.krypin.org/images/facebook.png"/></a>
-                <a class="dock-item" href="#"><img src="http://babel.krypin.org/images/google.png"/></a>
-            </div>
-
+    <div class="dock" id="dock2">
+        <span id="dock-label" >Login with:</span>
+        <div class="dock-container2">
+            <a class="dock-item2" href="#"><img src="http://babel.krypin.org/images/facebook.png"/></a>
+            <a class="dock-item2" href="#"><img src="http://babel.krypin.org/images/google.png"/></a>
         </div>
-    </li>
-    <li><span id="header">Login with:</span></li>
-</ul>
-<script type="text/javascript">
-
-    $(document).ready(
-        function () {
-            $('#dock').Fisheye(
-                {
-                    maxWidth: 6,
-                    items: 'a',
-                    itemsText: 'span',
-                    container: '.dock-container',
-                    itemWidth: 40,
-                    proximity: 10,
-                    halign: 'center'
-                }
-            )
-            $('#dock2').Fisheye(
-                {
-                    maxWidth: 6,
-                    items: 'a',
-                    itemsText: 'span',
-                    container: '.dock-container2',
-                    itemWidth: 45,
-                    proximity: 10,
-                    alignment : 'left',
-                    valign: 'bottom',
-                    halign : 'left'
-                }
-            )
-        }
-    );
-
-</script>
-
+    </div>
+</div>
 <div id="log"></div>
 <form id="form">
     <input id="submit" type="submit" value="Send"/>
-    <input type="text" id="msg" />
+    <input type="text" id="msg"/>
 </form>
+
+
+<button id="myBtn">Open Modal</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Authorization failure! </h2>
+        </div>
+        <div class="modal-body">
+            <p>You are required to login before you may submit messages! You may automatically sign up with either your Google or Facebook account by clicking on corresponding icon at the top right.
+                However, the recommended way to sign up here is to create a new account with GitHub.</p>
+            <p>
+
+            </p>
+        </div>
+        <div class="modal-footer">
+            <h3>Support: Malin Lääkkö, malin@krypin.org -- sponsored by Yamato Digital Audio info@yamato.xyz</h3>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById('myModal');
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
 </body>
 </html>
