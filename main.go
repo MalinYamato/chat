@@ -35,7 +35,7 @@ func main() {
 	err := httpscerts.Check("cert.pem", "key.pem")
 	// If they are not available, generate new ones.
 	if err != nil {
-		err = httpscerts.Generate("cert.pem", "key.pem", "localhost:8080")
+		err = httpscerts.Generate("cert.pem", "key.pem", "secure.krypin.org:8080")
 		if err != nil {
 			log.Fatal("Error: Couldn't create https certs.")
 		}
