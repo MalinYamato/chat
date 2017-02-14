@@ -36,7 +36,7 @@ func main() {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
-	err := http.ListenAndServe(*addr, nil)
+	err := http.ListenAndServeTLS(*addr,"cert.pem", "cert.key", nil )
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
