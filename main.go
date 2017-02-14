@@ -9,6 +9,8 @@ import (
 	"log"
 	"net/http"
 	"text/template"
+	"github.com/kabukky/httpscerts"
+
 )
 
 var addr = flag.String("addr", ":8080", "http service address")
@@ -29,6 +31,16 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Check if the cert files are available.
+	err := httpscerts.Check("cert.pem", "key.pem")
+	// If they are not available, generate new ones.
+	if err != nil {
+		err = httpscerts.Generate("cert.pem", "key.pem", "localhost:8080")
+		if err != nil {
+			log.Fatal("Error: Couldn't create https certs.")
+		}
+	}
+
 	flag.Parse()
 	hub := newHub()
 	go hub.run()
@@ -36,7 +48,8 @@ func main() {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
-	err := http.ListenAndServeTLS(*addr,"cert.pem", "cert.key", nil )
+
+	err = http.ListenAndServeTLS(*addr,"cert.pem", "key.pem", nil )
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
