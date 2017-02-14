@@ -47,7 +47,7 @@ fi
 
 if [ ! -d "$src/$domain/imgaes" ]; then
            echo "creating $HOME/$domain/imgaes"
-           mkdir $HOME/$doamin/images
+           mkdir $HOME/$domain/images
 fi
 
 if [ ! -d "$src/$domain/css" ]; then
