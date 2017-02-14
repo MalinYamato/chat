@@ -5,7 +5,7 @@
 # (C) 2017 Yamato Digital Audio
 # Author: Malin af Lääkkö
 #
-domain=$HOME/secure.krypin.org
+domain=secure.krypin.org
 src=$HOME/usr/local/packages/src/github.com
 bin=$HOME/usr/local/packages/bin
 declare -a packages=("MalinYamato/chat")
