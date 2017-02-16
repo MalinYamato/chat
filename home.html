@@ -125,7 +125,9 @@
                 if (!msg.value) {
                     return false;
                 }
-                var message = {"sender": sender.value, "receipient": "stuff",  "content" : msg.value};
+                var t = new Date();
+                var time = t.getDate() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
+                var message = {"sender": sender.value, "timestamp": time,  "content" : msg.value};
                 var json_message = JSON.stringify(message)
                 conn.send(json_message);
                 msg.value = "";
@@ -142,9 +144,21 @@
                 };
                 conn.onmessage = function (event) {
                     var message = JSON.parse(event.data);
-                    var item = document.createElement("div");
                     if (message.sender != "dummy") {
-                        item.innerText = "[" + message.sender + "] " + message.content;
+                        var time_item = document.createElement("li");
+                        time_item.setAttribute("id","timestamp");
+                        var sender_item = document.createElement("li");
+                        sender_item.setAttribute("id","from");
+                        var message_item = document.createElement("li");
+                        message_item.setAttribute("id","message");
+                        sender_item.innerText = message.sender ;
+                        time_item.innerText = " ["+message.timestamp+"] ";
+                        message_item.innerText =  message.content;
+                        var item = document.createElement("ul");
+                        item.setAttribute("id","post");
+                        item.appendChild(sender_item);
+                        item.appendChild(message_item);
+                        item.appendChild(time_item);
                         appendLog(item);
                 }
                 };
@@ -231,6 +245,30 @@
             height: auto;
             font-size: 6mm;
             width: 60%;
+        }
+
+        #post {
+            margin: 0px 0px 0px 0px;
+            padding-left: 0px;
+        }
+
+        #post li {
+            display: inline;
+            list-style-type: none;
+            padding-right: 10px;
+
+        }
+
+        #timestamp {
+            font: bold 12px Arial, Helvetica, sans-serif;
+        }
+
+        #from {
+            color: #7994ce;
+        }
+
+        #message {;
+            color: black;
         }
 
         #sender {
