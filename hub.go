@@ -36,7 +36,7 @@ type Hub struct {
 
 type Message struct {
 	Sender    string `json:"sender,omitempty"`
-	Recipient string `json:"recipient,omitempty"`
+	Timestamp string `json:"timestamp,omitempty"`
 	Content   string `json:"content,omitempty"`
 }
 
@@ -52,7 +52,6 @@ type Command struct {
 }
 
 func newHub(stack QueueStack) *Hub {
-
 	return &Hub {
 		broadcast:  make(chan []byte),
 		register:   make(chan *Client),
@@ -65,9 +64,6 @@ func newHub(stack QueueStack) *Hub {
 }
 
 func (h *Hub) run() {
-
-
-
 	for {
 		select {
 		case client := <-h.register:
@@ -80,13 +76,12 @@ func (h *Hub) run() {
 			}
 		case message := <-h.broadcast:
 			h.messages.Push(message)
-			if h.messages.Len() > 20 {
+			if h.messages.Len() > 25 {
 				h.messages.TailPop()
 			}
 			for client := range h.clients {
 				select {
 				case client.send <- message:
-
 				default:
 					close(client.send)
 					delete(h.clients, client)
