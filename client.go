@@ -108,7 +108,7 @@ func (c *Client) writePump() {
 	if err != nil {
 		return
 	}
-	json_message, _ := json.Marshal(Message{Sender: "dummy", Recipient: "dummy", Content: "dummy" })
+	json_message, _ := json.Marshal(Message{Sender: "dummy", Timestamp: "dummy", Content: "dummy" })
 	w.Write(json_message)
 
 	for {
