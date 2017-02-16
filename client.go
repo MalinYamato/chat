@@ -5,12 +5,12 @@
 package main
 
 import (
-
-	"bytes"
 	"log"
 	"net/http"
 	"time"
 	"github.com/gorilla/websocket"
+	//"encoding/json"
+	"encoding/json"
 )
 
 const (
@@ -30,10 +30,8 @@ const (
 var (
 	newline = []byte{'\n'}
 	space   = []byte{' '}
-
 )
 
-const noauth = "NOAUTH"
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -49,6 +47,10 @@ type Client struct {
 
 	// Buffered channel of outbound messages.
 	send chan []byte
+
+	CurrentRoom string
+
+	id string
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -64,35 +66,20 @@ func (c *Client) readPump() {
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+
 	for {
 		_, message, err := c.conn.ReadMessage()
+
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-
-		w, err := c.conn.NextWriter(websocket.TextMessage)
-		if err != nil {
-			return
-		}
-
-		//todo -- verify if client is authorized
-
-		var auth bool = false
-
-		if (auth || message[0] == 'T')  {
-			c.hub.broadcast <- message
-		} else {
-			log.Printf("no auth ")
-			c.hub.broadcast <- []byte{'I','G','N','O','R','E'}
-			w.Write([]byte{'N','O','A','U','T','H'})
-		}
-
+		//message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		//sonMessage, _ := json.Marshal(&Message{Sender: c.id, Content: string(message)})
+		c.hub.broadcast <- message
 	}
-	log.Printf("for loop exited ")
 }
 
 // writePump pumps messages from the hub to the websocket connection.
@@ -106,6 +93,24 @@ func (c *Client) writePump() {
 		ticker.Stop()
 		c.conn.Close()
 	}()
+
+	list := c.hub.messages.GetAllAsList()
+	for i := 0; i < len(list); i++ {
+		var m Message
+		json.Unmarshal(list[i].([]byte), &m)
+		w, err := c.conn.NextWriter(websocket.TextMessage)
+		if err != nil {
+			return
+		}
+		w.Write(list[i].([]byte))
+	}
+	w, err := c.conn.NextWriter(websocket.TextMessage)
+	if err != nil {
+		return
+	}
+	json_message, _ := json.Marshal(Message{Sender: "dummy", Recipient: "dummy", Content: "dummy" })
+	w.Write(json_message)
+
 	for {
 		select {
 		case message, ok := <-c.send:
@@ -120,6 +125,8 @@ func (c *Client) writePump() {
 			if err != nil {
 				return
 			}
+
+			log.Println("message sent")
 			w.Write(message)
 
 			// Add queued chat messages to the current websocket message.
