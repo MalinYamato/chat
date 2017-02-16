@@ -1,3 +1,8 @@
+//
+// (C) 2017 Yamato Digital Audio
+// Author: Malin af Lääkkö
+//
+
 package main
 
 
@@ -7,16 +12,15 @@ type QueueStack struct {
 }
 
 type Element struct {
-	value interface{} // All types satisfy the empty interface, so we can store anything here.
+	value interface{}
 	next *Element
 }
 
-// Return the stack's length
+
 func (s *QueueStack) Len() int {
 	return s.size
 }
 
-// GEt all elements with the oldest element at the top, wihout altering the stack
 func (s *QueueStack) GetAllAsList() []interface{}  {
 	list := make([]interface{}, s.size)
 	var cur *Element
@@ -28,14 +32,12 @@ func (s *QueueStack) GetAllAsList() []interface{}  {
 	return list
 }
 
-// Push a new element onto the stack
+
 func (s *QueueStack) Push(value interface{}) {
 	s.top = &Element{value, s.top}
 	s.size++
 }
 
-// Remove the top element from the stack and return it's value
-// If the stack is empty, return nil
 func (s *QueueStack) HeadPop() (value interface{}) {
 	if s.size > 0 {
 		value, s.top = s.top.value, s.top.next
