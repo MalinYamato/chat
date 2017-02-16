@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 	"text/template"
-	"github.com/kabukky/httpscerts"
+	//"github.com/kabukky/httpscerts"
 
 )
 
@@ -52,7 +52,7 @@ func main() {
 		serveWs(hub, w, r)
 	})
 
-	err = http.ListenAndServeTLS(*addr,"cert.pem", "key.pem", nil )
+	err := http.ListenAndServeTLS(*addr,"cert.pem", "key.pem", nil )
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
