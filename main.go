@@ -31,18 +31,21 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	queue := new(QueueStack)
+
 	// Check if the cert files are available.
-	err := httpscerts.Check("cert.pem", "key.pem")
+	//err := httpscerts.Check("cert.pem", "key.pem")
 	// If they are not available, generate new ones.
-	if err != nil {
-		err = httpscerts.Generate("cert.pem", "key.pem", "secure.krypin.org:8080")
-		if err != nil {
-			log.Fatal("Error: Couldn't create https certs.")
-		}
-	}
+	//if err != nil {
+	//	err = httpscerts.Generate("cert.pem", "key.pem", "localhost")
+	//	if err != nil {
+	//		log.Fatal("Error: Couldn't create https certs.")
+	//	}
+	//}
 
 	flag.Parse()
-	hub := newHub()
+	hub := newHub(*queue)
 	go hub.run()
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
