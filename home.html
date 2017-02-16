@@ -107,6 +107,7 @@
         window.onload = function () {
             var conn;
             var msg = document.getElementById("msg");
+            var sender = document.getElementById("sender");
             var log = document.getElementById("log");
 
             function appendLog(item) {
@@ -124,7 +125,9 @@
                 if (!msg.value) {
                     return false;
                 }
-                conn.send(msg.value);
+                var message = {"sender": sender.value, "receipient": "stuff",  "content" : msg.value};
+                var json_message = JSON.stringify(message)
+                conn.send(json_message);
                 msg.value = "";
                 return false;
             };
@@ -137,17 +140,13 @@
                     item.innerHTML = "<b>Your connection is closed.</b>";
                     appendLog(item);
                 };
-                conn.onmessage = function (evt) {
-                    var messages = evt.data.split('\n');
-                    for (var i = 0; i < messages.length; i++) {
-                        if (messages[i] == "NOAUTH")
-                            {modal.style.display = "block"; break}
-                        if (messages[i] == "IGNORE")
-                            {break}
-                        var item = document.createElement("div");
-                        item.innerText = messages[i];
+                conn.onmessage = function (event) {
+                    var message = JSON.parse(event.data);
+                    var item = document.createElement("div");
+                    if (message.sender != "dummy") {
+                        item.innerText = "[" + message.sender + "] " + message.content;
                         appendLog(item);
-                    }
+                }
                 };
             } else {
                 var item = document.createElement("div");
@@ -232,6 +231,12 @@
             height: auto;
             font-size: 6mm;
             width: 60%;
+        }
+
+        #sender {
+            height: auto;
+            font-size: 6mm;
+            width: 20%;
         }
 
         #submit {
@@ -344,6 +349,7 @@
 <form id="form">
     <input id="submit" type="submit" value="Send"/>
     <input type="text" id="msg"/>
+    <input type="text" id="sender"/>
 </form>
 
 
