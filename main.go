@@ -162,7 +162,7 @@ func main() {
 	hub := newHub(*queue)
 	go hub.run()
 
-	err := http.ListenAndServeTLS(*addr,"cert.pem", "key.pem", NewMux(config, hub) )
+	err = http.ListenAndServeTLS(*addr,"cert.pem", "key.pem", NewMux(config, hub) )
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
