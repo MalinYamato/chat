@@ -115,6 +115,8 @@ var Persons PersonsMAP
 
 func main() {
 
+	log.Println("Issuing Certs..")
+
 	// Check if the cert files are available.
 	err := httpscerts.Check("cert.pem", "key.pem")
 	//f they are not available, generate new ones.
