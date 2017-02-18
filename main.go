@@ -17,6 +17,7 @@ import (
 	"github.com/dghubble/gologin/google"
 	"golang.org/x/oauth2"
 	"strings"
+	"github.com/kabukky/httpscerts"
 )
 
 type Config struct {
@@ -99,7 +100,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	oauth2Config := &oauth2.Config{
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,
-		RedirectURL:  "https://localhost:8080/google/callback",
+		RedirectURL:  "https://secure.krypin.org:8080/google/callback",
 		Endpoint:     googleOAuth2.Endpoint,
 		Scopes:       []string{"profile", "email"},
 	}
@@ -115,14 +116,14 @@ var Persons PersonsMAP
 func main() {
 
 	// Check if the cert files are available.
-	//err := httpscerts.Check("cert.pem", "key.pem")
-	// If they are not available, generate new ones.
-	//if err != nil {
-	//	err = httpscerts.Generate("cert.pem", "key.pem", "localhost")
-	//	if err != nil {
-	//		log.Fatal("Error: Couldn't create https certs.")
-	//	}
-	//}
+	err := httpscerts.Check("cert.pem", "key.pem")
+	//f they are not available, generate new ones.
+	if err != nil {
+		err = httpscerts.Generate("cert.pem", "key.pem", "localhost")
+		if err != nil {
+			log.Fatal("Error: Couldn't create https certs.")
+		}
+	}
 
 	// read credentials from environment variables if available
 
