@@ -10,7 +10,7 @@
     <style>
         /* The Modal (background) */
         .modal {
-            display: none; /* Hidden by default */
+            display: block; /* Hidden by default */
             position: fixed; /* Stay in place */
             z-index: 1; /* Sit on top */
             left: 0;
@@ -18,8 +18,8 @@
             width: 100%; /* Full width */
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
             -webkit-animation-name: fadeIn; /* Fade in the background */
             -webkit-animation-duration: 0.4s;
             animation-name: fadeIn;
@@ -77,23 +77,43 @@
 
         /* Add Animation */
         @-webkit-keyframes slideIn {
-            from {bottom: -300px; opacity: 0}
-            to {bottom: 0; opacity: 1}
+            from {
+                bottom: -300px;
+                opacity: 0
+            }
+            to {
+                bottom: 0;
+                opacity: 1
+            }
         }
 
         @keyframes slideIn {
-            from {bottom: -300px; opacity: 0}
-            to {bottom: 0; opacity: 1}
+            from {
+                bottom: -300px;
+                opacity: 0
+            }
+            to {
+                bottom: 0;
+                opacity: 1
+            }
         }
 
         @-webkit-keyframes fadeIn {
-            from {opacity: 0}
-            to {opacity: 1}
+            from {
+                opacity: 0
+            }
+            to {
+                opacity: 1
+            }
         }
 
         @keyframes fadeIn {
-            from {opacity: 0}
-            to {opacity: 1}
+            from {
+                opacity: 0
+            }
+            to {
+                opacity: 1
+            }
         }
 
         #myBtn {
@@ -102,13 +122,14 @@
     </style>
 
 
-
     <script type="text/javascript">
         window.onload = function () {
             var conn;
             var msg = document.getElementById("msg");
             var sender = document.getElementById("sender");
             var log = document.getElementById("log");
+            modal.style.display = "none";
+
 
             function appendLog(item) {
                 var doScroll = log.scrollTop === log.scrollHeight - log.clientHeight;
@@ -119,48 +140,64 @@
             }
 
             document.getElementById("form").onsubmit = function () {
+
                 if (!conn) {
                     return false;
                 }
                 if (!msg.value) {
                     return false;
                 }
+
                 var t = new Date();
                 var time = t.getDate() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
-                var message = {"sender": sender.value, "timestamp": time,  "content" : msg.value};
-                var json_message = JSON.stringify(message)
+                var message = {"op":"Message","timestamp": time,  "token": "{{with .Person}}{{.Token}}{{end}}", "sender": "secret", "pictureURL": "secret", "Gender": "secret", "content": msg.value};
+                var json_message = JSON.stringify(message);
                 conn.send(json_message);
                 msg.value = "";
                 return false;
             };
 
             if (window["WebSocket"]) {
-                conn = new WebSocket("wss://{{$}}/ws");
+                conn = new WebSocket("wss://{{.Host}}/ws");
 
                 conn.onclose = function (evt) {
                     var item = document.createElement("div");
                     item.innerHTML = "<b>Your connection is closed.</b>";
                     appendLog(item);
                 };
+
                 conn.onmessage = function (event) {
+                  //  window.alert("sometext");
                     var message = JSON.parse(event.data);
-                    if (message.sender != "dummy") {
+                    if(message.content == "Unauthorized")
+                        modal.style.display = "block";
+                    else if (message.content != "Ignore") {
                         var time_item = document.createElement("li");
-                        time_item.setAttribute("id","timestamp");
+                        time_item.setAttribute("id", "timestamp");
+
+                        var picture_elem = document.createElement("img")
+                        picture_elem.setAttribute("src", message.pictureURL );
+                        var pictureURL_item = document.createElement("li");
+                        pictureURL_item.setAttribute("id", "pictureURL");
+                        pictureURL_item.appendChild(picture_elem);
+
                         var sender_item = document.createElement("li");
-                        sender_item.setAttribute("id","from");
+                        sender_item.setAttribute("id", "from");
+
                         var message_item = document.createElement("li");
-                        message_item.setAttribute("id","message");
-                        sender_item.innerText = message.sender ;
-                        time_item.innerText = " ["+message.timestamp+"] ";
-                        message_item.innerText =  message.content;
+                        message_item.setAttribute("id", "message");
+
+                        sender_item.innerText = message.sender;
+                        time_item.innerText = " [" + message.timestamp + "] ";
+                        message_item.innerText = message.content;
                         var item = document.createElement("ul");
-                        item.setAttribute("id","post");
+                        item.setAttribute("id", "post");
+                        item.appendChild((pictureURL_item))
                         item.appendChild(sender_item);
                         item.appendChild(message_item);
                         item.appendChild(time_item);
                         appendLog(item);
-                }
+                    }
                 };
             } else {
                 var item = document.createElement("div");
@@ -222,7 +259,7 @@
             font-size: 8mm;
             background: white;
             margin: 0;
-            padding: 0.5em 0.5em 0.5em 0.5em;
+            padding: 0.1em 0.1em 0.1em 0.1em;
             position: absolute;
             top: 2em;
             left: 0.5em;
@@ -247,147 +284,227 @@
             width: 60%;
         }
 
-        #post {
-            margin: 0px 0px 0px 0px;
-            padding-left: 0px;
-        }
 
-        #post li {
-            display: inline;
-            list-style-type: none;
-            padding-right: 10px;
 
-        }
 
-        #timestamp {
-            font: bold 12px Arial, Helvetica, sans-serif;
-        }
 
-        #from {
-            color: #7994ce;
-        }
 
-        #message {;
-            color: black;
-        }
-
-        #sender {
-            height: auto;
-            font-size: 6mm;
-            width: 20%;
-        }
 
         #submit {
             height: auto;
             font-size: 6mm;
         }
 
-        #dock {
-            position:  absolute;
-            left: 15px;
-            top: 5px;
-            height: 50px;
-            #text-align: center;
-        }
-        #dock2 {
+        #menu {
             position: absolute;
-            top: 5px;
+            top: 0px;
             right: 15px;
-            width: 200px;
-            height: 4em;
+            left: 15px;
+            margin-top: 5px;
+            height: 100%;
+
         }
 
-        .dock-container {
-            position: absolute;
+        #leftMenu {
+            position: relative;
             left: 0px;
-            top: 2px;
+            top: 0px;
+
+            padding: 0px 0px 0px 0px;
+            margin: 0px 0px 0px 0px;
         }
-        .dock-container2 {
+
+        #rightMenu {
+
             position: absolute;
             right: 0px;
-            top: 2px;
+            top: 0px;
+            padding: 0px 0px 0px 0px;
+            margin: 0px 0px 0px 0px;
         }
 
-        #dock-label {
-            position: relative;
-            top: 8px;
-            text-align: right;
-            text-decoration: none;
-            font: bold 20px "Comic Sans MS", cursive, sans-serif;
-
+        .Login {
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
         }
 
-        a.dock-item {
-            display: block;
-            float: left;;
-            #width: auto;
+        .Logout {
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
+        }
+
+        #menu li {
             position: absolute;
-            padding-left: 0px;
-            left: 0px;
-            top: 2px;
-            text-align: right;
-            text-decoration: none;
-            font: bold 12px Arial, Helvetica, sans-serif;
-        }
-
-        a.dock-item2 {
-            position: absolute;
-            #padding-left: 0px;
-            text-align: center;
-            text-decoration: none;
-            font: bold 12px Arial, Helvetica, sans-serif;
-        }
-        .dock-item img {
-            border: none;
-            margin-left: 0px;
-            padding-left: 0px;
-            width: 100%;
-        }
-        .dock-item2 img {
-            border: none;
-
-            padding-left: 0px;
-            width: 100%;
-        }
-
-        .dock-item span {
-            display: none;
-            padding-left: 20px;
-        }
-
-        .dock-item2 span {
-            display: none;
-            padding-left: 20px;
-        }
-        #email {
-            margin: 5px;
             top: 0px;
         }
 
-    </style>
+        #menu ul {
+            list-style: none
+        }
 
+        .right {
+
+        }
+
+        #login-item1 img {
+            width: 35px;
+        }
+
+        #login-item2 img {
+            width: 35px;
+        }
+
+        #dock-item img {
+            top: 10px;
+            width: 40px;
+        }
+
+        #login-label {
+            position: absolute;
+            right: 100px;
+            top: 0px;
+            font: bold 20px Arial, Helvetica, sans-serif;
+        }
+
+        #login-item1 {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+        }
+
+        #login-item2 {
+            position: absolute;
+            right: 50px;
+            top: 5px;
+        }
+
+        #logout-label {
+            position: absolute;
+            right: 40px;
+            top: 18px;
+            font: bold 20px Arial, Helvetica, sans-serif;
+        }
+
+        #logout-item {
+            position: absolute;
+            right: 40px;
+            top: 0px;
+        }
+
+        #logout-item img {
+            position: absolute;
+            top: 10px;
+            width: 40px;
+        }
+
+        #user-name {
+            position: relative;
+            left: 60px;
+            width: 400px;
+            color: #000000;
+            margin-top: 10px;
+            padding-top: 10px;
+            padding-bottom: 14px;
+            top: 14px;
+            font: bold 20px Arial, Helvetica, sans-serif;
+        }
+
+        #user-picture {
+            border-style: solid;
+            border-color:#616161;
+            border-width: 3px;
+            position: relative;
+            left: 0px;
+            width: 45px;
+            font: bold 20px Arial, Helvetica, sans-serif;
+        }
+
+
+        #post {
+            margin-left: 2px;
+            padding-left:0px;
+            margin-top: 1px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+
+        #post li {
+            display: inline;
+            list-style-type: none;
+            padding-right: 2px;
+
+        }
+
+        #pictureURL {
+
+        }
+
+        #pictureURL img {
+            position: relative;
+            left: 0px;
+            width: 30px;
+            border-style: solid;
+            border-color: #616161;
+            border-width: 2px;
+        }
+        #timestamp {
+            position: relative;
+            left:2px;
+            font: bold 10px Arial, Helvetica, sans-serif;
+        }
+
+        #from {
+            color: #7994ce;
+            position: relative;
+            left:2px;
+            font: bold 20px Arial, Helvetica, sans-serif;
+        }
+
+        #message {;
+            color: black;
+            position: relative;
+            left:5px;
+            font: bold 20px Arial, Helvetica, sans-serif;
+        }
+
+
+    </style>
 </head>
 <body>
 <div id="menu">
-    <div class="dock" id="dock">
-        <div class="dock-container">
-            <a class="dock-item" href="#"><img src="https://secure.krypin.org/images/id_card.png"/></a>
-        </div>
+    <div id="leftMenu">
+        <ul class="Login">
+            <li><img id="user-picture" src="{{with .Person}}{{.PictureURL}}{{end}}" style="visibility:{{.LogoutVisibility}}"/></li>
+            <!-- <li><a id="dock-item" href="#" style="visibility:{{.LogoutVisibility}}"><img src="{{.HostImg}}/images/id_card.png"/></a></li> -->
+            <li><span id="user-name" style="visibility:{{.LogoutVisibility}}">{{ with .Person}}{{.FirstName}} {{.LastName}}{{end}}</span></li>
+
+        </ul>
     </div>
 
-    <div class="dock" id="dock2">
-        <span id="dock-label" >Login with:</span>
-        <div class="dock-container2">
-            <a class="dock-item2" href="#"><img src="https://secure.krypin.org/images/facebook.png"/></a>
-            <a class="dock-item2" href="#"><img src="https://secure.krypin.org/images/google.png"/></a>
-        </div>
+    <div id="rightMenu">
+        <ul class="Login" style="visibility:{{.LoginVisibility}}">
+
+            <li class="right"><a id="login-item1" href="#"><img src="{{.HostImg}}/images/facebook.png"/></a>
+            <li class="right"><a id="login-item2" href="https://{{.Host}}/google/login"><img
+                    src="{{.HostImg}}/images/google.png"/></a></li>
+            <li class="right"><span id="login-label">Login with:</span></li>
+
+        </ul>
+        <ul class="Logout" style="visibility:{{.LogoutVisibility}}">
+            <li class="right"><span id="logout-label">Logout:</span></li>
+            <li class="right"><a id="logout-item" href="https://{{.Host}}/logout" method="post"><img
+                    src="{{.HostImg}}/images/home.png"/></a></li>
+
+
+        </ul>
     </div>
+
 </div>
 <div id="log"></div>
 <form id="form">
     <input id="submit" type="submit" value="Send"/>
     <input type="text" id="msg"/>
-    <input type="text" id="sender"/>
 </form>
 
 
@@ -402,7 +519,8 @@
             <h2>Authorization failure! </h2>
         </div>
         <div class="modal-body">
-            <p>You are required to login before you may submit messages! You may automatically sign up with either your Google or Facebook account by clicking on corresponding icon at the top right.
+            <p>You are required to login before you may submit messages! You may automatically sign up with either your
+                Google or Facebook account by clicking on corresponding icon at the top right.
                 However, the recommended way to sign up here is to create a new account with GitHub.</p>
             <p>
 
@@ -426,17 +544,17 @@
     var span = document.getElementsByClassName("close")[0];
 
     // When the user clicks the button, open the modal
-    btn.onclick = function() {
+    btn.onclick = function () {
         modal.style.display = "block";
     }
 
     // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
+    span.onclick = function () {
         modal.style.display = "none";
     }
 
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }

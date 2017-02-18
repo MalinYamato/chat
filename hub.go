@@ -7,7 +7,6 @@ package main
 
 
 import (
-	"encoding/json"
 )
 
 // hub maintains the set of active clients and broadcasts messages to the
@@ -27,6 +26,7 @@ type Hub struct {
 
 	messages QueueStack
 
+
 	command chan Command
 
 	rooms map[string]Room
@@ -35,8 +35,12 @@ type Hub struct {
 }
 
 type Message struct {
-	Sender    string `json:"sender,omitempty"`
+	Op        string `json:"op,omitempty"`
 	Timestamp string `json:"timestamp,omitempty"`
+	Token     string `json:"token,omitempty"`
+	Sender    string `json:"sender,omitempty"`
+	PictureURL string `json:"pictureURL,omitempty"`
+	Gender    string  `json:"gender,omitempty"`
 	Content   string `json:"content,omitempty"`
 }
 
@@ -87,17 +91,7 @@ func (h *Hub) run() {
 					delete(h.clients, client)
 				}
 			}
-		case cmd := <-h.command:
-			if (cmd.label == "chroom") {
-				cmd.client.CurrentRoom = cmd.value
-				messages := h.rooms[cmd.client.CurrentRoom].Messages
-				for i := 0; i < len(messages); i++ {
-					jsonMessage, _ := json.Marshal(&messages[i])
-					cmd.client.send <- jsonMessage
 
-				}
-
-			}
 		}
 	}
 }
