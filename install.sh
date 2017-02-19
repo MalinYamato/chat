@@ -6,7 +6,7 @@
 # Author: Malin af Lääkkö
 #
 domain=secure.krypin.xyz
-document_root = /var/www/$domain
+document_root=/var/www/$domain
 src=$GOPATH/packages/src/github.com
 bin=/usr/local/bin
 declare -a packages=("MalinYamato/chat")
