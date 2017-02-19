@@ -20,8 +20,7 @@ if [ ! -d ""$document_root" ]; then
 fi
 
 
-for d in "${dirs[@]";
-do
+for d in  ${dirs[@]  do
     if [ ! -d "$document_root/$d" ]; then
                echo "creating " $document_root/$d
                mkdir $document_root/$d
@@ -30,8 +29,7 @@ done
 
 echo "getting, building and installing packages"
 
-for i in "${packages[@]}";
-do
+for i in ${packages[@]} do
     if [ -d "$src/$i" ]; then
            echo "deleting package " $i
            rm -fr $src/$i
@@ -44,8 +42,7 @@ done
 
 install -v -m +x $bin/* /usr/local/bin
 
-for i in "${packages[@]}";
-do
+for i in ${packages[@]} do
    install -v -m +r $src/$i/*.html $document_root
    install -v -m +r $src/$i/js/* $document_root/js
    install -v -m +r $src/$i/css/* $document_root/css
