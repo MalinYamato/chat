@@ -1,4 +1,4 @@
-/#!/bin/bash
+#!/bin/bash
 #
 # (C) 2017 Yamato Digital Audio
 # Author: Malin af Lääkkö
