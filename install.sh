@@ -5,74 +5,50 @@
 # (C) 2017 Yamato Digital Audio
 # Author: Malin af Lääkkö
 #
-domain=secure.krypin.org
-src=$HOME/usr/local/packages/src/github.com
-bin=$HOME/usr/local/packages/bin
+domain=secure.krypin.xyz
+document_root = /var/www/$domain
+src=$GOPATH/packages/src/github.com
+bin=/usr/local/bin
 declare -a packages=("MalinYamato/chat")
+declare -a dirs=("css", "images", "js")
 
 
-if [ ! -d "$HOME/usr" ]; then
-        echo "creating $HOME/usr"
-        mkdir $HOME/usr
-fi
-if [ ! -d "$HOME/usr/local" ]; then
-        echo "creating $HOME/usr/local"
-        mkdir $HOME/usr/local
-fi
-
-if [ ! -d "$HOME/usr/local/packages" ]; then
-        echo "creating $HOME/usr/packages"
-        mkdir $HOME/usr/local/packages
-fi
-
-if [ ! -d "$HOME/usr/local/bin" ]; then
-        echo "creating $HOME/usr/local/bin"
-        mkdir $HOME/usr/local/bin
-fi
-
-if [ ! -d "$HOME/$domain" ]; then
-        echo "creating $HOME/$domain"
-        mkdir $HOME/$domain
-fi
-
-if [ -d "$src/MalinYamato/chat" ]; then
-           echo "deleting package $src/MalinYamato/chat"
-           rm -fr $src/MalinYamato/chat
-fi
-
-if [ ! -d "$HOME/$domain/js" ]; then
-           echo "creating $HOME/$domain/js"
-           mkdir $HOME/$domain/js
-fi
-
-if [ ! -d "$HOME/$domain/imgaes" ]; then
-           echo "creating $HOME/$domain/imgaes"
-           mkdir $HOME/$domain/images
-fi
-
-if [ ! -d "$HOME/$domain/css" ]; then
-           echo "creating $HOME/$domain/css"
-           mkdir $HOME/$domain/css
+if [ ! -d $document_root ]; then
+        echo "creating " $document_root/$
+        mkdir $document_root
 fi
 
 
+for d in "${dirs[@]"
+do
+    if [ ! -d $document_root/$d ]; then
+               echo "creating " $document_root/$d
+               mkdir $document_root/$d
+    fi
+done
 
 echo "getting, building and installing packages"
 
 for i in "${packages[@]}"
 do
+    if [ -d $src/$i ]; then
+           echo "deleting package " $i
+           rm -fr $src/$i
+    fi
+
    echo "Installing $i"
 
    go get github.com/$i
 done
 
-install -v -m +x $bin/* $HOME/usr/local/bin
+install -v -m +x $bin/* /usr/local/bin
 for i in "${packages[@]}"
 do
-   install -v -m +r $src/$i/*.html $HOME/$domain
-   install -v -m +r $src/$i/js/* $HOME/$domain/js
-   install -v -m +r $src/$i/css/* $HOME/$domain/css
-   install -v -m +r $src/$i/images/* $HOME/$domain/images
+   install -v -m +r $src/$i/*.html $document_root
+   install -v -m +r $src/$i/js/* $document_root/js
+   install -v -m +r $src/$i/css/* $document_root/css
+   install -v -m +r $src/$i/images/* $document_root/images
+   install -v -m +r $src/$i/*.html $document_root
 done
 
 
