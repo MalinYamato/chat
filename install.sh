@@ -13,7 +13,7 @@ declare -a packages=("MalinYamato/chat")
 declare -a dirs=("css", "images", "js")
 
 
-if [ ! -d $document_root ]; then
+if [ ! -d ""$document_root" ]; then
         echo "creating " $document_root/$
         mkdir $document_root
 fi
@@ -21,7 +21,7 @@ fi
 
 for d in "${dirs[@]"
 do
-    if [ ! -d $document_root/$d ]; then
+    if [ ! -d "$document_root/$d" ]; then
                echo "creating " $document_root/$d
                mkdir $document_root/$d
     fi
@@ -31,7 +31,7 @@ echo "getting, building and installing packages"
 
 for i in "${packages[@]}"
 do
-    if [ -d $src/$i ]; then
+    if [ -d "$src/$i" ]; then
            echo "deleting package " $i
            rm -fr $src/$i
     fi
