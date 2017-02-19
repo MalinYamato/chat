@@ -14,10 +14,11 @@ import (
 	"github.com/dghubble/gologin"
 	googleOAuth2 "golang.org/x/oauth2/google"
 
-	"github.com/dghubble/gologin/google"
+
 	"golang.org/x/oauth2"
 	"strings"
 	"github.com/kabukky/httpscerts"
+	"github.com/dghubble/gologin/google"
 )
 
 type Config struct {
@@ -36,7 +37,7 @@ type HTMLReplace struct {
 type PersonsMAP map[string]Person
 
 
-var addr = flag.String("addr", ":8080", "http service address")
+var addr = flag.String("addr", ":8008", "http service address")
 var homeTemplate = template.Must(template.ParseFiles("home.html"))
 
 func serveHome(w http.ResponseWriter, r *http.Request, stuff HTMLReplace) {
@@ -79,12 +80,6 @@ func serveHomeLogout(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func imageHandler(w http.ResponseWriter, r *http.Request) {
-
-	http.FileServer(http.Dir("path/to/file"))
-
-}
-
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
 
@@ -100,7 +95,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	oauth2Config := &oauth2.Config{
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,
-		RedirectURL:  "https://secure.krypin.org:8080/google/callback",
+		RedirectURL:  "https://secure.krypin.xyz:8008/google/callback",
 		Endpoint:     googleOAuth2.Endpoint,
 		Scopes:       []string{"profile", "email"},
 	}
@@ -121,7 +116,7 @@ func main() {
 	err := httpscerts.Check("cert.pem", "key.pem")
 	//f they are not available, generate new ones.
 	if err != nil {
-		err = httpscerts.Generate("cert.pem", "key.pem", "secure.krypin.org")
+		err = httpscerts.Generate("cert.pem", "key.pem", "secure.krypin.xyz")
 		if err != nil {
 			log.Fatal("Error: Couldn't create https certs.")
 		}
@@ -164,6 +159,7 @@ func main() {
 	hub := newHub(*queue)
 	go hub.run()
 
+	//err = http.ListenAndServe(*addr, NewMux(config, hub) )
 	err = http.ListenAndServeTLS(*addr,"cert.pem", "key.pem", NewMux(config, hub) )
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

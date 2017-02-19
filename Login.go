@@ -5,10 +5,10 @@ import (
 "fmt"
 "io/ioutil"
 "net/http"
-"github.com/dghubble/gologin/google"
 "github.com/dghubble/sessions"
 	"log"
 	"github.com/satori/go.uuid"
+	"github.com/dghubble/gologin/google"
 )
 
 const (

@@ -100,7 +100,6 @@ func (c *Client) readPump(cookieValue string) {
 
 		var m Message
 		json.Unmarshal(message, &m)
-		log.Println(">>>> ", m.Op)
 
 		if ( ! validSession(cookieValue)) {
 			json_message, _ := json.Marshal(Message{Op: "Control", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" })
@@ -108,7 +107,6 @@ func (c *Client) readPump(cookieValue string) {
 			if err != nil {
 				return
 			}
-			log.Println("write Error")
 			w.Write(json_message)
 		} else {
 
@@ -118,12 +116,11 @@ func (c *Client) readPump(cookieValue string) {
 				c.hub.broadcast <- message
 				c.token = m.Token
 			} else {
-				json_message, _ := json.Marshal(Message{Op: "Control", Timestamp: "null", Token: "Wrong Token", Sender: "Server", PictureURL: "null", Gender: "null",Content: "Unauthorized" })
+				json_message, _ := json.Marshal(Message{Op: "Control", Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null",Content: "Unauthorized" })
 				w, err := c.conn.NextWriter(websocket.TextMessage)
 				if err != nil {
 					return
 				}
-				log.Println("Write Wrong Token")
 				w.Write(json_message)
 			}
 
