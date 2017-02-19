@@ -42,6 +42,7 @@ do
 done
 
 install -v -m +x $bin/* /usr/local/bin
+
 for i in "${packages[@]}"
 do
    install -v -m +r $src/$i/*.html $document_root
@@ -50,6 +51,3 @@ do
    install -v -m +r $src/$i/images/* $document_root/images
    install -v -m +r $src/$i/*.html $document_root
 done
-
-
-
