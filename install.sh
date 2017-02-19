@@ -9,6 +9,7 @@ domain=secure.krypin.xyz
 document_root=/var/www/$domain
 src=$GOPATH/packages/src/github.com
 bin=/usr/local/bin
+
 declare -a packages=("MalinYamato/chat")
 declare -a dirs=("css", "images", "js")
 
@@ -19,7 +20,7 @@ if [ ! -d ""$document_root" ]; then
 fi
 
 
-for d in "${dirs[@]"
+for d in "${dirs[@]";
 do
     if [ ! -d "$document_root/$d" ]; then
                echo "creating " $document_root/$d
@@ -29,7 +30,7 @@ done
 
 echo "getting, building and installing packages"
 
-for i in "${packages[@]}"
+for i in "${packages[@]}";
 do
     if [ -d "$src/$i" ]; then
            echo "deleting package " $i
@@ -43,7 +44,7 @@ done
 
 install -v -m +x $bin/* /usr/local/bin
 
-for i in "${packages[@]}"
+for i in "${packages[@]}";
 do
    install -v -m +r $src/$i/*.html $document_root
    install -v -m +r $src/$i/js/* $document_root/js
