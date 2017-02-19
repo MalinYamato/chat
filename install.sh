@@ -19,7 +19,8 @@ if [ ! -d "$document_root" ] then
 fi
 
 
-for d in  "${dirs[@]}" do
+for d in  "${dirs[@]}"
+do
     if [ ! -d "$document_root/$d" ] then
                echo "creating  $document_root/$d"
                mkdir $document_root/$d
