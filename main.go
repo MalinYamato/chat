@@ -55,8 +55,7 @@ func serveHome(w http.ResponseWriter, r *http.Request, stuff HTMLReplace) {
 
 	stuff.Host = r.Host;
 	stuff.HostImg = "https://secure.krypin.xyz:443"
-	root := "/home/malin/GoglandProjects/chat"
-
+	root := "/var/www/secure.krypin.xyz"
 
 	if ( strings.Contains(r.URL.Path, "/session") ) {
 		log.Println(" Set path to / ", r.URL.Path)
