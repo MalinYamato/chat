@@ -2,125 +2,9 @@
 <html lang="en">
 <head>
     <title>Chat Example</title>
-    <script type="text/javascript" src="https://secure.krypin.org/js/jquery.js"></script>
-    <script type="text/javascript" src="https://secure.krypin.org/js/interface.js"></script>
-
-    <link href="https://secure.krypin.org/css/style.css" rel="stylesheet" type="text/css"/>
-
-    <style>
-        /* The Modal (background) */
-        .modal {
-            display: block; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0, 0, 0); /* Fallback color */
-            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-            -webkit-animation-name: fadeIn; /* Fade in the background */
-            -webkit-animation-duration: 0.4s;
-            animation-name: fadeIn;
-            animation-duration: 0.4s
-        }
-
-        /* Modal Content */
-        .modal-content {
-            position: fixed;
-            bottom: 0;
-            background-color: #7994ce;
-            width: 100%;
-            -webkit-animation-name: slideIn;
-            -webkit-animation-duration: 0.4s;
-            animation-name: slideIn;
-            animation-duration: 0.4s
-
-        }
-
-        /* The Close Button */
-        .close {
-            color: white;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .modal-header {
-            padding: 2px 16px;
-            background-color: #991c35;
-            color: white;
-            font: bold 18px Arial, Helvetica, sans-serif;
-        }
-
-        .modal-body {
-            background-color: #7994ce;
-            padding: 2px 16px;
-            color: black;
-            font: bold 18px Arial, Helvetica, sans-serif;
-        }
-
-        .modal-footer {
-            padding: 2px 16px;
-            background-color: #991c35;
-            color: white;
-            font: bold 12px Arial, Helvetica, sans-serif;
-        }
-
-        /* Add Animation */
-        @-webkit-keyframes slideIn {
-            from {
-                bottom: -300px;
-                opacity: 0
-            }
-            to {
-                bottom: 0;
-                opacity: 1
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                bottom: -300px;
-                opacity: 0
-            }
-            to {
-                bottom: 0;
-                opacity: 1
-            }
-        }
-
-        @-webkit-keyframes fadeIn {
-            from {
-                opacity: 0
-            }
-            to {
-                opacity: 1
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0
-            }
-            to {
-                opacity: 1
-            }
-        }
-
-        #myBtn {
-            visibility: hidden;
-        }
-    </style>
-
+    <link href="/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
 
     <script type="text/javascript">
         window.onload = function () {
@@ -128,7 +12,39 @@
             var msg = document.getElementById("msg");
             var sender = document.getElementById("sender");
             var log = document.getElementById("log");
+            var currentUsers = document.getElementById("CurrentUsers");
             modal.style.display = "none";
+
+
+            function appendNewUser(message) {
+
+                var res = document.getElementById(message.pictureURL);
+                if (res != null) {
+                    //detected dupplicate
+                    return;
+                }
+                var newUser = document.createElement("li");
+                newUser.setAttribute("id", message.token);
+                image = document.createElement("img");
+                image.setAttribute("src", message.pictureURL);
+                image.setAttribute("id", message.pictureURL);
+                newUser.appendChild(image);
+                var name = document.createElement("span");
+                name.innerText = message.sender;
+                newUser.appendChild(name);
+                currentUsers.appendChild(newUser);
+            }
+
+            function removeUser(message) {
+                var child = document.getElementById(message.token);
+                if (child != null) {
+                    var status = currentUsers.removeChild(child);
+                    //window.alert("User removed " + status);
+                }
+                else {
+                    window.alert("Attempt to remove an unknonw user!");
+                }
+            }
 
 
             function appendLog(item) {
@@ -147,10 +63,18 @@
                 if (!msg.value) {
                     return false;
                 }
-
+                // window.alert("message")
                 var t = new Date();
                 var time = t.getDate() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
-                var message = {"op":"Message","timestamp": time,  "token": "{{with .Person}}{{.Token}}{{end}}", "sender": "secret", "pictureURL": "secret", "Gender": "secret", "content": msg.value};
+                var message = {
+                    "op": "Message",
+                    "timestamp": time,
+                    "token": "{{with .Person}}{{.Token}}{{end}}",
+                    "sender": "secret",
+                    "pictureURL": "secret",
+                    "Gender": "secret",
+                    "content": msg.value
+                };
                 var json_message = JSON.stringify(message);
                 conn.send(json_message);
                 msg.value = "";
@@ -162,21 +86,28 @@
 
                 conn.onclose = function (evt) {
                     var item = document.createElement("div");
-                    item.innerHTML = "<b>Your connection is closed.</b>";
+                    item.innerHTML = "<b>Your connection is closed. " + evt.toString() + "  </b>";
                     appendLog(item);
                 };
 
                 conn.onmessage = function (event) {
-                  //  window.alert("sometext");
+
                     var message = JSON.parse(event.data);
-                    if(message.content == "Unauthorized")
+
+                    if (message.content == "Unauthorized")
                         modal.style.display = "block";
+                    else if (message.op == "NewUser") {
+                        appendNewUser(message);
+                    }
+                    else if (message.op == "ExitUser") {
+                        removeUser(message);
+                    }
                     else if (message.content != "Ignore") {
                         var time_item = document.createElement("li");
                         time_item.setAttribute("id", "timestamp");
 
                         var picture_elem = document.createElement("img")
-                        picture_elem.setAttribute("src", message.pictureURL );
+                        picture_elem.setAttribute("src", message.pictureURL);
                         var pictureURL_item = document.createElement("li");
                         pictureURL_item.setAttribute("id", "pictureURL");
                         pictureURL_item.appendChild(picture_elem);
@@ -188,7 +119,7 @@
                         message_item.setAttribute("id", "message");
 
                         sender_item.innerText = message.sender;
-                        time_item.innerText = " [" + message.timestamp + "] ";
+                        time_item.innerText = "[" + message.timestamp + "]";
                         message_item.innerText = message.content;
                         var item = document.createElement("ul");
                         item.setAttribute("id", "post");
@@ -205,41 +136,9 @@
                 appendLog(item);
             }
 
-
         };
     </script>
-    <script type="text/javascript">
 
-        $(document).ready(
-            function () {
-                $('#dock').Fisheye(
-                    {
-                        maxWidth: 6,
-                        items: 'a',
-                        itemsText: 'span',
-                        container: '.dock-container',
-                        itemWidth: 40,
-                        proximity: 20,
-                        halign: 'left'
-                    }
-                )
-                $('#dock2').Fisheye(
-                    {
-                        maxWidth: 6,
-                        items: 'a',
-                        itemsText: 'span',
-                        container: '.dock-container2',
-                        itemWidth: 40,
-                        proximity: 10,
-                        /*   alignment: 'right',
-                         #   valign: 'top', */
-                        halign: 'right'
-                    }
-                )
-            }
-        );
-
-    </script>
 
     <style type="text/css">
         html {
@@ -284,149 +183,16 @@
             width: 60%;
         }
 
-
-
-
-
-
-
         #submit {
             height: auto;
             font-size: 6mm;
         }
 
-        #menu {
-            position: absolute;
-            top: 0px;
-            right: 15px;
-            left: 15px;
-            margin-top: 5px;
-            height: 20%;
-
-        }
-
-        #leftMenu {
-            position: relative;
-            left: 0px;
-            top: 0px;
-
-            padding: 0px 0px 0px 0px;
-            margin: 0px 0px 0px 0px;
-        }
-
-        #rightMenu {
-
-            position: absolute;
-            right: 0px;
-            top: 0px;
-            padding: 0px 0px 0px 0px;
-            margin: 0px 0px 0px 0px;
-        }
-
-        .Login {
-            margin: 0px 0px 0px 0px;
-            padding: 0px 0px 0px 0px;
-        }
-
-        .Logout {
-            margin: 0px 0px 0px 0px;
-            padding: 0px 0px 0px 0px;
-        }
-
-        #menu li {
-            position: absolute;
-            top: 0px;
-        }
-
-        #menu ul {
-            list-style: none
-        }
-
-        .right {
-
-        }
-
-        #login-item1 img {
-            width: 35px;
-        }
-
-        #login-item2 img {
-            width: 35px;
-        }
-
-        #dock-item img {
-            top: 10px;
-            width: 40px;
-        }
-
-        #login-label {
-            position: absolute;
-            right: 100px;
-            top: 0px;
-            font: bold 20px Arial, Helvetica, sans-serif;
-        }
-
-        #login-item1 {
-            position: absolute;
-            right: 10px;
-            top: 5px;
-        }
-
-        #login-item2 {
-            position: absolute;
-            right: 50px;
-            top: 5px;
-        }
-
-        #logout-label {
-            position: absolute;
-            right: 40px;
-            top: 18px;
-            font: bold 20px Arial, Helvetica, sans-serif;
-        }
-
-        #logout-item {
-            position: absolute;
-            right: 40px;
-            top: 0px;
-        }
-
-        #logout-item img {
-            position: absolute;
-            top: 10px;
-            width: 40px;
-        }
-
-        #user-name {
-            position: relative;
-            left: 60px;
-            width: 400px;
-            color: #000000;
-            margin-top: 10px;
-            padding-top: 10px;
-            padding-bottom: 14px;
-            top: 14px;
-            font: bold 20px Arial, Helvetica, sans-serif;
-        }
-
-        #user-picture {
-            border-style: solid;
-            border-color:#616161;
-            border-width: 3px;
-            position: relative;
-            left: 0px;
-            width: 50px;
-            font: bold 20px Arial, Helvetica, sans-serif;
-        }
-
-
         #post {
             margin-left: 2px;
-            padding-left:0px;
             margin-top: 1px;
-            padding-top: 0px;
-            padding-bottom: 0px;
-            margin-bottom: 0px;
+            height: 32px;
+            background-color: white;
         }
 
         #post li {
@@ -436,35 +202,35 @@
 
         }
 
-        #pictureURL {
-
-        }
-
         #pictureURL img {
             position: relative;
             left: 0px;
-            width: 40px;
+            width: 30px;
+            height: 30px;
             border-style: solid;
             border-color: #616161;
             border-width: 2px;
         }
+
         #timestamp {
-            position: relative;
-            left:2px;
+            padding: 8px;
+            padding-top: 18px;
+            padding-left: 4px;
             font: bold 12px Arial, Helvetica, sans-serif;
+            color: #616161;
         }
 
         #from {
             color: #7994ce;
-            position: relative;
-            left:2px;
+            padding: 8px;
+            padding-left: 4px;
             font: bold 24px Arial, Helvetica, sans-serif;
         }
 
         #message {;
             color: black;
-            position: relative;
-            left:5px;
+            padding: 8px;
+            padding-left: 4px;
             font: bold 24px Arial, Helvetica, sans-serif;
         }
 
@@ -472,41 +238,64 @@
     </style>
 </head>
 <body>
-<div id="menu">
-    <div id="leftMenu">
-        <ul class="Login">
-            <li><img id="user-picture" src="{{with .Person}}{{.PictureURL}}{{end}}" style="visibility:{{.LogoutVisibility}}"/></li>
-            <!-- <li><a id="dock-item" href="#" style="visibility:{{.LogoutVisibility}}"><img src="{{.HostImg}}/images/id_card.png"/></a></li> -->
-            <li><span id="user-name" style="visibility:{{.LogoutVisibility}}">{{ with .Person}}{{.FirstName}} {{.LastName}}{{end}}</span></li>
+<ul>
+    <li id="leftMenu">
+        <ul>
+            <li>
+                <img src="/images/config.png"/>
+            </li>
+            <li>
+                <img src="/images/id_card.png"/>
+            </li>
+            <li>
 
+            </li>
         </ul>
-    </div>
+        <span id="me">{{ with .Person}}{{.FirstName}} {{.LastName}}{{end}}</span>
+    </li>
 
-    <div id="rightMenu">
-        <ul class="Login" style="visibility:{{.LoginVisibility}}">
 
-            <li class="right"><a id="login-item1" href="#"><img src="{{.HostImg}}/images/facebook.png"/></a>
-            <li class="right"><a id="login-item2" href="https://{{.Host}}/google/login"><img
-                    src="{{.HostImg}}/images/google.png"/></a></li>
-            <li class="right"><span id="login-label">Login with:</span></li>
-
+    <li id="centerMenu">
+        <ul id="CurrentUsers">
         </ul>
-        <ul class="Logout" style="visibility:{{.LogoutVisibility}}">
-            <li class="right"><span id="logout-label">Logout:</span></li>
-            <li class="right"><a id="logout-item" href="https://{{.Host}}/logout" method="post"><img
-                    src="{{.HostImg}}/images/home.png"/></a></li>
+    </li>
 
+    <li id="rightMenu">
+        <div style="visibility:{{.LoggedOut}}">
+            <ul>
+                <li>
+                    <span>Login</span>
+                </li>
+                <li>
+                    <a href="https://{{.Host}}/google/login"><img src="/images/google.png"/></a>
+                </li>
+                <li>
+                    <img src="/images/facebook.png"/>
+                </li>
+            </ul>
+        </div>
+        <div style="visibility:{{.LoggedIn}}">
+            <ul>
+                <li>
+                    <span>Logout</span>
+                </li>
+                <li>
+                    <form action='https://{{.Host}}/logout' method='POST'>
+                        <button type="submit"><img src="/images/home.png" border="0"/></button>
+                        <input type="hidden" name="token" value="{{with .Person}}{{.Token}}{{end}}"/>
+                    </form>
+                </li>
+            </ul>
 
-        </ul>
-    </div>
+        </div>
+    </li>
+</ul>
 
-</div>
 <div id="log"></div>
 <form id="form">
     <input id="submit" type="submit" value="Send"/>
     <input type="text" id="msg"/>
 </form>
-
 
 <button id="myBtn">Open Modal</button>
 
@@ -521,7 +310,7 @@
         <div class="modal-body">
             <p>You are required to login before you may submit messages! You may automatically sign up with either your
                 Google or Facebook account by clicking on corresponding icon at the top right.
-                However, the recommended way to sign up here is to create a new account with GitHub.</p>
+            </p>
             <p>
 
             </p>

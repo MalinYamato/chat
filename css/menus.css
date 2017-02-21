@@ -1,0 +1,103 @@
+
+#leftMenu {
+    padding-right: 3px;
+    padding-left: 10px;
+}
+
+#leftMenu ul {
+    #float: left;
+}
+
+#leftMenu img {
+    width: 35px;
+    padding: 4px;
+    padding-bottom: 0px;
+}
+
+#centerMenu {
+    #width: 60%;
+}
+
+#centerMenu ul  {
+    border-style: solid;
+    border-color: #616161;
+    border-width: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2px;
+    float: left;
+}
+
+#centerMenu img {
+    border-style: solid;
+    border-color: #616161;
+    border-width: 2px;
+    width: 2.5em;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#rightMenu  {
+    float: right;
+}
+
+#rightMenu  div {
+    position: absolute;
+    right: 14px;
+}
+
+#rightMenu span {
+    padding-top: 18px;
+    padding-right: 4px;
+}
+
+#rightMenu img {
+    width: 30px;
+    padding: 12px;
+    padding-left: 0px;
+    padding-right: 2px;
+
+}
+
+#rightMenu button {
+    padding: 0px;
+    margin:0px;
+    border: none;
+    background-color: transparent;
+}
+
+li {
+    float: left;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #7994ce;
+}
+
+li span {
+
+    display: block;
+    color: white;
+    text-align: center;
+    width: 3.5em;
+    text-decoration: none;
+    font: bold 14px Arial, Helvetica, sans-serif;
+}
+
+li #me {
+    text-align: left;
+    float: left;
+    width: 12em;
+    padding-left: 2px;
+    padding-bottom: 2px;
+
+}
+li a:hover {
+    background-color: #7994ce;
+}
+

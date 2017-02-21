@@ -17,6 +17,8 @@ const (
 	sessionUserKey = "googleID"
 )
 
+
+
 // sessionStore encodes and decodes session data stored in signed cookies
 var sessionStore = sessions.NewCookieStore([]byte(sessionSecret), nil)
 
@@ -30,6 +32,7 @@ type Person struct {
 	Location string         `json:"location,omitempty"`
 	PictureURL string	`json:"pictureURL,omitempty"`
 	GoogleID string		`json:"googleID,omitempty"`
+	UserID string           `json:"googleID,omitempty"`
 	Token string		`json:"token,omitempty"`
 }
 
@@ -48,7 +51,11 @@ func issueSession() http.Handler {
 		session.Values[sessionUserKey] = googleUser.Id
 		session.Save(w)
 		secret := uuid.NewV4()
-		Persons[secret.String()] = Person{"null",googleUser.GivenName,googleUser.FamilyName,googleUser.Email,googleUser.Gender,googleUser.Locale,googleUser.Picture,googleUser.Id,secret.String()}
+		userID := uuid.NewV4()
+
+		Persons[secret.String()] = Person{"null",googleUser.GivenName,googleUser.FamilyName,googleUser.Email,googleUser.Gender,googleUser.Locale,googleUser.Picture,googleUser.Id,userID.String(), secret.String()}
+		hub.broadcast <- Message{ "NewUser","null", userID.String(), googleUser.GivenName, googleUser.Picture, googleUser.Gender, "NULL"  }
+		log.Println("Successful Login ", googleUser.Email)
 		http.Redirect(w, req, "/session/?id=" + secret.String(), http.StatusFound)
 	}
 	return http.HandlerFunc(fn)
@@ -68,6 +75,7 @@ func welcomeHandler(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, string(page))
 }
 
+
 // profileHandler shows protected user content.
 func profileHandler(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, `<p>You are logged in!</p><form action="/logout" method="post"><input type="submit" value="Logout"></form>`)
@@ -76,7 +84,14 @@ func profileHandler(w http.ResponseWriter, req *http.Request) {
 // logoutHandler destroys the session on POSTs and redirects to home.
 func logoutHandler(w http.ResponseWriter, req *http.Request) {
 	log.Println("Delete",req.Method)
-	if req.Method == "GET" {
+	if req.Method == "POST" {
+		req.ParseForm()
+		token := req.Form["token"]
+		person, ok := Persons[token[0]]
+		if ok == true {
+			hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "User logged out!"}
+			delete(Persons, "token[0]")
+		}
 		sessionStore.Destroy(w, sessionName)
 	}
 	http.Redirect(w, req, "/", http.StatusFound)

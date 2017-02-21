@@ -49,7 +49,7 @@ type Client struct {
 	conn *websocket.Conn
 
 	// Buffered channel of outbound messages.
-	send chan []byte
+	send chan Message
 
 	id string
 
@@ -67,16 +67,16 @@ type Client struct {
 
 func validSession(value string) bool {
 	if value == "" {
-		log.Println("empty cookie")
+		log.Println("No Cookie was set")
 		return false
 	}
 	sess := sessionStore.New("example-google-app")
 	err := securecookie.DecodeMulti("example-google-app", value, &sess.Values, sessionStore.Codecs...)
 	if err != nil {
-		log.Println("Invalid")
+		log.Println("Cookie was invalid, perhaps expired")
 		return false
 	}
-	log.Println("Valid")
+	log.Println("Cookie valid")
 	return true
 }
 
@@ -90,38 +90,44 @@ func (c *Client) readPump(cookieValue string) {
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 
 	for {
-		_, message, err := c.conn.ReadMessage()
+		_, json_message, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
-				log.Printf("error: %v", err)
+				log.Printf("Wesocked was closed: %v", err)
 			}
+
+			log.Printf("Wesocked was closed: %v ", err)
 			break
 		}
 
-		var m Message
-		json.Unmarshal(message, &m)
+		var  message Message
+		json.Unmarshal(json_message, &message)
+
+		log.Println("Client: message from Browser ", message)
 
 		if ( ! validSession(cookieValue)) {
-			json_message, _ := json.Marshal(Message{Op: "Control", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" })
-			w, err := c.conn.NextWriter(websocket.TextMessage)
+			json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
+			err := c.conn.WriteJSON(json_message)
 			if err != nil {
+				log.Println("Client Fail to write JSON on websockets! ")
 				return
 			}
-			w.Write(json_message)
 		} else {
 
-			if value, ok := Persons[m.Token];  ok {
+			if value, ok := Persons[message.Token];  ok {
 				log.Println("message", value.PictureURL)
-				message, _ := json.Marshal(Message{Op: "Message", Timestamp: m.Timestamp, Token: "null", Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: m.Content  })
+				log.Println("message ", value.Location)
+				message := Message{Op: "Message", Timestamp: message.Timestamp, Token: "null", Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
 				c.hub.broadcast <- message
-				c.token = m.Token
+				c.token = message.Token
 			} else {
-				json_message, _ := json.Marshal(Message{Op: "Control", Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null",Content: "Unauthorized" })
-				w, err := c.conn.NextWriter(websocket.TextMessage)
+				log.Println(("Invalid Token"))
+				json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null",Content: "Unauthorized" }
+				err := c.conn.WriteJSON( json_message)
 				if err != nil {
+					log.Println("Client: Fail to write JSON on  websockets! ")
 					return
 				}
-				w.Write(json_message)
 			}
 
 		}
@@ -142,51 +148,42 @@ func (c *Client) writePump() {
 
 	list := c.hub.messages.GetAllAsList()
 	for i := 0; i < len(list); i++ {
-		var m Message
-		json.Unmarshal(list[i].([]byte), &m)
-		w, err := c.conn.NextWriter(websocket.TextMessage)
-		if err != nil {
-			return
-		}
-		w.Write(list[i].([]byte))
+		c.conn.WriteJSON(list[i])
 	}
-	w, err := c.conn.NextWriter(websocket.TextMessage)
-	if err != nil {
-		return
-	}
-	json_message, _ := json.Marshal(Message{Op: "Control", Timestamp: "null", Sender: "System", PictureURL: "null", Gender: "null", Content: "Ignore" })
-	w.Write(json_message)
+
 
 	for {
 		select {
 		case message, ok := <-c.send:
+		log.Println("Client: message from Hub ", message.Sender, message.Content, message.Timestamp, message.PictureURL)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				// The hub closed the channel.
+				log.Println("Client: The hub closed the connection", ok)
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-
-			w, err := c.conn.NextWriter(websocket.TextMessage)
+			err := c.conn.WriteJSON(message)
 			if err != nil {
+				log.Println("Client: Fail to flush remaining messages and write JSON on  websockets! ")
 				return
 			}
-
-			w.Write(message)
 
 			// Add queued chat messages to the current websocket message.
 			n := len(c.send)
 			for i := 0; i < n; i++ {
-				w.Write(newline)
-				w.Write(<-c.send)
+				log.Println("Send one more message")
+				err := c.conn.WriteJSON(<-c.send)
+				//w.Write(newline)
+				if err != nil {
+					log.Println("Client: Fail to flush remaining messages and write JSON on  websockets! ")
+					return
+				}
 			}
 
-			if err := w.Close(); err != nil {
-				return
-			}
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
+				log.Println("Ping Error ")
 				return
 			}
 		}
@@ -209,7 +206,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+	client := &Client{hub: hub, conn: conn, send: make(chan Message, 256)}
 	client.hub.register <- client
 	go client.writePump()
 	client.readPump(cookieValue)

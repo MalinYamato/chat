@@ -14,11 +14,12 @@ import (
 	"github.com/dghubble/gologin"
 	googleOAuth2 "golang.org/x/oauth2/google"
 
-
 	"golang.org/x/oauth2"
 	"strings"
 	"github.com/kabukky/httpscerts"
 	"github.com/dghubble/gologin/google"
+	//"path"
+	"path"
 )
 
 type Config struct {
@@ -27,64 +28,77 @@ type Config struct {
 }
 
 type HTMLReplace struct {
-	Host string
-	HostImg string
-	LoginVisibility string
-	LogoutVisibility string
-	Person Person
+	Host             string
+	HostImg          string
+	LoggedIn  string
+	LoggedOut string
+	Person           Person
 }
 
 type PersonsMAP map[string]Person
 
+type Endpoint struct {
+	protocol string
+	host     string
+	port     string
+}
 
-var addr = flag.String("addr", ":8008", "http service address")
+func (endpoint *Endpoint) url() (string) {
+	return endpoint.protocol + "://" + endpoint.host + ":" + endpoint.port
+}
+
+var endpoint Endpoint
+
 var homeTemplate = template.Must(template.ParseFiles("home.html"))
 
 func serveHome(w http.ResponseWriter, r *http.Request, stuff HTMLReplace) {
 
-	log.Println(">> ",r.URL)
-
 	stuff.Host = r.Host;
-	stuff.HostImg = "https://secure.krypin.org/"
+	stuff.HostImg = "https://secure.krypin.xyz:443"
+	root := "/home/malin/GoglandProjects/chat"
 
-	if ( strings.Contains( r.URL.Path,"/session") ) {
-		log.Println("Redirect to / from", r.URL.Path)
 
+	if ( strings.Contains(r.URL.Path, "/session") ) {
+		log.Println(" Set path to / ", r.URL.Path)
 		r.URL.Path = "/"
+	} else if ( strings.Contains(r.URL.Path, "/images") ) {
+		log.Println("Serve ", root+r.URL.Path)
+		fp := path.Join(root + r.URL.Path)
+		http.ServeFile(w, r, fp)
+		return
+	} else if ( strings.Contains(r.URL.Path, "/css") ) {
+		log.Println("Serve ", root+r.URL.Path)
+		fp := path.Join(root + r.URL.Path)
+		http.ServeFile(w, r, fp)
+		return
 	}
 	if r.URL.Path != "/" {
-		http.Error(w, "Not found", 404)
+		http.Error(w, "Illegal path "+r.URL.Path, 404)
 		return
 	}
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
 		return
 	}
+	log.Println("Serve ", r.URL)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	homeTemplate.Execute(w, stuff)
 }
 
 func serveHomeLogin(w http.ResponseWriter, r *http.Request) {
-        var p = (Person{})
-	log.Println("here fail")
-	serveHome(w,r, HTMLReplace{ "null", "null", "visible", "hidden", p } )
+	var p = (Person{})
+	serveHome(w, r, HTMLReplace{"null", "null", "hidden", "visible", p })
 }
-func serveHomeLogout(w http.ResponseWriter, r *http.Request) {
+func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := r.FormValue("id")
-	log.Println("here session")
-	//u := strings.Split(user,"@")
-	//secret := uuid.NewV4()
-
-	serveHome(w,r, HTMLReplace { "null", "null", "hidden", "visible", Persons[id] } )
-
+	serveHome(w, r, HTMLReplace{"null", "null", "visible", "hidden", Persons[id] })
 }
-
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/session/", serveHomeLogout)
+	mux.Handle("/session/", requireLogin(http.HandlerFunc(sessionHandler)))
 	mux.HandleFunc("/", serveHomeLogin)
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
@@ -95,7 +109,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	oauth2Config := &oauth2.Config{
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,
-		RedirectURL:  "https://secure.krypin.xyz:8008/google/callback",
+		RedirectURL:  endpoint.url() + "/google/callback",
 		Endpoint:     googleOAuth2.Endpoint,
 		Scopes:       []string{"profile", "email"},
 	}
@@ -108,15 +122,18 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 
 var Persons PersonsMAP
 
+var hub *Hub
+
 func main() {
 
-	log.Println("Issuing Certs..")
+	endpoint = Endpoint{"https", "secure.krypin.xyz", "443"}
 
 	// Check if the cert files are available.
 	err := httpscerts.Check("cert.pem", "key.pem")
 	//f they are not available, generate new ones.
 	if err != nil {
-		err = httpscerts.Generate("cert.pem", "key.pem", "secure.krypin.xyz")
+		log.Println("Issuing autosigned Certs..")
+		err = httpscerts.Generate("cert.pem", "key.pem", endpoint.host)
 		if err != nil {
 			log.Fatal("Error: Couldn't create https certs.")
 		}
@@ -156,11 +173,14 @@ func main() {
 	queue := new(QueueStack)
 
 	flag.Parse()
-	hub := newHub(*queue)
+	hub = newHub(*queue)
 	go hub.run()
 
+	var addr = flag.String("addr", ":"+endpoint.port, "http service address")
+
+	log.Println("Starting servoce at " + *addr)
+	err = http.ListenAndServeTLS(*addr, "cert.pem", "key.pem", NewMux(config, hub))
 	//err = http.ListenAndServe(*addr, NewMux(config, hub) )
-	err = http.ListenAndServeTLS(*addr,"cert.pem", "key.pem", NewMux(config, hub) )
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
