@@ -2,11 +2,42 @@
 <html lang="en">
 <head>
     <title>Chat Example</title>
-    <link href="/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
-    <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="css/menus.css" rel="stylesheet" type="text/css"/>
+    <link href="css/modal.css" rel="stylesheet" type="text/css"/>
+
 
     <script type="text/javascript">
+
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+
+            //ev.dataTransfer.effectAllowed = "copy";
+            ev.dataTransfer.setData("text", ev.target.id);
+            var data = ev.dataTransfer.getData("text", ev.target.id);
+            console.log(ev.target.id);
+            var current = document.getElementById("centerNenu");
+            current.appendChild(document.getElementById(data));
+        }
+
+        function drop(ev) {
+            //console.trace("dropped");
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "copy";
+            var data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+            var current = document.getElementById("centerNenu");
+            current.appendChild(document.getElementById(data));
+
+
+            console.log(data);
+
+        }
+
         window.onload = function () {
             var conn;
             var msg = document.getElementById("msg");
@@ -15,7 +46,6 @@
             var currentUsers = document.getElementById("CurrentUsers");
             modal.style.display = "none";
 
-
             function appendNewUser(message) {
                 var child = document.getElementById(message.token);
                 if (child != null) {
@@ -23,9 +53,10 @@
                 }
                 var newUser = document.createElement("li");
                 newUser.setAttribute("id", message.token);
+
                 image = document.createElement("img");
                 image.setAttribute("src", message.pictureURL);
-                image.setAttribute("id", message.pictureURL);
+
                 newUser.appendChild(image);
                 var name = document.createElement("span");
                 name.innerText = message.sender;
@@ -48,34 +79,50 @@
                 }
             }
 
-            document.getElementById("form").onsubmit = function () {
-
-                if (!conn) {
-                    return false;
-                }
-                if (!msg.value) {
-                    return false;
-                }
-                // window.alert("message")
+            function sendMessage(op, msg) {
                 var t = new Date();
                 var time = t.getDate() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
                 var message = {
-                    "op": "Message",
+                    "op": op,
                     "timestamp": time,
                     "token": "{{with .Person}}{{.Token}}{{end}}",
                     "sender": "secret",
                     "pictureURL": "secret",
                     "Gender": "secret",
-                    "content": msg.value
+                    "content": msg
                 };
                 var json_message = JSON.stringify(message);
+                console.log("send json message");
                 conn.send(json_message);
+                msg.value = "";
+                return true;
+            }
+
+
+            document.getElementById("form").onsubmit = function () {
+
+                if (!conn) {
+                    return false;
+                }
+
+                if (!msg.value) {
+                    return false;
+                }
+
+                sendMessage("Message",msg.value);
+
                 msg.value = "";
                 return false;
             };
 
             if (window["WebSocket"]) {
                 conn = new WebSocket("wss://{{.Host}}/ws");
+
+                conn.onopen = function (evt) {
+                    if ("{{with .Person}}{{.Token}}{{end}}" != "") {
+                    sendMessage("RequestWriteAccess", "null");
+                    }
+                }
 
                 conn.onclose = function (evt) {
                     var item = document.createElement("div");
@@ -92,34 +139,40 @@
                     else if (message.op == "NewUser") {
                         appendNewUser(message);
                     }
-                    else if (message.op == "ExitUser") {
-                        removeUser(message);
-                    }
                     else if (message.content != "Ignore") {
-                        var time_item = document.createElement("li");
-                        time_item.setAttribute("id", "timestamp");
-
-                        var picture_elem = document.createElement("img")
+                        console.log("here");
+                        if (message.op == "ExitUser") {
+                            removeUser(message);
+                        }
+                        var picture_elem = document.createElement("img");
                         picture_elem.setAttribute("src", message.pictureURL);
                         var pictureURL_item = document.createElement("li");
                         pictureURL_item.setAttribute("id", "pictureURL");
                         pictureURL_item.appendChild(picture_elem);
 
-                        var sender_item = document.createElement("li");
-                        sender_item.setAttribute("id", "from");
+
+                        var from_span = document.createElement("span");
+                        from_span.setAttribute("id", "from");
+                        from_span.innerText = message.sender;
+                        var time_span = document.createElement("span");
+                        time_span.setAttribute("id", "timestamp");
+                        time_span.innerText = "[" + message.timestamp + "]";
+                        var li_item = document.createElement("li");
+                        li_item.appendChild(from_span);
+                        li_item.appendChild(time_span);
 
                         var message_item = document.createElement("li");
                         message_item.setAttribute("id", "message");
+                        var text_item = document.createElement("span");
+                        text_item.setAttribute("id","messageText");
+                        text_item.innerText = message.content;
+                        message_item.appendChild(text_item);
 
-                        sender_item.innerText = message.sender;
-                        time_item.innerText = "[" + message.timestamp + "]";
-                        message_item.innerText = message.content;
                         var item = document.createElement("ul");
                         item.setAttribute("id", "post");
-                        item.appendChild((pictureURL_item))
-                        item.appendChild(sender_item);
+                        item.appendChild((pictureURL_item));
+                        item.appendChild(li_item);
                         item.appendChild(message_item);
-                        item.appendChild(time_item);
                         appendLog(item);
                     }
                 };
@@ -128,110 +181,12 @@
                 item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
                 appendLog(item);
             }
-
         };
     </script>
 
-
-    <style type="text/css">
-        html {
-            overflow: hidden;
-        }
-
-        body {
-            overflow: hidden;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            background: #7994ce;
-        }
-
-        #log {
-            font-size: 8mm;
-            background: white;
-            margin: 0;
-            padding: 0.1em 0.1em 0.1em 0.1em;
-            position: absolute;
-            top: 2em;
-            left: 0.5em;
-            right: 0.5em;
-            bottom: 2em;
-            overflow: auto;
-        }
-
-        #form {
-            padding: 0 0.5em 0 0.5em;
-            margin: 0;
-            position: absolute;
-            bottom: 1em;
-            left: 0px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        #msg {
-            height: auto;
-            font-size: 6mm;
-            width: 60%;
-        }
-
-        #submit {
-            height: auto;
-            font-size: 6mm;
-        }
-
-        #post {
-            margin-left: 2px;
-            margin-top: 1px;
-            height: 32px;
-            background-color: white;
-        }
-
-        #post li {
-            display: inline;
-            list-style-type: none;
-            padding-right: 2px;
-
-        }
-
-        #pictureURL img {
-            position: relative;
-            left: 0px;
-            width: 30px;
-            height: 30px;
-            border-style: solid;
-            border-color: #616161;
-            border-width: 2px;
-        }
-
-        #timestamp {
-            padding: 8px;
-            padding-top: 18px;
-            padding-left: 4px;
-            font: bold 12px Arial, Helvetica, sans-serif;
-            color: #616161;
-        }
-
-        #from {
-            color: #7994ce;
-            padding: 8px;
-            padding-left: 4px;
-            font: bold 24px Arial, Helvetica, sans-serif;
-        }
-
-        #message {;
-            color: black;
-            padding: 8px;
-            padding-left: 4px;
-            font: bold 24px Arial, Helvetica, sans-serif;
-        }
-
-
-    </style>
 </head>
 <body>
-<ul>
+<ul id="menu">
     <li id="leftMenu">
         <ul>
             <li>
@@ -247,14 +202,12 @@
         <span id="me">{{ with .Person}}{{.FirstName}} {{.LastName}}{{end}}</span>
     </li>
 
-
     <li id="centerMenu">
         <ul id="CurrentUsers">
         </ul>
     </li>
-
     <li id="rightMenu">
-        <div style="visibility:{{.LoggedOut}}">
+        <div style="display:{{.LoggedOut}}">
             <ul>
                 <li>
                     <span>Login</span>
@@ -267,7 +220,7 @@
                 </li>
             </ul>
         </div>
-        <div style="visibility:{{.LoggedIn}}">
+        <div style="display:{{.LoggedIn}}">
             <ul>
                 <li>
                     <span>Logout</span>
@@ -279,10 +232,11 @@
                     </form>
                 </li>
             </ul>
-
         </div>
     </li>
 </ul>
+
+
 
 <div id="log"></div>
 <form id="form">
@@ -290,8 +244,8 @@
     <input type="text" id="msg"/>
 </form>
 
-<button id="myBtn">Open Modal</button>
 
+<button id="myBtn">Open Modal</button>
 <!-- The Modal -->
 <div id="myModal" class="modal">
     <!-- Modal content -->
@@ -314,34 +268,6 @@
     </div>
 
 </div>
-
-<script>
-    // Get the modal
-    var modal = document.getElementById('myModal');
-
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    // When the user clicks the button, open the modal
-    btn.onclick = function () {
-        modal.style.display = "block";
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-</script>
-
+<script type="text/javascript" src="/js/modal.js"></script>
 </body>
 </html>

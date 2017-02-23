@@ -20,6 +20,8 @@ import (
 	"github.com/dghubble/gologin/google"
 	//"path"
 	"path"
+	"os"
+	"github.com/dghubble/sessions"
 )
 
 type Config struct {
@@ -28,11 +30,10 @@ type Config struct {
 }
 
 type HTMLReplace struct {
-	Host             string
-	HostImg          string
+	Host      string
 	LoggedIn  string
 	LoggedOut string
-	Person           Person
+	Person    Person
 }
 
 type PersonsMAP map[string]Person
@@ -47,30 +48,32 @@ func (endpoint *Endpoint) url() (string) {
 	return endpoint.protocol + "://" + endpoint.host + ":" + endpoint.port
 }
 
-var endpoint Endpoint
 
-var homeTemplate = template.Must(template.ParseFiles("home.html"))
 
 func serveHome(w http.ResponseWriter, r *http.Request, stuff HTMLReplace) {
 
 	stuff.Host = r.Host;
-	stuff.HostImg = "https://secure.krypin.xyz:443"
-	root := "/var/www/secure.krypin.xyz"
 
 	if ( strings.Contains(r.URL.Path, "/session") ) {
 		log.Println(" Set path to / ", r.URL.Path)
 		r.URL.Path = "/"
 	} else if ( strings.Contains(r.URL.Path, "/images") ) {
-		log.Println("Serve ", root+r.URL.Path)
-		fp := path.Join(root + r.URL.Path)
+		log.Println("Serve ", DocumentRoot+r.URL.Path)
+		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	} else if ( strings.Contains(r.URL.Path, "/css") ) {
-		log.Println("Serve ", root+r.URL.Path)
-		fp := path.Join(root + r.URL.Path)
+		log.Println("Serve ", DocumentRoot+r.URL.Path)
+		fp := path.Join(DocumentRoot + r.URL.Path)
+		http.ServeFile(w, r, fp)
+		return
+	} else if ( strings.Contains(r.URL.Path, "/js") ) {
+		log.Println("Serve ", DocumentRoot+r.URL.Path)
+		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	}
+
 	if r.URL.Path != "/" {
 		http.Error(w, "Illegal path "+r.URL.Path, 404)
 		return
@@ -86,12 +89,12 @@ func serveHome(w http.ResponseWriter, r *http.Request, stuff HTMLReplace) {
 
 func serveHomeLogin(w http.ResponseWriter, r *http.Request) {
 	var p = (Person{})
-	serveHome(w, r, HTMLReplace{"null", "null", "hidden", "visible", p })
+	serveHome(w, r, HTMLReplace{"null", "none", "flex", p })
 }
 func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := r.FormValue("id")
-	serveHome(w, r, HTMLReplace{"null", "null", "visible", "hidden", Persons[id] })
+	serveHome(w, r, HTMLReplace{"null", "flex", "none", Persons[id] })
 }
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
@@ -102,7 +105,6 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
-	mux.Handle("/profile", requireLogin(http.HandlerFunc(profileHandler)))
 	mux.HandleFunc("/logout", logoutHandler)
 	// 1. Register Login and Callback handlers
 	oauth2Config := &oauth2.Config{
@@ -120,12 +122,19 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 }
 
 var Persons PersonsMAP
-
 var hub *Hub
+var DocumentRoot string
+var endpoint Endpoint
+var homeTemplate = template.Must(template.ParseFiles("home.html"))
+var sessionStore = sessions.NewCookieStore([]byte(sessionSecret), nil)
 
 func main() {
 
 	endpoint = Endpoint{"https", "secure.krypin.xyz", "443"}
+	dir, _ := os.Getwd()
+	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
+	queue := new(QueueStack)
+	var addr = flag.String("addr", ":"+endpoint.port, "http service address")
 
 	// Check if the cert files are available.
 	err := httpscerts.Check("cert.pem", "key.pem")
@@ -169,13 +178,9 @@ func main() {
 		log.Fatal("Missing Google Client Secret")
 	}
 
-	queue := new(QueueStack)
-
 	flag.Parse()
 	hub = newHub(*queue)
 	go hub.run()
-
-	var addr = flag.String("addr", ":"+endpoint.port, "http service address")
 
 	log.Println("Starting servoce at " + *addr)
 	err = http.ListenAndServeTLS(*addr, "cert.pem", "key.pem", NewMux(config, hub))

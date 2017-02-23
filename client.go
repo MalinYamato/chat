@@ -28,7 +28,7 @@ const (
 	// Maximum message size allowed from peer.
 	maxMessageSize = 512
 
-	SessionID = "example-egoogle-app"
+
 )
 
 var (
@@ -70,20 +70,30 @@ func validSession(value string) bool {
 		log.Println("No Cookie was set")
 		return false
 	}
-	sess := sessionStore.New("example-google-app")
-	err := securecookie.DecodeMulti("example-google-app", value, &sess.Values, sessionStore.Codecs...)
+	sess := sessionStore.New(sessionName)
+	err := securecookie.DecodeMulti(sessionName, value, &sess.Values, sessionStore.Codecs...)
 	if err != nil {
 		log.Println("Cookie was invalid, perhaps expired")
 		return false
 	}
-	log.Println("Cookie valid")
+	log.Println("Client: Cookie is valid")
 	return true
 }
 
 func (c *Client) readPump(cookieValue string) {
 	defer func() {
+		person, ok := Persons[c.token]
+		if ok == true {
+			log.Println("User: Reading processes terminates because websocet connection terminated! Invalidate token:", c.token)
+			hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室、 またね　" + person.FirstName + " " + person.LastName}
+			delete(Persons, c.token)
+		} else {
+		     log.Println("Client: Reading processs terminates because connection terminated. Token not seet or invalid! Token:", c.token)
+		}
 		c.hub.unregister <- c
 		c.conn.Close()
+
+
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
@@ -93,10 +103,9 @@ func (c *Client) readPump(cookieValue string) {
 		_, json_message, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
-				log.Printf("Wesocked was closed: %v", err)
+				log.Printf("Read Wesocked was closed: %v", err)
 			}
-
-			log.Printf("Wesocked was closed: %v ", err)
+			log.Printf("Client: Wesocked was closed: %v ", err)
 			break
 		}
 
@@ -105,23 +114,28 @@ func (c *Client) readPump(cookieValue string) {
 
 		log.Println("Client: message from Browser ", message)
 
+
 		if ( ! validSession(cookieValue)) {
 			json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
 			err := c.conn.WriteJSON(json_message)
 			if err != nil {
-				log.Println("Client Fail to write JSON on websockets! ")
+				log.Println("Client Fail to write JSON on websockets because: ", err)
 				return
 			}
 		} else {
-
 			if value, ok := Persons[message.Token];  ok {
-				log.Println("message", value.PictureURL)
-				log.Println("message ", value.Location)
-				message := Message{Op: "Message", Timestamp: message.Timestamp, Token: "null", Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
-				c.hub.broadcast <- message
-				c.token = message.Token
+				if message.Op == "RequestWriteAccess" {
+					c.token = message.Token
+					log.Println("Client: Browser Authorized, connected and is grated write access! ", message.Token)
+					message := Message{Op: "Message", Timestamp: message.Timestamp, Token: "null", Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: "入室 " + value.FirstName + " " + value.LastName + " " + "国 " + value.Location}
+					c.hub.broadcast <- message
+				} else {
+					log.Println("Client: Token was set", c.token)
+					message := Message{Op: "Message", Timestamp: message.Timestamp, Token: "null", Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
+					c.hub.broadcast <- message
+				}
 			} else {
-				log.Println(("Invalid Token"))
+				log.Println("Client: Invalid Token: ", message.Token)
 				json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null",Content: "Unauthorized" }
 				err := c.conn.WriteJSON( json_message)
 				if err != nil {
@@ -134,14 +148,18 @@ func (c *Client) readPump(cookieValue string) {
 	}
 }
 
-// writePump pumps messages from the hub to the websocket connection.
-//
-// A goroutine running writePump is started for each connection. The
-// application ensures that there is at most one writer to a connection by
-// executing all writes from this goroutine.
+
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		person, ok := Persons[c.token]
+		if ok == true {
+			log.Println("User: Writing process terminates because websocet connection terminated!  Invalidate token: ", c.token)
+			hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室 またね　" + person.FirstName + " " + person.LastName + " "}
+			delete(Persons, c.token)
+		} else {
+			log.Println("User: Wrting process terminates because websocet connection terminated. Token not seet or invalid! Token:", c.token)
+		}
 		ticker.Stop()
 		c.conn.Close()
 	}()
@@ -155,16 +173,16 @@ func (c *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-c.send:
-		log.Println("Client: message from Hub ", message.Sender, message.Content, message.Timestamp, message.PictureURL)
+		log.Println("Client: message from Hub ", message.Sender, message.Content, message.Timestamp, message.Content)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				log.Println("Client: The hub closed the connection", ok)
+				log.Println("Client: The hub closed the connection because:", ok)
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
 			err := c.conn.WriteJSON(message)
 			if err != nil {
-				log.Println("Client: Fail to flush remaining messages and write JSON on  websockets! ")
+				log.Println("Client: Fail to write  websockets because: ",err)
 				return
 			}
 
@@ -190,11 +208,10 @@ func (c *Client) writePump() {
 	}
 }
 
-// serveWs handles websocket requests from the peer.
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	var cookieValue = ""
-	mycookie, err := r.Cookie("example-google-app")
+	mycookie, err := r.Cookie(sessionName)
 	if (err == nil) {
 		cookieValue = mycookie.Value
 	} else {

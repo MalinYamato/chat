@@ -4,23 +4,19 @@ import (
 
 "fmt"
 "io/ioutil"
-"net/http"
-"github.com/dghubble/sessions"
+
+	"net/http"
+
 	"log"
 	"github.com/satori/go.uuid"
 	"github.com/dghubble/gologin/google"
 )
 
 const (
-	sessionName    = "example-google-app"
-	sessionSecret  = "example cookie signing secret"
+	sessionName    = "secure.krypin.xyz"
+	sessionSecret  = "secure,krypin.xyz secret key developer"
 	sessionUserKey = "googleID"
 )
-
-
-
-// sessionStore encodes and decodes session data stored in signed cookies
-var sessionStore = sessions.NewCookieStore([]byte(sessionSecret), nil)
 
 // Config configures the main ServeMux.
 type Person struct {
@@ -37,7 +33,6 @@ type Person struct {
 }
 
 
-// issueSession issues a cookie session after successful Google login
 func issueSession() http.Handler {
 	fn := func(w http.ResponseWriter, req *http.Request) {
 		ctx := req.Context()
@@ -46,12 +41,19 @@ func issueSession() http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		// 2. Implement a success handler to issue some form of session
+
+		// remove possible old cookies
+		if isAuthenticated(req) {
+			log.Println("There was an old cookie. Removing it")
+			sessionStore.Destroy(w, sessionName)
+		}
+		// issue a new cookie
 		session := sessionStore.New(sessionName)
 		session.Values[sessionUserKey] = googleUser.Id
 		session.Save(w)
-		secret := uuid.NewV4()
-		userID := uuid.NewV4()
+
+		secret := uuid.NewV4()   // used as a secret to verify identity of users who sends websocket messages from the brwoser to the server
+		userID := uuid.NewV4()   // used to identify a user to all other users, not a secret.
 
 		Persons[secret.String()] = Person{"null",googleUser.GivenName,googleUser.FamilyName,googleUser.Email,googleUser.Gender,googleUser.Locale,googleUser.Picture,googleUser.Id,userID.String(), secret.String()}
 		hub.broadcast <- Message{ "NewUser","null", userID.String(), googleUser.GivenName, googleUser.Picture, googleUser.Gender, "NULL"  }
@@ -76,21 +78,16 @@ func welcomeHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 
-// profileHandler shows protected user content.
-func profileHandler(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprint(w, `<p>You are logged in!</p><form action="/logout" method="post"><input type="submit" value="Logout"></form>`)
-}
-
 // logoutHandler destroys the session on POSTs and redirects to home.
 func logoutHandler(w http.ResponseWriter, req *http.Request) {
-	log.Println("Delete",req.Method)
+	log.Println("User Loggeed out, Delete",req.Method)
 	if req.Method == "POST" {
 		req.ParseForm()
 		token := req.Form["token"]
 		person, ok := Persons[token[0]]
 		if ok == true {
-			hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "User logged out!"}
-			delete(Persons, "token[0]")
+			hub.broadcast <- Message{"ExitUser", "出ました",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室、またね　" + person.FirstName + " " + person.LastName}
+			delete(Persons, token[0])
 		}
 		sessionStore.Destroy(w, sessionName)
 	}

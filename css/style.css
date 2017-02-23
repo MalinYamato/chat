@@ -1,11 +1,114 @@
+
+
+html {
+	overflow: hidden;
+}
+
 body {
-	font: 11px Arial, Helvetica, sans-serif;
-	#background: #ffffff url(https://secure.krypin.org/images/main-bg.gif);
+	overflow: hidden;
 	padding: 0;
 	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: #7994ce;
 }
-img {
-	border: none;
+
+#log {
+
+	background: white;
+	margin: 0;
+	padding: 0.1em 0.1em 0.1em 0.1em;
+	position: absolute;
+	top: 4em;
+	left: 0.5em;
+	right: 0.5em;
+	bottom: 4em;
+	overflow: auto;
+}
+
+#form {
+	padding: 0 0.5em 0 0.5em;
+	margin: 0;
+	position: absolute;
+	bottom: 1em;
+	left: 0px;
+	width: 100%;
+	overflow: hidden;
+}
+
+
+#divv {
+	border: 1px solid #aaaaaa;
+	padding: 0 0.5em 0 0.5em;
+	margin: 0;
+	position: absolute;
+	bottom: 1em;
+	right: 0px;
+	width: 45px;
+	height: 45px;
+	overflow: hidden;
+}
+
+
+#msg {
+	height: auto;
+	font-size: 6mm;
+	width: 60%;
+}
+
+#submit {
+	height: auto;
+	font-size: 6mm;
+}
+
+#post {
+	display: flex;
+	flex-direction: row;
+	margin-left: 2px;
+	height: auto;
+	background-color: white;
+	margin-bottom: -2px;
+
+}
+
+#post li {;
+	padding-right: 2px;
+	height: auto;
+
+
+}
+
+#pictureURL img {
+	left: 0px;
+	width: 30px;
+	height: 30px;
+	border-radius: 35%;
+	border-style: solid;
+	border-color: #b82045;
+	border-width: 2px;
+}
+
+#timestamp {
+	padding-left: 4px;
+	font: bold 10px Arial, Helvetica, sans-serif;
+	color: #616161;
+	width: auto;
+	text-align: left;
+	word-break: keep-all;
+}
+
+#from {
+	color: #7994ce;
+	font: bold 20px Arial, Helvetica, sans-serif;
+}
+
+#messageText {
+	height: auto;
+	word-break: normal;
+	margin-left: 6px;
+	color: black;
+	text-align: left;
+	font: normal 20px Arial, Helvetica, sans-serif;
 }
 
 
