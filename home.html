@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
     <title>Chat Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
     <link href="/css/style.css" rel="stylesheet" type="text/css"/>
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <script type="text/javascript">
 
@@ -109,18 +113,29 @@
                     return false;
                 }
 
-                sendMessage("Message",msg.value);
+                sendMessage("Message", msg.value);
 
                 msg.value = "";
                 return false;
             };
+
+            function myFunction(id) {
+                console.log("clicked");
+                var x = document.getElementById(id);
+                if (x.className.indexOf("w3-show") == -1) {
+                    x.className += " w3-show";
+                } else {
+                    x.className = x.className.replace(" w3-show", "");
+                }
+            }
+
 
             if (window["WebSocket"]) {
                 conn = new WebSocket("wss://{{.Host}}/ws");
 
                 conn.onopen = function (evt) {
                     if ("{{with .Person}}{{.Token}}{{end}}" != "") {
-                    sendMessage("RequestWriteAccess", "null");
+                        sendMessage("RequestWriteAccess", "null");
                     }
                 }
 
@@ -144,6 +159,20 @@
                         if (message.op == "ExitUser") {
                             removeUser(message);
                         }
+
+                        var uniqueID = message.token + "@" + message.timestamp.split(" ")[1];
+
+                        var uberdiv = document.createElement("div");
+
+                        // only show details for logged in users
+                        if ("{{with .Person}}{{.Token}}{{end}}" != "") {
+                            var diven = document.createElement("div");
+                            diven.setAttribute("id", uniqueID);
+                            diven.setAttribute("class", "w3-hide w3-container w3-ligth-grey fmt-row");
+
+
+                        }
+
                         var picture_elem = document.createElement("img");
                         picture_elem.setAttribute("src", message.pictureURL);
                         var pictureURL_item = document.createElement("li");
@@ -164,16 +193,29 @@
                         var message_item = document.createElement("li");
                         message_item.setAttribute("id", "message");
                         var text_item = document.createElement("span");
-                        text_item.setAttribute("id","messageText");
+                        text_item.setAttribute("id", "messageText");
                         text_item.innerText = message.content;
                         message_item.appendChild(text_item);
 
                         var item = document.createElement("ul");
-                        item.setAttribute("id", "post");
+                        item.setAttribute("id", "postitem");
                         item.appendChild((pictureURL_item));
                         item.appendChild(li_item);
                         item.appendChild(message_item);
-                        appendLog(item);
+
+                        var btn = document.createElement("button");
+                        btn.setAttribute("class", "w3-btn");
+                        btn.setAttribute("id", "postbutton");
+                        btn.appendChild(item);
+
+                        // only show details for logged in users
+                        if ("{{with .Person}}{{.Token}}{{end}}" != "") {
+                                btn.setAttribute("onclick", "myFunction('" + uniqueID + "')");
+                            }
+                        uberdiv.appendChild(btn);
+                        uberdiv.appendChild(diven);
+                        uberdiv.setAttribute("id", "post");
+                        appendLog(uberdiv);
                     }
                 };
             } else {
@@ -193,7 +235,7 @@
                 <img src="/images/config.png"/>
             </li>
             <li>
-                <img src="/images/id_card.png"/>
+                <a href="https://{{.Host}}/MainProfile"> <img src="/images/id_card.png"/></a>
             </li>
             <li>
 
@@ -237,12 +279,79 @@
 </ul>
 
 
-
 <div id="log"></div>
 <form id="form">
     <input id="submit" type="submit" value="Send"/>
     <input type="text" id="msg"/>
 </form>
+
+
+
+<script>
+
+    function myFunction(myid) {
+        console.log("clicked" + myid);
+
+        userId =  myid.split("@")[0]
+
+        var x = document.getElementById(myid);
+        console.log(x);
+        if (x.className.indexOf("w3-show") == -1) {
+
+            // json format
+            var person = {"userId" : userId};
+
+            $.ajax({
+                url: 'https://{{.Host}}/profile',
+                type: 'post',
+                data: JSON.stringify(person),
+                contentType : 'application/json',
+                success: function (person) {
+
+                    if (person.userId != null) {
+
+                        var bigImage = document.createElement("img");
+                        bigImage.setAttribute("src", person.pictureURL);
+                        x.appendChild(bigImage);
+
+                        var info = document.createElement("ul");
+                        var info1 = document.createElement("li");
+                        var info2 = document.createElement("li");
+                        var info3 = document.createElement("li");
+                        var info4 = document.createElement("li");
+                        var info5 = document.createElement("li");
+                        var info6 = document.createElement("li");
+                        info1.innerText = "Name:        " + person.firstName + " " + person.lastName;
+                        info2.innerText = "Gender:      " + person.gender;
+                        info3.innerText = "Orientation: " + person.sexualOrienation;
+                        info4.innerText = "Location:    " + person.country + " " + person.town;
+                        info5.innerText = "Age:         " + "0";
+                        info6.innerText = "Other:       " + person.email;
+                        info.appendChild(info1);
+                        info.appendChild(info2);
+                        info.appendChild(info3);
+                        info.appendChild(info4);
+                        info.appendChild(info5);
+                        info.appendChild(info6);
+                        info.setAttribute("id", "profileInfo");
+                        x.appendChild(info);
+
+                        console.log(person);
+                        x.className += " w3-show";
+                    }
+                }
+            });
+
+          //  x.className += " w3-show";
+
+        } else {
+            while (x.lastChild) {
+                x.removeChild(x.lastChild);
+            }
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+</script>
 
 
 <button id="myBtn">Open Modal</button>

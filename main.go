@@ -22,6 +22,10 @@ import (
 	"path"
 	"os"
 	"github.com/dghubble/sessions"
+	"encoding/json"
+
+	"fmt"
+
 )
 
 type Config struct {
@@ -48,16 +52,15 @@ func (endpoint *Endpoint) url() (string) {
 	return endpoint.protocol + "://" + endpoint.host + ":" + endpoint.port
 }
 
+func serveHome(w http.ResponseWriter, r *http.Request) {
 
-
-func serveHome(w http.ResponseWriter, r *http.Request, stuff HTMLReplace) {
+	stuff := HTMLReplace{"null", "none", "flex", (Person{}) }
 
 	stuff.Host = r.Host;
-
-	if ( strings.Contains(r.URL.Path, "/session") ) {
-		log.Println(" Set path to / ", r.URL.Path)
-		r.URL.Path = "/"
-	} else if ( strings.Contains(r.URL.Path, "/images") ) {
+	 if ( strings.Contains(r.URL.Path, "/session") ) {
+		 log.Println(" Set path ", r.URL.Path)
+		 r.URL.Path = "/"
+	 } else if ( strings.Contains(r.URL.Path, "/images") ) {
 		log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
@@ -82,26 +85,230 @@ func serveHome(w http.ResponseWriter, r *http.Request, stuff HTMLReplace) {
 		http.Error(w, "Method not allowed", 405)
 		return
 	}
-	log.Println("Serve ", r.URL)
+	log.Println("Serve ", r.URL, stuff.Person.Token )
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	homeTemplate.Execute(w, stuff)
 }
 
-func serveHomeLogin(w http.ResponseWriter, r *http.Request) {
-	var p = (Person{})
-	serveHome(w, r, HTMLReplace{"null", "none", "flex", p })
-}
 func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
-	id := r.FormValue("id")
-	serveHome(w, r, HTMLReplace{"null", "flex", "none", Persons[id] })
+	sess, err := sessionStore.Get(r, sessionName)
+	if err != nil {
+		log.Println("Error in getting and verifying coookie ", err)
+	}
+
+	token  := sess.Values[sessionToken].(string)
+
+	log.Println("session token from cookie ", token)
+
+	person, ok := Persons[token]
+	if !ok {
+		log.Println("sessionHandler: User does not exist for token ", person.Token)
+		w.Write([]byte("Authorization Failure! User does not exist, The following token is invalid: " + token ))
+	        }
+
+	stuff := HTMLReplace{r.Host, "flex", "none", person}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	homeTemplate.Execute(w, stuff)
+
 }
+
+type ProfileRequest struct {
+	Id   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
+type Person struct {
+	Nic               string        `json:"nic,omitempty"`
+	FirstName         string        `json:"firstName,omitempty"`
+	LastName          string        `json:"lastName,omitempty"`
+	Email             string        `json:"email,omitempty"`
+	Gender            string        `json:"gender,omitempty"`
+	Town              string        `json:"country,omitempty"`
+	Country           string        `json:"town,omitempty"`
+	PictureURL        string        `json:"pictureURL,omitempty"`
+	SexualOrientation string        `json:"sexualOrienation,omitempty"`
+	Languages         map[string]string `json:"Languages,omitempty"`
+	Profession        string        `json:"profession,omitempty"`
+	Education         string        `json:"education,omitempty"`
+	Description       string        `json:"description,omitempty"`
+	GoogleID          string        `json:"googleId,omitempty"`
+	UserID            string        `json:"userId,omitempty"`
+	Token             string        `json:"token,omitempty"`
+}
+
+func profileHandler(w http.ResponseWriter, r *http.Request) {
+
+	log.Println("User requested a profile")
+
+	var request Person;
+	if r.Method == "POST" {
+
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&request)
+		if err != nil {
+			log.Println("ERR> ", err)
+		}
+		defer r.Body.Close()
+		log.Printf("%s\n", request.UserID)
+
+		var person Person
+		var ok = false
+		for k, v := range Persons {
+			fmt.Printf("key[%s] value[%s]\n", k, v)
+			if v.UserID == request.UserID {
+				person = v
+				person.Token = "secret"
+				ok = true
+				break;
+			}
+			ok = false
+			fmt.Printf("key[%s] value[%s]\n", k, v)
+		}
+
+		if ok == false {
+			log.Println("Person not foond for ID: ")
+		}
+
+		data, err := json.Marshal(person)
+		if err != nil {
+			panic(err)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(data)
+
+	} else {
+		log.Println("Unknown method ", r.Method)
+
+	}
+}
+
+var LANGUAGES = []string{"English", "Finnish", "Same", "Swedish", "German", "French", "Spannish", "Italian", "Portogese", "Russian", "Chinese", "Japanese", "Korean", "Thai" }
+var ORIENTATION = []string{"Straight", "Gay", "Lesbian", "BiSexual", "ASexual"}
+var GENDER = []string{"Female", "Male", "TranssexualF", "TranssexualM", "CrossDresser", "None"}
+
+
+func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
+
+	session, err := sessionStore.Get( r, sessionName)
+	if err != nil {
+		log.Println("Client: Call to sessionStore.Get returned ", err)
+		return
+	}
+
+	if session == nil {
+		log.Println("Client: returned session was nil")
+		return
+	}
+
+	token := session.Values[sessionToken].(string)
+
+	p, _ := Persons[token]
+
+	//p.Languages = map[string]string{"English":"checked"}
+
+	t := template.New("fieldname example")
+	t = template.Must(template.ParseFiles("profile.html"))
+
+	//p :=  Person{
+	//	Gender:            "Female",
+	//	SexualOrientation: "Gay",
+	//	Languages:         map[string]string{"English": "checked", "German": "checked"},
+	//}
+
+	t.Execute(w, struct {
+		Languages          []string
+		Genders            []string
+		SexualOrientations []string
+		P                  Person
+		Host               string
+	}{
+		Languages:          LANGUAGES,
+		Genders:            GENDER,
+		SexualOrientations: ORIENTATION,
+		P:                  p,
+		Host:               r.Host,
+	})
+}
+func Contains(slice []string, item string) bool {
+	set := make(map[string]struct{}, len(slice))
+	for _, s := range slice {
+		set[s] = struct{}{}
+	}
+	_, ok := set[item]
+	return ok
+}
+
+
+
+func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
+
+
+
+	log.Println("UpdateProfile called ", r.Method)
+	r.ParseForm()
+
+	if r.Method == "POST" {
+
+
+
+
+
+		session, err := sessionStore.Get( r, sessionName)
+		if err != nil {
+			log.Println("Client: Call to sessionStore.Get returned ", err)
+			return
+		}
+
+		if session == nil {
+			log.Println("Client: returned session was nil")
+			return
+		}
+
+		token := session.Values[sessionToken].(string)
+
+	        p := Persons[token]
+		p.FirstName = r.Form.Get("FirstName")
+		p.LastName = r.Form.Get("LastName")
+		p.Gender = r.Form.Get("Gender")
+		p.Country = r.Form.Get("Country")
+		p.Town = r.Form.Get("Town")
+		p.Nic = r.Form.Get("Nic")
+		p.Profession = r.Form.Get("Profession")
+		p.Education = r.Form.Get("Education")
+		p.SexualOrientation = r.Form.Get("SexualOrientation")
+		p.Description = r.Form.Get("Description")
+
+		fmt.Printf("%+v\n", r.Form)
+		productsSelected := r.Form["Language"]
+		log.Println(Contains(productsSelected, "English"))
+
+		for  i:=0; i < len(LANGUAGES); i++ {
+			if Contains( r.Form["Language"],LANGUAGES[i]) {
+				p.Languages[LANGUAGES[i]] = "checked"
+			}
+		}
+		Persons[token] = p
+
+		log.Println("Name ", r.Form["Gender"])
+	}
+
+	http.Redirect(w, r, "/session", http.StatusFound)
+}
+
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("/", serveHome)
 	mux.Handle("/session/", requireLogin(http.HandlerFunc(sessionHandler)))
-	mux.HandleFunc("/", serveHomeLogin)
+	mux.Handle("/profile", requireLogin(http.HandlerFunc(profileHandler)))
+	mux.Handle("/ProfileUpdate", requireLogin(http.HandlerFunc(updateProfileHandler)))
+	mux.Handle("/MainProfile", requireLogin(http.HandlerFunc(mainProfileHandler)))
+
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
@@ -130,7 +337,7 @@ var sessionStore = sessions.NewCookieStore([]byte(sessionSecret), nil)
 
 func main() {
 
-	endpoint = Endpoint{"https", "secure.krypin.xyz", "443"}
+	endpoint = Endpoint{"https", "localhost", "443"}
 	dir, _ := os.Getwd()
 	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
 	queue := new(QueueStack)
@@ -182,7 +389,7 @@ func main() {
 	hub = newHub(*queue)
 	go hub.run()
 
-	log.Println("Starting servoce at " + *addr)
+	log.Println("Starting service at ", endpoint.url() )
 	err = http.ListenAndServeTLS(*addr, "cert.pem", "key.pem", NewMux(config, hub))
 	//err = http.ListenAndServe(*addr, NewMux(config, hub) )
 	if err != nil {

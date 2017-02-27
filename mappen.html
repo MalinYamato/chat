@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+
+
+<p id="demo">Click the button to get your position.</p>
+
+<button class=button" onclick="getLocation()">Confirm your location</button>
+
+
+<div id="mapholder"></div>
+
+
+<script>
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        var url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude;
+        $.get(url, function (data, status) {
+                var city;
+                var country;
+                var len = data.results[0].address_components.length;
+                var comps = data.results[0].address_components;
+                for (i = 0; i < len; i++) {
+                    for (g = 0; g < comps[i].types.length; g++) {
+                        if (comps[i].types[g] == "postal_town") {
+                            city = comps[i].long_name;
+                        } else if (comps[i].types[g] == "country") {
+                            country = comps[i].long_name;
+                        }
+                    }
+                }
+                console.log("City " + city +  " Country " + country);
+            }
+        );
+
+        x.innerHTML = "Latitude: " + position.coords.latitude +
+            "<br>Longitude: " + position.coords.longitude;
+    }
+</script>
+
+</body>
+</html>

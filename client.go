@@ -12,7 +12,6 @@ import (
 	//"encoding/json"
 	"encoding/json"
 	"github.com/gorilla/securecookie"
-
 )
 
 const (
@@ -51,27 +50,22 @@ type Client struct {
 	// Buffered channel of outbound messages.
 	send chan Message
 
-	id string
-
-	token string
-
-	UserName string
-
+	Token string
+	Cookie string
 }
 
-// readPump pumps messages from the websocket connection to the hub.
-//
-// The application runs readPump in a per-connection goroutine. The application
-// ensures that there is at most one reader on a connection by executing all
-// reads from this goroutine.
+func (c *Client ) token() (string) {
 
-func validSession(value string) bool {
-	if value == "" {
+	return c.Token
+}
+
+func (c *Client) validSession() bool {
+	if c.Cookie == "" {
 		log.Println("No Cookie was set")
 		return false
 	}
 	sess := sessionStore.New(sessionName)
-	err := securecookie.DecodeMulti(sessionName, value, &sess.Values, sessionStore.Codecs...)
+	err := securecookie.DecodeMulti(sessionName, c.Cookie, &sess.Values, sessionStore.Codecs...)
 	if err != nil {
 		log.Println("Cookie was invalid, perhaps expired")
 		return false
@@ -80,15 +74,16 @@ func validSession(value string) bool {
 	return true
 }
 
-func (c *Client) readPump(cookieValue string) {
+func (c *Client) readPump() {
 	defer func() {
-		person, ok := Persons[c.token]
+
+		person, ok := Persons[c.token()]
 		if ok == true {
-			log.Println("User: Reading processes terminates because websocet connection terminated! Invalidate token:", c.token)
+			log.Println("User: Reading processes terminates because websocet connection terminated! Invalidate token:", c.token())
 			hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室、 またね　" + person.FirstName + " " + person.LastName}
-			delete(Persons, c.token)
+			//delete(Persons, c.token)
 		} else {
-		     log.Println("Client: Reading processs terminates because connection terminated. Token not seet or invalid! Token:", c.token)
+		     log.Println("Client: Reading processs terminates because connection terminated. Token not seet or invalid! Token:", c.token())
 		}
 		c.hub.unregister <- c
 		c.conn.Close()
@@ -115,7 +110,7 @@ func (c *Client) readPump(cookieValue string) {
 		log.Println("Client: message from Browser ", message)
 
 
-		if ( ! validSession(cookieValue)) {
+		if ! c.validSession() {
 			json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
 			err := c.conn.WriteJSON(json_message)
 			if err != nil {
@@ -125,13 +120,16 @@ func (c *Client) readPump(cookieValue string) {
 		} else {
 			if value, ok := Persons[message.Token];  ok {
 				if message.Op == "RequestWriteAccess" {
-					c.token = message.Token
 					log.Println("Client: Browser Authorized, connected and is grated write access! ", message.Token)
-					message := Message{Op: "Message", Timestamp: message.Timestamp, Token: "null", Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: "入室 " + value.FirstName + " " + value.LastName + " " + "国 " + value.Location}
+					message := Message{Op: "Message", Timestamp: message.Timestamp, Token: value.UserID, Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: "入室 " + value.FirstName + " " + value.LastName + " " + "国 " + value.Country}
 					c.hub.broadcast <- message
 				} else {
-					log.Println("Client: Token was set", c.token)
-					message := Message{Op: "Message", Timestamp: message.Timestamp, Token: "null", Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
+					sender := value.FirstName
+					if len(value.Nic) > 5 {
+                                          sender = value.Nic
+					}
+					log.Println("Client: Token was set", c.token())
+					message := Message{Op: "Message", Timestamp: message.Timestamp, Token: value.UserID, Sender: sender, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
 					c.hub.broadcast <- message
 				}
 			} else {
@@ -139,7 +137,7 @@ func (c *Client) readPump(cookieValue string) {
 				json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null",Content: "Unauthorized" }
 				err := c.conn.WriteJSON( json_message)
 				if err != nil {
-					log.Println("Client: Fail to write JSON on  websockets! ")
+					log.Println("Client: Fail to write JSON on  websockets! Err: ", err)
 					return
 				}
 			}
@@ -152,13 +150,13 @@ func (c *Client) readPump(cookieValue string) {
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
-		person, ok := Persons[c.token]
+		person, ok := Persons[c.token()]
 		if ok == true {
-			log.Println("User: Writing process terminates because websocet connection terminated!  Invalidate token: ", c.token)
+			log.Println("User: Writing process terminates because websocet connection terminated!  Invalidate token: ", c.token())
 			hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室 またね　" + person.FirstName + " " + person.LastName + " "}
-			delete(Persons, c.token)
+			//delete(Persons, c.token)
 		} else {
-			log.Println("User: Wrting process terminates because websocet connection terminated. Token not seet or invalid! Token:", c.token)
+			log.Println("User: Wrting process terminates because websocet connection terminated. Token not seet or invalid! Token:", c.token())
 		}
 		ticker.Stop()
 		c.conn.Close()
@@ -168,7 +166,6 @@ func (c *Client) writePump() {
 	for i := 0; i < len(list); i++ {
 		c.conn.WriteJSON(list[i])
 	}
-
 
 	for {
 		select {
@@ -210,12 +207,25 @@ func (c *Client) writePump() {
 
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
-	var cookieValue = ""
+	session, err := sessionStore.Get( r, sessionName)
+	if err != nil {
+		log.Println("Client: Call to sessionStore.Get returned ", err)
+		return
+	}
+
+	if session == nil {
+		log.Println("Client: returned session was nil")
+		return
+	}
+
+	token := session.Values[sessionToken].(string)
+
+	var cookie = ""
 	mycookie, err := r.Cookie(sessionName)
 	if (err == nil) {
-		cookieValue = mycookie.Value
+		cookie = mycookie.Value
 	} else {
-		cookieValue = ""
+		cookie = ""
 	}
 
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -223,8 +233,8 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan Message, 256)}
+	client := &Client{hub: hub, conn: conn, send: make(chan Message, 256), Token: token, Cookie: cookie}
 	client.hub.register <- client
 	go client.writePump()
-	client.readPump(cookieValue)
+	client.readPump()
 }

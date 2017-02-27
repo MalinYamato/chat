@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        form {
+
+            background: linear-gradient(to bottom right, #d2d2d2, white);
+        }
+
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+
+        }
+
+        [class*="col-"] {
+            float: left;
+            padding: 15px;
+        }
+
+        html {
+            font-family: "Lucida Sans", sans-serif;
+        }
+        .header {
+            color: #505050;
+            margin-left: 15px;
+            margin-top: 14px;
+            font: 18px Arial, Helvetica, sans-serif;
+            margin-bottom: 4px;
+
+        }
+
+        .menu ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+
+        }
+
+        .menu li {
+            padding: 8px;
+            margin-bottom: 7px;
+            background-color: #9cb8f5;
+            color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+        }
+
+        input, select {
+            padding: 8px;
+            margin-bottom: 7px;
+            background-color: #dcdcdc;
+            color: rgb(27, 27, 27);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            margin-left: 2px;
+            border-radius: 8px;
+            font: 18px Arial, Helvetica, sans-serif;
+
+        }
+
+        .menu span {
+
+            margin-bottom: 2px;
+            margin-left: 2px;
+            color: rgb(74, 74, 74);
+        }
+
+        .menu li:hover {
+            background-color: #88a3df;
+        }
+
+        .menu li:hover {
+            background-color: #88a3df;
+        }
+
+        #submitbutton:hover {
+            background-color: #ce492e;
+        }
+
+        .aside {
+
+        }
+
+        .header {
+            background-color: #9cb8f5;
+            color: #ffffff;
+            margin: 0px;
+            font-size: 12px;
+            padding: 2px;
+        }
+
+        .header img {
+            width: 40px;
+        }
+
+        .header h1 {
+            margin-left: 15px;
+
+        }
+
+        .footer {
+            background-color: #9cb8f5;
+            color: #ffffff;
+            text-align: center;
+            font-size: 12px;
+
+            padding: 20px;
+        }
+
+        /* For mobile phones: */
+        [class*="col-"] {
+            width: 100%;
+        }
+
+        @media only screen and (min-width: 600px) {
+            /* For tablets: */
+            .col-m-1 {
+                width: 8.33%;
+            }
+
+            .col-m-2 {
+                width: 16.66%;
+            }
+
+            .col-m-3 {
+                width: 25%;
+            }
+
+            .col-m-4 {
+                width: 33.33%;
+            }
+
+            .col-m-5 {
+                width: 41.66%;
+            }
+
+            .col-m-6 {
+                width: 50%;
+            }
+
+            .col-m-7 {
+                width: 58.33%;
+            }
+
+            .col-m-8 {
+                width: 66.66%;
+            }
+
+            .col-m-9 {
+                width: 75%;
+            }
+
+            .col-m-10 {
+                width: 83.33%;
+            }
+
+            .col-m-11 {
+                width: 91.66%;
+            }
+
+            .col-m-12 {
+                width: 100%;
+            }
+        }
+
+        @media only screen and (min-width: 768px) {
+            /* For desktop: */
+            .col-1 {
+                width: 8.33%;
+            }
+
+            .col-2 {
+                width: 16.66%;
+            }
+
+            .col-3 {
+                width: 25%;
+            }
+
+            .col-4 {
+                width: 33.33%;
+            }
+
+            .col-5 {
+                width: 41.66%;
+            }
+
+            .col-6 {
+                width: 50%;
+            }
+
+            .col-7 {
+                width: 58.33%;
+            }
+
+            .col-8 {
+                width: 66.66%;
+            }
+
+            .col-9 {
+                width: 75%;
+            }
+
+            .col-10 {
+                width: 83.33%;
+            }
+
+            .col-11 {
+                width: 91.66%;
+            }
+
+            .col-12 {
+                width: 100%;
+            }
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            margin-top: 6px;
+            margin-bottom: 6px;
+            padding: 8px 8px;
+            box-sizing: border-box;
+            background-color: rgba(230, 230, 230, 0);
+            font-weight: normal;
+            border-radius: 12px;
+            border: 2px solid #9cb8f5;
+            font: 18px Arial, Helvetica, sans-serif;
+            resize: vertical;
+        }
+
+        h1 {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .button {
+            background-color: #9cb8f5; /* Green */
+            border-style: solid;
+            border: 2px solid #777777;
+            font: 16px Arial, Helvetica, sans-serif;
+            padding: 10px 3px;
+            text-align: center;
+            text-decoration: none;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.2s;
+            cursor: pointer;
+            border-radius: 12px;
+            width: 10em;
+            display: table;
+            margin: 0 auto
+
+        }
+
+        .button:hover {
+            background-color: #88a3df;
+            color: white;
+        }
+
+        fieldset {
+            height: auto;
+            width: 100%;
+            border: 2px solid #9cb8f5;
+            border-radius: 12px;
+
+        }
+
+        .flex-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .flexrow span {
+            margin-bottom: 2px;
+            margin-left: 2px;
+            color: rgb(74, 74, 74);
+        }
+
+        .flex-item {
+            margin-right: 5px;
+        }
+
+
+        #mapholder img {
+            width: 100%;
+        }
+
+        .picture {
+            max-width: 240px;
+        }
+        .aside {
+            #max-width: 210px;
+
+            background-color: #9cb8f5;
+            padding: 5px;
+            color: #ffffff;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+        .aside img {
+            min-width: 180px;
+            max-width: 180px;
+            max-height: 200px;
+            margin: 10px;
+            text-align: center;
+            border-radius: 12px;
+            border-style: solid;
+            border-width: 2px;
+        }
+
+        #fileToUpload {
+            margin-left: 10px;
+            margin-right: 10px;
+            background-color: #9cb8f5;
+            width: auto;
+        }
+
+        #fileToUpload:hover {
+            background-color: #88a3df;
+        }
+
+        .checkbox-container {
+
+            display: flex;
+            #flex-direction: row;
+            flex-wrap: wrap;
+            margin-left: 14px;
+            align-content: flex-start;
+        }
+        .checkbox-container div {
+            text-align: left;
+            width: 7em;
+            margin: 2px;
+            padding: 2px;
+        }
+
+        #Town,#Country,.locationbutton {
+            width: 10em;
+        }
+        .locationbutton {
+            margin-left: 2px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="header flex-row">
+    <a href="https://{{.Host}}/session" >
+        <img src="/images/home.png" /> </a> <h1>Profile</h1>
+</div>
+<div>
+
+</div>
+<form id="ProfileForm">
+    <div class="row">
+
+        <div class="col-3 col-m-5 menu">
+
+            <ul>
+                <li>
+                    <span for="Nic"><b>Nicname</b> <br> </span>
+                    <input type="text" id="Nic" name="Nic" placeholder="Nicname used during chat" value="{{.P.Nic}}">
+                </li>
+
+                <li>
+                    <span for="FirstName"><b>First Name </b>  </span>
+                    <input type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}" >
+                </li>
+                <li>
+                    <span for="LastName"><b>Last Name </b></span>
+                    <input type="text" id="LastName" name="LastName" value="{{.P.LastName}}" >
+                </li>
+                <li>
+                    <span for="Gender"><b>Gender</b> </span>
+                    <select id="Gender" name="Gender">
+                        {{ $gs := .Genders }} {{ $selected := .P.Gender }}{{ range $gs}}{{$v := .}}
+                        <option value="{{$v}}" {{ if eq  $selected $v }} selected {{end}}>{{$v}}</option>{{end}}
+                    </select>
+                </li>
+                <li>
+                    <span for="SexualOrientation"><b>Orientation</b> </span>
+                    <select id="SexualOrientation" name="SexualOrientation">
+                        {{ $os := .SexualOrientations }} {{ $selected := .P.SexualOrientation }}{{ range $os}}{{$ov := .}}
+                        <option value="{{$ov}}" {{ if eq  $selected $ov }} selected {{end}}>{{$ov}}</option>{{end}}
+                    </select>
+                </li>
+                <li>
+            <span for="email"><b>Email</b> (Verified) <br></span>
+                    <input type="text" id="Email" name="Email" value="malin.yamato@gmail.com" readonly>
+                </li>
+
+                <li>
+                    <span for="Profession"><b>Profession</b></span>
+                    <input placeholder="Profession" type="text" id="Profession" name="Profession" value="{{.P.Profession}}">
+                </li>
+                <li>
+                    <span for="Education"><b>Education</b> </span>
+                    <input placeholder="Education" type="text" id="Education" name="Education" value="{{.P.Education}}">
+                </li>
+                <li>
+                    <input id="submitbutton"  formmethod="post" formaction="https://{{.Host}}/ProfileUpdate" class="button" type="submit" value="Save">
+                </li>
+            </ul>
+
+        </div>
+
+
+        <div class="col-4 col-m-9 picture">
+            <div class="aside">
+                <div class="flex-column">
+                    <img src="{{.P.PictureURL}}">
+                    <input class="button" type="file" name="fileToUpload" id="fileToUpload">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-m-9">
+            <h1>My story</h1>
+            <textarea id="introo" form="ProfileForm" name="Description" label="sdfsdf" >{{.P.Description}}</textarea>
+        </div>
+        <div class="col-9 col-m-9">
+            <fieldset>
+                <legend>Location and Languages</legend>
+
+                <div class="flex-column">
+
+                    <div class="flex-row">
+                        <div class="flex-column">
+                            <button type="button" class="button locationbutton" onclick="getLocation()">Get Your Location!</button>
+                            <span for="Country"><b>Country</b> </span>
+                            <input type="text" id="Country" name="Country" value="{{.P.Country}}">
+
+                            <span for="Town"><b>Town</b> </span>
+                            <input type="text" id="Town" name="Town" value="{{.P.Town}}">
+                        </div>
+                        <div class="checkbox-container languages">
+                            <!-- TEMPLATE CODE -->
+                            {{ $all := .Languages }} {{ $some := .P.Languages}}
+                            {{ range $all}}{{$v := .}}
+                            <div><input type="checkbox" name="Language" value="{{$v}}" {{ if eq  "checked" (index $some $v) }}checked {{end}}>{{$v}}</div>{{end}}
+                            <!-- TEMPLATE CODE -->
+                        </div>
+                    </div>
+                    <div id="mapholder"></div>
+                </div>
+            </fieldset>
+        </div>
+
+
+
+
+    </div>
+</form>
+<div class="footer">
+    <p></p>
+</div>
+<script>
+    var town = document.getElementById("town");
+    var city = document.getElementById("city");
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+
+        } else {
+            $("#country").val("Unknown");
+            $("#town").val("Unknown");
+        }
+    }
+
+    function showPosition(position) {
+
+        var latlon = position.coords.latitude + "," + position.coords.longitude;
+
+        var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="
+            + latlon + "&zoom=12&size=400x300&sensor=false&key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0";
+
+        document.getElementById("mapholder").innerHTML = "<img src='" + img_url + "'>";
+
+        var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon;
+        $.get(url, function (data, status) {
+
+                var len = data.results[0].address_components.length;
+                var comps = data.results[0].address_components;
+                for (i = 0; i < len; i++) {
+                    for (g = 0; g < comps[i].types.length; g++) {
+                        if (comps[i].types[g] == "postal_town") {
+                            var town = comps[i].long_name;
+                            $("#Town").val(town)
+                        } else if (comps[i].types[g] == "country") {
+                            var country = comps[i].long_name;
+                            $("#Country").val(country);
+                        }
+                    }
+                }
+                console.log("City " + city + " Country " + country);
+            }
+        );
+
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -34,7 +34,9 @@ body {
 	left: 0px;
 	width: 100%;
 	overflow: hidden;
+
 }
+
 
 
 #divv {
@@ -54,11 +56,44 @@ body {
 	height: auto;
 	font-size: 6mm;
 	width: 60%;
+
 }
 
 #submit {
 	height: auto;
 	font-size: 6mm;
+
+}
+
+.fmt-row  {
+	float: left;
+	margin-left: 2px;
+	height: auto;
+	background-color: #6c6c6c;
+	margin-bottom: -2px;
+	padding: 0px;
+	-webkit-box-shadow:  10px 10px 5px gray;
+	-moz-box-shadow:  10px 10px 5px gray;
+	box-shadow:  8px 8px 5px gray;
+	border-radius: 10%;
+}
+.fmt-row img {
+    float: left;
+	height: 138px;
+	border-style: solid;
+	border-width: 2px;
+	border-radius: 10%;
+}
+#profileInfo {
+	float: left;
+	border-radius: 10%;
+	border-style: solid;
+	border-width: 2px;
+}
+#profileInfo li {
+	color: white;
+	margin-left: 4px;
+	margin-right: 2px;
 }
 
 #post {
@@ -70,12 +105,30 @@ body {
 	margin-bottom: -2px;
 
 }
+#postitem {
+	display: flex;
+	flex-direction: row;
+	margin-left: 2px;
+	height: auto;
+	background-color: white;
+	margin-bottom: -2px;
+
+}
+#postbutton {
+	display: flex;
+	flex-direction: row;
+	margin-left: 2px;
+	height: auto;
+	background-color: white;
+	margin-bottom: -2px;
+
+}
+
+
 
 #post li {;
 	padding-right: 2px;
 	height: auto;
-
-
 }
 
 #pictureURL img {
@@ -100,6 +153,7 @@ body {
 #from {
 	color: #7994ce;
 	font: bold 20px Arial, Helvetica, sans-serif;
+
 }
 
 #messageText {
@@ -108,7 +162,7 @@ body {
 	margin-left: 6px;
 	color: black;
 	text-align: left;
-	font: normal 20px Arial, Helvetica, sans-serif;
+	font: normal 18px Arial, Helvetica, sans-serif;
 }
 
 

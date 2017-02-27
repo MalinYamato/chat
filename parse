@@ -1,0 +1,61 @@
+package main
+
+
+
+import (
+"html/template"
+"os"
+
+)
+
+
+var LANGUAGES =[]string {"English","Finnish","Same","Swedish","German","French","Spannish","Italian","Portogese","Russian","Chinese","Japanese","Korean","Thai" }
+var ORIENTATION =[]string {"Straight","Gay","Lesbian","BiSexual","ASexual"}
+var GENDER = []string {"Female","Male","TranssexualF","TranssexualM","CrossDresser","None"}
+
+
+
+//{{ $os := .SexualOrientations }} {{ $selected := .P.SexualOrientation }}{{ range $os}}{{$ov := .}}
+//<option value="{{$ov}}" {{ if eq  $selected $ov }} selected {{end}}>{{$ov}}</option>{{end}}
+
+//{{ $gs := .Genders }} {{ $selected := .P.Gender }}{{ range $gs}}{{$v := .}}
+//<option value="{{$v}}" {{ if eq  $selected $v }} selected {{end}}>{{$v}}</option>{{end}}`
+
+
+
+type XPerson struct{
+Gender string
+SexualOrientation string
+Languages map[string]string
+}
+
+func main() {
+
+	//all := []string{"English","Finnish","Same","Swedish","German","French","Spannish","Italian","Portogese","Russian","Chinese","Japanese","Korean","Thai" }
+
+	t := template.New("fieldname example")
+
+
+	t = template.Must(template.ParseFiles("profile.html"))
+	//t, _ = t.Parse(temp)
+
+
+	p := XPerson{
+		Gender: "Female",
+		SexualOrientation: "Gay",
+		Languages: map[string]string{"English":"checked","German":"checked"},
+	}
+
+
+	t.Execute(os.Stdout, struct {
+		Languages []string
+		Genders []string
+		SexualOrientations []string
+		P XPerson
+	}{
+		Languages: LANGUAGES,
+		Genders: GENDER,
+		SexualOrientations: ORIENTATION,
+		P: p,
+	})
+}
