@@ -201,15 +201,21 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	session, err := sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Client: Call to sessionStore.Get returned ", err)
-	}
-
-	if session != nil {
-		token = session.Values[sessionToken].(string)
-		mycookie, err := r.Cookie(sessionName)
-		if (err == nil) {
-			cookie = mycookie.Value
-		} else {
-			cookie = ""
+	} else if session != nil {
+		atoken, ok := session.Values[sessionToken]
+		if ok  {
+			log.Println(atoken)
+			if atoken != nil {
+				token = atoken.(string)
+			} else {
+				log.Println("Client: token was nil")
+			}
+			mycookie, err := r.Cookie(sessionName)
+			if (err == nil) {
+				cookie = mycookie.Value
+			} else {
+				cookie = ""
+			}
 		}
 	}
 
