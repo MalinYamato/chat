@@ -466,26 +466,47 @@
             url : post_url,
             type: "post",
             data : form_data
-        }).done(function(response){
+        }).done(function(response) {
             $("#mapholder").empty();
+            if (response.status == "Error") {
+                $("#status").css("background-color", "red");
+            } else {
+            $("#status").css("background-color", "green");
+            }
             $("#status").text(response.detail);
             $("#StatusBox").show();
         });
     });
 
     function getLocation() {
+
+        console.log("getLocation");
+        var timeoutVal = 10 * 1000 * 1000;
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
+            navigator.geolocation.getCurrentPosition(showPosition,displayError,
+                { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+            );
 
         } else {
+            console.log("bad");
             $("#country").val("Unknown");
             $("#town").val("Unknown");
         }
     }
 
+    function displayError(err) {
+        console.log("Code " + err.code  + " Err " +  err.message);
+        $("#status").css("background-color", "red");
+        $("#status").text("Goolge is bad! " + err.message + " Code: "+err.code);
+        $("#StatusBox").show();
+    }
+
     function showPosition(position) {
-        $("#StatusBox").hide();
+        console.log("latlon " + latlon);
+      //  $("#StatusBox").hide();
         var latlon = position.coords.latitude + "," + position.coords.longitude;
+
+        console.log("latlon " + latlon);
 
         var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="
             + latlon + "&zoom=12&size=400x300&sensor=false&key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0";
