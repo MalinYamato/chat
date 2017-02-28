@@ -10,7 +10,7 @@ body {
 	margin: 0;
 	width: 100%;
 	height: 100%;
-	background: #7994ce;
+	background: #9cb8f5;
 }
 
 #log {
@@ -66,18 +66,20 @@ body {
 }
 
 .fmt-row  {
+
 	float: left;
 	margin-left: 2px;
 	height: auto;
-	background-color: #6c6c6c;
+	background-color: rgba(108, 108, 108, 0);
 	margin-bottom: -2px;
 	padding: 0px;
-	-webkit-box-shadow:  10px 10px 5px gray;
-	-moz-box-shadow:  10px 10px 5px gray;
-	box-shadow:  8px 8px 5px gray;
+
 	border-radius: 10%;
 }
 .fmt-row img {
+	-webkit-box-shadow:  10px 10px 5px gray;
+	-moz-box-shadow:  10px 10px 5px gray;
+	box-shadow:  8px 8px 5px gray;
     float: left;
 	height: 138px;
 	border-style: solid;
@@ -85,6 +87,10 @@ body {
 	border-radius: 10%;
 }
 #profileInfo {
+	-webkit-box-shadow:  10px 10px 5px gray;
+	-moz-box-shadow:  10px 10px 5px gray;
+	box-shadow:  8px 8px 5px gray;
+	background-color: rgb(80, 80, 80);
 	float: left;
 	border-radius: 10%;
 	border-style: solid;
@@ -102,7 +108,7 @@ body {
 	margin-left: 2px;
 	height: auto;
 	background-color: white;
-	margin-bottom: -2px;
+	margin-bottom: 1px;
 
 }
 #postitem {
@@ -114,6 +120,11 @@ body {
 	margin-bottom: -2px;
 
 }
+#postitem span {
+	margin-left: 4px;
+	text-align: left;
+}
+
 #postbutton {
 	display: flex;
 	flex-direction: row;
@@ -121,6 +132,8 @@ body {
 	height: auto;
 	background-color: white;
 	margin-bottom: -2px;
+	padding-left: 0px;
+	padding: 2px;
 
 }
 
@@ -135,7 +148,7 @@ body {
 	left: 0px;
 	width: 30px;
 	height: 30px;
-	border-radius: 35%;
+	border-radius: 50%;
 	border-style: solid;
 	border-color: #b82045;
 	border-width: 2px;
@@ -148,21 +161,126 @@ body {
 	width: auto;
 	text-align: left;
 	word-break: keep-all;
+
 }
 
 #from {
+
 	color: #7994ce;
-	font: bold 20px Arial, Helvetica, sans-serif;
+	font: bold 18px Arial, Helvetica, sans-serif;
 
 }
 
 #messageText {
-	height: auto;
-	word-break: normal;
+    height: auto;
+	white-space: normal;
+	word-break: break-all;
 	margin-left: 6px;
 	color: black;
 	text-align: left;
+
 	font: normal 18px Arial, Helvetica, sans-serif;
+}
+@media only screen and (min-width: 600px) {
+	/* For tablets: */
+	.col-m-1 {
+		width: 8.33%;
+	}
+
+	.col-m-2 {
+		width: 16.66%;
+	}
+
+	.col-m-3 {
+		width: 25%;
+	}
+
+	.col-m-4 {
+		width: 33.33%;
+	}
+
+	.col-m-5 {
+		width: 41.66%;
+	}
+
+	.col-m-6 {
+		width: 50%;
+	}
+
+	.col-m-7 {
+		width: 58.33%;
+	}
+
+	.col-m-8 {
+		width: 66.66%;
+	}
+
+	.col-m-9 {
+		width: 75%;
+	}
+
+	.col-m-10 {
+		width: 83.33%;
+	}
+
+	.col-m-11 {
+		width: 91.66%;
+	}
+
+	.col-m-12 {
+		width: 100%;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	/* For desktop: */
+	.col-1 {
+		width: 8.33%;
+	}
+
+	.col-2 {
+		width: 16.66%;
+	}
+
+	.col-3 {
+		width: 25%;
+	}
+
+	.col-4 {
+		width: 33.33%;
+	}
+
+	.col-5 {
+		width: 41.66%;
+	}
+
+	.col-6 {
+		width: 50%;
+	}
+
+	.col-7 {
+		width: 58.33%;
+	}
+
+	.col-8 {
+		width: 66.66%;
+	}
+
+	.col-9 {
+		width: 75%;
+	}
+
+	.col-10 {
+		width: 83.33%;
+	}
+
+	.col-11 {
+		width: 91.66%;
+	}
+
+	.col-12 {
+		width: 100%;
+	}
 }
 
 

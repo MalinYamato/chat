@@ -26,8 +26,6 @@ const (
 
 	// Maximum message size allowed from peer.
 	maxMessageSize = 512
-
-
 )
 
 var (
@@ -50,11 +48,11 @@ type Client struct {
 	// Buffered channel of outbound messages.
 	send chan Message
 
-	Token string
+	Token  string
 	Cookie string
 }
 
-func (c *Client ) token() (string) {
+func (c *Client) token() (string) {
 
 	return c.Token
 }
@@ -77,19 +75,18 @@ func (c *Client) validSession() bool {
 func (c *Client) readPump() {
 	defer func() {
 
-		person, ok := Persons[c.token()]
-		if ok == true {
+		//person, ok := Persons[c.token()]
+		if true {
 			log.Println("User: Reading processes terminates because websocet connection terminated! Invalidate token:", c.token())
-			hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室、 またね　" + person.FirstName + " " + person.LastName}
+			//hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室、 またね　" + person.FirstName + " " + person.LastName}
 			//delete(Persons, c.token)
 		} else {
-		     log.Println("Client: Reading processs terminates because connection terminated. Token not seet or invalid! Token:", c.token())
+			log.Println("Client: Reading processs terminates because connection terminated. Token not seet or invalid! Token:", c.token())
 		}
 		c.hub.unregister <- c
 		c.conn.Close()
-
-
 	}()
+
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
@@ -104,56 +101,54 @@ func (c *Client) readPump() {
 			break
 		}
 
-		var  message Message
+		var message Message
 		json.Unmarshal(json_message, &message)
 
 		log.Println("Client: message from Browser ", message)
 
-
-		if ! c.validSession() {
+		if message.Op == "SendAllMessages" {
+			list := c.hub.messages.GetAllAsList()
+			for i := 0; i < len(list); i++ {
+				c.conn.WriteJSON(list[i])
+			}
+		} else if ! c.validSession() {
 			json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
 			err := c.conn.WriteJSON(json_message)
 			if err != nil {
 				log.Println("Client Fail to write JSON on websockets because: ", err)
 				return
 			}
+		} else if value, ok := Persons[message.Token]; ok {
+
+			sender := value.FirstName
+			if len(value.Nic) > 5 {
+				sender = value.Nic
+			}
+
+			log.Println("Client: Token was set", c.token())
+			message := Message{Op: "Message", Timestamp: message.Timestamp, Token: value.UserID, Sender: sender, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
+			c.hub.broadcast <- message
 		} else {
-			if value, ok := Persons[message.Token];  ok {
-				if message.Op == "RequestWriteAccess" {
-					log.Println("Client: Browser Authorized, connected and is grated write access! ", message.Token)
-					message := Message{Op: "Message", Timestamp: message.Timestamp, Token: value.UserID, Sender: value.FirstName, PictureURL: value.PictureURL, Gender: value.Gender, Content: "入室 " + value.FirstName + " " + value.LastName + " " + "国 " + value.Country}
-					c.hub.broadcast <- message
-				} else {
-					sender := value.FirstName
-					if len(value.Nic) > 5 {
-                                          sender = value.Nic
-					}
-					log.Println("Client: Token was set", c.token())
-					message := Message{Op: "Message", Timestamp: message.Timestamp, Token: value.UserID, Sender: sender, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
-					c.hub.broadcast <- message
-				}
-			} else {
-				log.Println("Client: Invalid Token: ", message.Token)
-				json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null",Content: "Unauthorized" }
-				err := c.conn.WriteJSON( json_message)
-				if err != nil {
-					log.Println("Client: Fail to write JSON on  websockets! Err: ", err)
-					return
-				}
+			log.Println("Client: Invalid Token: ", message.Token)
+			json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
+			err := c.conn.WriteJSON(json_message)
+			if err != nil {
+				log.Println("Client: Fail to write JSON on  websockets! Err: ", err)
+				return
 			}
 
 		}
+
 	}
 }
-
 
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
-		person, ok := Persons[c.token()]
-		if ok == true {
+		//person, ok := Persons[c.token()]
+		if true {
 			log.Println("User: Writing process terminates because websocet connection terminated!  Invalidate token: ", c.token())
-			hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室 またね　" + person.FirstName + " " + person.LastName + " "}
+			// hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室 またね　" + person.FirstName + " " + person.LastName + " "}
 			//delete(Persons, c.token)
 		} else {
 			log.Println("User: Wrting process terminates because websocet connection terminated. Token not seet or invalid! Token:", c.token())
@@ -162,15 +157,10 @@ func (c *Client) writePump() {
 		c.conn.Close()
 	}()
 
-	list := c.hub.messages.GetAllAsList()
-	for i := 0; i < len(list); i++ {
-		c.conn.WriteJSON(list[i])
-	}
-
 	for {
 		select {
 		case message, ok := <-c.send:
-		log.Println("Client: message from Hub ", message.Sender, message.Content, message.Timestamp, message.Content)
+			log.Println("Client: message from Hub ", message.Sender, message.Content, message.Timestamp, message.Content)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				log.Println("Client: The hub closed the connection because:", ok)
@@ -179,7 +169,7 @@ func (c *Client) writePump() {
 			}
 			err := c.conn.WriteJSON(message)
 			if err != nil {
-				log.Println("Client: Fail to write  websockets because: ",err)
+				log.Println("Client: Fail to write  websockets because: ", err)
 				return
 			}
 
@@ -194,7 +184,6 @@ func (c *Client) writePump() {
 					return
 				}
 			}
-
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
@@ -207,25 +196,21 @@ func (c *Client) writePump() {
 
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
-	session, err := sessionStore.Get( r, sessionName)
+	var token string = ""
+	var cookie string = ""
+	session, err := sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Client: Call to sessionStore.Get returned ", err)
-		return
 	}
 
-	if session == nil {
-		log.Println("Client: returned session was nil")
-		return
-	}
-
-	token := session.Values[sessionToken].(string)
-
-	var cookie = ""
-	mycookie, err := r.Cookie(sessionName)
-	if (err == nil) {
-		cookie = mycookie.Value
-	} else {
-		cookie = ""
+	if session != nil {
+		token = session.Values[sessionToken].(string)
+		mycookie, err := r.Cookie(sessionName)
+		if (err == nil) {
+			cookie = mycookie.Value
+		} else {
+			cookie = ""
+		}
 	}
 
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -233,6 +218,9 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+
+	log.Println("Client: Upgraded to websocket!")
+
 	client := &Client{hub: hub, conn: conn, send: make(chan Message, 256), Token: token, Cookie: cookie}
 	client.hub.register <- client
 	go client.writePump()

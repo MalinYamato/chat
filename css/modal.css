@@ -20,7 +20,7 @@
 .modal-content {
     position: fixed;
     bottom: 0;
-    background-color: #7994ce;
+    background-color: #9cb8f5;
     width: 100%;
     -webkit-animation-name: slideIn;
     -webkit-animation-duration: 0.4s;
@@ -52,7 +52,7 @@
 }
 
 .modal-body {
-    background-color: #7994ce;
+    background-color: #9cb8f5;
     padding: 2px 16px;
     color: black;
     font: bold 18px Arial, Helvetica, sans-serif;

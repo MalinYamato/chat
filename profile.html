@@ -31,6 +31,7 @@
         html {
             font-family: "Lucida Sans", sans-serif;
         }
+
         .header {
             color: #505050;
             margin-left: 15px;
@@ -41,14 +42,16 @@
         }
 
         .menu ul {
+            margin-top: 8px;
+            max-width: 200px;
             list-style-type: none;
-            margin: 0;
+
             padding: 0;
 
         }
 
         .menu li {
-            padding: 8px;
+            padding: 4px;
             margin-bottom: 7px;
             background-color: #9cb8f5;
             color: #ffffff;
@@ -59,19 +62,23 @@
         }
 
         input, select {
-            padding: 8px;
-            margin-bottom: 7px;
+            maxwidht: 12em;
+            padding: 4px;
+            margin-bottom: 5px;
             background-color: #dcdcdc;
             color: rgb(27, 27, 27);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             margin-left: 2px;
             border-radius: 8px;
-            font: 18px Arial, Helvetica, sans-serif;
+            font: 14px Arial, Helvetica, sans-serif;
 
         }
 
-        .menu span {
+        span {
+            font: 12px Arial, Helvetica, sans-serif;
+        }
 
+        .menu span {
             margin-bottom: 2px;
             margin-left: 2px;
             color: rgb(74, 74, 74);
@@ -107,6 +114,7 @@
 
         .header h1 {
             margin-left: 15px;
+            text-shadow: 2px 2px 4px #000000;
 
         }
 
@@ -124,111 +132,10 @@
             width: 100%;
         }
 
-        @media only screen and (min-width: 600px) {
-            /* For tablets: */
-            .col-m-1 {
-                width: 8.33%;
-            }
-
-            .col-m-2 {
-                width: 16.66%;
-            }
-
-            .col-m-3 {
-                width: 25%;
-            }
-
-            .col-m-4 {
-                width: 33.33%;
-            }
-
-            .col-m-5 {
-                width: 41.66%;
-            }
-
-            .col-m-6 {
-                width: 50%;
-            }
-
-            .col-m-7 {
-                width: 58.33%;
-            }
-
-            .col-m-8 {
-                width: 66.66%;
-            }
-
-            .col-m-9 {
-                width: 75%;
-            }
-
-            .col-m-10 {
-                width: 83.33%;
-            }
-
-            .col-m-11 {
-                width: 91.66%;
-            }
-
-            .col-m-12 {
-                width: 100%;
-            }
-        }
-
-        @media only screen and (min-width: 768px) {
-            /* For desktop: */
-            .col-1 {
-                width: 8.33%;
-            }
-
-            .col-2 {
-                width: 16.66%;
-            }
-
-            .col-3 {
-                width: 25%;
-            }
-
-            .col-4 {
-                width: 33.33%;
-            }
-
-            .col-5 {
-                width: 41.66%;
-            }
-
-            .col-6 {
-                width: 50%;
-            }
-
-            .col-7 {
-                width: 58.33%;
-            }
-
-            .col-8 {
-                width: 66.66%;
-            }
-
-            .col-9 {
-                width: 75%;
-            }
-
-            .col-10 {
-                width: 83.33%;
-            }
-
-            .col-11 {
-                width: 91.66%;
-            }
-
-            .col-12 {
-                width: 100%;
-            }
-        }
 
         textarea {
             width: 100%;
-            height: 180px;
+            height: 12em;
             margin-top: 6px;
             margin-bottom: 6px;
             padding: 8px 8px;
@@ -285,6 +192,8 @@
         .flex-row {
             display: flex;
             flex-direction: row;
+            align-content: flex-start;
+            flex-wrap: wrap;
         }
 
         .flexrow span {
@@ -297,16 +206,21 @@
             margin-right: 5px;
         }
 
-
         #mapholder img {
             width: 100%;
         }
 
-        .picture {
-            max-width: 240px;
+        .menu
+        {
+            margin-left: 10px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-content: flex-start;
+            flex-wrap: wrap;
         }
-        .aside {
-            #max-width: 210px;
+
+        .picture {
 
             background-color: #9cb8f5;
             padding: 5px;
@@ -315,13 +229,14 @@
             font-size: 14px;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
+            width: auto;
         }
 
-        .aside img {
-            min-width: 180px;
-            max-width: 180px;
-            max-height: 200px;
-            margin: 10px;
+        .picture img {
+            margin: 3px;
+            width: 200px;
+            height: 200px;
             text-align: center;
             border-radius: 12px;
             border-style: solid;
@@ -342,11 +257,11 @@
         .checkbox-container {
 
             display: flex;
-            #flex-direction: row;
             flex-wrap: wrap;
             margin-left: 14px;
             align-content: flex-start;
         }
+
         .checkbox-container div {
             text-align: left;
             width: 7em;
@@ -354,11 +269,67 @@
             padding: 2px;
         }
 
-        #Town,#Country,.locationbutton {
+        #Town, #Country, .locationbutton {
             width: 10em;
         }
+
         .locationbutton {
             margin-left: 2px;
+        }
+
+        .right-side {
+
+            margin-top: 5px;
+            margin-left: 10px;
+        }
+
+        .location-languages {
+            max-width: 500px;
+        }
+
+        .my-story {
+            min-width: 400px;
+        }
+
+        .status   {
+
+        }
+
+       #status span {
+
+
+
+        }
+
+        .status, .status-m {
+            color: white;
+            -webkit-box-shadow:  10px 10px 5px gray;
+            -moz-box-shadow:  10px 10px 5px gray;
+            box-shadow:  8px 8px 5px gray;
+            height: 4em;
+            width: 500px;
+            font: 24px Arial, Helvetica, sans-serif;
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            border-radius: 12px;
+            background-color: #55aa2d;
+
+        }
+
+        @media only screen and (max-width: 735px) {
+            .stuff-m {
+                 margin-top: 5px;
+                 height: 5em;
+
+            }
+        }
+        @media only screen and (min-width: 730px) {
+            .stuff {
+                margin-top: 5px;
+                height: 5em;
+
+            }
         }
 
     </style>
@@ -366,17 +337,18 @@
 
 <body>
 <div class="header flex-row">
-    <a href="https://{{.Host}}/session" >
-        <img src="/images/home.png" /> </a> <h1>Profile</h1>
+    <a href="https://{{.Host}}/session">
+        <img src="/images/home.png"/> </a>
+    <h1>Profile</h1>
 </div>
-<div>
+<form id="ProfileForm" class="flex-row" action="https://{{.Host}}/ProfileUpdate">
+        <div class="menu">
+            <div class=" picture">
 
-</div>
-<form id="ProfileForm">
-    <div class="row">
-
-        <div class="col-3 col-m-5 menu">
-
+                    <div class="flex-column">
+                        <img src="{{.P.PictureURL}}">
+                    </div>
+            </div>
             <ul>
                 <li>
                     <span for="Nic"><b>Nicname</b> <br> </span>
@@ -385,61 +357,59 @@
 
                 <li>
                     <span for="FirstName"><b>First Name </b>  </span>
-                    <input type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}" >
+                    <input type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
                 </li>
                 <li>
                     <span for="LastName"><b>Last Name </b></span>
-                    <input type="text" id="LastName" name="LastName" value="{{.P.LastName}}" >
+                    <input type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
                 </li>
                 <li>
                     <span for="Gender"><b>Gender</b> </span>
                     <select id="Gender" name="Gender">
                         {{ $gs := .Genders }} {{ $selected := .P.Gender }}{{ range $gs}}{{$v := .}}
-                        <option value="{{$v}}" {{ if eq  $selected $v }} selected {{end}}>{{$v}}</option>{{end}}
+                        <option value="{{$v}}" {{ if eq $selected $v }} selected {{end}}>{{$v}}</option>
+                        {{end}}
                     </select>
                 </li>
+
+                <li >
+                    <span for="BirthDate"><b>Birth Date</b> </span>
+                    <input type="date" id="BirthDate" name="BirthDate" min="2012-01-02" max="1900-12-31" value="{{.P.BirthDate}}">
+                </li>
+
                 <li>
                     <span for="SexualOrientation"><b>Orientation</b> </span>
                     <select id="SexualOrientation" name="SexualOrientation">
-                        {{ $os := .SexualOrientations }} {{ $selected := .P.SexualOrientation }}{{ range $os}}{{$ov := .}}
-                        <option value="{{$ov}}" {{ if eq  $selected $ov }} selected {{end}}>{{$ov}}</option>{{end}}
+                        {{ $os := .SexualOrientations }} {{ $selected := .P.SexualOrientation }}{{ range $os}}{{$ov:=.}}
+                        <option value="{{$ov}}" {{ if eq $selected $ov }} selected {{end}}>{{$ov}}</option>
+                        {{end}}'
                     </select>
                 </li>
                 <li>
-            <span for="email"><b>Email</b> (Verified) <br></span>
-                    <input type="text" id="Email" name="Email" value="malin.yamato@gmail.com" readonly>
+                    <span for="email"><b>Email</b> (Verified) <br></span>
+                    <input type="text" id="Email" name="Email" value="{{.P.Email}}" readonly>
                 </li>
 
                 <li>
                     <span for="Profession"><b>Profession</b></span>
-                    <input placeholder="Profession" type="text" id="Profession" name="Profession" value="{{.P.Profession}}">
+                    <input placeholder="Profession" type="text" id="Profession" name="Profession"
+                           value="{{.P.Profession}}">
                 </li>
                 <li>
                     <span for="Education"><b>Education</b> </span>
                     <input placeholder="Education" type="text" id="Education" name="Education" value="{{.P.Education}}">
                 </li>
                 <li>
-                    <input id="submitbutton"  formmethod="post" formaction="https://{{.Host}}/ProfileUpdate" class="button" type="submit" value="Save">
+                    <input id="submitbutton" formmethod="post" class="button" type="submit" value="Save">
                 </li>
             </ul>
 
         </div>
-
-
-        <div class="col-4 col-m-9 picture">
-            <div class="aside">
-                <div class="flex-column">
-                    <img src="{{.P.PictureURL}}">
-                    <input class="button" type="file" name="fileToUpload" id="fileToUpload">
-                </div>
-            </div>
+        <div class="right-side">
+        <div class=" my-story">
+            <textarea id="introo" placeholder="My story" form="ProfileForm" name="Description" label="sdfsdf">{{.P.Description}}</textarea>
         </div>
-
-        <div class="col-6 col-m-9">
-            <h1>My story</h1>
-            <textarea id="introo" form="ProfileForm" name="Description" label="sdfsdf" >{{.P.Description}}</textarea>
-        </div>
-        <div class="col-9 col-m-9">
+        <div class=" location-languages">
             <fieldset>
                 <legend>Location and Languages</legend>
 
@@ -447,7 +417,9 @@
 
                     <div class="flex-row">
                         <div class="flex-column">
-                            <button type="button" class="button locationbutton" onclick="getLocation()">Get Your Location!</button>
+                            <button type="button" class="button locationbutton" onclick="getLocation()">Get Your
+                                Location!
+                            </button>
                             <span for="Country"><b>Country</b> </span>
                             <input type="text" id="Country" name="Country" value="{{.P.Country}}">
 
@@ -458,19 +430,24 @@
                             <!-- TEMPLATE CODE -->
                             {{ $all := .Languages }} {{ $some := .P.Languages}}
                             {{ range $all}}{{$v := .}}
-                            <div><input type="checkbox" name="Language" value="{{$v}}" {{ if eq  "checked" (index $some $v) }}checked {{end}}>{{$v}}</div>{{end}}
+                            <div><input type="checkbox" name="Language" value="{{$v}}" {{ if eq "checked" (index $some $v) }}checked {{end}}>{{$v}}</div>
+                            {{end}}
                             <!-- TEMPLATE CODE -->
                         </div>
                     </div>
+
                     <div id="mapholder"></div>
                 </div>
+
             </fieldset>
-        </div>
+            </div>
 
 
-
+        <div id="StatusBox" hidden class="stuff stuff-m"><p  class="status-m status" id="status"></p></div>
 
     </div>
+
+
 </form>
 <div class="footer">
     <p></p>
@@ -478,6 +455,23 @@
 <script>
     var town = document.getElementById("town");
     var city = document.getElementById("city");
+
+    $("#ProfileForm").submit(function(event){
+        event.preventDefault();
+        var post_url = $(this).attr("action");
+        var form_data = $(this).serialize();
+         console.log("call on sbmit");
+
+        $.ajax({
+            url : post_url,
+            type: "post",
+            data : form_data
+        }).done(function(response){
+            $("#mapholder").empty();
+            $("#status").text(response.detail);
+            $("#StatusBox").show();
+        });
+    });
 
     function getLocation() {
         if (navigator.geolocation) {
@@ -490,7 +484,7 @@
     }
 
     function showPosition(position) {
-
+        $("#StatusBox").hide();
         var latlon = position.coords.latitude + "," + position.coords.longitude;
 
         var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="

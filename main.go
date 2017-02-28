@@ -25,7 +25,6 @@ import (
 	"encoding/json"
 
 	"fmt"
-
 )
 
 type Config struct {
@@ -54,13 +53,10 @@ func (endpoint *Endpoint) url() (string) {
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
 
-	stuff := HTMLReplace{"null", "none", "flex", (Person{}) }
-
-	stuff.Host = r.Host;
-	 if ( strings.Contains(r.URL.Path, "/session") ) {
-		 log.Println(" Set path ", r.URL.Path)
-		 r.URL.Path = "/"
-	 } else if ( strings.Contains(r.URL.Path, "/images") ) {
+	if ( strings.Contains(r.URL.Path, "/session") ) {
+		log.Println(" Set path ", r.URL.Path)
+		r.URL.Path = "/"
+	} else if ( strings.Contains(r.URL.Path, "/images") ) {
 		log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
@@ -85,9 +81,32 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", 405)
 		return
 	}
-	log.Println("Serve ", r.URL, stuff.Person.Token )
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	homeTemplate.Execute(w, stuff)
+
+	ifs := hub.messages.GetAllAsList()
+	var msgs []Message
+	msgs = make([]Message, len(ifs), len(ifs))
+	for i := 0; i < len(ifs); i++ {
+		msgs[i] = ifs[i].(Message)
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	homeTemplate.Execute(w, struct {
+		Host      string
+		LoggedIn  string
+		LoggedOut string
+		Person    Person
+		Messages  []Message
+	}{
+		Host:      r.Host,
+		LoggedIn:  "none",
+		LoggedOut: "flex",
+		Person:    Person{},
+		Messages:  msgs,
+
+	})
+
 }
 
 func sessionHandler(w http.ResponseWriter, r *http.Request) {
@@ -97,7 +116,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error in getting and verifying coookie ", err)
 	}
 
-	token  := sess.Values[sessionToken].(string)
+	token := sess.Values[sessionToken].(string)
 
 	log.Println("session token from cookie ", token)
 
@@ -105,12 +124,29 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		log.Println("sessionHandler: User does not exist for token ", person.Token)
 		w.Write([]byte("Authorization Failure! User does not exist, The following token is invalid: " + token ))
-	        }
+	}
 
-	stuff := HTMLReplace{r.Host, "flex", "none", person}
+	ifs := hub.messages.GetAllAsList()
+	var msgs []Message
+	msgs = make([]Message, len(ifs), len(ifs))
+	for i := 0; i < len(ifs); i++ {
+		msgs[i] = ifs[i].(Message)
+	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	homeTemplate.Execute(w, stuff)
+	homeTemplate.Execute(w, struct {
+		Host      string
+		LoggedIn  string
+		LoggedOut string
+		Person    Person
+		Messages  []Message
+	}{
+		Host:      r.Host,
+		LoggedIn:  "flex",
+		LoggedOut: "none",
+		Person:    person,
+		Messages:  msgs,
+	})
 
 }
 
@@ -120,22 +156,30 @@ type ProfileRequest struct {
 }
 
 type Person struct {
-	Nic               string        `json:"nic,omitempty"`
-	FirstName         string        `json:"firstName,omitempty"`
-	LastName          string        `json:"lastName,omitempty"`
-	Email             string        `json:"email,omitempty"`
-	Gender            string        `json:"gender,omitempty"`
-	Town              string        `json:"country,omitempty"`
-	Country           string        `json:"town,omitempty"`
+	Keep              bool          `json:"keep"`
+	Nic               string        `json:"nic"`
+	FirstName         string        `json:"firstName"`
+	LastName          string        `json:"lastName"`
+	Email             string        `json:"email"`
+	Gender            string        `json:"gender"`
+	Town              string        `json:"country"`
+	Country           string        `json:"town"`
 	PictureURL        string        `json:"pictureURL,omitempty"`
-	SexualOrientation string        `json:"sexualOrienation,omitempty"`
+	SexualOrientation string        `json:"sexualOrienation"`
+	BirthDate         string         `json:"birthDate"`
 	Languages         map[string]string `json:"Languages,omitempty"`
-	Profession        string        `json:"profession,omitempty"`
-	Education         string        `json:"education,omitempty"`
+	Profession        string        `json:"profession"`
+	Education         string        `json:"education"`
 	Description       string        `json:"description,omitempty"`
 	GoogleID          string        `json:"googleId,omitempty"`
 	UserID            string        `json:"userId,omitempty"`
 	Token             string        `json:"token,omitempty"`
+	Room              string        `json:"room"`
+}
+
+type Status struct {
+	Status string `json:"status"`
+	Detail string `json:"detail"`
 }
 
 func profileHandler(w http.ResponseWriter, r *http.Request) {
@@ -190,10 +234,9 @@ var LANGUAGES = []string{"English", "Finnish", "Same", "Swedish", "German", "Fre
 var ORIENTATION = []string{"Straight", "Gay", "Lesbian", "BiSexual", "ASexual"}
 var GENDER = []string{"Female", "Male", "TranssexualF", "TranssexualM", "CrossDresser", "None"}
 
-
 func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, err := sessionStore.Get( r, sessionName)
+	session, err := sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Client: Call to sessionStore.Get returned ", err)
 		return
@@ -242,63 +285,79 @@ func Contains(slice []string, item string) bool {
 	return ok
 }
 
-
-
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
-
-
 
 	log.Println("UpdateProfile called ", r.Method)
 	r.ParseForm()
 
+	var status Status
+
 	if r.Method == "POST" {
 
-
-
-
-
-		session, err := sessionStore.Get( r, sessionName)
+		session, err := sessionStore.Get(r, sessionName)
 		if err != nil {
 			log.Println("Client: Call to sessionStore.Get returned ", err)
-			return
-		}
-
-		if session == nil {
+			status.Status = "Error"
+			status.Detail = "Failed to get a valid cookie!"
+		} else if session == nil {
 			log.Println("Client: returned session was nil")
-			return
-		}
+			status.Status = "Error"
+			status.Detail = "The session is not valid!"
 
-		token := session.Values[sessionToken].(string)
+		} else {
 
-	        p := Persons[token]
-		p.FirstName = r.Form.Get("FirstName")
-		p.LastName = r.Form.Get("LastName")
-		p.Gender = r.Form.Get("Gender")
-		p.Country = r.Form.Get("Country")
-		p.Town = r.Form.Get("Town")
-		p.Nic = r.Form.Get("Nic")
-		p.Profession = r.Form.Get("Profession")
-		p.Education = r.Form.Get("Education")
-		p.SexualOrientation = r.Form.Get("SexualOrientation")
-		p.Description = r.Form.Get("Description")
+			token := session.Values[sessionToken].(string)
 
-		fmt.Printf("%+v\n", r.Form)
-		productsSelected := r.Form["Language"]
-		log.Println(Contains(productsSelected, "English"))
+			p := Persons[token]
 
-		for  i:=0; i < len(LANGUAGES); i++ {
-			if Contains( r.Form["Language"],LANGUAGES[i]) {
-				p.Languages[LANGUAGES[i]] = "checked"
+			p.FirstName = r.Form.Get("FirstName")
+			p.LastName = r.Form.Get("LastName")
+			p.Gender = r.Form.Get("Gender")
+			p.Country = r.Form.Get("Country")
+			p.Town = r.Form.Get("Town")
+			p.Nic = r.Form.Get("Nic")
+			p.Profession = r.Form.Get("Profession")
+			p.Education = r.Form.Get("Education")
+			p.SexualOrientation = r.Form.Get("SexualOrientation")
+			p.Description = r.Form.Get("Description")
+			p.BirthDate = r.Form.Get("BirthDate")
+
+			fmt.Printf("%+v\n", r.Form)
+			productsSelected := r.Form["Language"]
+			log.Println(Contains(productsSelected, "English"))
+
+			for i := 0; i < len(LANGUAGES); i++ {
+				if Contains(r.Form["Language"], LANGUAGES[i]) {
+					p.Languages[LANGUAGES[i]] = "checked"
+				}
 			}
-		}
-		Persons[token] = p
 
-		log.Println("Name ", r.Form["Gender"])
+			if p.Keep == false {
+				status.Status = "New"
+				status.Detail = "The profile was successfully created!"
+			} else {
+				status.Status = "Updated"
+				status.Detail = "The profile was successfully updated!"
+			}
+
+			p.Keep = true
+			Persons[token] = p
+
+			log.Println("Name ", r.Form["Gender"])
+		}
 	}
 
-	http.Redirect(w, r, "/session", http.StatusFound)
-}
+	data, err := json.Marshal(status)
+	if err != nil {
+		panic(err)
+		return
+	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+
+	//http.Redirect(w, r, "/session", http.StatusFound)
+}
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
 
@@ -389,7 +448,7 @@ func main() {
 	hub = newHub(*queue)
 	go hub.run()
 
-	log.Println("Starting service at ", endpoint.url() )
+	log.Println("Starting service at ", endpoint.url())
 	err = http.ListenAndServeTLS(*addr, "cert.pem", "key.pem", NewMux(config, hub))
 	//err = http.ListenAndServe(*addr, NewMux(config, hub) )
 	if err != nil {

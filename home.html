@@ -134,9 +134,13 @@
                 conn = new WebSocket("wss://{{.Host}}/ws");
 
                 conn.onopen = function (evt) {
-                    if ("{{with .Person}}{{.Token}}{{end}}" != "") {
-                        sendMessage("RequestWriteAccess", "null");
-                    }
+
+                    sendMessage("SendAllMessages", "null");
+
+
+                 //   if ("{{with .Person}}{{.Token}}{{end}}" != "") {
+                   //     sendMessage("SendAllMessages", "null");
+                   // }
                 }
 
                 conn.onclose = function (evt) {
@@ -159,6 +163,8 @@
                         if (message.op == "ExitUser") {
                             removeUser(message);
                         }
+
+                        console.log(message)
 
                         var uniqueID = message.token + "@" + message.timestamp.split(" ")[1];
 
@@ -212,9 +218,15 @@
                         if ("{{with .Person}}{{.Token}}{{end}}" != "") {
                                 btn.setAttribute("onclick", "myFunction('" + uniqueID + "')");
                             }
+
                         uberdiv.appendChild(btn);
-                        uberdiv.appendChild(diven);
+
+                        if ("{{with .Person}}{{.Token}}{{end}}" != "") {
+                         uberdiv.appendChild(diven);
+                        }
+
                         uberdiv.setAttribute("id", "post");
+
                         appendLog(uberdiv);
                     }
                 };
@@ -249,11 +261,9 @@
         </ul>
     </li>
     <li id="rightMenu">
-        <div style="display:{{.LoggedOut}}">
-            <ul>
-                <li>
-                    <span>Login</span>
-                </li>
+        <div class="flex-column" style="display:{{.LoggedOut}}">
+            <span>Login</span>
+            <ul class="flex-row">
                 <li>
                     <a href="https://{{.Host}}/google/login"><img src="/images/google.png"/></a>
                 </li>
@@ -261,17 +271,18 @@
                     <img src="/images/facebook.png"/>
                 </li>
             </ul>
+
         </div>
-        <div style="display:{{.LoggedIn}}">
+        <div class="flex-column" style="display:{{.LoggedIn}}">
             <ul>
-                <li>
-                    <span>Logout</span>
-                </li>
-                <li>
+                <li >
                     <form action='https://{{.Host}}/logout' method='POST'>
                         <button type="submit"><img src="/images/home.png" border="0"/></button>
                         <input type="hidden" name="token" value="{{with .Person}}{{.Token}}{{end}}"/>
                     </form>
+                </li>
+                <li>
+                    <span>Logout</span>
                 </li>
             </ul>
         </div>
@@ -309,11 +320,9 @@
                 success: function (person) {
 
                     if (person.userId != null) {
-
                         var bigImage = document.createElement("img");
                         bigImage.setAttribute("src", person.pictureURL);
                         x.appendChild(bigImage);
-
                         var info = document.createElement("ul");
                         var info1 = document.createElement("li");
                         var info2 = document.createElement("li");
@@ -321,12 +330,15 @@
                         var info4 = document.createElement("li");
                         var info5 = document.createElement("li");
                         var info6 = document.createElement("li");
-                        info1.innerText = "Name:        " + person.firstName + " " + person.lastName;
-                        info2.innerText = "Gender:      " + person.gender;
-                        info3.innerText = "Orientation: " + person.sexualOrienation;
-                        info4.innerText = "Location:    " + person.country + " " + person.town;
-                        info5.innerText = "Age:         " + "0";
-                        info6.innerText = "Other:       " + person.email;
+
+                        info1.innerText = "        " + person.nic;
+                        info2.innerText = "        " + person.firstName + " " + person.lastName;
+                        info3.innerText = "        " + person.gender +" "+ person.sexualOrienation;
+                        info4.innerText = "        " + person.country + " " + person.town;
+                        info5.innerText = "        " + "";
+                        info6.innerText = "        " + person.profession;
+
+
                         info.appendChild(info1);
                         info.appendChild(info2);
                         info.appendChild(info3);

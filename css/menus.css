@@ -23,6 +23,7 @@
     padding-bottom: 0px;
 }
 
+
 #CurrentUsers {
     display: flex;
     flex-direction: row;
@@ -42,7 +43,7 @@
     border-radius: 50%;
     border-color: #b82045;
     border-width: 2px;
-    width: 2em;
+    width: 2.5em;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -50,37 +51,60 @@
 
 
 #rightMenu  {
-    padding-right: 12px;
+    padding-right: 10px;
     text-shadow: 2px 2px 4px #000000;
 }
-#rightMenu  ul {
+#rightMenu.LoggedIn ul {
+
+
+}
+.flex-column {
+    display: flex;
+    flex-direction: column
+}
+
+.flex-row {
     display: flex;
     flex-direction: row;
 }
-#rightMenu span {
-    padding-top: 18px;
-    padding-right: 4px;
+
+#rightMenu.LoggedOut ul {
+
 }
+
+
+#rightMenu span {
+    padding-top: 1px;
+    padding-right: 8px;
+
+    padding-bottom:2px;
+}
+
 #rightMenu img {
-    width: 35px;
-    padding: 12px;
-    padding-left: 0px;
-    padding-right: 2px;
+    width: 2em;
 }
 #rightMenu button {
+    margin-top: 2px;
+    padding-left: 12px;
+    padding-right: 12px;
+    background-color: #9cb8f5;
+}
+
+#rightMenu form {
     padding: 0px;
-    margin:0px;
+    margin-left: auto;
+    margin-right: auto;
+
     border: none;
     background-color: transparent;
 }
-
 
 ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #7994ce;
+    background-color: ##9cb8f5;
 }
 li span {
 
@@ -89,16 +113,17 @@ li span {
     text-align: center;
     width: auto;
     text-decoration: none;
-    font: bold 14px Arial, Helvetica, sans-serif;
+    font: bold 16px Arial, Helvetica, sans-serif;
 }
 li #me {
     text-align: left;
     width: 12em;
     padding-left: 2px;
     padding-bottom: 2px;
+    margin-top: 3px;
 
 }
 li a:hover {
-    background-color: #7994ce;
+    background-color: #9cb8f5;
 }
 
