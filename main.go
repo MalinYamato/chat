@@ -396,7 +396,7 @@ var sessionStore = sessions.NewCookieStore([]byte(sessionSecret), nil)
 
 func main() {
 
-	endpoint = Endpoint{"https", "secure.localhost.xyz", "443"}
+	endpoint = Endpoint{"https", "secure.krypin.xyz", "443"}
 	dir, _ := os.Getwd()
 	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
 	queue := new(QueueStack)
