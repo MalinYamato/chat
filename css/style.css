@@ -5,6 +5,7 @@ html {
 }
 
 body {
+	font:  18px Comic Sans MS , cursive, sans-serif;
 	overflow: hidden;
 	padding: 0;
 	margin: 0;
@@ -121,9 +122,15 @@ body {
 
 }
 #postitem span {
+
 	margin-left: 4px;
 	text-align: left;
 }
+
+#postitem li {
+	margin-top: -3px;
+}
+
 
 #postbutton {
 	display: flex;
@@ -152,10 +159,11 @@ body {
 	border-style: solid;
 	border-color: #b82045;
 	border-width: 2px;
+	margin-top: 2px
 }
 
 #timestamp {
-	padding-left: 4px;
+
 	font: bold 10px Arial, Helvetica, sans-serif;
 	color: #616161;
 	width: auto;
@@ -165,13 +173,18 @@ body {
 }
 
 #from {
-
+	margin-top: -3px;
+	margin-bottom: -3px;
+	height: auto;
+	font-size: 20px;
+	font-weight:bold;
 	color: #7994ce;
-	font: bold 18px Arial, Helvetica, sans-serif;
+
 
 }
 
 #messageText {
+	font: 18px Arial, Helvetica, sans-serif;
     height: auto;
 	white-space: normal;
 	word-break: break-all;
@@ -179,7 +192,7 @@ body {
 	color: black;
 	text-align: left;
 
-	font: normal 18px Arial, Helvetica, sans-serif;
+
 }
 @media only screen and (min-width: 600px) {
 	/* For tablets: */

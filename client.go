@@ -72,6 +72,15 @@ func (c *Client) validSession() bool {
 	return true
 }
 
+func (c *Client) flushRoom(room string) {
+	theRoom :=  c.hub.messages[room]
+	list := theRoom.GetAllAsList()
+	log.Println("Room List length ",len(list))
+	for i := 0; i < len(list); i++ {
+		c.send <- list[i].(Message)
+	}
+}
+
 func (c *Client) readPump() {
 	defer func() {
 
@@ -107,31 +116,34 @@ func (c *Client) readPump() {
 		log.Println("Client: message from Browser ", message)
 
 		if message.Op == "SendAllMessages" {
-			list := c.hub.messages.GetAllAsList()
-			for i := 0; i < len(list); i++ {
-				c.conn.WriteJSON(list[i])
-			}
+			c.flushRoom("Main")
+
 		} else if ! c.validSession() {
-			json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
-			err := c.conn.WriteJSON(json_message)
+			json_message := Message{Op: "Control", Room: "none", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
+			c.send <- json_message
 			if err != nil {
 				log.Println("Client Fail to write JSON on websockets because: ", err)
 				return
 			}
 		} else if value, ok := Persons[message.Token]; ok {
 
-			sender := value.FirstName
-			if len(value.Nic) > 5 {
-				sender = value.Nic
+			if message.Op == "ChangeRoom" {
+					log.Println("Request to change room to ", message.Content)
+					value.Room = message.Content;
+				        Persons[value.Token] = value
+					c.flushRoom(value.Room)
+			} else {
+				sender := value.FirstName
+				if len(value.Nic) > 5 {
+					sender = value.Nic
+				}
+				message := Message{Op: "Message", Room: value.Room, Timestamp: message.Timestamp, Token: value.UserID, Sender: sender, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
+				c.hub.broadcast <- message
 			}
-
-			log.Println("Client: Token was set", c.token())
-			message := Message{Op: "Message", Timestamp: message.Timestamp, Token: value.UserID, Sender: sender, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
-			c.hub.broadcast <- message
 		} else {
 			log.Println("Client: Invalid Token: ", message.Token)
-			json_message := Message{Op: "Control", Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
-			err := c.conn.WriteJSON(json_message)
+			json_message := Message{Op: "Control", Room: value.Room, Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
+			c.send <- json_message
 			if err != nil {
 				log.Println("Client: Fail to write JSON on  websockets! Err: ", err)
 				return
@@ -203,7 +215,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println("Client: Call to sessionStore.Get returned ", err)
 	} else if session != nil {
 		atoken, ok := session.Values[sessionToken]
-		if ok  {
+		if ok {
 			log.Println(atoken)
 			if atoken != nil {
 				token = atoken.(string)

@@ -25,11 +25,15 @@ import (
 	"encoding/json"
 
 	"fmt"
+	"strconv"
+
 )
 
 type Config struct {
-	ClientID     string
-	ClientSecret string
+	ClientID       string
+	ClientSecret   string
+	ChatHost       string
+	ChatPrivateKey string
 }
 
 type HTMLReplace struct {
@@ -84,7 +88,8 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-	ifs := hub.messages.GetAllAsList()
+	room := hub.messages["Main"]
+	ifs := room.GetAllAsList()
 	var msgs []Message
 	msgs = make([]Message, len(ifs), len(ifs))
 	for i := 0; i < len(ifs); i++ {
@@ -126,7 +131,8 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Authorization Failure! User does not exist, The following token is invalid: " + token ))
 	}
 
-	ifs := hub.messages.GetAllAsList()
+	room := hub.messages[person.Room]
+	ifs := room.GetAllAsList()
 	var msgs []Message
 	msgs = make([]Message, len(ifs), len(ifs))
 	for i := 0; i < len(ifs); i++ {
@@ -155,6 +161,12 @@ type ProfileRequest struct {
 	Name string `json:"name,omitempty"`
 }
 
+type Date struct {
+	Year int
+	Month int
+	Day int
+}
+
 type Person struct {
 	Keep              bool          `json:"keep"`
 	Nic               string        `json:"nic"`
@@ -166,7 +178,7 @@ type Person struct {
 	Country           string        `json:"town"`
 	PictureURL        string        `json:"pictureURL,omitempty"`
 	SexualOrientation string        `json:"sexualOrienation"`
-	BirthDate         string         `json:"birthDate"`
+	BirthDate         Date          `json:"birthDate"`
 	Languages         map[string]string `json:"Languages,omitempty"`
 	Profession        string        `json:"profession"`
 	Education         string        `json:"education"`
@@ -250,17 +262,9 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 	token := session.Values[sessionToken].(string)
 
 	p, _ := Persons[token]
-
-	//p.Languages = map[string]string{"English":"checked"}
-
 	t := template.New("fieldname example")
 	t = template.Must(template.ParseFiles("profile.html"))
 
-	//p :=  Person{
-	//	Gender:            "Female",
-	//	SexualOrientation: "Gay",
-	//	Languages:         map[string]string{"English": "checked", "German": "checked"},
-	//}
 
 	t.Execute(w, struct {
 		Languages          []string
@@ -320,7 +324,9 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			p.Education = r.Form.Get("Education")
 			p.SexualOrientation = r.Form.Get("SexualOrientation")
 			p.Description = r.Form.Get("Description")
-			p.BirthDate = r.Form.Get("BirthDate")
+			p.BirthDate.Year, _ =  strconv.Atoi(r.Form.Get("BirthYear"))
+			p.BirthDate.Month, _ =  strconv.Atoi(r.Form.Get("BirthMonth"))
+			p.BirthDate.Day, _ =  strconv.Atoi(r.Form.Get("BirthDay"))
 
 			fmt.Printf("%+v\n", r.Form)
 			productsSelected := r.Form["Language"]
@@ -392,11 +398,19 @@ var hub *Hub
 var DocumentRoot string
 var endpoint Endpoint
 var homeTemplate = template.Must(template.ParseFiles("home.html"))
-var sessionStore = sessions.NewCookieStore([]byte(sessionSecret), nil)
-
+var sessionStore *sessions.CookieStore
 func main() {
 
-	endpoint = Endpoint{"https", "secure.krypin.xyz", "443"}
+	config := &Config{
+		ClientID:      os.Getenv("GOOGLE_CLIENT_ID"),
+		ClientSecret:  os.Getenv("GOOGLE_CLIENT_SECRET"),
+		ChatHost:      os.Getenv("CHAT_HOST"),
+		ChatPrivateKey : os.Getenv("CHAT_PRIVATE_KEY"),
+	}
+
+	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
+
+	endpoint = Endpoint{"https", config.ChatHost, "443"}
 	dir, _ := os.Getwd()
 	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
 	queue := new(QueueStack)
@@ -413,19 +427,7 @@ func main() {
 		}
 	}
 
-	// read credentials from environment variables if available
-
-	//config := &Config{
-	//	ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
-	//	ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
-	//}
-
 	Persons = make(PersonsMAP)
-
-	config := &Config{
-		ClientID:     "585900153728-tu7nr57i15m1d8sq8ljiv1e00nol2djr.apps.googleusercontent.com",
-		ClientSecret: "Qll7wns7E-5uePpE7nqsm56o",
-	}
 
 	// allow consumer credential flags to override config fields
 	clientID := flag.String("client-id", "", "Google Client ID")

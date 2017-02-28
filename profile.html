@@ -332,6 +332,14 @@
             }
         }
 
+        .Number {
+
+            width: 4.5em;
+        }
+        .SmallNumber {
+            width: 3.5em;
+        }
+
     </style>
 </head>
 
@@ -373,8 +381,23 @@
                 </li>
 
                 <li >
-                    <span for="BirthDate"><b>Birth Date</b> </span>
-                    <input type="date" id="BirthDate" name="BirthDate" min="2012-01-02" max="1900-12-31" value="{{.P.BirthDate}}">
+
+                  <div class="flex-row">
+                     <div class="flex-column">
+                         <span for="BirthDate"><b>Year</b> </span>
+                         <input class="Number" type="number" min="1900" max="2100" id="BirtYear" name="BirthYear" value="{{.P.BirthDate.Year}}">
+                     </div>
+                         <div class="flex-column">
+                              <span for="BirthDate"><b>Month</b> </span>
+                              <input class="SmallNumber" type="number" min="1" max="12" id="BirthMonth" name="BirthMonth"  value="{{.P.BirthDate.Month}}">
+                         </div>
+                             <div class="flex-column">
+                               <span for="BirthDate"><b>Day</b> </span>
+                                <input class="SmallNumber" type="number" min="1" max="31" id="BirthDay" name="BirthDay" value="{{.P.BirthDate.Day}}">
+                             </div>
+                  </div>
+
+
                 </li>
 
                 <li>
@@ -387,7 +410,7 @@
                 </li>
                 <li>
                     <span for="email"><b>Email</b> (Verified) <br></span>
-                    <input type="text" id="Email" name="Email" value="{{.P.Email}}" readonly>
+                    <input type="email" id="Email" name="Email" value="{{.P.Email}}" readonly>
                 </li>
 
                 <li>

@@ -11,7 +11,6 @@ import (
 	"github.com/satori/go.uuid"
 	"github.com/dghubble/gologin/google"
 
-
 )
 
 const (
@@ -80,7 +79,8 @@ func issueSession() http.Handler {
 				GoogleID:          googleUser.Id,
 				UserID :           userID.String(),
 				Token:             secret.String(),
-				Description: 	   v.Description}
+				Description: 	   v.Description,
+				Room: 		   v.Room}
 
 				delete(Persons,key)
 
@@ -94,7 +94,7 @@ func issueSession() http.Handler {
 				LastName:          googleUser.FamilyName,
 				Email:             googleUser.Email,
 				Gender:            googleUser.Gender,
-				BirthDate:         "",
+				BirthDate:         Date{0,0,0},
 				Town:              "",
 				Country:           googleUser.Locale,
 				PictureURL:        googleUser.Picture,
@@ -105,14 +105,15 @@ func issueSession() http.Handler {
 				GoogleID:          googleUser.Id,
 				UserID:            userID.String(),
 				Token:             secret.String(),
-			        Description:       ""}
+			        Description:       "",
+				Room:              "Main",}
 
 		}
 
 		Persons[secret.String()] = *person
 
-		hub.broadcast <- Message{Op: "Message", Timestamp: "null", Token: person.UserID, Sender: person.FirstName, PictureURL: person.PictureURL, Gender: person.Gender, Content: "入室 " + person.FirstName + " " + person.LastName }
-		hub.broadcast <- Message{ "NewUser","null", person.UserID, person.FirstName, person.PictureURL, person.Gender, "NULL"  }
+		hub.broadcast <- Message{Op: "Messag", Room: person.Room, Timestamp: "null", Token: person.UserID, Sender: person.FirstName, PictureURL: person.PictureURL, Gender: person.Gender, Content: "入室 " + person.FirstName + " " + person.LastName }
+		hub.broadcast <- Message{Op: "NewUser", Room: person.Room, Timestamp:"null",Token: person.UserID, Sender: person.FirstName, PictureURL:person.PictureURL, Gender:person.Gender, Content:"NULL"  }
 
 		log.Println("Successful Login ", googleUser.Email)
 		http.Redirect(w, req, "/session", http.StatusFound)
@@ -144,7 +145,7 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 		token := session.Values[sessionToken].(string)
 		person, ok := Persons[token]
 		if ok == true {
-			hub.broadcast <- Message{"ExitUser", "出ました", person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室、またね　" + person.FirstName + " " + person.LastName}
+			hub.broadcast <- Message{Op:"ExitUser",Room: person.Room, Timestamp: "出ました", Token: person.UserID, Sender:person.FirstName, PictureURL:person.PictureURL, Gender:person.Gender, Content:"出室、またね　" + person.FirstName + " " + person.LastName}
 			if person.Keep == false {
 			     delete(Persons, token)
 		         }

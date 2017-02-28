@@ -8,6 +8,80 @@
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
 
+    <style>
+
+        ul {
+            font:  18px Comic Sans MS , cursive, sans-serif;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+
+        }
+
+        li {
+            #float: left;
+        }
+
+
+        .dropbtn {
+            padding-top: 3px;
+        }
+        #SelectedRoom {
+            padding-left: 2px;
+            padding-top: 4px;
+        }
+
+        li button, .dropbtn {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            #padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li button:hover, .dropdown:hover .dropbtn {
+            background-color: rgb(148, 175, 240);
+        }
+
+        li.dropdown {
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            border-radius: 12%;
+            border-style:solid;
+            border-color: #88a3df;
+            display: none;
+            position: absolute;
+            background-color: #a2befc;
+            width: auto;
+            -webkit-box-shadow:  10px 10px 5px gray;
+            -moz-box-shadow:  10px 10px 5px gray;
+            box-shadow:  8px 8px 5px gray;
+            z-index: 1;
+        }
+
+        .dropdown-content button {
+
+            width: 12em;
+            #text-shadow: 2px 2px 4px #000000;
+            color: #9a2f4d;
+            background-color: #a2befc;
+            padding: 2px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            border-radius: 12%;
+        }
+
+        .dropdown-content button:hover {background-color: #94aff0
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
@@ -101,6 +175,49 @@
                 msg.value = "";
                 return true;
             }
+
+            document.getElementById("MainButton").onclick = function () {
+                $("#SelectedRoom").text("Main");
+                $("#log").empty();
+                sendMessage("ChangeRoom", "Main");
+            };
+
+            document.getElementById("ReimersHotelButton").onclick =function () {
+                $("#SelectedRoom").text("Reimers Hotel");
+                $("#log").empty();
+                sendMessage("ChangeRoom", "ReimersHotel");
+            };
+
+            document.getElementById("EvaMonikaMalinButton").onclick =function () {
+                $("#SelectedRoom").text("EvaMonikaMalin");
+                $("#log").empty();
+                sendMessage("ChangeRoom", "Eva Monika Malin");
+            };
+
+            document.getElementById("GayButton").onclick = function () {
+                $("#SelectedRoom").text("Gay");
+                $("#log").empty();
+                sendMessage("ChangeRoom", "Gay");
+            };
+
+            document.getElementById("LesbianButton").onclick =function () {
+                $("#SelectedRoom").text("Lesbian");
+                $("#log").empty();
+                sendMessage("ChangeRoom", "Lesbian");
+            };
+
+            document.getElementById("JapaneseButton").onclick =function () {
+                $("#SelectedRoom").text("日本語屋");
+                $("#log").empty();
+                sendMessage("ChangeRoom", "Japanese");
+            };
+            document.getElementById("TransButton").onclick =function () {
+                $("#SelectedRoom").text("Trans");
+                $("#log").empty();
+                sendMessage("ChangeRoom", "Trans");
+            };
+
+
 
 
             document.getElementById("form").onsubmit = function () {
@@ -236,6 +353,8 @@
                 appendLog(item);
             }
         };
+
+
     </script>
 
 </head>
@@ -244,14 +363,24 @@
     <li id="leftMenu">
         <ul>
             <li>
-                <img src="/images/config.png"/>
+                <a href="https://{{.Host}}/MainProfile"> <img src="/images/config.png"/></a>
             </li>
             <li>
                 <a href="https://{{.Host}}/MainProfile"> <img src="/images/id_card.png"/></a>
             </li>
-            <li>
-
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn">Room: </a>
+                <div class="dropdown-content">
+                    <button  id="MainButton" >Main room</button>
+                    <button  id="ReimersHotelButton" >Reimers Hotel room</button>
+                    <button  id="EvaMonikaMalinButton" >EvaMonikaMalin room</button>
+                    <button id="JapaneseButton" >日本語屋さん</button>
+                    <button id="GayButton" >Gay room</button>
+                    <button id="LesbianButton" >Lesbian room</button>
+                    <button id="TransButton" >Trans room</button>
+                </div>
             </li>
+            <li id="SelectedRoom"></li>
         </ul>
         <span id="me">{{ with .Person}}{{.FirstName}} {{.LastName}}{{end}}</span>
     </li>

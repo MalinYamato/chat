@@ -104,7 +104,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: ##9cb8f5;
+    background-color: #9cb8f5;
 }
 li span {
 
@@ -113,7 +113,7 @@ li span {
     text-align: center;
     width: auto;
     text-decoration: none;
-    font: bold 16px Arial, Helvetica, sans-serif;
+
 }
 li #me {
     text-align: left;

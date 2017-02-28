@@ -25,8 +25,7 @@ type Hub struct {
 	// Unregister requests from clients.
 	unregister chan *Client
 
-	messages QueueStack
-
+	messages map[string]QueueStack
 
 	command chan Command
 
@@ -37,6 +36,7 @@ type Hub struct {
 
 type Message struct {
 	Op        string `json:"op,omitempty"`
+	Room      string `json:"Room"`
 	Timestamp string `json:"timestamp,omitempty"`
 	Token     string `json:"token,omitempty"`
 	Sender    string `json:"sender,omitempty"`
@@ -64,11 +64,20 @@ func newHub(stack QueueStack) *Hub {
 		clients:    make(map[*Client]bool),
 		rooms:	    make(map[string]Room),
 		command:    make(chan Command),
-		messages:   stack,
+		messages:   map[string]QueueStack{
+				"Main":QueueStack{},
+			        "ReimersHotel" : QueueStack{},
+			        "EvaMonikaMalin":QueueStack{},
+				"Japanese": QueueStack{},
+			        "Lesbian": QueueStack{},
+			        "Gay": QueueStack{},
+			        "Trans":  QueueStack{}},
 	}
 }
 
 func (h *Hub) run() {
+
+
 	for {
 		select {
 		case client := <-h.register:
@@ -81,10 +90,16 @@ func (h *Hub) run() {
 			}
 
 		case message := <-h.broadcast:
-			log.Println("Hub: broadcast", message)
-			h.messages.Push(message)
-			if h.messages.Len() > 50 {
-				h.messages.TailPop()
+
+
+			room := h.messages[message.Room]
+			room.Push(message)
+		        h.messages[message.Room] = room
+
+			log.Println("Hub: broadcast", message,message.Room, room.Len() )
+
+			if room.Len() > 50 {
+				room.TailPop()
 			}
 			for client := range h.clients {
 				select {
