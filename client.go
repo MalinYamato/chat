@@ -208,7 +208,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 			if atoken != nil {
 				token = atoken.(string)
 			} else {
-				log.Println("Client: token was nil")
+				log.Println("Client:  token was nil")
 			}
 			mycookie, err := r.Cookie(sessionName)
 			if (err == nil) {
