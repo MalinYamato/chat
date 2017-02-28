@@ -2,10 +2,7 @@ package main
 
 import (
 
-"fmt"
-"io/ioutil"
-
-	"net/http"
+        "net/http"
 
 	"log"
 	"github.com/satori/go.uuid"
@@ -48,9 +45,9 @@ func issueSession() http.Handler {
 			log.Println("There was an old cookie. Removing it")
 			sessionStore.Destroy(w, sessionName)
 		}
-		// issue a new cookie
+
 		session := sessionStore.New(sessionName)
-		//session.Values[sessionUserKey] = secret
+
 		session.Values[sessionUserKey] = googleUser.Id
 		session.Values[sessionToken] = secret.String()
 		err = session.Save(w)
@@ -121,22 +118,8 @@ func issueSession() http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-// welcomeHandler shows a welcome message and login button.
-func welcomeHandler(w http.ResponseWriter, req *http.Request) {
-	if req.URL.Path != "/" {
-		http.NotFound(w, req)
-		return
-	}
-	if isAuthenticated(req) {
-		http.Redirect(w, req, "/profile", http.StatusFound)
-		return
-	}
-	page, _ := ioutil.ReadFile("home.html")
-	fmt.Fprintf(w, string(page))
-}
 
 
-// logoutHandler destroys the session on POSTs and redirects to home.
 func logoutHandler(w http.ResponseWriter, req *http.Request) {
 	log.Println("User Loggeed out, Delete",req.Method)
 	if req.Method == "POST" {
@@ -155,7 +138,7 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 
-// requireLogin redirects unauthenticated users to the login route.
+
 func requireLogin(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, req *http.Request) {
 		if !isAuthenticated(req) {
@@ -167,7 +150,7 @@ func requireLogin(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-// isAuthenticated returns true if the user has a signed session cookie.
+
 func isAuthenticated(req *http.Request) bool {
 	_, err := sessionStore.Get(req, sessionName);
 	if err == nil {
