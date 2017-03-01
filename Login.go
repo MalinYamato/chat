@@ -62,6 +62,7 @@ func issueSession() http.Handler {
 			if v.Email == googleUser.Email {
 			person = &Person{
 				Nic:               v.Nic,
+				Keep:		   v.Keep,
 				FirstName:         checkSet(v.FirstName,googleUser.GivenName),
 				LastName:          checkSet(v.LastName,googleUser.FamilyName),
 				Email:             checkSet(v.Email,googleUser.Email),
@@ -89,6 +90,7 @@ func issueSession() http.Handler {
 		if person == nil {
 			person = &Person{
 				Nic:               "",
+				Keep:              false,
 				FirstName:         googleUser.GivenName,
 				LastName:          googleUser.FamilyName,
 				Email:             googleUser.Email,
@@ -137,10 +139,10 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 
 			hub.broadcast <- Message{Op:"ExitUser",Room: person.Room, Timestamp: "出ました", Token: person.UserID, Sender:person.FirstName, PictureURL:person.PictureURL, Gender:person.Gender, Content:"出室、またね　" + person.FirstName + " " + person.LastName}
 			if person.Keep == false {
-				log.Printf("Login: Logout user and remove Remove her profile Email %s  UserId %s Token $s", person.Email,person.UserID,person.Token)
+				log.Printf("Login: Logout user and remove Remove her profile Email %s  UserId %s Token %s", person.Email,  person.UserID,  person.Token)
 			     delete(Persons, token)
 		         } else {
-				log.Printf("Login: Logout user but keep her Profile Email %s  UserId %s Token $s", person.Email,person.UserID,person.Token)
+				log.Printf("Login: Logout user but keep her Profile Email %s  UserId %s Token %s", person.Email, person.UserID, person.Token)
 			}
 		}
 		sessionStore.Destroy(w, sessionName)
