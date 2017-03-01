@@ -19,7 +19,7 @@
 
         form {
 
-            background: linear-gradient(to bottom right, #d2d2d2, white);
+            background: linear-gradient(to bottom right, #bfbfbf, white);
         }
 
         .row::after {
@@ -39,7 +39,7 @@
         }
 
         .header {
-            color: #505050;
+            color: 505050#;
             margin-left: 15px;
             margin-top: 14px;
             font: 18px Arial, Helvetica, sans-serif;
@@ -212,8 +212,10 @@
             margin-right: 5px;
         }
 
-        #mapholder img {
-            width: 100%;
+
+
+        #MapHolder {
+            height: 330px;
         }
 
         .menu
@@ -271,8 +273,7 @@
         .checkbox-container div {
             text-align: left;
             width: 7em;
-            margin: 2px;
-            padding: 2px;
+
         }
 
         #Town, #Country, .locationbutton {
@@ -301,12 +302,6 @@
 
         }
 
-       #status span {
-
-
-
-        }
-
         .status, .status-m {
             color: white;
             -webkit-box-shadow:  10px 10px 5px gray;
@@ -314,7 +309,7 @@
             box-shadow:  8px 8px 5px gray;
             height: 4em;
             width: 500px;
-            font: 24px Arial, Helvetica, sans-serif;
+            font: 18px Arial, Helvetica, sans-serif;
             display: table-cell;
             vertical-align: middle;
             text-align: center;
@@ -339,7 +334,6 @@
         }
 
         .Number {
-
             width: 4.5em;
         }
         .SmallNumber {
@@ -366,22 +360,22 @@
             <ul>
                 <li>
                     <span for="Nic"><b>Nicname</b> <br> </span>
-                    <input type="text" id="Nic" name="Nic" placeholder="Nicname used during chat" value="{{.P.Nic}}">
+                    <input onchange="changed()" type="text" id="Nic" name="Nic" placeholder="Nicname used during chat" value="{{.P.Nic}}">
                 </li>
 
                 <li>
                     <span for="FirstName"><b>First Name </b>  </span>
-                    <input type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
+                    <input onchange="changed()" type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
                 </li>
                 <li>
                     <span for="LastName"><b>Last Name </b></span>
-                    <input type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
+                    <input onchange="changed()" type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
                 </li>
                 <li>
                     <span for="Gender"><b>Gender</b> </span>
-                    <select id="Gender" name="Gender">
+                    <select onchange="changed()" id="Gender" name="Gender">
                         {{ $gs := .Genders }} {{ $selected := .P.Gender }}{{ range $gs}}{{$v := .}}
-                        <option value="{{$v}}" {{ if eq $selected $v }} selected {{end}}>{{$v}}</option>
+                        <option onchange="changed()" value="{{$v}}" {{ if eq $selected $v }} selected {{end}}>{{$v}}</option>
                         {{end}}
                     </select>
                 </li>
@@ -391,15 +385,15 @@
                   <div class="flex-row">
                      <div class="flex-column">
                          <span for="BirthDate"><b>Year</b> </span>
-                         <input class="Number" type="number" min="1900" max="2100" id="BirtYear" name="BirthYear" value="{{.P.BirthDate.Year}}">
+                         <input onchange="changed()" class="Number" type="number" min="1900" max="2100" id="BirtYear" name="BirthYear" value="{{.P.BirthDate.Year}}">
                      </div>
                          <div class="flex-column">
                               <span for="BirthDate"><b>Month</b> </span>
-                              <input class="SmallNumber" type="number" min="1" max="12" id="BirthMonth" name="BirthMonth"  value="{{.P.BirthDate.Month}}">
+                              <input onchange="changed()" class="SmallNumber" type="number" min="1" max="12" id="BirthMonth" name="BirthMonth"  value="{{.P.BirthDate.Month}}">
                          </div>
                              <div class="flex-column">
                                <span for="BirthDate"><b>Day</b> </span>
-                                <input class="SmallNumber" type="number" min="1" max="31" id="BirthDay" name="BirthDay" value="{{.P.BirthDate.Day}}">
+                                <input onchange="changed()"  class="SmallNumber" type="number" min="1" max="31" id="BirthDay" name="BirthDay" value="{{.P.BirthDate.Day}}">
                              </div>
                   </div>
 
@@ -408,25 +402,25 @@
 
                 <li>
                     <span for="SexualOrientation"><b>Orientation</b> </span>
-                    <select id="SexualOrientation" name="SexualOrientation">
+                    <select onchange="changed()" id="SexualOrientation" name="SexualOrientation">
                         {{ $os := .SexualOrientations }} {{ $selected := .P.SexualOrientation }}{{ range $os}}{{$ov:=.}}
-                        <option value="{{$ov}}" {{ if eq $selected $ov }} selected {{end}}>{{$ov}}</option>
+                        <option onchange="changed()"  value="{{$ov}}" {{ if eq $selected $ov }} selected {{end}}>{{$ov}}</option>
                         {{end}}'
                     </select>
                 </li>
                 <li>
                     <span for="email"><b>Email</b> (Verified) <br></span>
-                    <input type="email" id="Email" name="Email" value="{{.P.Email}}" readonly>
+                    <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.Email}}" readonly>
                 </li>
 
                 <li>
                     <span for="Profession"><b>Profession</b></span>
-                    <input placeholder="Profession" type="text" id="Profession" name="Profession"
+                    <input onchange="changed()"  placeholder="Profession" type="text" id="Profession" name="Profession"
                            value="{{.P.Profession}}">
                 </li>
                 <li>
                     <span for="Education"><b>Education</b> </span>
-                    <input placeholder="Education" type="text" id="Education" name="Education" value="{{.P.Education}}">
+                    <input  onchange="changed()" placeholder="Education" type="text" id="Education" name="Education" value="{{.P.Education}}">
                 </li>
                 <li>
                     <input id="submitbutton" formmethod="post" class="button" type="submit" value="Save">
@@ -450,29 +444,29 @@
                                 Location!
                             </button>
                             <span for="Country"><b>Country</b> </span>
-                            <input type="text" id="Country" name="Country" value="{{.P.Country}}">
+                            <input  onchange="changed()" type="text" id="Country" name="Country" value="{{.P.Country}}">
 
                             <span for="Town"><b>Town</b> </span>
-                            <input type="text" id="Town" name="Town" value="{{.P.Town}}">
+                            <input onchange="changed()" type="text" id="Town" name="Town" value="{{.P.Town}}">
                         </div>
                         <div class="checkbox-container languages">
                             <!-- TEMPLATE CODE -->
                             {{ $all := .Languages }} {{ $some := .P.Languages}}
                             {{ range $all}}{{$v := .}}
-                            <div><input type="checkbox" name="Language" value="{{$v}}" {{ if eq "checked" (index $some $v) }}checked {{end}}>{{$v}}</div>
+                            <div><input onchange="changed()" type="checkbox" name="Language" value="{{$v}}" {{ if eq "checked" (index $some $v) }}checked {{end}}>{{$v}}</div>
                             {{end}}
                             <!-- TEMPLATE CODE -->
                         </div>
                     </div>
 
-                    <div id="mapholder"></div>
+                    <div id="MapHolder"></div>
                 </div>
 
             </fieldset>
             </div>
 
 
-        <div id="StatusBox" hidden class="stuff stuff-m"><p  class="status-m status" id="status"></p></div>
+        <div id="StatusBox" style="width:100%;height:500px" hidden  class="stuff stuff-m"><p  class="status-m status" id="status"></p></div>
 
     </div>
 
@@ -482,6 +476,7 @@
     <p></p>
 </div>
 <script>
+    $("#StatusBox").hide();
     var town = document.getElementById("town");
     var city = document.getElementById("city");
 
@@ -502,13 +497,21 @@
             } else {
             $("#status").css("background-color", "green");
             }
-            $("#status").text(response.detail);
+            $("#MapHolder").height(280);
             $("#StatusBox").show();
+            $("#status").html(response.detail);
         });
     });
 
-    function getLocation() {
+    function changed() {
+        $("#MapHolder").height(280);
+        $("#StatusBox").show();
+        $("#status").html("Your changes have not been saved yet!");
+        $("#status").css("background-color", "darkred")
+    }
 
+    function getLocation() {
+        $("#MapHolder").show();
         console.log("getLocation");
         var timeoutVal = 10 * 1000 * 1000;
         if (navigator.geolocation) {
@@ -527,8 +530,113 @@
         console.log("Code " + err.code  + " Err " +  err.message);
         $("#status").css("background-color", "red");
         $("#status").text("Goolge is bad! " + err.message + " Code: "+err.code);
+        $("#MapHolder").height(280);
         $("#StatusBox").show();
     }
+
+    var markerShapeGlastonbury = {
+        coord: [12,4,216,22,212,74,157,70,184,111,125,67,6,56],
+        type: 'poly'
+    };
+
+
+    var pictureOverlay;
+
+        function setMapPoint(lat,long, message) {
+
+            $("#StatusBox").hide();
+            $("#MapHolder").height(330);
+
+            var latlong = new google.maps.LatLng(lat,long);
+            var mapCanvas = document.getElementById("MapHolder");
+            var mapOptions = {center: latlong, zoom: 10};
+            var map = new google.maps.Map(mapCanvas,mapOptions);
+
+            var myCity = new google.maps.Circle({
+                center: latlong,
+                radius: 5000,
+                strokeColor: "#0000FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#0000FF",
+                fillOpacity: 0.2
+            });
+            myCity.setMap(map);
+
+            var imageBounds = {
+                north: lat + 0.015,
+                south: lat - 0.015,
+                east:  long + 0.025,
+                west:  long - 0.025
+            };
+
+            pictureOverlay = new google.maps.GroundOverlay(
+                '{{.P.PictureURL}}',
+                imageBounds);
+
+            pictureOverlay.setMap(map);
+
+    }
+
+    function myMap() {
+
+        var lat = 50.110924;
+        var long = 8.682127;
+
+
+        $("#StatusBox").hide();
+        $("#MapHolder").height(330);
+
+        var latlong = new google.maps.LatLng(lat,long);
+        var mapCanvas = document.getElementById("MapHolder");
+        var mapOptions = {center: latlong, zoom: 4};
+        var map = new google.maps.Map(mapCanvas,mapOptions);
+
+        var myCity = new google.maps.Circle({
+            center: latlong,
+            radius: 150000,
+            strokeColor: "#0000FF",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#0000FF",
+            fillOpacity: 0.2
+        });
+        myCity.setMap(map);
+
+        var imageBounds = {
+            north: lat + 0.015,
+            south: lat - 0.015,
+            east:  long + 0.025,
+            west:  long - 0.025
+        };
+
+        pictureOverlay = new google.maps.GroundOverlay(
+            "https://{.Host}/images/krypinlogo.png",
+            imageBounds);
+
+        pictureOverlay.setMap(map);
+
+
+        /*
+        var myCenter = new google.maps.LatLng(50.110924,);
+        var mapCanvas = document.getElementById("MapHolder");
+        var mapOptions = {center: myCenter, zoom: 4};
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+        var marker = new google.maps.Marker({
+        position:myCenter ,
+        icon:"pinkball.png" });
+
+        marker.setMap(map);
+
+        var infowindow = new google.maps.InfoWindow({
+            content: '<b>Chat server location!</b>'
+        });
+
+
+        infowindow.open(MapHolder,marker);
+        */
+    }
+
 
     function showPosition(position) {
         console.log("latlon " + latlon);
@@ -537,10 +645,7 @@
 
         console.log("latlon " + latlon);
 
-        var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="
-            + latlon + "&zoom=12&size=400x300&sensor=false&key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0";
-
-        document.getElementById("mapholder").innerHTML = "<img src='" + img_url + "'>";
+        setMapPoint( position.coords.latitude ,  position.coords.longitude ,$("#FirstName").val() + " " + $("#LastName").val());
 
         var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon;
         $.get(url, function (data, status) {
@@ -565,6 +670,9 @@
     }
 
 
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0&callback=myMap" >
 </script>
 
 </body>

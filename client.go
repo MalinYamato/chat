@@ -39,15 +39,11 @@ var upgrader = websocket.Upgrader{
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
 	hub *Hub
-
-	// The websocket connection.
 	conn *websocket.Conn
-
-	// Buffered channel of outbound messages.
 	send chan Message
-
 	Token  string
 	Cookie string
+
 }
 
 func (c *Client) token() (string) {
@@ -57,7 +53,7 @@ func (c *Client) token() (string) {
 
 func (c *Client) validSession() bool {
 	if c.Cookie == "" {
-		log.Println("No Cookie was set")
+		log.Println("Client: Empty! Client does not have a Cookie yet.")
 		return false
 	}
 	sess := sessionStore.New(sessionName)
@@ -73,7 +69,7 @@ func (c *Client) validSession() bool {
 func (c *Client) flushRoom(room string) {
 	theRoom :=  c.hub.messages[room]
 	list := theRoom.GetAllAsList()
-	log.Println("Room List length ",len(list))
+	//log.Println("Room List length ",len(list))
 	for i := 0; i < len(list); i++ {
 		c.send <- list[i].(Message)
 	}
@@ -155,14 +151,7 @@ func (c *Client) readPump() {
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
-		//person, ok := Persons[c.token()]
-		if true {
-			log.Println("User: Writing process terminates because websocet connection terminated!  Invalidate token: ", c.token())
-			// hub.broadcast <- Message{"ExitUser", "",person.UserID, person.FirstName, person.PictureURL, person.Gender, "出室 またね　" + person.FirstName + " " + person.LastName + " "}
-			//delete(Persons, c.token)
-		} else {
-			log.Println("User: Wrting process terminates because websocet connection terminated. Token not seet or invalid! Token:", c.token())
-		}
+		log.Println("User: Writing process terminates because websocet connection terminated!  Invalidate token: ", c.token())
 		ticker.Stop()
 		c.conn.Close()
 	}()
@@ -170,10 +159,10 @@ func (c *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-c.send:
-			log.Println("Client: message from Hub ", message.Sender, message.Content, message.Timestamp, message.Content)
+			log.Println("Client: Try to send message to browser", message.Sender, message.Content, message.Timestamp, message.Content)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				log.Println("Client: The hub closed the connection because:", ok)
+				log.Println("Client: fail to use websocket connection. It was probaly closed by client.  Reason", ok)
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
@@ -197,7 +186,7 @@ func (c *Client) writePump() {
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.conn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
-				log.Println("Ping Error ")
+				log.Println("Client: Write process : Ping Error ")
 				return
 			}
 		}
@@ -210,7 +199,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	var cookie string = ""
 	session, err := sessionStore.Get(r, sessionName)
 	if err != nil {
-		log.Println("Client: Call to sessionStore.Get returned ", err)
+		log.Println("Client: Failed to get a session, call to sessionStore.Get returned:", err)
 	} else if session != nil {
 		atoken, ok := session.Values[sessionToken]
 		if ok {

@@ -56,31 +56,31 @@ func (endpoint *Endpoint) url() (string) {
 func serveHome(w http.ResponseWriter, r *http.Request) {
 
 	if ( strings.Contains(r.URL.Path, "/session") ) {
-		log.Println(" Set path ", r.URL.Path)
+		log.Println("Main: Set path ", r.URL.Path)
 		r.URL.Path = "/"
 	} else if ( strings.Contains(r.URL.Path, "/images") ) {
-		log.Println("Serve ", DocumentRoot+r.URL.Path)
+		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	} else if ( strings.Contains(r.URL.Path, "/css") ) {
-		log.Println("Serve ", DocumentRoot+r.URL.Path)
+		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	} else if ( strings.Contains(r.URL.Path, "/js") ) {
-		log.Println("Serve ", DocumentRoot+r.URL.Path)
+		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	}
 
 	if r.URL.Path != "/" {
-		http.Error(w, "Illegal path "+r.URL.Path, 404)
+		http.Error(w, "Main: Illegal path "+r.URL.Path, 404)
 		return
 	}
 	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", 405)
+		http.Error(w, "Main: Method not allowed", 405)
 		return
 	}
 
@@ -116,7 +116,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 	sess, err := sessionStore.Get(r, sessionName)
 	if err != nil {
-		log.Println("Error in getting and verifying coookie ", err)
+		log.Println("Main: sessionHandler: Error in getting and verifying coookie ", err)
 	}
 
 	token := sess.Values[sessionToken].(string)
@@ -125,7 +125,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 	person, ok := Persons[token]
 	if !ok {
-		log.Println("sessionHandler: User does not exist for token ", person.Token)
+		log.Println("Main: sessionHandler: User does not exist for token ", person.Token)
 		w.Write([]byte("Authorization Failure! User does not exist, The following token is invalid: " + token ))
 	}
 
@@ -194,8 +194,6 @@ type Status struct {
 
 func profileHandler(w http.ResponseWriter, r *http.Request) {
 
-	log.Println("User requested a profile")
-
 	var request Person;
 	if r.Method == "POST" {
 
@@ -205,24 +203,28 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println("ERR> ", err)
 		}
 		defer r.Body.Close()
-		log.Printf("%s\n", request.UserID)
+
+		log.Printf("Main: Profile request for user UserID: %s \n",  request.UserID)
 
 		var person Person
 		var ok = false
-		for k, v := range Persons {
-			fmt.Printf("key[%s] value[%s]\n", k, v)
+		for _, v := range Persons {
+			//fmt.Printf("key[%s] value[%s]\n", k, v)
 			if v.UserID == request.UserID {
 				person = v
 				person.Token = "secret"
 				ok = true
+
 				break;
 			}
 			ok = false
-			fmt.Printf("key[%s] value[%s]\n", k, v)
+			//fmt.Printf("key[%s] value[%s]\n", k, v)
 		}
 
 		if ok == false {
-			log.Println("Person not foond for ID: ")
+			log.Printf("Main: User not found for UserID %s \n", request.UserID)
+		} else {
+		        log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID,person.Token)
 		}
 
 		data, err := json.Marshal(person)
@@ -235,7 +237,7 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(data)
 
 	} else {
-		log.Println("Unknown method ", r.Method)
+		log.Println("Main Unknown HTTP method ", r.Method)
 
 	}
 }
@@ -248,12 +250,12 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, err := sessionStore.Get(r, sessionName)
 	if err != nil {
-		log.Println("Client: Call to sessionStore.Get returned ", err)
+		log.Println("Main: mainProfileHandler() Call to sessionStore.Get returned ", err)
 		return
 	}
 
 	if session == nil {
-		log.Println("Client: returned session was nil")
+		log.Println("Main: mainProfileHander() returned session was nil")
 		return
 	}
 
@@ -289,20 +291,18 @@ func Contains(slice []string, item string) bool {
 
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
-	log.Println("UpdateProfile called ", r.Method)
 	r.ParseForm()
-
 	var status Status
 
 	if r.Method == "POST" {
 
 		session, err := sessionStore.Get(r, sessionName)
 		if err != nil {
-			log.Println("Client: Call to sessionStore.Get returned ", err)
+			log.Println("Main: UpdateProfileHandler() Call to sessionStore.Get returned ", err)
 			status.Status = "Error"
 			status.Detail = "Failed to get a valid cookie!"
 		} else if session == nil {
-			log.Println("Client: returned session was nil")
+			log.Println("Main: UpdateProfileHandler() returned session was nil")
 			status.Status = "Error"
 			status.Detail = "The session is not valid!"
 
@@ -338,16 +338,14 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 			if p.Keep == false {
 				status.Status = "New"
-				status.Detail = "The profile was successfully created!"
+				status.Detail = " A new profile was successfully created! <br> Public key: " + p.UserID + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
 			} else {
 				status.Status = "Updated"
-				status.Detail = "The profile was successfully updated!"
+				status.Detail = "The profile was successfully updated! <br> Public key: " + p.UserID + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
 			}
 
 			p.Keep = true
 			Persons[token] = p
-
-			log.Println("Name ", r.Form["Gender"])
 		}
 	}
 
@@ -360,7 +358,6 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(data)
 
-	//http.Redirect(w, r, "/session", http.StatusFound)
 }
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {

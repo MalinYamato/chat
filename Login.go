@@ -42,7 +42,7 @@ func issueSession() http.Handler {
 
 		// remove possible old cookies
 		if isAuthenticated(req) {
-			log.Println("There was an old cookie. Removing it")
+			log.Println("Login: There was an old cookie. Removing it")
 			sessionStore.Destroy(w, sessionName)
 		}
 
@@ -53,12 +53,13 @@ func issueSession() http.Handler {
 		err = session.Save(w)
 
 		if err != nil {
-			log.Println("could not set session ", err)
+			log.Println("Login: could not set session ", err)
 		}
 
+		var user string
 		var person *Person = nil
 		for key, v := range Persons {
-			if v.GoogleID == googleUser.Id {
+			if v.Email == googleUser.Email {
 			person = &Person{
 				Nic:               v.Nic,
 				FirstName:         checkSet(v.FirstName,googleUser.GivenName),
@@ -74,15 +75,16 @@ func issueSession() http.Handler {
 				Profession:        v.Profession,
 				Education:         v.Education,
 				GoogleID:          googleUser.Id,
-				UserID :           userID.String(),
+				UserID :           v.UserID,
 				Token:             secret.String(),
 				Description: 	   v.Description,
 				Room: 		   v.Room}
 
 				delete(Persons,key)
 
-				Persons[secret.String()] = *person
 			}
+			user = "registred user"
+
 		}
 		if person == nil {
 			person = &Person{
@@ -91,7 +93,7 @@ func issueSession() http.Handler {
 				LastName:          googleUser.FamilyName,
 				Email:             googleUser.Email,
 				Gender:            googleUser.Gender,
-				BirthDate:         Date{0,0,0},
+				BirthDate:         Date{2000,1,1},
 				Town:              "",
 				Country:           googleUser.Locale,
 				PictureURL:        googleUser.Picture,
@@ -105,6 +107,9 @@ func issueSession() http.Handler {
 			        Description:       "",
 				Room:              "Main",}
 
+			user = "new user"
+
+
 		}
 
 		Persons[secret.String()] = *person
@@ -112,7 +117,8 @@ func issueSession() http.Handler {
 		hub.broadcast <- Message{Op: "Messag", Room: person.Room, Timestamp: "null", Token: person.UserID, Sender: person.FirstName, PictureURL: person.PictureURL, Gender: person.Gender, Content: "入室 " + person.FirstName + " " + person.LastName }
 		hub.broadcast <- Message{Op: "NewUser", Room: person.Room, Timestamp:"null",Token: person.UserID, Sender: person.FirstName, PictureURL:person.PictureURL, Gender:person.Gender, Content:"NULL"  }
 
-		log.Println("Successful Login ", googleUser.Email)
+		log.Printf("Login: Successful Login of %s Email: %s  GoogleId: %s Token: %s UserID %s ", user, person.Email, person.GoogleID, person.Token, person.UserID)
+
 		http.Redirect(w, req, "/session", http.StatusFound)
 	}
 	return http.HandlerFunc(fn)
@@ -121,17 +127,21 @@ func issueSession() http.Handler {
 
 
 func logoutHandler(w http.ResponseWriter, req *http.Request) {
-	log.Println("User Loggeed out, Delete",req.Method)
+
 	if req.Method == "POST" {
 		req.ParseForm()
 		session, _ := sessionStore.Get(req,sessionName)
 		token := session.Values[sessionToken].(string)
 		person, ok := Persons[token]
 		if ok == true {
+
 			hub.broadcast <- Message{Op:"ExitUser",Room: person.Room, Timestamp: "出ました", Token: person.UserID, Sender:person.FirstName, PictureURL:person.PictureURL, Gender:person.Gender, Content:"出室、またね　" + person.FirstName + " " + person.LastName}
 			if person.Keep == false {
+				log.Printf("Login: Logout user and remove Remove her profile Email %s  UserId %s Token $s", person.Email,person.UserID,person.Token)
 			     delete(Persons, token)
-		         }
+		         } else {
+				log.Printf("Login: Logout user but keep her Profile Email %s  UserId %s Token $s", person.Email,person.UserID,person.Token)
+			}
 		}
 		sessionStore.Destroy(w, sessionName)
 	}
@@ -156,7 +166,7 @@ func isAuthenticated(req *http.Request) bool {
 	if err == nil {
 		return true
 	}
-	log.Println("authentication failed ", err)
+	log.Println("Login: Authentication failed, reason: ", err)
 	return false
 }
 
