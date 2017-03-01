@@ -545,7 +545,7 @@
         function setMapPoint(lat,long, message) {
 
             $("#StatusBox").hide();
-            $("#MapHolder").height(330);
+            $("#MapHolder").height(350);
 
             var latlong = new google.maps.LatLng(lat,long);
             var mapCanvas = document.getElementById("MapHolder");
@@ -571,70 +571,50 @@
             };
 
             pictureOverlay = new google.maps.GroundOverlay(
-                '{{.P.PictureURL}}',
+                "{{.P.PictureURL}}",
                 imageBounds);
 
             pictureOverlay.setMap(map);
-
     }
 
     function myMap() {
 
-        var lat = 50.110924;
-        var long = 8.682127;
+        alat = 50.110924;
+        along = 8.682127;
 
 
         $("#StatusBox").hide();
-        $("#MapHolder").height(330);
+        $("#MapHolder").height(350);
 
-        var latlong = new google.maps.LatLng(lat,long);
+        var latlong = new google.maps.LatLng(alat,along);
         var mapCanvas = document.getElementById("MapHolder");
         var mapOptions = {center: latlong, zoom: 4};
         var map = new google.maps.Map(mapCanvas,mapOptions);
 
         var myCity = new google.maps.Circle({
             center: latlong,
-            radius: 150000,
+            radius: 450000,
             strokeColor: "#0000FF",
             strokeOpacity: 0.8,
             strokeWeight: 2,
             fillColor: "#0000FF",
-            fillOpacity: 0.2
+            fillOpacity: 0.1
         });
         myCity.setMap(map);
 
         var imageBounds = {
-            north: lat + 0.015,
-            south: lat - 0.015,
-            east:  long + 0.025,
-            west:  long - 0.025
+            north: alat + 2.5,
+            south: alat - 2.5,
+            east:  along + 3.5,
+            west:  along - 3.5
         };
 
         pictureOverlay = new google.maps.GroundOverlay(
-            "https://{.Host}/images/krypinlogo.png",
+            "https://{{.Host}}/images/krypinlogo.png",
             imageBounds);
 
         pictureOverlay.setMap(map);
 
-
-        /*
-        var myCenter = new google.maps.LatLng(50.110924,);
-        var mapCanvas = document.getElementById("MapHolder");
-        var mapOptions = {center: myCenter, zoom: 4};
-        var map = new google.maps.Map(mapCanvas, mapOptions);
-        var marker = new google.maps.Marker({
-        position:myCenter ,
-        icon:"pinkball.png" });
-
-        marker.setMap(map);
-
-        var infowindow = new google.maps.InfoWindow({
-            content: '<b>Chat server location!</b>'
-        });
-
-
-        infowindow.open(MapHolder,marker);
-        */
     }
 
 
