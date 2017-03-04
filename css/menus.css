@@ -26,14 +26,14 @@
 
 
 #ProfileImage {
-    background-image: url("https:/secure.krypin.xyz/images/profile.png");
+    background-image: url("https://secure.krypin.xyz/images/profile.png");
     background-size: 80px 2em;
     width: 80px;
     height: 2em;
 }
 
 #ProfileImage:hover {
-    background-image: url("https:/secure.krypin.xyz/images/profile-hover.png");
+    background-image: url("https://secure.krypin.xyz/images/profile-hover.png");
     background-size: 80px 2em;
 }
 
