@@ -27,16 +27,7 @@ body {
 	border-radius: 1%;
 }
 
-#form {
-	padding: 0 0.5em 0 0.5em;
-	margin: 0;
-	position: absolute;
-	bottom: 1em;
-	left: 0px;
-	width: 100%;
-	overflow: hidden;
 
-}
 
 
 
@@ -109,7 +100,7 @@ body {
 	margin-left: 2px;
 	height: auto;
 	background-color: white;
-	margin-bottom: 1px;
+	margin-bottom: 2px;
 
 }
 #postitem {
@@ -138,9 +129,8 @@ body {
 	margin-left: 2px;
 	height: auto;
 	background-color: white;
-	margin-bottom: -2px;
-	padding-left: 0px;
-	padding: 2px;
+
+	padding:0;
 
 }
 
@@ -294,6 +284,50 @@ body {
 	.col-12 {
 		width: 100%;
 	}
+}
+
+
+.bottom {
+	display: flex;
+	flex-direction: row;
+	position: absolute;
+	bottom: 18px;
+	width: 100%
+}
+
+#form {
+	padding: 0 0.5em 0 0.5em;
+	margin: 0;
+	height:50px;
+	left: 0px;
+	width: 100%;
+	overflow: hidden;
+
+}
+
+#PublishList{
+	width: 60%;
+}
+
+#PublishList li {
+	height: 50px;
+}
+
+#PublishList img {
+
+	border-style: solid;
+	border-radius: 50%;
+	border-color: #000000;
+	border-width: 2px;
+	width: 2.5em;
+	display: block;
+    margin-bottom: 5px;
+}
+
+#PublishList img:hover {
+	border-style: solid;
+	border-color: red;
+	border-width: 4px;
 }
 
 

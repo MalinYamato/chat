@@ -13,84 +13,7 @@
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
 
-    <style>
-
-        ul {
-            font:  18px Comic Sans MS , cursive, sans-serif;
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-
-        }
-
-        li {
-            #float: left;
-        }
-
-
-        .dropbtn {
-            padding-top: 3px;
-        }
-        #SelectedRoom {
-            padding-left: 2px;
-            padding-top: 4px;
-        }
-
-        li button, .dropbtn {
-            display: inline-block;
-            color: white;
-            text-align: center;
-            #padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        li button:hover, .dropdown:hover .dropbtn {
-            background-color: rgb(148, 175, 240);
-        }
-
-        li.dropdown {
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            border-radius: 10%;
-            border-style:solid;
-            border-color: #88a3df;
-            display: none;
-            position: absolute;
-            background-color: rgba(162, 190, 252, 0);
-            width: auto;
-            padding: 10px;
-            -webkit-box-shadow:  10px 10px 5px gray;
-            -moz-box-shadow:  10px 10px 5px gray;
-            box-shadow:  8px 8px 5px gray;
-            z-index: 1;
-        }
-
-        .dropdown-content button {
-
-            width: 12em;
-            #text-shadow: 2px 2px 4px #000000;
-            color: #000000;
-            background-color: #a2befc;
-            padding: 2px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            border-radius: 10%;
-        }
-
-        .dropdown-content button:hover {background-color: #94aff0
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-    </style>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
     <script type="text/javascript">
 
 
@@ -130,26 +53,25 @@
             var currentUsers = document.getElementById("CurrentUsers");
             modal.style.display = "none";
 
-            function appendNewUser(message) {
-                var child = document.getElementById(message.token);
+            function appendNewUser(message, uniqueID) {
+                var child = document.getElementById(message.sender);
                 if (child != null) {
                     var status = currentUsers.removeChild(child);
                 }
                 var newUser = document.createElement("li");
-                newUser.setAttribute("id", message.token);
-
+                newUser.setAttribute("id", message.sender);
                 image = document.createElement("img");
                 image.setAttribute("src", message.pictureURL);
-
+                image.setAttribute("onclick", "RequestToPublish('" + uniqueID + "')");
                 newUser.appendChild(image);
                 var name = document.createElement("span");
-                name.innerText = message.sender;
+                name.innerText = message.nic;
                 newUser.appendChild(name);
                 currentUsers.appendChild(newUser);
             }
 
             function removeUser(message) {
-                var child = document.getElementById(message.token);
+                var child = document.getElementById(message.userId);
                 if (child != null) {
                     var status = currentUsers.removeChild(child);
                 }
@@ -183,48 +105,67 @@
             }
 
             document.getElementById("MainButton").onclick = function () {
-                $("#SelectedRoom").text("Main");
+                $("#SelectedRoom").text("Main本館");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "Main");
             };
 
-            document.getElementById("ReimersHotelButton").onclick =function () {
-                $("#SelectedRoom").text("Reimers Hotel");
+            document.getElementById("MPRButton").onclick = function () {
+                $("#SelectedRoom").text("Instant Private 秘密屋");
+                $("#log").empty();
+                sendMessage("ChangeRoom", "MPR");
+            };
+
+            document.getElementById("ReimersHotelButton").onclick = function () {
+                $("#SelectedRoom").text("Reimers Hotel屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "ReimersHotel");
             };
 
-            document.getElementById("EvaMonikaMalinButton").onclick =function () {
-                $("#SelectedRoom").text("EvaMonikaMalin");
+            document.getElementById("EvaMonikaMalinButton").onclick = function () {
+                $("#SelectedRoom").text("EvaMonikaMalin屋");
                 $("#log").empty();
-                sendMessage("ChangeRoom", "Eva Monika Malin");
+                sendMessage("ChangeRoom", "EvaMonikaMalin");
             };
 
             document.getElementById("GayButton").onclick = function () {
-                $("#SelectedRoom").text("Gay");
+                $("#SelectedRoom").text("Gayゲイ屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "Gay");
             };
 
-            document.getElementById("LesbianButton").onclick =function () {
-                $("#SelectedRoom").text("Lesbian");
+            document.getElementById("LesbianButton").onclick = function () {
+                $("#SelectedRoom").text("Lesbianレズ屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "Lesbian");
             };
-
-            document.getElementById("JapaneseButton").onclick =function () {
+            document.getElementById("JapaneseButton").onclick = function () {
                 $("#SelectedRoom").text("日本語屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "Japanese");
             };
-            document.getElementById("TransButton").onclick =function () {
-                $("#SelectedRoom").text("Trans");
+            document.getElementById("TransButton").onclick = function () {
+                $("#SelectedRoom").text("Trans　性転換屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "Trans");
             };
 
+            var _id = 0;
 
+            function getID() {
+                if (_id > 1000) {
+                    _id = 0;
+                }
+                _id++;
+                return _id;
+            }
 
+            function loggedIn() {
+                if ("{{with .Person}}{{.Token}}{{end}}" != " ") {
+                    return true;
+                }
+                return false;
+            }
 
             document.getElementById("form").onsubmit = function () {
 
@@ -260,11 +201,7 @@
 
                     sendMessage("SendAllMessages", "null");
 
-
-                 //   if ("{{with .Person}}{{.Token}}{{end}}" != "") {
-                   //     sendMessage("SendAllMessages", "null");
-                   // }
-                }
+                };
 
                 conn.onclose = function (evt) {
                     var item = document.createElement("div");
@@ -276,30 +213,42 @@
 
                     var message = JSON.parse(event.data);
 
-                    if (message.content == "Unauthorized")
+                    if (message.content == "Unauthorized") {
                         modal.style.display = "block";
-                    else if (message.op == "NewUser") {
-                        appendNewUser(message);
-                    }
-                    else if (message.content != "Ignore") {
-                        console.log("here");
-                        if (message.op == "ExitUser") {
+                    } else if (message.content != "Ignore") {
+                        console.log("New message", message);
+
+                        var uniqueID = message.sender +"@" + getID();
+
+                        if (message.op == "ExitUser" && message.token != "flash") {
                             removeUser(message);
                         }
 
-                        console.log(message)
+                        if (message.op == "NewUser" && message.token != "flash") {
+                            appendNewUser(message, uniqueID);
+                        }
 
-                        var uniqueID = message.token + "@" + message.timestamp.split(" ")[1];
+                        if (message.op == "UpdateTarget") {
+                            console.log("UpdateTarget to " + message.content);
+                            var elem = document.getElementById("Target:"+message.sender);
+                            if (message.content == "GREEN") {
+                                elem.setAttribute("style", "background-color:green; border-width: 3px; border-style:solid;")
+                            }
+                            else if (message.content == "BLUE") {
+                                elem.setAttribute("style", "border-color:blue; border-width: 3px; border-style:solid;")
+                            }
+                            return;
+                        }
 
                         var uberdiv = document.createElement("div");
 
+
+
                         // only show details for logged in users
-                        if ("{{with .Person}}{{.Token}}{{end}}" != "") {
+                        if (loggedIn()) {
                             var diven = document.createElement("div");
                             diven.setAttribute("id", uniqueID);
                             diven.setAttribute("class", "w3-hide w3-container w3-ligth-grey fmt-row");
-
-
                         }
 
                         var picture_elem = document.createElement("img");
@@ -311,7 +260,7 @@
 
                         var from_span = document.createElement("span");
                         from_span.setAttribute("id", "from");
-                        from_span.innerText = message.sender;
+                        from_span.innerText = message.nic;
                         var time_span = document.createElement("span");
                         time_span.setAttribute("id", "timestamp");
                         time_span.innerText = "[" + message.timestamp + "]";
@@ -333,23 +282,31 @@
                         item.appendChild(message_item);
 
                         var btn = document.createElement("button");
+
                         btn.setAttribute("class", "w3-btn");
                         btn.setAttribute("id", "postbutton");
                         btn.appendChild(item);
 
+
                         // only show details for logged in users
-                        if ("{{with .Person}}{{.Token}}{{end}}" != "") {
-                                btn.setAttribute("onclick", "myFunction('" + uniqueID + "')");
-                            }
+                        if (loggedIn()) {
+                            btn.setAttribute("onclick", "myFunction('" + uniqueID + "')");
+                        }
 
                         uberdiv.appendChild(btn);
 
-                        if ("{{with .Person}}{{.Token}}{{end}}" != "") {
-                         uberdiv.appendChild(diven);
+                        if (loggedIn()) {
+                            uberdiv.appendChild(diven);
                         }
 
-                        uberdiv.setAttribute("id", "post");
 
+                        uberdiv.setAttribute("id", "post");
+                        if (message.op == "PrivateMessage") {
+                            message_item.setAttribute("style", "background-color:#DEDEDE;");
+                            uberdiv.setAttribute("style", "background-color:#DEDEDE;");
+                            item.setAttribute("style", "background-color:#DEDEDE;");
+                            btn.setAttribute("style", "background-color:#DEDEDE;");
+                        }
                         appendLog(uberdiv);
                     }
                 };
@@ -369,36 +326,40 @@
     <li id="leftMenu">
         <ul>
             <li>
-                <a href="https://{{.Host}}/MainProfile"> <img src="/images/config.png"/></a>
-            </li>
-            <li>
-                <a href="https://{{.Host}}/MainProfile"> <img src="/images/id_card.png"/></a>
+                <a href="https://{{.Host}}/MainProfile">
+                    <div id="ProfileImage"></div>
+                </a>
             </li>
             <li class="dropdown">
                 <a href="javascript:void(0)" class="dropbtn">Room: </a>
                 <div class="dropdown-content">
-                    <button  id="MainButton" >Main room</button>
-                    <button  id="ReimersHotelButton" >Reimers Hotel room</button>
-                    <button  id="EvaMonikaMalinButton" >EvaMonikaMalin room</button>
-                    <button id="JapaneseButton" >日本語屋さん</button>
-                    <button id="GayButton" >Gay room</button>
-                    <button id="LesbianButton" >Lesbian room</button>
-                    <button id="TransButton" >Trans room</button>
+                    <button id="MainButton">Main 本館</button>
+                    <button id="MPRButton">Instant Private 秘密屋</button>
+                    <button id="JapaneseButton">日本語屋さん</button>
+                    <button id="ReimersHotelButton">Reimers Hotel屋</button>
+                    <button id="EvaMonikaMalinButton">EvaMonikaMali屋</button>
+                    <button id="GayButton">Gay ゲイ屋</button>
+                    <button id="LesbianButton">Lesbian レズ屋</button>
+                    <button id="TransButton">Trans 性転換屋</button>
                 </div>
             </li>
             <li id="SelectedRoom"></li>
         </ul>
         <span id="me">{{ with .Person}}{{.FirstName}} {{.LastName}}{{end}}</span>
     </li>
-
     <li id="centerMenu">
         <ul id="CurrentUsers">
+            <!-- TEMPLATE CODE -->
+            {{ range .Persons}}
+            <li id="{{.UserID}}"><img onclick="RequestToPublish({{.UserID}})"  src="{{.PictureURL}}"> </img><span>{{.Nic}}</span></li>
+            {{end}}
+            <!-- TEMPLATE CODE -->
         </ul>
     </li>
     <li id="rightMenu">
         <div class="flex-column" style="display:{{.LoggedOut}}">
             <span>Login</span>
-            <ul class="flex-row">
+            <ul class="flex-row loggedOut">
                 <li>
                     <a href="https://{{.Host}}/google/login"><img src="/images/google.png"/></a>
                 </li>
@@ -408,17 +369,17 @@
             </ul>
 
         </div>
-        <div class="flex-column" style="display:{{.LoggedIn}}">
+        <div class="flex-row" style="display:{{.LoggedIn}}">
             <ul>
-                <li >
-                    <form action='https://{{.Host}}/logout' method='POST'>
-                        <button type="submit"><img src="/images/home.png" border="0"/></button>
+                <li>
+                    <form id="pingu" action='https://{{.Host}}/logout' method='POST'>
+
+                        <button type="submit"><img src="/images/pingu.png" border="0"/></button>
                         <input type="hidden" name="token" value="{{with .Person}}{{.Token}}{{end}}"/>
                     </form>
+
                 </li>
-                <li>
-                    <span>Logout</span>
-                </li>
+
             </ul>
         </div>
     </li>
@@ -426,32 +387,42 @@
 
 
 <div id="log"></div>
-<form id="form">
-    <input id="submit" type="submit" value="Send"/>
-    <input type="text" id="msg"/>
-</form>
 
+<div class="bottom flex-row">
+    <form id="form">
+        <input id="submit" type="submit" value="Send"/>
+        <input type="text" id="msg"/>
+    </form>
 
+    <ul id="PublishList" class="flex-row">
+        <!-- TEMPLATE CODE -->
+        {{ range .Targets}}
+        <li id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 3px; border-style:solid;" onclick="RemoveTarget({{.Target.UserID}})"  src="{{.Target.PictureURL}}"> </img> <!--<span>{{.Target.Nic}}</span>--> </li>
+        {{end}}
+        <!-- TEMPLATE CODE -->
+
+    </ul>
+</div>
 
 <script>
 
     function myFunction(myid) {
         console.log("clicked" + myid);
 
-        userId =  myid.split("@")[0]
+        userId = myid.split("@")[0]
 
         var x = document.getElementById(myid);
         console.log(x);
         if (x.className.indexOf("w3-show") == -1) {
 
             // json format
-            var person = {"userId" : userId};
+            var person = {"userId": userId};
 
             $.ajax({
                 url: 'https://{{.Host}}/profile',
                 type: 'post',
                 data: JSON.stringify(person),
-                contentType : 'application/json',
+                contentType: 'application/json',
                 success: function (person) {
 
                     if (person.userId != null) {
@@ -468,11 +439,10 @@
 
                         info1.innerText = "        " + person.nic;
                         info2.innerText = "        " + person.firstName + " " + person.lastName;
-                        info3.innerText = "        " + person.gender +" "+ person.sexualOrienation;
+                        info3.innerText = "        " + person.gender + " " + person.sexualOrienation;
                         info4.innerText = "        " + person.country + " " + person.town;
                         info5.innerText = "        " + "";
                         info6.innerText = "        " + person.profession;
-
 
                         info.appendChild(info1);
                         info.appendChild(info2);
@@ -489,7 +459,7 @@
                 }
             });
 
-          //  x.className += " w3-show";
+            //  x.className += " w3-show";
 
         } else {
             while (x.lastChild) {
@@ -498,6 +468,61 @@
             x.className = x.className.replace(" w3-show", "");
         }
     }
+
+    function RequestToPublish(anId) {
+
+        var targetID = anId.split("@")[0];
+        var message = {"op": "AddTarget", "ids": [targetID]};
+        console.log("message> " + message["ids"]);
+
+        if ($("li[id='" + "Target:" + targetID + "']").length > 0) {
+            return; // dupplicate
+        }
+
+        $.ajax({
+            url: 'https://{{.Host}}/TargetManager',
+            type: 'post',
+            data: JSON.stringify(message),
+            contentType: 'application/json',
+            success: function (r) {
+                console.log("Request to publish response: " + r.status.detail + " " + r.person.email);
+                if (r.person.userId != null) {
+                    var liIten  = document.createElement("li");
+                    liIten.setAttribute("id", "Target:"+r.person.userId);
+                    var imagen = document.createElement("img");
+                    imagen.setAttribute("src", r.person.pictureURL);
+                    var elem = document.getElementById("PublishList");
+                    if (r.status.detail == "GREEN") {
+                        imagen.setAttribute("style", "border-color:green; border-width: 3px; border-style:solid;")
+                    } else if (r.status.detail == "BLUE") {
+                        imagen.setAttribute("style", "border-color:blue; border-width: 3px; border-style:solid;")
+                    }
+                    imagen.setAttribute("onclick", "RemoveTarget('" + targetID + "')");
+                    liIten.appendChild(imagen);
+                    elem.appendChild(liIten);
+                }
+            }
+        });
+
+    }
+
+    function RemoveTarget(targetId)
+    {
+        var message = {"op": "RemoveTarget", "ids": [targetId]};
+        $.ajax({
+            url: 'https://{{.Host}}/TargetManager',
+            type: 'post',
+            data: JSON.stringify(message),
+            contentType: 'application/json',
+
+            success: function (r) {
+                var elem = document.getElementById("PublishList");
+                var child = document.getElementById("Target:"+targetId);
+                elem.removeChild(child);
+            }
+        });
+    }
+
 </script>
 
 

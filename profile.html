@@ -102,10 +102,6 @@
             background-color: #ce492e;
         }
 
-        .aside {
-
-        }
-
         .header {
             background-color: #9cb8f5;
             color: #ffffff;
@@ -113,9 +109,34 @@
             font-size: 12px;
             padding: 2px;
         }
+        .header a {
+            background-color: #9cb8f5;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
 
-        .header img {
-            width: 40px;
+        #HomeImage {
+            background-image: url("/images/chat.png");
+            background-size: 80px 4em;
+            width: 80px;
+            height: 4em;
+        }
+
+        #HomeImage:hover {
+            background-image: url("/images/chat-hover.png");
+            background-size: 80px 4em;
+        }
+
+        .col1 {
+            width: 20%;
+        }
+
+        .col2 {
+            width: 20%
+        }
+
+        .col3 {
+            width: 20%;
         }
 
         .header h1 {
@@ -157,12 +178,12 @@
         h1 {
             margin-top: 5px;
             margin-bottom: 5px;
+            font:  26px Comic Sans MS , cursive, sans-serif;
         }
 
         .button {
             background-color: #9cb8f5; /* Green */
             border-style: solid;
-            border: 2px solid #777777;
             font: 16px Arial, Helvetica, sans-serif;
             padding: 10px 3px;
             text-align: center;
@@ -345,9 +366,11 @@
 
 <body>
 <div class="header flex-row">
-    <a href="https://{{.Host}}/session">
-        <img src="/images/home.png"/> </a>
-    <h1>Profile</h1>
+    <h1 class="col1">Profile</h1>
+    <div class="col2" > </div>
+    <a class="col3"  href="https://{{.Host}}/session">
+        <div id="HomeImage"></div> </a>
+
 </div>
 <form id="ProfileForm" class="flex-row" action="https://{{.Host}}/ProfileUpdate">
         <div class="menu">
@@ -619,8 +642,7 @@
 
 
     function showPosition(position) {
-        console.log("latlon " + latlon);
-      //  $("#StatusBox").hide();
+
         var latlon = position.coords.latitude + "," + position.coords.longitude;
 
         console.log("latlon " + latlon);

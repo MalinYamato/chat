@@ -19,6 +19,8 @@ type Hub struct {
 	// Inbound messages from the clients.
 	broadcast chan Message
 
+	multicast chan Message
+
 	// Register requests from the clients.
 	register chan *Client
 
@@ -35,14 +37,15 @@ type Hub struct {
 }
 
 type Message struct {
-	Op        string `json:"op,omitempty"`
-	Room      string `json:"Room"`
-	Timestamp string `json:"timestamp,omitempty"`
-	Token     string `json:"token,omitempty"`
-	Sender    string `json:"sender,omitempty"`
-	PictureURL string `json:"pictureURL,omitempty"`
-	Gender    string  `json:"gender,omitempty"`
-	Content   string `json:"content,omitempty"`
+	Op        string    `json:"op"`
+	Token     string    `json:"token"`
+	Room      string    `json:"room"`
+	Sender    string    `json:"sender"`
+	Nic       string    `json:"nic,omitempty"`
+	Targets   Targets   `json:"receivers,omitempty"`
+	Timestamp string    `json:"timestamp,omitempty"`
+	PictureURL string   `json:"pictureURL,omitemtpy"`
+	Content   string    `json:"content"`
 }
 
 type Room struct {
@@ -59,6 +62,7 @@ type Command struct {
 func newHub(stack QueueStack) *Hub {
 	return &Hub {
 		broadcast:  make(chan Message),
+		multicast : make(chan Message),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[*Client]bool),
@@ -73,7 +77,9 @@ func newHub(stack QueueStack) *Hub {
 			        "Gay": QueueStack{},
 			        "Trans":  QueueStack{}},
 	}
+
 }
+
 
 func (h *Hub) run() {
 
@@ -82,21 +88,41 @@ func (h *Hub) run() {
 		select {
 		case client := <-h.register:
 			h.clients[client] = true
+		        if client.Token != "" {
+				person, _ := _persons.findPersonByToken(client.Token)
+				client.UserId = person.UserID
+			}
 
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
+				//_persons.RemoveByToken(client.Token)
 				delete(h.clients, client)
 				close(client.send)
 			}
 
-		case message := <-h.broadcast:
+		case message := <-h.multicast:
 
+			log.Printf("Hub: multicast from %s to %s in room %s", message.Sender, message.Room, message.Targets )
+
+
+			for client := range h.clients {
+				if _, ok := message.Targets[client.UserId]; ok == true {
+					select {
+					case client.send <- message:
+					default:
+						log.Println("Hub: Close Client")
+						close(client.send)
+						delete(h.clients, client)
+					}
+				}
+			}
+		case message := <-h.broadcast:
 
 			room := h.messages[message.Room]
 			room.Push(message)
 		        h.messages[message.Room] = room
 
-			log.Println("Hub: broadcast", message,message.Room, room.Len() )
+			log.Printf("Hub: broadcast to all from %s in room %s", message.Sender, message.Room)
 
 			if room.Len() > 50 {
 				room.TailPop()

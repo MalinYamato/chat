@@ -1,5 +1,3 @@
-
-
 package main
 
 import (
@@ -10,6 +8,7 @@ import (
 	//"encoding/json"
 	"encoding/json"
 	"github.com/gorilla/securecookie"
+	"strconv"
 )
 
 const (
@@ -38,12 +37,12 @@ var upgrader = websocket.Upgrader{
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
-	hub *Hub
-	conn *websocket.Conn
-	send chan Message
+	hub    *Hub
+	conn   *websocket.Conn
+	send   chan Message
+	UserId string
 	Token  string
 	Cookie string
-
 }
 
 func (c *Client) token() (string) {
@@ -67,13 +66,26 @@ func (c *Client) validSession() bool {
 }
 
 func (c *Client) flushRoom(room string) {
-	theRoom :=  c.hub.messages[room]
+	theRoom := c.hub.messages[room]
 	list := theRoom.GetAllAsList()
 	//log.Println("Room List length ",len(list))
 	for i := 0; i < len(list); i++ {
-		c.send <- list[i].(Message)
+		var msg Message
+		msg = list[i].(Message)
+		msg.Token = "flash"
+		c.send <- msg
 	}
 }
+
+//type Message struct {
+//	Op        string   `json:"op"`
+//	Token     string   `json:"token"`
+//	Room      string   `json:"room"`
+//	Sender    string   `json:"sender"`
+//	Receivers map[string]bool `json:"receivers,omitempty"`
+//	Timestamp string   `json:"timestamp,omitempty"`
+//	Content   string   `json:"content,omitempty"`
+//}
 
 func (c *Client) readPump() {
 	defer func() {
@@ -113,40 +125,64 @@ func (c *Client) readPump() {
 			c.flushRoom("Main")
 
 		} else if ! c.validSession() {
-			json_message := Message{Op: "Control", Room: "none", Timestamp: "null", Token: "Invalid Session", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
+			json_message := Message{Op: "Status", Sender: "Server", Room: "none", Token: "null", Timestamp: "null", Content: "Unauthorized" }
 			c.send <- json_message
 			if err != nil {
 				log.Println("Client Fail to write JSON on websockets because: ", err)
 				return
 			}
-		} else if value, ok := Persons[message.Token]; ok {
-
-			if message.Op == "ChangeRoom" {
-					log.Println("Request to change room to ", message.Content)
-					value.Room = message.Content;
-				        Persons[value.Token] = value
-					c.flushRoom(value.Room)
-			} else {
-				sender := value.FirstName
-				if len(value.Nic) > 5 {
-					sender = value.Nic
-				}
-				message := Message{Op: "Message", Room: value.Room, Timestamp: message.Timestamp, Token: value.UserID, Sender: sender, PictureURL: value.PictureURL, Gender: value.Gender, Content: message.Content  }
-				c.hub.broadcast <- message
-			}
 		} else {
-			log.Println("Client: Invalid Token: ", message.Token)
-			json_message := Message{Op: "Control", Room: value.Room, Timestamp: "null", Token: "Invalid Token", Sender: "Server", PictureURL: "null", Gender: "null", Content: "Unauthorized" }
-			c.send <- json_message
-			if err != nil {
-				log.Println("Client: Fail to write JSON on  websockets! Err: ", err)
-				return
+			var person Person
+			log.Println("messsssssss "+ message.Sender)
+			person, ok := _persons.findPersonByToken(message.Token)
+			if ok {
+				if message.Op == "ChangeRoom" {
+					log.Println("Request to change room to ", message.Content)
+					person.Room = message.Content;
+					_persons.Save(person)
+					c.flushRoom(person.Room)
+				} else {
+					targets, yes := _publishers[c.UserId]
+					length := len(targets.Targets)
+					theMessage := "[" + strconv.Itoa(length) + "] " + message.Content
+					if yes {
+						message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets.Targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage  }
+						c.hub.multicast <- message
+					} else {
+						if person.Room != "MPR" { // should not broadcast to this room
+							message := Message{Op: "Message", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: message.Content  }
+							c.hub.broadcast <- message
+						}
+					}
+				}
+			} else {
+				log.Println("Client: Invalid Token: ", message.Token)
+				json_message := Message{Op: "Status", Token: "Invalid Token", Room: person.Room, Sender: "Server", Timestamp: "null", Content: "Unauthorized" }
+				c.send <- json_message
+				if err != nil {
+					log.Println("Client: Fail to write JSON on  websockets! Err: ", err)
+					return
+				}
+
 			}
 
 		}
-
 	}
 }
+
+/*
+type Message struct {
+	Op        string    `json:"op"`
+	Token     string    `json:"token"`
+	Room      string    `json:"room"`
+	Sender    string    `json:"sender"`
+	Nic       string    `json:"nic,omitempty"`
+	Receivers Receivers `json:"receivers,omitempty"`
+	Timestamp string    `json:"timestamp,omitempty"`
+	PictureURL string   `json:"pictureURL,omitemtpy"`
+	Content   string    `json:"content"`
+}
+*/
 
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
@@ -195,27 +231,9 @@ func (c *Client) writePump() {
 
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
-	var token string = ""
-	var cookie string = ""
-	session, err := sessionStore.Get(r, sessionName)
+	token, cookie, err := getCookieAndTokenfromRequest(r, false)
 	if err != nil {
-		log.Println("Client: Failed to get a session, call to sessionStore.Get returned:", err)
-	} else if session != nil {
-		atoken, ok := session.Values[sessionToken]
-		if ok {
-			log.Println(atoken)
-			if atoken != nil {
-				token = atoken.(string)
-			} else {
-				log.Println("Client:  token was nil")
-			}
-			mycookie, err := r.Cookie(sessionName)
-			if (err == nil) {
-				cookie = mycookie.Value
-			} else {
-				cookie = ""
-			}
-		}
+		log.Println(err)
 	}
 
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -226,7 +244,9 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Client: Upgraded to websocket!")
 
-	client := &Client{hub: hub, conn: conn, send: make(chan Message, 256), Token: token, Cookie: cookie}
+	person, _ := _persons.findPersonByToken(token)
+
+	client := &Client{hub: hub, conn: conn, send: make(chan Message, 256), UserId: person.UserID, Token: token, Cookie: cookie}
 	client.hub.register <- client
 	go client.writePump()
 	client.readPump()

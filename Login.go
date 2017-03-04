@@ -1,32 +1,36 @@
 package main
 
 import (
-
-        "net/http"
+	"net/http"
 
 	"log"
 	"github.com/satori/go.uuid"
 	"github.com/dghubble/gologin/google"
 
+	"time"
+	"strconv"
 )
 
 const (
 	sessionName    = "secure.krypin.xyz"
 	sessionSecret  = "secure,krypin.xyz secret key developer"
 	sessionUserKey = "googleID"
-	sessionToken  =   "SessionToken"
+	sessionToken   = "SessionToken"
 )
 
 // Config configures the main ServeMux.
 
-
 func checkSet(a string, b string) (string) {
 	if a == "" {
-	return b
+		return b
 	}
 	return a
 }
 
+func timestamp() string {
+	date := time.Now()
+	return strconv.Itoa(date.Day()) + ":" + strconv.Itoa(date.Hour()) + ":" + strconv.Itoa(date.Minute()) + ":" + strconv.Itoa(date.Second())
+}
 
 func issueSession() http.Handler {
 	fn := func(w http.ResponseWriter, req *http.Request) {
@@ -37,8 +41,8 @@ func issueSession() http.Handler {
 			return
 		}
 
-		secret := uuid.NewV4()   // used as a secret to verify identity of users who sends websocket messages from the brwoser to the server
-		userID := uuid.NewV4()   // used to identify a user to all other users, not a secret.
+		secret := uuid.NewV4() // used as a secret to verify identity of users who sends websocket messages from the brwoser to the server
+		userID := uuid.NewV4() // used to identify a user to all other users, not a secret.
 
 		// remove possible old cookies
 		if isAuthenticated(req) {
@@ -57,45 +61,47 @@ func issueSession() http.Handler {
 		}
 
 		var user string
-		var person *Person = nil
-		for key, v := range Persons {
-			if v.Email == googleUser.Email {
-			person = &Person{
-				Nic:               v.Nic,
-				Keep:		   v.Keep,
-				FirstName:         checkSet(v.FirstName,googleUser.GivenName),
-				LastName:          checkSet(v.LastName,googleUser.FamilyName),
-				Email:             checkSet(v.Email,googleUser.Email),
-				Gender:            checkSet(v.Gender,googleUser.Gender),
+		var v Person
+		var ok bool
+		v, ok = _persons.findPersonByGoogleID(googleUser.Id)
+		if ok {
+			log.Println("heressssssssssssss")
+			person := Person{
+				Nic:               checkSet(v.Nic, googleUser.GivenName),
+				Keep:              v.Keep,
+				FirstName:         checkSet(v.FirstName, googleUser.GivenName),
+				LastName:          checkSet(v.LastName, googleUser.FamilyName),
+				Email:             checkSet(v.Email, googleUser.Email),
+				Gender:            checkSet(v.Gender, googleUser.Gender),
 				BirthDate:         v.BirthDate,
-				Country:           checkSet(v.Country,googleUser.Locale),
+				Country:           checkSet(v.Country, googleUser.Locale),
 				Town:              v.Town,
-				PictureURL:        checkSet(v.PictureURL,googleUser.Picture),
+				PictureURL:        checkSet(v.PictureURL, googleUser.Picture),
 				SexualOrientation: v.SexualOrientation,
 				Languages:         v.Languages,
 				Profession:        v.Profession,
 				Education:         v.Education,
 				GoogleID:          googleUser.Id,
-				UserID :           v.UserID,
+				UserID:            v.UserID,
 				Token:             secret.String(),
-				Description: 	   v.Description,
-				Room: 		   v.Room}
+				Description:       v.Description,
+				Room:              v.Room}
 
-				delete(Persons,key)
+			person.LoggedIn = true
+			_persons.Save(person)
 
-			}
 			user = "registred user"
 
 		}
-		if person == nil {
-			person = &Person{
-				Nic:               "",
+		if ! ok {
+			person := Person{
+				Nic:               googleUser.GivenName,
 				Keep:              false,
 				FirstName:         googleUser.GivenName,
 				LastName:          googleUser.FamilyName,
 				Email:             googleUser.Email,
 				Gender:            googleUser.Gender,
-				BirthDate:         Date{2000,1,1},
+				BirthDate:         Date{"1900", "1", "1"},
 				Town:              "",
 				Country:           googleUser.Locale,
 				PictureURL:        googleUser.Picture,
@@ -106,18 +112,18 @@ func issueSession() http.Handler {
 				GoogleID:          googleUser.Id,
 				UserID:            userID.String(),
 				Token:             secret.String(),
-			        Description:       "",
-				Room:              "Main",}
+				Description:       "",
+				Room:              "Main", }
 
 			user = "new user"
-
+			person.LoggedIn = true
+			_persons.Save(person)
 
 		}
 
-		Persons[secret.String()] = *person
+		person, _ := _persons.findPersonByGoogleID(googleUser.Id)
 
-		hub.broadcast <- Message{Op: "Messag", Room: person.Room, Timestamp: "null", Token: person.UserID, Sender: person.FirstName, PictureURL: person.PictureURL, Gender: person.Gender, Content: "入室 " + person.FirstName + " " + person.LastName }
-		hub.broadcast <- Message{Op: "NewUser", Room: person.Room, Timestamp:"null",Token: person.UserID, Sender: person.FirstName, PictureURL:person.PictureURL, Gender:person.Gender, Content:"NULL"  }
+		hub.broadcast <- Message{Op: "NewUser", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 " + person.getNic() }
 
 		log.Printf("Login: Successful Login of %s Email: %s  GoogleId: %s Token: %s UserID %s ", user, person.Email, person.GoogleID, person.Token, person.UserID)
 
@@ -126,30 +132,30 @@ func issueSession() http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-
-
 func logoutHandler(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method == "POST" {
 		req.ParseForm()
-		session, _ := sessionStore.Get(req,sessionName)
+		session, _ := sessionStore.Get(req, sessionName)
 		token := session.Values[sessionToken].(string)
-		person, ok := Persons[token]
-		if ok == true {
-
-			hub.broadcast <- Message{Op:"ExitUser",Room: person.Room, Timestamp: "出ました", Token: person.UserID, Sender:person.FirstName, PictureURL:person.PictureURL, Gender:person.Gender, Content:"出室、またね　" + person.FirstName + " " + person.LastName}
+		var person Person
+		person, ok := _persons.findPersonByToken(token)
+		if ok {
+			person.LoggedIn = false
+			hub.broadcast <- Message{Op: "ExitUser", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "出室、またね " + person.getNic() }
 			if person.Keep == false {
-				log.Printf("Login: Logout user and remove Remove her profile Email %s  UserId %s Token %s", person.Email,  person.UserID,  person.Token)
-			     delete(Persons, token)
-		         } else {
+				log.Printf("Login: Logout user and remove Remove her profile Email %s  UserId %s Token %s", person.Email, person.UserID, person.Token)
+				_persons.Delete(person)
+
+			} else {
 				log.Printf("Login: Logout user but keep her Profile Email %s  UserId %s Token %s", person.Email, person.UserID, person.Token)
 			}
 		}
 		sessionStore.Destroy(w, sessionName)
 	}
+
 	http.Redirect(w, req, "/", http.StatusFound)
 }
-
 
 func requireLogin(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, req *http.Request) {
@@ -162,7 +168,6 @@ func requireLogin(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-
 func isAuthenticated(req *http.Request) bool {
 	_, err := sessionStore.Get(req, sessionName);
 	if err == nil {
@@ -171,4 +176,3 @@ func isAuthenticated(req *http.Request) bool {
 	log.Println("Login: Authentication failed, reason: ", err)
 	return false
 }
-
