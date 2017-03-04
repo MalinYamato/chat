@@ -142,6 +142,7 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 		person, ok := _persons.findPersonByToken(token)
 		if ok {
 			person.LoggedIn = false
+			_persons.Save(person)
 			hub.broadcast <- Message{Op: "ExitUser", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "出室、またね " + person.getNic() }
 			if person.Keep == false {
 				log.Printf("Login: Logout user and remove Remove her profile Email %s  UserId %s Token %s", person.Email, person.UserID, person.Token)
