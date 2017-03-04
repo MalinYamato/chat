@@ -71,7 +71,7 @@
             }
 
             function removeUser(message) {
-                var child = document.getElementById(message.userId);
+                var child = document.getElementById(message.sender);
                 if (child != null) {
                     var status = currentUsers.removeChild(child);
                 }
