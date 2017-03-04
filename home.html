@@ -302,7 +302,6 @@
                             uberdiv.appendChild(diven);
                         }
 
-
                         uberdiv.setAttribute("id", "post");
                         if (message.op == "PrivateMessage") {
                             message_item.setAttribute("style", "background-color:#DEDEDE;");
@@ -400,7 +399,7 @@
     <ul id="PublishList" class="flex-row">
         <!-- TEMPLATE CODE -->
         {{ range .Targets}}
-        <li id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 3px; border-style:solid;" onclick="RemoveTarget({{.Target.UserID}})"  src="{{.Target.PictureURL}}"> </img> <!--<span>{{.Target.Nic}}</span>--> </li>
+        <li id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;" onclick="RemoveTarget({{.Target.UserID}})"  src="{{.Target.PictureURL}}"> </img> <!--<span>{{.Target.Nic}}</span>--> </li>
         {{end}}
         <!-- TEMPLATE CODE -->
 
