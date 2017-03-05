@@ -6,10 +6,8 @@ import (
 	"net/http"
 	"html/template"
 	//"github.com/kabukky/httpscerts"
-
 	"github.com/dghubble/gologin"
 	googleOAuth2 "golang.org/x/oauth2/google"
-
 	"golang.org/x/oauth2"
 	"strings"
 	"github.com/kabukky/httpscerts"
@@ -19,7 +17,6 @@ import (
 	"os"
 	"github.com/dghubble/sessions"
 	"encoding/json"
-
 	"fmt"
 )
 
@@ -89,7 +86,6 @@ func (endpoint *Endpoint) url() (string) {
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
-
 	if ( strings.Contains(r.URL.Path, "/session") ) {
 		log.Println("Main: Set path ", r.URL.Path)
 		r.URL.Path = "/"
@@ -109,7 +105,6 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, fp)
 		return
 	}
-
 	if r.URL.Path != "/" {
 		http.Error(w, "Main: Illegal path "+r.URL.Path, 404)
 		return
@@ -118,7 +113,6 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Main: Method not allowed", 405)
 		return
 	}
-
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	room := hub.messages["Main"]
 	ifs := room.GetAllAsList()
@@ -127,7 +121,6 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(ifs); i++ {
 		msgs[i] = ifs[i].(Message)
 	}
-
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	homeTemplate.Execute(w, struct {
 		Host      string
@@ -159,9 +152,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Main: sessionHandler: Error in getting and verifying coookie ", err)
 	}
-
 	token := sess.Values[sessionToken].(string)
-
 	log.Println("session token from cookie ", token)
 	var person Person
 	var ok bool
@@ -170,7 +161,6 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Main: sessionHandler: User does not exist for token ", person.Token)
 		w.Write([]byte("Authorization Failure! User does not exist, The following token is invalid: " + token ))
 	}
-
 	room := hub.messages[person.Room]
 	ifs := room.GetAllAsList()
 	var msgs []Message
@@ -178,7 +168,6 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(ifs); i++ {
 		msgs[i] = ifs[i].(Message)
 	}
-
 	var targets []GreenBlue
 	for k, _ := range _publishers[person.UserID].Targets {
 		target, ok := _persons.findPersonByUserId(k)
@@ -187,7 +176,6 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 			targets = append(targets, GreenBlue{color,target})
 		}
 	}
-
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	homeTemplate.Execute(w, struct {
 		Host      string
@@ -209,29 +197,23 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func profileHandler(w http.ResponseWriter, r *http.Request) {
-
 	var request Person;
 	if r.Method == "POST" {
-
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&request)
 		if err != nil {
 			log.Println("ERR> ", err)
 		}
 		defer r.Body.Close()
-
 		log.Printf("Main: Profile request for user UserID: %s \n", request.UserID)
-
 		var person Person
 		person, ok := _persons.findPersonByUserId(request.UserID)
 		person.Token = ""
-
 		if ok {
 			log.Printf("Main: User not found for UserID %s \n", request.UserID)
 		} else {
 			log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
 		}
-
 		data, err := json.Marshal(person)
 		if err != nil {
 			panic(err)
@@ -242,7 +224,6 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 
 	} else {
 		log.Println("Main Unknown HTTP method ", r.Method)
-
 	}
 }
 
@@ -379,7 +360,6 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	var status Status
 	if r.Method == "POST" {
-
 		session, err := sessionStore.Get(r, sessionName)
 		if err != nil {
 			log.Println("Main: UpdateProfileHandler() Call to sessionStore.Get returned ", err)
@@ -389,13 +369,10 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println("Main: UpdateProfileHandler() returned session was nil")
 			status.Status = ERROR
 			status.Detail = "The session is not valid!"
-
 		} else {
-
 			token := session.Values[sessionToken].(string)
 			var p Person
 			p, _ = _persons.findPersonByToken(token)
-
 			p.FirstName = r.Form.Get("FirstName")
 			p.LastName = r.Form.Get("LastName")
 			p.Gender = r.Form.Get("Gender")
@@ -412,7 +389,6 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("%+v\n", r.Form)
 			productsSelected := r.Form["Language"]
 			log.Println(Contains(productsSelected, "English"))
-
 			for i := 0; i < len(LANGUAGES); i++ {
 				if Contains(r.Form["Language"], LANGUAGES[i]) {
 					p.Languages[LANGUAGES[i]] = "checked"
@@ -509,19 +485,15 @@ var sessionStore *sessions.CookieStore
 var _publishers Publishers
 
 func main() {
-
 	_publishers = make(Publishers)
 	_persons = Persons{__pers: make(map[string]Person)}
-
 	config := &Config{
 		ClientID:       os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret:   os.Getenv("GOOGLE_CLIENT_SECRET"),
 		ChatHost:       os.Getenv("CHAT_HOST"),
 		ChatPrivateKey: os.Getenv("CHAT_PRIVATE_KEY"),
 	}
-
 	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
-
 	endpoint = Endpoint{"https", config.ChatHost, "443"}
 	dir, _ := os.Getwd()
 	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
