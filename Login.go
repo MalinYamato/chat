@@ -37,16 +37,13 @@ func issueSession() http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
 		secret := uuid.NewV4() // used as a secret to verify identity of users who sends websocket messages from the brwoser to the server
 		userID := uuid.NewV4() // used to identify a user to all other users, not a secret.
-
 		// remove possible old cookies
 		if isAuthenticated(req) {
 			log.Println("Login: There was an old cookie. Removing it")
 			sessionStore.Destroy(w, sessionName)
 		}
-
 		session := sessionStore.New(sessionName)
 		session.Values[sessionUserKey] = googleUser.Id
 		session.Values[sessionToken] = secret.String()
@@ -54,7 +51,6 @@ func issueSession() http.Handler {
 		if err != nil {
 			log.Println("Login: could not set session ", err)
 		}
-
 		var user string
 		var v Person
 		var ok bool
@@ -120,7 +116,6 @@ func issueSession() http.Handler {
 }
 
 func logoutHandler(w http.ResponseWriter, req *http.Request) {
-
 	if req.Method == "POST" {
 		req.ParseForm()
 		session, _ := sessionStore.Get(req, sessionName)
