@@ -102,8 +102,6 @@ func (h *Hub) run() {
 		case message := <-h.multicast:
 
 			log.Printf("Hub: multicast from %s to %s in room %s", message.Sender, message.Room, message.Targets )
-
-
 			for client := range h.clients {
 				if _, ok := message.Targets[client.UserId]; ok == true {
 					select {
@@ -120,7 +118,6 @@ func (h *Hub) run() {
 			room := h.messages[message.Room]
 			room.Push(message)
 		        h.messages[message.Room] = room
-
 			log.Printf("Hub: broadcast to all from %s in room %s", message.Sender, message.Room)
 
 			if room.Len() > 50 {

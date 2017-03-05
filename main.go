@@ -228,8 +228,9 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateMPRStatus(clientID string, targetID string) string {
-	MPRStatus := BLUE
+	var MPRStatus string
 	var two int = 0
+	targets := make(Targets)
 	client, ok := _publishers[clientID]
 	if ok {
 		if _, ok := client.Targets[targetID]; ok == true {
@@ -244,11 +245,13 @@ func updateMPRStatus(clientID string, targetID string) string {
 	}
 	if two == 2 {
 		MPRStatus = GREEN // target and client are sending messages to each other, they have formed a Multicast Private Room
+		targets[targetID] = true
+		targets[clientID] = true
+	} else {
+		MPRStatus = BLUE
+		targets[clientID] = true
 	}
 
-	targets := make(Targets)
-	targets[targetID] = true
-	targets[clientID] = true
 	hub.multicast <- Message{"UpdateTarget", "", "", clientID, "", targets, timestamp(), "", MPRStatus }
 	return MPRStatus
 }
