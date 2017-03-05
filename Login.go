@@ -2,15 +2,12 @@ package main
 
 import (
 	"net/http"
-
 	"log"
 	"github.com/satori/go.uuid"
 	"github.com/dghubble/gologin/google"
-
 	"time"
 	"strconv"
 )
-
 const (
 	sessionName    = "secure.krypin.xyz"
 	sessionSecret  = "secure,krypin.xyz secret key developer"
