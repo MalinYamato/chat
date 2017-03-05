@@ -206,15 +206,17 @@
                             appendNewUser(message, uniqueID);
                         }
                         if (message.op == "UpdateTarget") {
-                            console.log("UpdateTarget to " + message.content);
-                            var elem = document.getElementById("Target:" + message.sender)
+                            for (var key in message.receivers) {
+                            var elem = document.getElementById("Target:" + key);
                             if (elem != null) {
+                                console.log("Target: " +  key  + "updated to " + message.content);
                                 child = elem.childNodes;
-                            if (message.content == "GREEN") {
-                                child[0].setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
-                            }
-                            else if (message.content == "BLUE") {
-                                child[0].setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;")
+                                if (message.content == "GREEN") {
+                                    child[0].setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
+                                }
+                                else if (message.content == "BLUE") {
+                                    child[0].setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;")
+                                }
                             }
                         }
                             return;

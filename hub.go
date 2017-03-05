@@ -101,7 +101,7 @@ func (h *Hub) run() {
 
 		case message := <-h.multicast:
 
-			log.Printf("Hub: multicast from %s to %s in room %s", message.Sender, message.Room, message.Targets )
+			log.Printf("Hub: multicast from %s to %s in room %s ", message.Sender, message.Room, message.Targets)
 			for client := range h.clients {
 				if _, ok := message.Targets[client.UserId]; ok == true {
 					select {

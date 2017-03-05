@@ -245,12 +245,12 @@ func updateMPRStatus(clientID string, targetID string) string {
 	}
 	if two == 2 {
 		MPRStatus = GREEN // target and client are sending messages to each other, they have formed a Multicast Private Room
-		targets[targetID] = true
-		targets[clientID] = true
 	} else {
 		MPRStatus = BLUE
-		targets[clientID] = true
 	}
+
+	targets[targetID] = true
+	targets[clientID] = true
 
 	hub.multicast <- Message{"UpdateTarget", "", "", clientID, "", targets, timestamp(), "", MPRStatus }
 	return MPRStatus
