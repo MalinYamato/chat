@@ -120,7 +120,6 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
 	room := hub.messages["Main"]
 	ifs := room.GetAllAsList()
 	var msgs []Message
@@ -128,7 +127,6 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(ifs); i++ {
 		msgs[i] = ifs[i].(Message)
 	}
-
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	homeTemplate.Execute(w, struct {
@@ -147,9 +145,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		Messages:  msgs,
 		Persons:   _persons.getAllLoggedIn(),
 		Targets:   nil,
-
 	})
-
 }
 
 type GreenBlue struct {
@@ -183,7 +179,6 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		msgs[i] = ifs[i].(Message)
 	}
 
-
 	var targets []GreenBlue
 	for k, _ := range _publishers[person.UserID].Targets {
 		target, ok := _persons.findPersonByUserId(k)
@@ -211,7 +206,6 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		Persons:   _persons.getAllLoggedIn(),
 		Targets:   targets,
 	})
-
 }
 
 func profileHandler(w http.ResponseWriter, r *http.Request) {
@@ -243,7 +237,6 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 			return
 		}
-
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(data)
 
@@ -281,7 +274,6 @@ func updateMPRStatus(clientID string, targetID string) string {
 
 func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-
 	var request PublishRequest
 	var MPRStatus string
 	response := PublishRequestResponse{"RequestResponse", Status{}, Person{}}
@@ -311,7 +303,6 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 					response.Status = Status{Status: WARNING, Detail: fmt.Sprintf("Receiver not found for UserID %s \n", targetID) }
 				} else {
 					log.Printf("Main: Profile request for Target %s UserID %s token %s \n", target.Email, target.UserID, target.Token)
-
 					publisher, ok := _publishers[client.UserID]
 					if request.Op == "RemoveTarget" {
 						if ok && len(publisher.Targets) >= 1 {
@@ -321,19 +312,14 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 						if ok && len(publisher.Targets) < 1 {
 							delete(_publishers, client.UserID)
 						}
-
 					} else if request.Op == "AddTarget" {
 						if ! ok {
 							publisher = Publisher{client.UserID, make(Targets)}
-						}
-						if _, exists := publisher.Targets[target.UserID]; exists == true {
-
 						}
 						publisher.Targets[target.UserID] = true
 						log.Printf("Receiver %s added \n", request.Ids[0])
 						_publishers[client.UserID] = publisher
 					}
-
 					MPRStatus = updateMPRStatus(client.UserID, target.UserID)
 					response.Status = Status{SUCCESS, MPRStatus}
 					response.Person = target
@@ -353,24 +339,19 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
-
 	session, err := sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Main: mainProfileHandler() Call to sessionStore.Get returned ", err)
 		return
 	}
-
 	if session == nil {
 		log.Println("Main: mainProfileHander() returned session was nil")
 		return
 	}
-
 	token := session.Values[sessionToken].(string)
-
 	p, _ := _persons.findPersonByToken(token)
 	t := template.New("fieldname example")
 	t = template.Must(template.ParseFiles("profile.html"))
-
 	t.Execute(w, struct {
 		Languages          []string
 		Genders            []string
@@ -395,10 +376,8 @@ func Contains(slice []string, item string) bool {
 }
 
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
-
 	r.ParseForm()
 	var status Status
-
 	if r.Method == "POST" {
 
 		session, err := sessionStore.Get(r, sessionName)
@@ -430,7 +409,6 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			p.BirthDate.Year = r.Form.Get("BirthYear")
 			p.BirthDate.Month = r.Form.Get("BirthMonth")
 			p.BirthDate.Month = r.Form.Get("BirthDay")
-
 			fmt.Printf("%+v\n", r.Form)
 			productsSelected := r.Form["Language"]
 			log.Println(Contains(productsSelected, "English"))
@@ -440,7 +418,6 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 					p.Languages[LANGUAGES[i]] = "checked"
 				}
 			}
-
 			if p.Keep == false {
 				status.Status = "New"
 				status.Detail = " A new profile was successfully created! <br> Public key: " + p.UserID + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
@@ -448,25 +425,20 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				status.Status = "Updated"
 				status.Detail = "The profile was successfully updated! <br> Public key: " + p.UserID + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
 			}
-
 			p.Keep = true
 			_persons.Save(p)
 		}
 	}
-
 	data, err := json.Marshal(status)
 	if err != nil {
 		panic(err)
 		return
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(data)
-
 }
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
-
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", serveHome)
 	mux.Handle("/session/", requireLogin(http.HandlerFunc(sessionHandler)))
@@ -474,7 +446,6 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.Handle("/ProfileUpdate", requireLogin(http.HandlerFunc(updateProfileHandler)))
 	mux.Handle("/MainProfile", requireLogin(http.HandlerFunc(mainProfileHandler)))
 	mux.Handle("/TargetManager", requireLogin(http.HandlerFunc(TargetManagerHandler)))
-
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
@@ -518,7 +489,6 @@ func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token strin
 	} else {
 		token = ""
 	}
-
 	return token, cookie, nil
 }
 

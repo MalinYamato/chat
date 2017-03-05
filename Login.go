@@ -51,11 +51,9 @@ func issueSession() http.Handler {
 		}
 
 		session := sessionStore.New(sessionName)
-
 		session.Values[sessionUserKey] = googleUser.Id
 		session.Values[sessionToken] = secret.String()
 		err = session.Save(w)
-
 		if err != nil {
 			log.Println("Login: could not set session ", err)
 		}
@@ -65,7 +63,6 @@ func issueSession() http.Handler {
 		var ok bool
 		v, ok = _persons.findPersonByGoogleID(googleUser.Id)
 		if ok {
-			log.Println("heressssssssssssss")
 			person := Person{
 				Nic:               checkSet(v.Nic, googleUser.GivenName),
 				Keep:              v.Keep,
@@ -89,9 +86,7 @@ func issueSession() http.Handler {
 
 			person.LoggedIn = true
 			_persons.Save(person)
-
 			user = "registred user"
-
 		}
 		if ! ok {
 			person := Person{
@@ -118,15 +113,10 @@ func issueSession() http.Handler {
 			user = "new user"
 			person.LoggedIn = true
 			_persons.Save(person)
-
 		}
-
 		person, _ := _persons.findPersonByGoogleID(googleUser.Id)
-
 		hub.broadcast <- Message{Op: "NewUser", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 " + person.getNic() }
-
 		log.Printf("Login: Successful Login of %s Email: %s  GoogleId: %s Token: %s UserID %s ", user, person.Email, person.GoogleID, person.Token, person.UserID)
-
 		http.Redirect(w, req, "/session", http.StatusFound)
 	}
 	return http.HandlerFunc(fn)
@@ -154,7 +144,6 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 		}
 		sessionStore.Destroy(w, sessionName)
 	}
-
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 

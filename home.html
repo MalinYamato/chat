@@ -39,10 +39,6 @@
             ev.target.appendChild(document.getElementById(data));
             var current = document.getElementById("centerNenu");
             current.appendChild(document.getElementById(data));
-
-
-            console.log(data);
-
         }
 
         window.onload = function () {
@@ -109,31 +105,26 @@
                 $("#log").empty();
                 sendMessage("ChangeRoom", "Main");
             };
-
             document.getElementById("MPRButton").onclick = function () {
                 $("#SelectedRoom").text("Instant Private 秘密屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "MPR");
             };
-
             document.getElementById("ReimersHotelButton").onclick = function () {
                 $("#SelectedRoom").text("Reimers Hotel屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "ReimersHotel");
             };
-
             document.getElementById("EvaMonikaMalinButton").onclick = function () {
                 $("#SelectedRoom").text("EvaMonikaMalin屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "EvaMonikaMalin");
             };
-
             document.getElementById("GayButton").onclick = function () {
                 $("#SelectedRoom").text("Gayゲイ屋");
                 $("#log").empty();
                 sendMessage("ChangeRoom", "Gay");
             };
-
             document.getElementById("LesbianButton").onclick = function () {
                 $("#SelectedRoom").text("Lesbianレズ屋");
                 $("#log").empty();
@@ -151,7 +142,6 @@
             };
 
             var _id = 0;
-
             function getID() {
                 if (_id > 1000) {
                     _id = 0;
@@ -168,17 +158,13 @@
             }
 
             document.getElementById("form").onsubmit = function () {
-
                 if (!conn) {
                     return false;
                 }
-
                 if (!msg.value) {
                     return false;
                 }
-
                 sendMessage("Message", msg.value);
-
                 msg.value = "";
                 return false;
             };
@@ -193,14 +179,11 @@
                 }
             }
 
-
+            /////////////////////////////////////////////////// WEBSOCET STUFF ///////////////////////////////////////
             if (window["WebSocket"]) {
                 conn = new WebSocket("wss://{{.Host}}/ws");
-
                 conn.onopen = function (evt) {
-
                     sendMessage("SendAllMessages", "null");
-
                 };
 
                 conn.onclose = function (evt) {
@@ -210,24 +193,18 @@
                 };
 
                 conn.onmessage = function (event) {
-
                     var message = JSON.parse(event.data);
-
                     if (message.content == "Unauthorized") {
                         modal.style.display = "block";
                     } else if (message.content != "Ignore") {
                         console.log("New message", message);
-
                         var uniqueID = message.sender +"@" + getID();
-
                         if (message.op == "ExitUser" && message.token != "flash") {
                             removeUser(message);
                         }
-
                         if (message.op == "NewUser" && message.token != "flash") {
                             appendNewUser(message, uniqueID);
                         }
-
                         if (message.op == "UpdateTarget") {
                             console.log("UpdateTarget to " + message.content);
                             var elem = document.getElementById("Target:" + message.sender)
@@ -243,24 +220,20 @@
                             return;
                         }
 
+                        // I do Dom not Jquery because I can, becase I am a dominatrix !!!!
+
                         var uberdiv = document.createElement("div");
-
-
-
                         // only show details for logged in users
                         if (loggedIn()) {
                             var diven = document.createElement("div");
                             diven.setAttribute("id", uniqueID);
                             diven.setAttribute("class", "w3-hide w3-container w3-ligth-grey fmt-row");
                         }
-
                         var picture_elem = document.createElement("img");
                         picture_elem.setAttribute("src", message.pictureURL);
                         var pictureURL_item = document.createElement("li");
                         pictureURL_item.setAttribute("id", "pictureURL");
                         pictureURL_item.appendChild(picture_elem);
-
-
                         var from_span = document.createElement("span");
                         from_span.setAttribute("id", "from");
                         from_span.innerText = message.nic;
@@ -270,38 +243,29 @@
                         var li_item = document.createElement("li");
                         li_item.appendChild(from_span);
                         li_item.appendChild(time_span);
-
                         var message_item = document.createElement("li");
                         message_item.setAttribute("id", "message");
                         var text_item = document.createElement("span");
                         text_item.setAttribute("id", "messageText");
                         text_item.innerText = message.content;
                         message_item.appendChild(text_item);
-
                         var item = document.createElement("ul");
                         item.setAttribute("id", "postitem");
                         item.appendChild((pictureURL_item));
                         item.appendChild(li_item);
                         item.appendChild(message_item);
-
                         var btn = document.createElement("button");
-
                         btn.setAttribute("class", "w3-btn");
                         btn.setAttribute("id", "postbutton");
                         btn.appendChild(item);
-
-
                         // only show details for logged in users
                         if (loggedIn()) {
                             btn.setAttribute("onclick", "myFunction('" + uniqueID + "')");
                         }
-
                         uberdiv.appendChild(btn);
-
                         if (loggedIn()) {
                             uberdiv.appendChild(diven);
                         }
-
                         uberdiv.setAttribute("id", "post");
                         if (message.op == "PrivateMessage") {
                             message_item.setAttribute("style", "background-color:#DEDEDE;");
@@ -318,10 +282,7 @@
                 appendLog(item);
             }
         };
-
-
     </script>
-
 </head>
 <body>
 <ul id="menu">
@@ -350,7 +311,7 @@
         <span id="me">{{ with .Person}}{{.FirstName}} {{.LastName}}{{end}}</span>
     </li>
     <li id="centerMenu">
-        <ul id="CurrentUsers">
+        <ul id="CurrentUsers">  <!-- oyeaa, no more JSP, PHP or other stoneage server side stuff!!! Go Lang templating...-->
             <!-- TEMPLATE CODE -->
             {{ range .Persons}}
             <li id="{{.UserID}}"><img onclick="RequestToPublish({{.UserID}})"  src="{{.PictureURL}}"> </img><span>{{.Nic}}</span></li>
@@ -369,7 +330,6 @@
                     <img src="/images/facebook.png"/>
                 </li>
             </ul>
-
         </div>
         <div class="flex-row" style="display:{{.LoggedIn}}">
             <ul>
@@ -379,14 +339,11 @@
                         <button type="submit"><img src="/images/pingu.png" border="0"/></button>
                         <input type="hidden" name="token" value="{{with .Person}}{{.Token}}{{end}}"/>
                     </form>
-
                 </li>
-
             </ul>
         </div>
     </li>
 </ul>
-
 
 <div id="log"></div>
 
@@ -395,14 +352,12 @@
         <input id="submit" type="submit" value="Send"/>
         <input type="text" id="msg"/>
     </form>
-
     <ul id="PublishList" class="flex-row">
         <!-- TEMPLATE CODE -->
         {{ range .Targets}}
         <li id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;" onclick="RemoveTarget({{.Target.UserID}})"  src="{{.Target.PictureURL}}"> </img> <!--<span>{{.Target.Nic}}</span>--> </li>
         {{end}}
         <!-- TEMPLATE CODE -->
-
     </ul>
 </div>
 
@@ -410,23 +365,18 @@
 
     function myFunction(myid) {
         console.log("clicked" + myid);
-
         userId = myid.split("@")[0]
-
         var x = document.getElementById(myid);
         console.log(x);
         if (x.className.indexOf("w3-show") == -1) {
-
             // json format
             var person = {"userId": userId};
-
             $.ajax({
                 url: 'https://{{.Host}}/profile',
                 type: 'post',
                 data: JSON.stringify(person),
                 contentType: 'application/json',
                 success: function (person) {
-
                     if (person.userId != null) {
                         var bigImage = document.createElement("img");
                         bigImage.setAttribute("src", person.pictureURL);
@@ -438,14 +388,12 @@
                         var info4 = document.createElement("li");
                         var info5 = document.createElement("li");
                         var info6 = document.createElement("li");
-
                         info1.innerText = "        " + person.nic;
                         info2.innerText = "        " + person.firstName + " " + person.lastName;
                         info3.innerText = "        " + person.gender + " " + person.sexualOrienation;
                         info4.innerText = "        " + person.country + " " + person.town;
                         info5.innerText = "        " + "";
                         info6.innerText = "        " + person.profession;
-
                         info.appendChild(info1);
                         info.appendChild(info2);
                         info.appendChild(info3);
@@ -454,15 +402,11 @@
                         info.appendChild(info6);
                         info.setAttribute("id", "profileInfo");
                         x.appendChild(info);
-
                         console.log(person);
                         x.className += " w3-show";
                     }
                 }
             });
-
-            //  x.className += " w3-show";
-
         } else {
             while (x.lastChild) {
                 x.removeChild(x.lastChild);
@@ -471,16 +415,16 @@
         }
     }
 
+    //
+    // AJAX is better and more secure than WS for sensitive data and structured requests that expect structured response
+    //
     function RequestToPublish(anId) {
-
         var targetID = anId.split("@")[0];
         var message = {"op": "AddTarget", "ids": [targetID]};
         console.log("message> " + message["ids"]);
-
         if ($("li[id='" + "Target:" + targetID + "']").length > 0) {
             return; // dupplicate
         }
-
         $.ajax({
             url: 'https://{{.Host}}/TargetManager',
             type: 'post',
@@ -505,7 +449,6 @@
                 }
             }
         });
-
     }
 
     function RemoveTarget(targetId)
@@ -516,7 +459,6 @@
             type: 'post',
             data: JSON.stringify(message),
             contentType: 'application/json',
-
             success: function (r) {
                 var elem = document.getElementById("PublishList");
                 var child = document.getElementById("Target:"+targetId);
@@ -540,9 +482,6 @@
         <div class="modal-body">
             <p>You are required to login before you may submit messages! You may automatically sign up with either your
                 Google or Facebook account by clicking on corresponding icon at the top right.
-            </p>
-            <p>
-
             </p>
         </div>
         <div class="modal-footer">

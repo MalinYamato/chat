@@ -33,7 +33,6 @@ type Hub struct {
 
 	rooms map[string]Room
 
-
 }
 
 type Message struct {

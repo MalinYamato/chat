@@ -16,9 +16,7 @@
         * {
             box-sizing: border-box;
         }
-
         form {
-
             background: linear-gradient(to bottom right, #bfbfbf, white);
         }
 
@@ -26,7 +24,6 @@
             content: "";
             clear: both;
             display: table;
-
         }
 
         [class*="col-"] {
@@ -44,16 +41,13 @@
             margin-top: 14px;
             font: 18px Arial, Helvetica, sans-serif;
             margin-bottom: 4px;
-
         }
 
         .menu ul {
             margin-top: 8px;
             max-width: 200px;
             list-style-type: none;
-
             padding: 0;
-
         }
 
         .menu li {
@@ -77,7 +71,6 @@
             margin-left: 2px;
             border-radius: 8px;
             font: 14px Arial, Helvetica, sans-serif;
-
         }
 
         span {
@@ -142,7 +135,6 @@
         .header h1 {
             margin-left: 15px;
             text-shadow: 2px 2px 4px #000000;
-
         }
 
         .footer {
@@ -150,7 +142,6 @@
             color: #ffffff;
             text-align: center;
             font-size: 12px;
-
             padding: 20px;
         }
 
@@ -158,7 +149,6 @@
         [class*="col-"] {
             width: 100%;
         }
-
 
         textarea {
             width: 100%;
@@ -195,7 +185,6 @@
             width: 10em;
             display: table;
             margin: 0 auto
-
         }
 
         .button:hover {
@@ -208,7 +197,6 @@
             width: 100%;
             border: 2px solid #9cb8f5;
             border-radius: 12px;
-
         }
 
         .flex-column {
@@ -233,8 +221,6 @@
             margin-right: 5px;
         }
 
-
-
         #MapHolder {
             height: 330px;
         }
@@ -250,7 +236,6 @@
         }
 
         .picture {
-
             background-color: #9cb8f5;
             padding: 5px;
             color: #ffffff;
@@ -258,7 +243,6 @@
             font-size: 14px;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-
             width: auto;
         }
 
@@ -284,7 +268,6 @@
         }
 
         .checkbox-container {
-
             display: flex;
             flex-wrap: wrap;
             margin-left: 14px;
@@ -294,7 +277,6 @@
         .checkbox-container div {
             text-align: left;
             width: 7em;
-
         }
 
         #Town, #Country, .locationbutton {
@@ -306,7 +288,6 @@
         }
 
         .right-side {
-
             margin-top: 5px;
             margin-left: 10px;
         }
@@ -317,10 +298,6 @@
 
         .my-story {
             min-width: 400px;
-        }
-
-        .status   {
-
         }
 
         .status, .status-m {
@@ -336,21 +313,19 @@
             text-align: center;
             border-radius: 12px;
             background-color: #55aa2d;
-
         }
 
         @media only screen and (max-width: 735px) {
             .stuff-m {
                  margin-top: 5px;
                  height: 5em;
-
             }
         }
+
         @media only screen and (min-width: 730px) {
             .stuff {
                 margin-top: 5px;
                 height: 5em;
-
             }
         }
 
@@ -375,7 +350,6 @@
 <form id="ProfileForm" class="flex-row" action="https://{{.Host}}/ProfileUpdate">
         <div class="menu">
             <div class=" picture">
-
                     <div class="flex-column">
                         <img src="{{.P.PictureURL}}">
                     </div>
@@ -385,7 +359,6 @@
                     <span for="Nic"><b>Nicname</b> <br> </span>
                     <input onchange="changed()" type="text" id="Nic" name="Nic" placeholder="Nicname used during chat" value="{{.P.Nic}}">
                 </li>
-
                 <li>
                     <span for="FirstName"><b>First Name </b>  </span>
                     <input onchange="changed()" type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
@@ -402,9 +375,7 @@
                         {{end}}
                     </select>
                 </li>
-
-                <li >
-
+                <li>
                   <div class="flex-row">
                      <div class="flex-column">
                          <span for="BirthDate"><b>Year</b> </span>
@@ -419,10 +390,7 @@
                                 <input onchange="changed()"  class="SmallNumber" type="number" min="1" max="31" id="BirthDay" name="BirthDay" value="{{.P.BirthDate.Day}}">
                              </div>
                   </div>
-
-
                 </li>
-
                 <li>
                     <span for="SexualOrientation"><b>Orientation</b> </span>
                     <select onchange="changed()" id="SexualOrientation" name="SexualOrientation">
@@ -435,7 +403,6 @@
                     <span for="email"><b>Email</b> (Verified) <br></span>
                     <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.Email}}" readonly>
                 </li>
-
                 <li>
                     <span for="Profession"><b>Profession</b></span>
                     <input onchange="changed()"  placeholder="Profession" type="text" id="Profession" name="Profession"
@@ -449,7 +416,6 @@
                     <input id="submitbutton" formmethod="post" class="button" type="submit" value="Save">
                 </li>
             </ul>
-
         </div>
         <div class="right-side">
         <div class=" my-story">
@@ -458,9 +424,7 @@
         <div class=" location-languages">
             <fieldset>
                 <legend>Location and Languages</legend>
-
                 <div class="flex-column">
-
                     <div class="flex-row">
                         <div class="flex-column">
                             <button type="button" class="button locationbutton" onclick="getLocation()">Get Your
@@ -481,19 +445,12 @@
                             <!-- TEMPLATE CODE -->
                         </div>
                     </div>
-
                     <div id="MapHolder"></div>
                 </div>
-
             </fieldset>
             </div>
-
-
         <div id="StatusBox" style="width:100%;height:500px" hidden  class="stuff stuff-m"><p  class="status-m status" id="status"></p></div>
-
     </div>
-
-
 </form>
 <div class="footer">
     <p></p>
@@ -541,7 +498,6 @@
             navigator.geolocation.getCurrentPosition(showPosition,displayError,
                 { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
             );
-
         } else {
             console.log("bad");
             $("#country").val("Unknown");
@@ -557,24 +513,14 @@
         $("#StatusBox").show();
     }
 
-    var markerShapeGlastonbury = {
-        coord: [12,4,216,22,212,74,157,70,184,111,125,67,6,56],
-        type: 'poly'
-    };
-
-
-    var pictureOverlay;
-
+        var pictureOverlay;
         function setMapPoint(lat,long, message) {
-
             $("#StatusBox").hide();
             $("#MapHolder").height(350);
-
             var latlong = new google.maps.LatLng(lat,long);
             var mapCanvas = document.getElementById("MapHolder");
             var mapOptions = {center: latlong, zoom: 10};
             var map = new google.maps.Map(mapCanvas,mapOptions);
-
             var myCity = new google.maps.Circle({
                 center: latlong,
                 radius: 5000,
@@ -585,35 +531,27 @@
                 fillOpacity: 0.2
             });
             myCity.setMap(map);
-
             var imageBounds = {
                 north: lat + 0.015,
                 south: lat - 0.015,
                 east:  long + 0.025,
                 west:  long - 0.025
             };
-
             pictureOverlay = new google.maps.GroundOverlay(
                 "{{.P.PictureURL}}",
                 imageBounds);
-
             pictureOverlay.setMap(map);
     }
 
     function myMap() {
-
         alat = 50.110924;
         along = 8.682127;
-
-
         $("#StatusBox").hide();
         $("#MapHolder").height(350);
-
         var latlong = new google.maps.LatLng(alat,along);
         var mapCanvas = document.getElementById("MapHolder");
         var mapOptions = {center: latlong, zoom: 4};
         var map = new google.maps.Map(mapCanvas,mapOptions);
-
         var myCity = new google.maps.Circle({
             center: latlong,
             radius: 450000,
@@ -624,31 +562,21 @@
             fillOpacity: 0.1
         });
         myCity.setMap(map);
-
         var imageBounds = {
             north: alat + 2.5,
             south: alat - 2.5,
             east:  along + 3.5,
             west:  along - 3.5
         };
-
         pictureOverlay = new google.maps.GroundOverlay(
             "https://{{.Host}}/images/krypinlogo.png",
             imageBounds);
-
         pictureOverlay.setMap(map);
-
     }
-
-
     function showPosition(position) {
-
         var latlon = position.coords.latitude + "," + position.coords.longitude;
-
         console.log("latlon " + latlon);
-
         setMapPoint( position.coords.latitude ,  position.coords.longitude ,$("#FirstName").val() + " " + $("#LastName").val());
-
         var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon;
         $.get(url, function (data, status) {
 
@@ -668,14 +596,9 @@
                 console.log("City " + city + " Country " + country);
             }
         );
-
     }
-
-
 </script>
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0&callback=myMap" >
 </script>
-
 </body>
 </html>
