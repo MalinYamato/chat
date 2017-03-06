@@ -182,11 +182,14 @@
             /////////////////////////////////////////////////// WEBSOCET STUFF ///////////////////////////////////////
             if (window["WebSocket"]) {
                 conn = new WebSocket("wss://{{.Host}}/ws");
+
                 conn.onopen = function (evt) {
+                    console.log("Websocket connection opened!")
                     sendMessage("SendAllMessages", "null");
                 };
 
                 conn.onclose = function (evt) {
+                    console.log("Wesocket connection closed!: " + evt)
                     var item = document.createElement("div");
                     item.innerHTML = "<b>Your connection is closed. " + evt.toString() + "  </b>";
                     appendLog(item);
@@ -196,27 +199,30 @@
                     var message = JSON.parse(event.data);
                     if (message.content == "Unauthorized") {
                         modal.style.display = "block";
+
                     } else if (message.content != "Ignore") {
                         console.log("New message", message);
                         var uniqueID = message.sender +"@" + getID();
                         if (message.op == "ExitUser" && message.token != "flash") {
                             removeUser(message);
                         }
+                        /////// NewUser //////////////////////////////////////////////
                         if (message.op == "NewUser" && message.token != "flash") {
                             appendNewUser(message, uniqueID);
                         }
+                        ////// UpdateTarget  /////////////////////////////////////////
                         if (message.op == "UpdateTarget") {
                             for (var key in message.receivers) {
-                            var elem = document.getElementById("Target:" + key);
-                            if (elem != null) {
-                                console.log("Target: " +  key  + "updated to " + message.content);
-                                child = elem.childNodes;
-                                if (message.content == "GREEN") {
-                                    child[0].setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
+                              var elem = document.getElementById("Target: " + key);
+                              if (elem != null) {
+                                  console.log("Sender "+ message.sender +" Target: " +  key  + " updated to " + message.content);
+                                  child = elem.childNodes;
+                                  if (message.content == "GREEN") {
+                                      child[0].setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
                                 }
-                                else if (message.content == "BLUE") {
-                                    child[0].setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;")
-                                }
+                                  else if (message.content == "BLUE") {
+                                      child[0].setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;")
+                                  }
                             }
                         }
                             return;
