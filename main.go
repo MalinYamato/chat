@@ -372,7 +372,7 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(json_response)
 		if response.Status.Status == "SUCCESS" {
-			hub.broadcast <- Message{Op: "UpdateTarget", Token: "", Room: client.Room, Sender: client.UserID, Targets: targets, Nic: "", Timestamp: timestamp(), PictureURL: "", Content: "", PublishersTargets: targetsOftargets}
+			hub.multicast <- Message{Op: "UpdateTarget", Token: "", Room: client.Room, Sender: client.UserID, Targets: targets, Nic: "", Timestamp: timestamp(), PictureURL: "", Content: "", PublishersTargets: targetsOftargets}
 		}
 	} else {
 		log.Println("Main Unknown HTTP method ", r.Method)
