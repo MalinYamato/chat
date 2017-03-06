@@ -93,21 +93,6 @@ type Message struct {
 //
 
 
-func (t PublishersTargets) collectAllTargets(pub UserId) (p PublishersTargets, targets Targets) {
-	p = make(PublishersTargets)
-	targets = make(Targets)
-	for k,_ := range t[pub] {
-		targets[k] = true
-		log.Println("target>>>>",k)
-		p[k]  = make(Targets)
-		//log.Println(k)
-		for k2, _ := range t[k] {
-		//	log.Println(k2)
-			p[k][k2] = t[k][k2]
-		}
-	}
-	return p,targets
-}
 
 
 func (t PublishersTargets)  Status(pub UserId, target UserId) (publish PublishersTargets, status Status) {
@@ -305,6 +290,21 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 
 
 // case a   CLIENT ---> TARGET
+func (t PublishersTargets) collectAllTargets(pub UserId) (p PublishersTargets, targets Targets) {
+	p = make(PublishersTargets)
+	targets = make(Targets)
+	for k,_ := range t[pub] {
+		targets[k] = true
+		//	log.Println("target>>>>",k)
+		p[k]  = make(Targets)
+		//log.Println(k)
+		for k2, _ := range t[k] {
+			//	log.Println(k2)
+			p[k][k2] = t[k][k2]
+		}
+	}
+	return p,targets
+}
 
 
 
@@ -342,6 +342,7 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 				} else {
 					log.Printf("Main: Profile request for Target %s UserID %s token %s \n", target.Email, target.UserID, target.Token)
 					targets, ok := _publishers[client.UserID]
+					targetsOftargets, targs = _publishers.collectAllTargets(client.UserID)
 					if request.Op == "RemoveTarget" {
 						if ok && len(targets) >= 1 {
 							log.Println("Remove a Target")
@@ -358,11 +359,16 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 						targets[targetID] = true
 						_publishers[target.UserID] = targets
 						log.Printf("Receiver %s added \n", request.Ids[0])
+						targetsOftargets, targs = _publishers.collectAllTargets(client.UserID)
 					}
-					_, targetStatus := _publishers.Status(client.UserID, targetID)
-					targetsOftargets, targs = _publishers.collectAllTargets(client.UserID)
+					//_, targetStatus := _publishers.Status(client.UserID, targetID)
 
-					response.Status = Status{SUCCESS, targetStatus.Status}
+					for k, v := range targs {
+						log.Printf("TARGS %s %s \n", k, v)
+
+					}
+
+					response.Status = Status{SUCCESS, "RED"}
 					response.Person = target
 				}
 			}
