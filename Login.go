@@ -98,7 +98,7 @@ func issueSession() http.Handler {
 				Profession:        "",
 				Education:         "",
 				GoogleID:          googleUser.Id,
-				UserID:            userID.String(),
+				UserID:            UserId(userID.String()),
 				Token:             secret.String(),
 				Description:       "",
 				Room:              "Main", }

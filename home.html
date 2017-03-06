@@ -12,10 +12,8 @@
     <link href="/css/style.css" rel="stylesheet" type="text/css"/>
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript">
-
 
         function allowDrop(ev) {
             ev.preventDefault();
@@ -178,6 +176,25 @@
                     x.className = x.className.replace(" w3-show", "");
                 }
             }
+            function targetStatus(t, pubID, targetID) {
+                var status;
+                var a_to_b = false;
+                var b_to_a = false;
+
+                if(t[pubID][targetID] == true) {
+                    a_to_b = true;
+                }
+                if (t[targetID][pubID] == true) {
+                    b_to_a = true;
+                }
+                if (a_to_b && b_to_a) {
+                    status = "GREEN";
+                } else {
+                    status = "BLUE";
+                }
+                return status;
+            }
+
 
             /////////////////////////////////////////////////// WEBSOCET STUFF ///////////////////////////////////////
             if (window["WebSocket"]) {
@@ -212,16 +229,17 @@
                         }
                         ////// UpdateTarget  /////////////////////////////////////////
                         if (message.op == "UpdateTarget") {
-                            for (var key in message.receivers) {
-                               console.log("for each jey " + key )
-                              var elem = document.getElementById("Target:" + key);
+                            for (var targ in message.pubtarget) {
+                                console.log("for each key:" + targ + ":");
+                              var elem = document.getElementById("Target:" + targ);
                               if (elem != null) {
-                                  console.log("Sender "+ message.sender +" Target: " +  key  + " updated to " + message.content);
                                   child = elem.childNodes;
-                                  if (message.content == "GREEN") {
+                                  stat = targetStatus(message.pubtarget, message.sender, targ);
+                                  console.log("Sender "+ message.sender +" Target: " +  targ  + " updated to " + stat);
+                                  if (stat == "GREEN") {
                                       child[0].setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
                                 }
-                                  else if (message.content == "BLUE") {
+                                  else if (stat == "BLUE") {
                                       child[0].setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;")
                                   }
                             }

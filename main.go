@@ -64,13 +64,88 @@ type Status struct {
 	Detail string `json:"detail"`
 }
 
+// publishers[].Targets[]
+
+type UserId string
+type Targets map[UserId]bool
+type PublishersTargets map[UserId]map[UserId]bool
+
+type Message struct {
+	Op                string                           `json:"op"`
+	Token             string                           `json:"token"`
+	Room              string                           `json:"room"`
+	Sender            UserId                           `json:"sender"`
+	Targets           Targets                          `json:"targets,omitempty"`
+	Nic               string                           `json:"nic,omitempty"`
+	Timestamp         string                           `json:"timestamp,omitempty"`
+	PictureURL        string                           `json:"pictureURL,omitemtpy"`
+	//payload
+	Content           string                           `json:"content"`
+	PublishersTargets PublishersTargets                `json:"pubtarget,omitempty"`
+}
+
+//      expected return value
+//
+//     [publisherA] --> [targetA],[targetB],[targetC], n
+//     [targetA]  --> [target = PublisherA],[target], n
+//     [targetB]  --> [target = publiherA],[target],[target], n
+//     [targetC]  --> [target], n
+//
+
+
+func (t PublishersTargets) collectAllTargets(pub UserId) (p PublishersTargets, targets Targets) {
+	p = make(PublishersTargets)
+	targets = make(Targets)
+	for k,_ := range t[pub] {
+		targets[k] = true
+		p[k]  = make(Targets)
+		//log.Println(k)
+		for k2, _ := range t[k] {
+		//	log.Println(k2)
+			p[k][k2] = t[k][k2]
+		}
+	}
+	return p,targets
+}
+
+
+func (t PublishersTargets)  Status(pub UserId, target UserId) (publish PublishersTargets, status Status) {
+
+	var pt = make(PublishersTargets)
+	var a_to_b bool = false
+	var b_to_a bool = false
+
+	if _ , ok := t[pub][target]; ok == true {
+		if pt[pub] == nil {
+			pt[pub] = make(Targets)
+		}
+		        pt[pub][target] = true
+		        a_to_b = true
+	}
+	if _ , ok := t[target][pub]; ok == true {
+		if pt[target] == nil {
+			pt[target] = make(Targets)
+		}
+		pt[target][pub] = true
+		b_to_a = true
+	}
+	if a_to_b && b_to_a {
+		status.Status = GREEN
+	} else {
+		status.Status = BLUE
+	}
+
+	return pt, status
+
+}
+
 type PublishRequest struct {
 	Op  string   `json:"op"`
 	Ids []string `json:"ids"`
 }
 
 type PublishRequestResponse struct {
-	Op     string       `json:"op"`
+	Op     string      `json:"op"`
 	Status Status      `json:"status"`
 	Person Person      `json:"person"`
 }
@@ -169,11 +244,11 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		msgs[i] = ifs[i].(Message)
 	}
 	var targets []GreenBlue
-	for k, _ := range _publishers[person.UserID].Targets {
+	for k, _ := range _publishers[person.UserID]  {
 		target, ok := _persons.findPersonByUserId(k)
 		if ok {
-			color := updateMPRStatus(person.UserID, target.UserID)
-			targets = append(targets, GreenBlue{color,target})
+		//	color := updateMPRStatus(person.UserID, target.UserID)
+			targets = append(targets, GreenBlue{BLUE,target})
 		}
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -231,37 +306,12 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 // case a   CLIENT ---> TARGET
 
 
-func updateMPRStatus(clientID string, targetID string) string {
-	var MPRStatus string
-	var two int = 0
-	targets := make(Targets)
-	client, ok := _publishers[clientID]
-	if ok {
-		if _, ok := client.Targets[targetID]; ok == true {
-			two++
-		}
-	}
-	target, ok := _publishers[targetID]
-	if ok {
-		if _, ok := target.Targets[clientID]; ok == true {
-			two++
-		}
-	}
-	if two == 2 {
-
-		MPRStatus = GREEN // target and client are sending messages to each other, they have formed a Multicast Private Room
-		targets[targetID] = true
-		targets[clientID] = true
-	}
-
-	hub.multicast <- Message{"UpdateTarget", "", "", clientID, "", targets, timestamp(), "", MPRStatus }
-	return MPRStatus
-}
 
 func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var request PublishRequest
-	var MPRStatus string
+	var targetsOftargets PublishersTargets
+	var targets Targets
 	response := PublishRequestResponse{"RequestResponse", Status{}, Person{}}
 	if r.Method == "POST" {
 		var client Person
@@ -281,7 +331,7 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 					panic(err)
 				}
 				log.Println(request)
-				targetID := request.Ids[0]
+				targetID := UserId(request.Ids[0])
 				log.Println("target", targetID)
 				target, ok := _persons.findPersonByUserId(targetID)
 				if ! ok {
@@ -289,25 +339,28 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 					response.Status = Status{Status: WARNING, Detail: fmt.Sprintf("Receiver not found for UserID %s \n", targetID) }
 				} else {
 					log.Printf("Main: Profile request for Target %s UserID %s token %s \n", target.Email, target.UserID, target.Token)
-					publisher, ok := _publishers[client.UserID]
+					targets, ok := _publishers[client.UserID]
 					if request.Op == "RemoveTarget" {
-						if ok && len(publisher.Targets) >= 1 {
+						if ok && len(targets) >= 1 {
 							log.Println("Remove a Target")
-							delete(publisher.Targets, request.Ids[0])
+							delete(targets, UserId(request.Ids[0]))
+							_publishers[client.UserID] = targets
 						}
-						if ok && len(publisher.Targets) < 1 {
+						if ok && len(targets) < 1 {
 							delete(_publishers, client.UserID)
 						}
 					} else if request.Op == "AddTarget" {
 						if ! ok {
-							publisher = Publisher{client.UserID, make(Targets)}
+							targets = make(Targets)
 						}
-						publisher.Targets[target.UserID] = true
+						targets[targetID] = true
+						_publishers[target.UserID] = targets
 						log.Printf("Receiver %s added \n", request.Ids[0])
-						_publishers[client.UserID] = publisher
 					}
-					MPRStatus = updateMPRStatus(client.UserID, target.UserID)
-					response.Status = Status{SUCCESS, MPRStatus}
+					_, targetStatus := _publishers.Status(client.UserID, targetID)
+					targetsOftargets, targets = _publishers.collectAllTargets(client.UserID)
+
+					response.Status = Status{SUCCESS, targetStatus.Status}
 					response.Person = target
 				}
 			}
@@ -318,7 +371,9 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(json_response)
-
+		if response.Status.Status == "SUCCESS" {
+			hub.broadcast <- Message{Op: "UpdateTarget", Token: "", Room: client.Room, Sender: client.UserID, Targets: targets, Nic: "", Timestamp: timestamp(), PictureURL: "", Content: "", PublishersTargets: targetsOftargets}
+		}
 	} else {
 		log.Println("Main Unknown HTTP method ", r.Method)
 	}
@@ -401,10 +456,10 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			if p.Keep == false {
 				status.Status = "New"
-				status.Detail = " A new profile was successfully created! <br> Public key: " + p.UserID + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
+				status.Detail = " A new profile was successfully created! <br> Public key: " + string(p.UserID) + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
 			} else {
 				status.Status = "Updated"
-				status.Detail = "The profile was successfully updated! <br> Public key: " + p.UserID + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
+				status.Detail = "The profile was successfully updated! <br> Public key: " + string(p.UserID) + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
 			}
 			p.Keep = true
 			_persons.Save(p)
@@ -473,13 +528,6 @@ func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token strin
 	return token, cookie, nil
 }
 
-type Targets map[string]bool
-
-type Publisher struct {
-	UserId  string
-	Targets Targets
-}
-type Publishers map[string]Publisher
 
 var _persons Persons
 var hub *Hub
@@ -487,11 +535,14 @@ var DocumentRoot string
 var endpoint Endpoint
 var homeTemplate = template.Must(template.ParseFiles("home.html"))
 var sessionStore *sessions.CookieStore
-var _publishers Publishers
+var _publishers PublishersTargets
 
 func main() {
-	_publishers = make(Publishers)
-	_persons = Persons{__pers: make(map[string]Person)}
+	//testA()
+	//return
+
+	_publishers = make(PublishersTargets)
+	_persons = Persons{__pers: make(map[UserId]Person)}
 	config := &Config{
 		ClientID:       os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret:   os.Getenv("GOOGLE_CLIENT_SECRET"),

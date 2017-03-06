@@ -35,17 +35,8 @@ type Hub struct {
 
 }
 
-type Message struct {
-	Op        string    `json:"op"`
-	Token     string    `json:"token"`
-	Room      string    `json:"room"`
-	Sender    string    `json:"sender"`
-	Nic       string    `json:"nic,omitempty"`
-	Targets   Targets   `json:"receivers,omitempty"`
-	Timestamp string    `json:"timestamp,omitempty"`
-	PictureURL string   `json:"pictureURL,omitemtpy"`
-	Content   string    `json:"content"`
-}
+
+
 
 type Room struct {
 	Name string

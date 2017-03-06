@@ -40,7 +40,7 @@ type Client struct {
 	hub    *Hub
 	conn   *websocket.Conn
 	send   chan Message
-	UserId string
+	UserId UserId
 	Token  string
 	Cookie string
 }
@@ -143,10 +143,10 @@ func (c *Client) readPump() {
 					c.flushRoom(person.Room)
 				} else {
 					targets, yes := _publishers[c.UserId]
-					length := len(targets.Targets)
+					length := len(targets)
 					theMessage := "[" + strconv.Itoa(length) + "] " + message.Content
 					if yes {
-						message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets.Targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage  }
+						message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage  }
 						c.hub.multicast <- message
 					} else {
 						if person.Room != "MPR" { // should not broadcast to this room
