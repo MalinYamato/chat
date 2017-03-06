@@ -213,6 +213,7 @@
                         ////// UpdateTarget  /////////////////////////////////////////
                         if (message.op == "UpdateTarget") {
                             for (var key in message.receivers) {
+                               console.log("for each jey " + key )
                               var elem = document.getElementById("Target: " + key);
                               if (elem != null) {
                                   console.log("Sender "+ message.sender +" Target: " +  key  + " updated to " + message.content);
