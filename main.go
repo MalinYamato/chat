@@ -356,14 +356,13 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 							targets = make(Targets)
 						}
 						targets[targetID] = true
-						_publishers[target.UserID] = targets
+						_publishers[client.UserID] = targets
 					}
 					var pictures = make(map[UserId]string)
 					for k,_ := range _publishers {
 						p,_  := _persons.findPersonByUserId(k)
 						pictures[k] = p.PictureURL
 					}
-
 
 					targetgraph  := Graph{Basenode: target.UserID, PublishersTargets: _publishers, Pictures: pictures}
 					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: target.Room, Sender: client.UserID, Targets: Targets{target.UserID: true}, Nic: "", Timestamp: timestamp(), Content: "", Graph: targetgraph}
