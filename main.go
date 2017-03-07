@@ -359,9 +359,10 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 						targets[targetID] = true
 						_publishers[target.UserID] = targets
 						log.Printf("Receiver %s added \n", request.Ids[0])
-						targetsOftargets, targs = _publishers.collectAllTargets(client.UserID)
+						_, targs = _publishers.collectAllTargets(client.UserID)
+
 					}
-					//_, targetStatus := _publishers.Status(client.UserID, targetID)
+					targetsOftargets, _ = _publishers.collectAllTargets(client.UserID)
 
 					for k, v := range targs {
 						log.Printf("TARGS %s %s \n", k, v)
