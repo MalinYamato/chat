@@ -229,23 +229,30 @@
                         }
                         ////// UpdateTarget  /////////////////////////////////////////
                         if (message.op == "UpdateTarget") {
-                            for (var targ in message.pubtarget) {
-                                console.log("for each key:" + targ + ":");
-                              var elem = document.getElementById("Target:" + targ);
-                              if (elem != null) {
-                                  child = elem.childNodes;
-                                  stat = targetStatus(message.pubtarget, message.sender, targ);
-                                  console.log("Sender "+ message.sender +" Target: " +  targ  + " updated to " + stat);
+                            var publist = document.getElementById("PublishList");
+                            $(publist).empty();
+
+                            for (var key in message.pubtarget) {
+                                console.log("for each key:" + key + ":");
+                                stat = targetStatus(message.pubtarget, message.sender, key);
+                                  var liIten = document.createElement("li");
+                                  liIten.setAttribute("id", "Target:" + message.sender);
+                                  var imagen = document.createElement("img");
+                                  imagen.setAttribute("src", message.pictureURL);
                                   if (stat == "GREEN") {
-                                      child[0].setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
-                                }
-                                  else if (stat == "BLUE") {
-                                      child[0].setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;")
+                                      imagen.setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
+                                  } else if (stat == "BLUE") {
+                                      imagen.setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;");
+                                  } else if (stat == "RED") {
+                                      imagen.setAttribute("style", "border-color:red; border-width: 4px; border-style:solid;");
                                   }
+                                  imagen.setAttribute("onclick", "RemoveTarget('" + key + "')");
+                                  liIten.appendChild(imagen);
+                                  publist.appendChild(liIten);
                             }
-                        }
                             return;
-                        }
+                          }
+
 
                         // I do Dom not Jquery because I can, becase I am a dominatrix !!!!
 
@@ -458,24 +465,10 @@
             data: JSON.stringify(message),
             contentType: 'application/json',
             success: function (r) {
-                console.log("Request to publish response: " + r.status.detail + " " + r.person.email);
-                if (r.person.userId != null) {
-                    var liIten  = document.createElement("li");
-                    liIten.setAttribute("id", "Target:"+r.person.userId);
-                    var imagen = document.createElement("img");
-                    imagen.setAttribute("src", r.person.pictureURL);
-                    var elem = document.getElementById("PublishList");
-                    if (r.status.detail == "GREEN") {
-                        imagen.setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
-                    } else if (r.status.detail == "BLUE") {
-                        imagen.setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;")
-                    }
-                    imagen.setAttribute("onclick", "RemoveTarget('" + targetID + "')");
-                    liIten.appendChild(imagen);
-                    elem.appendChild(liIten);
-                }
+                console.log("Add of target requested /targetManager: " + r.status.detail + " " + r.person.email);
+
             }
-        });
+            });
     }
 
     function RemoveTarget(targetId)
@@ -487,9 +480,10 @@
             data: JSON.stringify(message),
             contentType: 'application/json',
             success: function (r) {
-                var elem = document.getElementById("PublishList");
-                var child = document.getElementById("Target:"+targetId);
-                elem.removeChild(child);
+                console.log("Delete of target requested /targetManager: " + r.status.detail + " " + r.person.email);
+             //   var elem = document.getElementById("PublishList");
+             //   var child = document.getElementById("Target:"+targetId);
+             //   elem.removeChild(child);
             }
         });
     }

@@ -342,7 +342,7 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 				} else {
 					log.Printf("Main: Profile request for Target %s UserID %s token %s \n", target.Email, target.UserID, target.Token)
 					targets, ok := _publishers[client.UserID]
-					targetsOftargets, targs = _publishers.collectAllTargets(client.UserID)
+					_, targs = _publishers.collectAllTargets(client.UserID)
 					if request.Op == "RemoveTarget" {
 						if ok && len(targets) >= 1 {
 							log.Println("Remove a Target")
@@ -370,8 +370,9 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 
 					response.Status = Status{SUCCESS, "DONT"}
 					response.Person = target
+
 					if response.Status.Status == "SUCCESS" {
-						hub.multicast <- Message{Op: "UpdateTarget", Token: "", Room: client.Room, Sender: client.UserID, Targets: targs, Nic: "", Timestamp: timestamp(), PictureURL: "", Content: "", PublishersTargets: targetsOftargets}
+						hub.multicast <- Message{Op: "UpdateTarget", Token: "", Room: client.Room, Sender: client.UserID, Targets: targs, Nic: "", Timestamp: timestamp(), PictureURL: client.PictureURL, Content: "", PublishersTargets: targetsOftargets}
 					}
 				}
 			}
