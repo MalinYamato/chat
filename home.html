@@ -184,7 +184,7 @@
                 console.log("here");
 
                 graph = message.graph.publishersTargets;
-                basenode = message.basenode;
+                basenode = message.graph.basenode;
                 targetnode = targetID;
 
                 if(graph[basenode][targetnode] == true) {
