@@ -185,14 +185,14 @@
 
                 graph = message.graph.publishersTargets;
                 basenode = message.basenode;
-                targetnode = targetID
+                targetnode = targetID;
 
                 if(graph[basenode][targetnode] == true) {
                     a_to_b = true;
                 }
 
                 console.log("here2");
-                console.log("here2 t " + targetID);
+                console.log("here2 t " + targetnode);
                 console.log("here2 b " + basenode);
 
                 if (graph[targetnode][basenode] == true) {
