@@ -187,7 +187,10 @@
                 basenode = message.graph.basenode;
                 targetnode = targetID;
 
-                if(graph[basenode][targetnode] == true) {
+                if (graph[basenode][targetnode] === undefined) {
+                    a_to_b = false
+                }
+                else if(graph[basenode][targetnode] == true) {
                     a_to_b = true;
                 }
 
@@ -195,7 +198,9 @@
                 console.log("here2 t " + targetnode);
                 console.log("here2 b " + basenode);
 
-                if (graph[targetnode][basenode] == true) {
+                if (graph[targetnode][basenode] === undefined) {
+                    b_to_a = false
+                } else if (graph[targetnode][basenode] == true) {
                     b_to_a = true;
                 }
                 console.log("here3");
