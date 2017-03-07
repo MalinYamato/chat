@@ -358,19 +358,18 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 						targets[targetID] = true
 						_publishers[target.UserID] = targets
 					}
-					var graph Graph
-					graph.Pictures = make(map[UserId]string)
+					var pictures = make(map[UserId]string)
 					for k,_ := range _publishers {
 						p,_  := _persons.findPersonByUserId(k)
-						graph.Pictures[k] = p.PictureURL
+						pictures[k] = p.PictureURL
 					}
-					graph.PublishersTargets = _publishers
 
-					graph.Basenode = target.UserID
-					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{target.UserID: true}, Nic: "", Timestamp: timestamp(), PictureURL: "", Content: "", Graph: graph}
 
-					graph.Basenode = client.UserID
-					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{client.UserID: true}, Nic: "", Timestamp: timestamp(), PictureURL: "", Content: "", Graph: graph}
+					targetgraph  := Graph{Basenode: target.UserID, PublishersTargets: _publishers, Pictures: pictures}
+					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: target.Room, Sender: client.UserID, Targets: Targets{target.UserID: true}, Nic: "", Timestamp: timestamp(), Content: "", Graph: targetgraph}
+
+					clientgraph  := Graph{Basenode: client.UserID, PublishersTargets: _publishers, Pictures: pictures}
+					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{client.UserID: true}, Nic:"", Timestamp: timestamp(), Content: "", Graph: clientgraph}
 
 					response.Status = Status{SUCCESS, "DONT"}
 					response.Person = target
