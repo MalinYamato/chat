@@ -232,23 +232,26 @@
                             var publist = document.getElementById("PublishList");
                             $(publist).empty();
 
-                            for (var key in message.pubtarget) {
-                                console.log("for each key:" + key + ":");
-                                stat = targetStatus(message.pubtarget, message.sender, key);
-                                  var liIten = document.createElement("li");
-                                  liIten.setAttribute("id", "Target:" + message.sender);
+                            for (var key1 in message.pubtarget) {
+                                console.log("key1 " + key1);
+                                for (var key2 in message.pubtarget[key1]) {
+                                   console.log("for each key:" + key2 + ":");
+                                   stat = targetStatus(message.pubtarget, key1, key2);
+                                   var liIten = document.createElement("li");
+                                  liIten.setAttribute("id", "Target:" + key2);
                                   var imagen = document.createElement("img");
                                   imagen.setAttribute("src", message.pictureURL);
                                   if (stat == "GREEN") {
-                                      imagen.setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
+                                     imagen.setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
                                   } else if (stat == "BLUE") {
-                                      imagen.setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;");
+                                     imagen.setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;");
                                   } else if (stat == "RED") {
-                                      imagen.setAttribute("style", "border-color:red; border-width: 4px; border-style:solid;");
+                                    imagen.setAttribute("style", "border-color:red; border-width: 4px; border-style:solid;");
                                   }
-                                  imagen.setAttribute("onclick", "RemoveTarget('" + key + "')");
+                                  imagen.setAttribute("onclick", "RemoveTarget('" + key2 + "')");
                                   liIten.appendChild(imagen);
                                   publist.appendChild(liIten);
+                            }
                             }
                             return;
                           }
