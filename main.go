@@ -368,7 +368,7 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 
 					}
 
-					response.Status = Status{SUCCESS, "RED"}
+					response.Status = Status{SUCCESS, "DONT"}
 					response.Person = target
 				}
 			}
