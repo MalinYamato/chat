@@ -255,7 +255,7 @@
                             for (var key1 in message.graph.publishersTargets) {
                                 console.log("key1 " + key1);
                                 if (key1 == message.graph.basenode) {
-                                for (var key2 of message.graph.publishersTargets[key1]) {
+                                for (var key2 in message.graph.publishersTargets[key1]) {
                                     console.log("key2:" + key2 + ":");
 
                                     stat = targetStatus(message, key2);
