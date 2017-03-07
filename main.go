@@ -360,8 +360,10 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 					}
 					var pictures = make(map[UserId]string)
 					for k,_ := range _publishers {
-						p,_  := _persons.findPersonByUserId(k)
-						pictures[k] = p.PictureURL
+						for k2, _ := range _publishers[k] {
+							p,_  := _persons.findPersonByUserId(k2)
+							pictures[k2] = p.PictureURL
+						}
 					}
 
 					targetgraph  := Graph{Basenode: target.UserID, PublishersTargets: _publishers, Pictures: pictures}
