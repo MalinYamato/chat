@@ -66,6 +66,11 @@ type Status struct {
 
 // publishers[].Targets[]
 
+type Graph struct {
+	Basenode          UserId               `json:"basenode"`
+	PublishersTargets PublishersTargets    `json:"publishersTargets"`
+	Pictures          map[UserId]string    `json:"pictures"`
+}
 type UserId string
 type Targets map[UserId]bool
 type PublishersTargets map[UserId]map[UserId]bool
@@ -81,7 +86,7 @@ type Message struct {
 	PictureURL        string                           `json:"pictureURL,omitemtpy"`
 	//payload
 	Content           string                           `json:"content"`
-	PublishersTargets PublishersTargets                `json:"pubtarget,omitempty"`
+	Graph             Graph                            `json:"graph,omitempty"`
 }
 
 //      expected return value
@@ -311,9 +316,6 @@ func (t PublishersTargets) collectAllTargets(pub UserId) (p PublishersTargets, t
 func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var request PublishRequest
-	var targetsOftargets PublishersTargets
-	//var targets Targets
-	var targs Targets
 	response := PublishRequestResponse{"RequestResponse", Status{}, Person{}}
 	if r.Method == "POST" {
 		var client Person
@@ -342,39 +344,36 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 				} else {
 					log.Printf("Main: Profile request for Target %s UserID %s token %s \n", target.Email, target.UserID, target.Token)
 					targets, ok := _publishers[client.UserID]
-					_, targs = _publishers.collectAllTargets(client.UserID)
 					if request.Op == "RemoveTarget" {
 						if ok && len(targets) >= 1 {
-							log.Println("Remove a Target")
-							delete(targets, UserId(request.Ids[0]))
-							_publishers[client.UserID] = targets
+							delete(_publishers[client.UserID], UserId(request.Ids[0]))
 						}
 						if ok && len(targets) < 1 {
 							delete(_publishers, client.UserID)
 						}
-					} else if request.Op == "AddTarget" {
+						} else if request.Op == "AddTarget" {
 						if ! ok {
 							targets = make(Targets)
 						}
 						targets[targetID] = true
 						_publishers[target.UserID] = targets
-						log.Printf("Receiver %s added \n", request.Ids[0])
-						_, targs = _publishers.collectAllTargets(client.UserID)
-
 					}
-					targetsOftargets, _ = _publishers.collectAllTargets(client.UserID)
-
-					for k, v := range targs {
-						log.Printf("TARGS %s %s \n", k, v)
-
+					var graph Graph
+					graph.Pictures = make(map[UserId]string)
+					for k,_ := range _publishers {
+						p,_  := _persons.findPersonByUserId(k)
+						graph.Pictures[k] = p.PictureURL
 					}
+					graph.PublishersTargets = _publishers
+
+					graph.Basenode = target.UserID
+					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{target.UserID: true}, Nic: "", Timestamp: timestamp(), PictureURL: "", Content: "", Graph: graph}
+
+					graph.Basenode = client.UserID
+					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{client.UserID: true}, Nic: "", Timestamp: timestamp(), PictureURL: "", Content: "", Graph: graph}
 
 					response.Status = Status{SUCCESS, "DONT"}
 					response.Person = target
-
-					if response.Status.Status == "SUCCESS" {
-						hub.multicast <- Message{Op: "UpdateTarget", Token: "", Room: client.Room, Sender: client.UserID, Targets: targs, Nic: "", Timestamp: timestamp(), PictureURL: client.PictureURL, Content: "", PublishersTargets: targetsOftargets}
-					}
 				}
 			}
 		}
