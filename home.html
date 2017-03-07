@@ -181,6 +181,8 @@
                 var a_to_b = false;
                 var b_to_a = false;
 
+                console.log("here");
+
                 if(t[pubID][targetID] == true) {
                     a_to_b = true;
                 }
@@ -236,7 +238,9 @@
                                 if (key1 == message.graph.basenode) {
                                 for (var key2 in message.graph.publishersTargets[key1]) {
                                     console.log("key2:" + key2 + ":");
+
                                     stat = targetStatus(message.graph.publishersTargets, message.graph.basenode, key2);
+
                                     var liIten = document.createElement("li");
                                     liIten.setAttribute("id", "Target:" + key2);
                                     var imagen = document.createElement("img");
