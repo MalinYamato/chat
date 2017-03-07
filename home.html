@@ -176,22 +176,26 @@
                     x.className = x.className.replace(" w3-show", "");
                 }
             }
-            function targetStatus(t, pubID, targetID) {
+            function targetStatus(message, targetID) {
                 var status;
                 var a_to_b = false;
                 var b_to_a = false;
 
                 console.log("here");
 
-                if(t[pubID][targetID] == true) {
+                graph = message.graph.publishersTargets;
+                basenode = message.basenode;
+                targetnode = targetID
+
+                if(graph[basenode][targetnode] == true) {
                     a_to_b = true;
                 }
 
                 console.log("here2");
-                console.log("here2 t" + targetID);
-                console.log("here2 b" + pubID);
+                console.log("here2 t " + targetID);
+                console.log("here2 b " + basenode);
 
-                if (t[targetID][pubID] == true) {
+                if (graph[targetnode][basenode] == true) {
                     b_to_a = true;
                 }
                 console.log("here3");
@@ -246,7 +250,7 @@
                                 for (var key2 in message.graph.publishersTargets[key1]) {
                                     console.log("key2:" + key2 + ":");
 
-                                    stat = targetStatus(message.graph.publishersTargets, message.graph.basenode, key2);
+                                    stat = targetStatus(message, key2);
 
                                     var liIten = document.createElement("li");
                                     liIten.setAttribute("id", "Target:" + key2);
