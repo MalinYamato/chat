@@ -198,11 +198,14 @@
                 console.log("here2 t " + targetnode);
                 console.log("here2 b " + basenode);
 
-                if (graph[targetnode][basenode] === undefined) {
-                    b_to_a = false
-                } else if (graph[targetnode][basenode] == true) {
-                    b_to_a = true;
+                if ( targetnode in graph) {
+                    if (graph[targetnode][basenode] == true) {
+                        b_to_a = true;
+                    }
                 }
+
+
+
                 console.log("here3");
 
                 if (a_to_b && b_to_a) {
@@ -252,7 +255,7 @@
                             for (var key1 in message.graph.publishersTargets) {
                                 console.log("key1 " + key1);
                                 if (key1 == message.graph.basenode) {
-                                for (var key2 in message.graph.publishersTargets[key1]) {
+                                for (var key2 of message.graph.publishersTargets[key1]) {
                                     console.log("key2:" + key2 + ":");
 
                                     stat = targetStatus(message, key2);
