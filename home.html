@@ -228,34 +228,34 @@
                             appendNewUser(message, uniqueID);
                         }
                         ////// UpdateTarget  /////////////////////////////////////////
-                        if (message.op == "UpdateTarget") {
+                        if (message.op == "UpdateTargetGraph") {
                             var publist = document.getElementById("PublishList");
                             $(publist).empty();
-
-                            for (var key1 in message.pubtarget) {
+                            for (var key1 in message.graph.publishersTargets) {
                                 console.log("key1 " + key1);
-                                for (var key2 in message.pubtarget[key1]) {
-                                   console.log("for each key:" + key2 + ":");
-                                   stat = targetStatus(message.pubtarget, key1, key2);
-                                   var liIten = document.createElement("li");
-                                  liIten.setAttribute("id", "Target:" + key2);
-                                  var imagen = document.createElement("img");
-                                  imagen.setAttribute("src", message.pictureURL);
-                                  if (stat == "GREEN") {
-                                     imagen.setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
-                                  } else if (stat == "BLUE") {
-                                     imagen.setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;");
-                                  } else if (stat == "RED") {
-                                    imagen.setAttribute("style", "border-color:red; border-width: 4px; border-style:solid;");
-                                  }
-                                  imagen.setAttribute("onclick", "RemoveTarget('" + key2 + "')");
-                                  liIten.appendChild(imagen);
-                                  publist.appendChild(liIten);
+                                if (key1 == message.graph.basenode) {
+                                for (var key2 in message.graph.publishersTargets[key1]) {
+                                    console.log("key2:" + key2 + ":");
+                                    stat = targetStatus(message.graph.publishersTargets, message.graph.basenode, key2);
+                                    var liIten = document.createElement("li");
+                                    liIten.setAttribute("id", "Target:" + key2);
+                                    var imagen = document.createElement("img");
+                                    imagen.setAttribute("src", message.graph.pictures[key2]);
+                                    if (stat == "GREEN") {
+                                        imagen.setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
+                                    } else if (stat == "BLUE") {
+                                        imagen.setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;");
+                                    } else if (stat == "RED") {
+                                        imagen.setAttribute("style", "border-color:red; border-width: 4px; border-style:solid;");
+                                    }
+                                    imagen.setAttribute("onclick", "RemoveTarget('" + key2 + "')");
+                                    liIten.appendChild(imagen);
+                                    publist.appendChild(liIten);
+                                }
                             }
                             }
                             return;
                           }
-
 
                         // I do Dom not Jquery because I can, becase I am a dominatrix !!!!
 
