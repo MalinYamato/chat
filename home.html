@@ -186,9 +186,16 @@
                 if(t[pubID][targetID] == true) {
                     a_to_b = true;
                 }
+
+                console.log("here2");
+                console.log("here2 t" + targetID);
+                console.log("here2 b" + pubID);
+
                 if (t[targetID][pubID] == true) {
                     b_to_a = true;
                 }
+                console.log("here3");
+
                 if (a_to_b && b_to_a) {
                     status = "GREEN";
                 } else {
