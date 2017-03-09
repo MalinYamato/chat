@@ -336,7 +336,6 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				log.Println(request)
 				targetID := UserId(request.Ids[0])
-				log.Println("target", targetID)
 				target, ok := _persons.findPersonByUserId(targetID)
 				if ! ok {
 					log.Printf("Main: Target  not found for UserID %s \n", targetID)
@@ -358,6 +357,8 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 						targets[targetID] = true
 						_publishers[client.UserID] = targets
 					}
+
+					// all the pictures of all possible targets
 					var pictures = make(map[UserId]string)
 					for k,_ := range _publishers {
 						for k2, _ := range _publishers[k] {
@@ -368,7 +369,6 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 
 					targetgraph  := Graph{Basenode: target.UserID, PublishersTargets: _publishers, Pictures: pictures}
 					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: target.Room, Sender: client.UserID, Targets: Targets{target.UserID: true}, Nic: "", Timestamp: timestamp(), Content: "", Graph: targetgraph}
-
 					clientgraph  := Graph{Basenode: client.UserID, PublishersTargets: _publishers, Pictures: pictures}
 					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{client.UserID: true}, Nic:"", Timestamp: timestamp(), Content: "", Graph: clientgraph}
 

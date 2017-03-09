@@ -152,7 +152,7 @@ li #me {
     width: 12em;
     padding-left: 2px;
     padding-bottom: 2px;
-    margin-top: 3px;
+    margin-top: -8px;
 
 }
 li a:hover {
@@ -232,3 +232,10 @@ li.dropdown {
     display: block;
 }
 
+#stuff2, #stuff3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 110px;
+    height: 43px;
+    #background-color: #bfbfbf;
+}
