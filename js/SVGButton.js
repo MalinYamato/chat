@@ -22,12 +22,10 @@ function SVGImageButton(id, img, size) {
     smallCloudExp = "layer7";
     bigCloud = "no";
     smallCloud = "layer2";
-
     this.Id = id;
     this.size = size;
     this.image = img;
 
-    console.log("ID ", this.Id);
     this.s = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
 
     document.querySelector(this.Id).getSVGDocument().getElementById("googleIcon").style.display = "none";
@@ -83,18 +81,7 @@ function SVGButton(id, text, size) {
     this.Id = id;
     this.size = size;
 
-    console.log("ID " + this.Id);
-
-    var sss = document.querySelector(this.Id);
-    if (sss == null) {
-        console.log("Not found elem for " + this.Id);
-    }
-
-
-    this.s = sss.getSVGDocument().getElementById("svg2");
-
-
-   // this.s = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
+    var element = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
 
     this.t = document.querySelector(this.Id).getSVGDocument().getElementById(this.Label);
     this.t.textContent = text;
