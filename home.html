@@ -49,31 +49,30 @@
                 profile.mouseDown();
                 window.location = "https://{{.Host}}/MainProfile";
                 };
-/*
-            var logout = new SVGButton("#logout", "Logout", "big");
-            logout.t.onmousedown = function () {
-                logout.mouseDown();
-                $.ajax({
-                    type: "POST",
-                    async: false,
-                    url: "https://{{.Host}}/logout",
-                    data: {token: "{{.Person.Token }}"},
-                    success: function (result) {
-                        console.log("didit ", result);
-                        window.location = "https://{{.Host}}/";
+
+            if (loggedIn()) {
+                var logout = new SVGButton("#logout", "Logout", "big");
+                logout.t.onmousedown = function () {
+                    logout.mouseDown();
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: "https://{{.Host}}/logout",
+                        data: {token: "{{.Person.Token }}"},
+                        success: function (result) {
+                            console.log("didit ", result);
+                            window.location = "https://{{.Host}}/";
                         }
                     });
                 };
-
-                */
-
+            }
 
             var google = new SVGImageButton("#google", "googleIcon", "small");
             google.s.onmousedown = function () {
                 google.mouseDown();
                 window.location = "https://{{.Host}}/google/login";
             };
-            loginLabel
+
             var facebook = new SVGImageButton("#facebook", "facebookIcon", "small");
 
             var loginLabel = new SVGButton("#loginLabel", " Login", "big");
