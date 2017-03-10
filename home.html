@@ -162,10 +162,10 @@
             }
 
             function loggedIn() {
-                if ("{{with .Person}}{{.Token}}{{end}}" != " ") {
-                    return true;
+                if ("{{with .Person}}{{.Token}}{{end}}" == "") {
+                    return false;
                 }
-                return false;
+                return true;
             }
 
             document.getElementById("form").onsubmit = function () {
