@@ -27,7 +27,8 @@ function SVGImageButton(id, img, size) {
     this.size = size;
     this.image = img;
 
-    this.s = document.querySelector(id).getSVGDocument().getElementById("svg2");
+    console.log("ID ", this.Id);
+    this.s = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
 
     document.querySelector(this.Id).getSVGDocument().getElementById("googleIcon").style.display = "none";
     document.querySelector(this.Id).getSVGDocument().getElementById("facebookIcon").style.display = "none";
@@ -82,8 +83,8 @@ function SVGButton(id, text, size) {
     this.Id = id;
     this.size = size;
 
-    this.s = document.querySelector(id).getSVGDocument().getElementById("svg2");
-    this.t = document.querySelector(id).getSVGDocument().getElementById(this.Label);
+    this.s = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
+    this.t = document.querySelector(this.Id).getSVGDocument().getElementById(this.Label);
     this.t.textContent = text;
     document.querySelector(this.Id).getSVGDocument().getElementById(label).style.display = "inline";
     document.querySelector(this.Id).getSVGDocument().getElementById(bigCloudExp).style.display = "none";
