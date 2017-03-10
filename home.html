@@ -67,15 +67,19 @@
                 };
             }
 
-            var google = new SVGImageButton("#google", "googleIcon", "small");
-            google.s.onmousedown = function () {
-                google.mouseDown();
-                window.location = "https://{{.Host}}/google/login";
-            };
+            if (!loggedIn()) {
 
-            var facebook = new SVGImageButton("#facebook", "facebookIcon", "small");
+                var google = new SVGImageButton("#google", "googleIcon", "small");
+                google.s.onmousedown = function () {
+                    google.mouseDown();
+                    window.location = "https://{{.Host}}/google/login";
+                };
 
-            var loginLabel = new SVGButton("#loginLabel", " Login", "big");
+                var facebook = new SVGImageButton("#facebook", "facebookIcon", "small");
+
+                var loginLabel = new SVGButton("#loginLabel", " Login", "big");
+
+            }
 
             function removeUser(message) {
                 var child = document.getElementById(message.sender);
