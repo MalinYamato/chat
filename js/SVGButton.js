@@ -83,7 +83,19 @@ function SVGButton(id, text, size) {
     this.Id = id;
     this.size = size;
 
-    this.s = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
+    console.log("ID " + this.Id);
+
+    var sss = document.querySelector(this.Id);
+    if (sss == null) {
+        console.log("Not found elem for " + this.Id);
+    }
+
+
+    this.s = sss.getSVGDocument().getElementById("svg2");
+
+
+   // this.s = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
+
     this.t = document.querySelector(this.Id).getSVGDocument().getElementById(this.Label);
     this.t.textContent = text;
     document.querySelector(this.Id).getSVGDocument().getElementById(label).style.display = "inline";
