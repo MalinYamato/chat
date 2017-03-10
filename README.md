@@ -1,4 +1,4 @@
-# Krypin  -- a little cozy place to at in Swedish 
+# Krypin Chat -- a little cozy place to stay at in Swedish 
 Krypin is a secure encrypted chat with profile managment and several advanced ways to enage in private chat and establish a private chat room on the fly.You may log in by a Google or Fasebook acount.  
 
 Note. The installation and setup is very primitive at this point.
