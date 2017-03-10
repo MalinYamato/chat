@@ -1,16 +1,80 @@
 /**
  * Created by malin on 2017-03-09.
  */
+//
+// (C) 2017 Yamato Digital Audio
+// Author: Malin af Lääkkö
+//
 
-function SVGButton(id, text, size, inFn, downFn, upFn, outFn) {
+function setDefaultActions (obj) {
+    obj.s.onmouseover =  function () { obj.mouseIn(); };
+    obj.s.onmouseup =    function () { obj.mouseUp(); };
+    obj.s.onmousedown    =   function () { obj.mouseDown(); };
+    obj.s.onmouseout =   function () { obj.mouseOut(); };
+}
+
+function SVGImageButton(id, img, size) {
+
+    colorIn = "gray";
+    colorPress = "gray";
+    colorOut = "#9cb8f5";
+    bigCloudExp = "no";
+    smallCloudExp = "layer7";
+    bigCloud = "no";
+    smallCloud = "layer2";
+
+    this.Id = id;
+    this.size = size;
+    this.image = img;
+
+    this.s = document.querySelector(id).getSVGDocument().getElementById("svg2");
+
+    document.querySelector(this.Id).getSVGDocument().getElementById("googleIcon").style.display = "none";
+    document.querySelector(this.Id).getSVGDocument().getElementById("facebookIcon").style.display = "none";
+    document.querySelector(this.Id).getSVGDocument().getElementById(smallCloudExp).style.display = "none";
+    document.querySelector(this.Id).getSVGDocument().getElementById(this.image).style.display = "inline";
+
+    this.big = function () {
+        this.cloud = bigCloud;
+        this.cloudE = bigCloudExp;
+        document.querySelector(this.Id).getSVGDocument().getElementById(bigCloud).setAttribute("visibility", "visible");
+        document.querySelector(this.Id).getSVGDocument().getElementById(smallCloud).setAttribute("visibility", "hidden");
+    };
+    this.small = function () {
+        this.cloud = smallCloud;
+        this.cloudE = smallCloudExp;
+      //  document.querySelector(this.Id).getSVGDocument().getElementById(bigCloud).setAttribute("visibility", "hidden");
+        document.querySelector(this.Id).getSVGDocument().getElementById(smallCloud).setAttribute("visibility", "visible");
+    };
+    if (this.size == "big") {
+        this.small();
+    } else {
+        this.small();
+    }
+    this.mouseOut = function (e) {
+        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "none";;
+    };
+    this.mouseIn = function (e) {
+        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "inline";
+    };
+    this.mouseDown = function () {
+        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "inline";
+    };
+    this.mouseUp = function () {
+        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "none";
+    };
+
+    setDefaultActions(this);
+}
+
+
+function SVGButton(id, text, size) {
 
     this.Label = "text16838";
     colorIn = "gray";
     colorPress = "gray";
     colorOut = "#9cb8f5";
-    chat = "layer2";
-    photos = "layer3";
-    profile = "layer6";
+    label = "layer3";
     bigCloudExp = "layer8";
     smallCloudExp = "layer7";
     bigCloud = "layer5";
@@ -21,9 +85,7 @@ function SVGButton(id, text, size, inFn, downFn, upFn, outFn) {
     this.s = document.querySelector(id).getSVGDocument().getElementById("svg2");
     this.t = document.querySelector(id).getSVGDocument().getElementById(this.Label);
     this.t.textContent = text;
-    document.querySelector(this.Id).getSVGDocument().getElementById(chat).style.display = "none";
-    document.querySelector(this.Id).getSVGDocument().getElementById(photos).style.display = "inline";
-    document.querySelector(this.Id).getSVGDocument().getElementById(profile).style.display = "none";
+    document.querySelector(this.Id).getSVGDocument().getElementById(label).style.display = "inline";
     document.querySelector(this.Id).getSVGDocument().getElementById(bigCloudExp).style.display = "none";
     document.querySelector(this.Id).getSVGDocument().getElementById(smallCloudExp).style.display = "none"
 
@@ -56,8 +118,7 @@ function SVGButton(id, text, size, inFn, downFn, upFn, outFn) {
     this.mouseUp = function () {
         document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "none";
     };
-    this.t.onmouseover = inFn;
-    this.t.onmousedown = downFn;
-    this.t.onmouseup = upFn;
-    this.t.onmouseout = outFn;
+
+    setDefaultActions(this);
+
 }

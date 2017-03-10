@@ -136,6 +136,8 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 		}
 		sessionStore.Destroy(w, sessionName)
 	}
+	// redirect does not work for AJAX calls. Redirects have to be implemtend by client
+	w.Write([]byte(SUCCESS));
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 

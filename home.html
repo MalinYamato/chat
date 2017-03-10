@@ -13,35 +13,10 @@
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="/js/SVGButton.js"></script>
+   <script src="/js/SVGButton.js"></script>
     <script type="text/javascript">
 
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
-
-        function drag(ev) {
-
-            //ev.dataTransfer.effectAllowed = "copy";
-            ev.dataTransfer.setData("text", ev.target.id);
-            var data = ev.dataTransfer.getData("text", ev.target.id);
-            console.log(ev.target.id);
-            var current = document.getElementById("centerNenu");
-            current.appendChild(document.getElementById(data));
-        }
-
-        function drop(ev) {
-            //console.trace("dropped");
-            ev.preventDefault();
-            ev.dataTransfer.dropEffect = "copy";
-            var data = ev.dataTransfer.getData("text");
-            ev.target.appendChild(document.getElementById(data));
-            var current = document.getElementById("centerNenu");
-            current.appendChild(document.getElementById(data));
-        }
-
         window.onload = function () {
-
 
             var conn;
             var msg = document.getElementById("msg");
@@ -49,9 +24,6 @@
             var log = document.getElementById("log");
             var currentUsers = document.getElementById("CurrentUsers");
             modal.style.display = "none";
-
-
-            console.log("loading");
 
             function appendNewUser(message, uniqueID) {
                 var child = document.getElementById(message.sender);
@@ -70,23 +42,36 @@
                 currentUsers.appendChild(newUser);
             }
 
+            //////////////////////// Button actions settings ///////////////////////////////
 
+            var profile = new SVGButton("#profile", "Profile", "big");
+            profile.t.onmousedown = function () {
+                profile.mouseDown();
+                window.location = "https://{{.Host}}/MainProfile";
+                };
+            var logout = new SVGButton("#logout", "Logout", "big");
+            logout.t.onmousedown = function () {
+                logout.mouseDown();
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "https://{{.Host}}/logout",
+                    data: {token: "{{.Person.Token }}"},
+                    success: function (result) {
+                        console.log("didit ", result);
+                        window.location = "https://{{.Host}}/";
+                        }
+                    });
+                };
 
-            var stuff3 = new SVGButton("#stuff3", "Profile", "big",
-                function () {
-                    stuff3.mouseIn();
-                },
-                function () {
-                    stuff3.mouseDown();
-                    window.location = "https://{{.Host}}/MainProfile";
-                },
-                function () {
-                    stuff3.mouseUp();
-                },
-                function () {
-                    stuff3.mouseOut();
-                } );
+            var google = new SVGImageButton("#google", "googleIcon", "small");
+            google.s.onmousedown = function () {
+                google.mouseDown();
+                window.location = "https://{{.Host}}/google/login";
+            };
 
+            var facebook = new SVGImageButton("#facebook", "facebookIcon", "small");
+            var loginLabel = new SVGButton("#loginLabel", " Login", "big");
 
             function removeUser(message) {
                 var child = document.getElementById(message.sender);
@@ -164,7 +149,6 @@
             };
 
             var _id = 0;
-
             function getID() {
                 if (_id > 1000) {
                     _id = 0;
@@ -180,30 +164,18 @@
                 return false;
             }
 
-
-            console.log("loading2");
-
             document.getElementById("form").onsubmit = function () {
-                console.log("sending");
 
                 if (!conn) {
                     return false;
                 }
-
-                console.log("sending");
                 if (!msg.value) {
                     return false;
                 }
-
-                console.log("sending");
-
                 sendMessage("Message", msg.value);
                 msg.value = "";
                 return false;
             };
-
-
-            console.log("loading3");
 
             function myFunction(id) {
                 console.log("clicked");
@@ -235,8 +207,6 @@
                         }
                     }
 
-                    console.log("here3");
-
                     if (a_to_b && b_to_a) {
                         status = "GREEN";
                     } else {
@@ -245,7 +215,6 @@
                     return status;
                 }
             }
-                console.log("loading5");
 
                 /////////////////////////////////////////////////// WEBSOCET STUFF ///////////////////////////////////////
                 if (window["WebSocket"]) {
@@ -373,20 +342,18 @@
                     item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
                     appendLog(item);
                 }
-
         }
     </script>
 </head>
+
 <body>
-
-
 
 <ul id="menu">
     <li id="leftMenu">
 
         <ul>
             <li>
-                <object id="stuff3" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
+                <object id="profile" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
                     Profile
                 </object>
             </li>
@@ -418,29 +385,37 @@
     </li>
     <li id="rightMenu">
         <div class="flex-column" style="display:{{.LoggedOut}}">
-            <span>Login</span>
+
+        <object id="loginLabel" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
+            Login
+        </object>
+
             <ul class="flex-row loggedOut">
                 <li>
-                    <a href="https://{{.Host}}/google/login"><img src="/images/google.png"/></a>
+                    <object id="google" class="cstuff" type="image/svg+xml" data="/images/icons.svg">
+                        Lobgout
+                    </object>
                 </li>
                 <li>
-                    <img src="/images/facebook.png"/>
+                    <object id="facebook" class="cstuff" type="image/svg+xml" data="/images/icons.svg">
+                        Lobgout
+                    </object>
                 </li>
             </ul>
         </div>
         <div class="flex-row" style="display:{{.LoggedIn}}">
             <ul>
                 <li>
-                    <form id="pingu" action='https://{{.Host}}/logout' method='POST'>
-
-                        <button type="submit"><img src="/images/pingu.png" border="0"/></button>
-                        <input type="hidden" name="token" value="{{with .Person}}{{.Token}}{{end}}"/>
-                    </form>
+                  <object id="logout" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
+                       Lobgout
+                   </object>
                 </li>
             </ul>
         </div>
     </li>
 </ul>
+
+
 
 <div id="log"></div>
 
