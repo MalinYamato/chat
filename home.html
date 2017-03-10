@@ -51,7 +51,7 @@
                 };
 
             if (loggedIn()) {
-                var logout = new SVGButton("#logout", "Logout", "big");
+                var logout = new SVGButton("#logoutButton", "Logout", "big");
                 logout.t.onmousedown = function () {
                     logout.mouseDown();
                     $.ajax({
@@ -410,7 +410,7 @@
         <div class="flex-row" style="display:{{.LoggedIn}}">
             <ul>
                 <li>
-                  <object id="logout" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
+                  <object id="logoutButton" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
                        Lobgout
                    </object>
                 </li>
