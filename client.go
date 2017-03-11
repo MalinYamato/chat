@@ -1,3 +1,37 @@
+//
+// Copyright 2017 Malin Lääkkö -- Yamato Digital Audio.  All rights reserved.
+// https://github.com/MalinYamato
+//
+// Yamato Digital Audio https://yamato.xyz
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
 package main
 
 import (
@@ -65,18 +99,6 @@ func (c *Client) validSession() bool {
 	return true
 }
 
-func (c *Client) flushRoom(room string) {
-	theRoom := c.hub.messages[room]
-	list := theRoom.GetAllAsList()
-	//log.Println("Room List length ",len(list))
-	for i := 0; i < len(list); i++ {
-		var msg Message
-		msg = list[i].(Message)
-		msg.Token = "flash"
-		c.send <- msg
-	}
-}
-
 //type Message struct {
 //	Op        string   `json:"op"`
 //	Token     string   `json:"token"`
@@ -118,13 +140,9 @@ func (c *Client) readPump() {
 
 		var message Message
 		json.Unmarshal(json_message, &message)
+		log.Println("Client: message from Browser ", message);
 
-		log.Println("Client: message from Browser ", message)
-
-		if message.Op == "SendAllMessages" {
-			c.flushRoom("Main")
-
-		} else if ! c.validSession() {
+		if ! c.validSession() {
 			json_message := Message{Op: "Status", Sender: "Server", Room: "none", Token: "null", Timestamp: "null", Content: "Unauthorized" }
 			c.send <- json_message
 			if err != nil {
@@ -133,26 +151,17 @@ func (c *Client) readPump() {
 			}
 		} else {
 			var person Person
-			log.Println("messsssssss "+ message.Sender)
 			person, ok := _persons.findPersonByToken(message.Token)
 			if ok {
-				if message.Op == "ChangeRoom" {
-					log.Println("Request to change room to ", message.Content)
-					person.Room = message.Content;
-					_persons.Save(person)
-					c.flushRoom(person.Room)
+				targets, yes := _publishers[c.UserId]
+				if yes {
+					theMessage := "[" + strconv.Itoa(len(targets)) + "] " + message.Content
+					message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage  }
+					c.hub.multicast <- message
 				} else {
-					targets, yes := _publishers[c.UserId]
-					length := len(targets)
-					theMessage := "[" + strconv.Itoa(length) + "] " + message.Content
-					if yes {
-						message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage  }
-						c.hub.multicast <- message
-					} else {
-						if person.Room != "MPR" { // should not broadcast to this room
-							message := Message{Op: "Message", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: message.Content  }
-							c.hub.broadcast <- message
-						}
+					if person.Room != "MPR" { // should not broadcast to this room
+						message := Message{Op: "Message", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: message.Content  }
+						c.hub.broadcast <- message
 					}
 				}
 			} else {

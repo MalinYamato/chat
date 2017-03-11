@@ -1,3 +1,36 @@
+//
+// Copyright 2017 Malin Lääkkö -- Yamato Digital Audio.  All rights reserved.
+// https://github.com/MalinYamato
+//
+// Yamato Digital Audio https://yamato.xyz
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
 package main
 
 import (
@@ -16,7 +49,6 @@ import (
 	"path"
 	"os"
 	"github.com/dghubble/sessions"
-	"encoding/json"
 	"fmt"
 )
 
@@ -52,7 +84,6 @@ const
 	WARNING = "WARNING"
 	SUCCESS = "SUCCESS"
 )
-
 const (
 	GREEN = "GREEN" // sender and target are sending pvt messages to each other
 	BLUE  = "BLUE"  // sender sends pvt messages to the target but not the other way around
@@ -66,86 +97,22 @@ type Status struct {
 
 // publishers[].Targets[]
 
-type Graph struct {
-	Basenode          UserId               `json:"basenode"`
-	PublishersTargets PublishersTargets    `json:"publishersTargets"`
-	Pictures          map[UserId]string    `json:"pictures"`
-}
-type UserId string
-type Targets map[UserId]bool
-type PublishersTargets map[UserId]map[UserId]bool
 
 type Message struct {
-	Op                string                           `json:"op"`
-	Token             string                           `json:"token"`
-	Room              string                           `json:"room"`
-	Sender            UserId                           `json:"sender"`
-	Targets           Targets                          `json:"targets,omitempty"`
-	Nic               string                           `json:"nic,omitempty"`
-	Timestamp         string                           `json:"timestamp,omitempty"`
-	PictureURL        string                           `json:"pictureURL,omitemtpy"`
+	Op         string                           `json:"op"`
+	Token      string                           `json:"token"`
+	Room       string                           `json:"room"`
+	Sender     UserId                           `json:"sender"`
+	Targets    Targets                          `json:"targets,omitempty"`
+	Nic        string                           `json:"nic,omitempty"`
+	Timestamp  string                           `json:"timestamp,omitempty"`
+	PictureURL string                           `json:"pictureURL,omitemtpy"`
 	//payload
-	Content           string                           `json:"content"`
-	Graph             Graph                            `json:"graph,omitempty"`
+	Content   string                           `json:"content"`
+	Graph     Graph                            `json:"graph,omitempty"`
+	RoomUsers []Person                         `json:"roomUsers,omitempty"`
 }
 
-//      expected return value
-//
-//     [publisherA] --> [targetA],[targetB],[targetC], n
-//     [targetA]  --> [target = PublisherA],[target], n
-//     [targetB]  --> [target = publiherA],[target],[target], n
-//     [targetC]  --> [target], n
-//
-
-
-
-
-func (t PublishersTargets)  Status(pub UserId, target UserId) (publish PublishersTargets, status Status) {
-
-	var pt = make(PublishersTargets)
-	var a_to_b bool = false
-	var b_to_a bool = false
-
-	if _ , ok := t[pub][target]; ok == true {
-		if pt[pub] == nil {
-			pt[pub] = make(Targets)
-		}
-		        pt[pub][target] = true
-		        a_to_b = true
-	}
-	if _ , ok := t[target][pub]; ok == true {
-		if pt[target] == nil {
-			pt[target] = make(Targets)
-		}
-		pt[target][pub] = true
-		b_to_a = true
-	}
-	if a_to_b && b_to_a {
-		status.Status = GREEN
-	} else {
-		status.Status = BLUE
-	}
-
-	return pt, status
-
-}
-
-type PublishRequest struct {
-	Op  string   `json:"op"`
-	Ids []string `json:"ids"`
-}
-
-type PublishRequestResponse struct {
-	Op     string      `json:"op"`
-	Status Status      `json:"status"`
-	Person Person      `json:"person"`
-}
-
-var (
-	LANGUAGES   = []string{"English", "Finnish", "Same", "Swedish", "German", "French", "Spannish", "Italian", "Portogese", "Russian", "Chinese", "Japanese", "Korean", "Thai" }
-	ORIENTATION = []string{"Straight", "Gay", "Lesbian", "BiSexual", "ASexual"}
-	GENDER      = []string{"Female", "Male", "TranssexualF", "TranssexualM", "CrossDresser", "None"}
-)
 
 func (endpoint *Endpoint) url() (string) {
 	return endpoint.protocol + "://" + endpoint.host + ":" + endpoint.port
@@ -202,13 +169,13 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		LoggedOut: "flex",
 		Person:    Person{},
 		Messages:  msgs,
-		Persons:   _persons.getAllLoggedIn(),
+		Persons:   _persons.getAllInRoom("Main"),
 		Targets:   nil,
 	})
 }
 
 type GreenBlue struct {
-	Color string
+	Color  string
 	Target Person
 }
 
@@ -235,13 +202,14 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		msgs[i] = ifs[i].(Message)
 	}
 	var targets []GreenBlue
-	for k, _ := range _publishers[person.UserID]  {
+	for k, _ := range _publishers[person.UserID] {
 		target, ok := _persons.findPersonByUserId(k)
 		if ok {
-		//	color := updateMPRStatus(person.UserID, target.UserID)
-			targets = append(targets, GreenBlue{BLUE,target})
+			//	color := updateMPRStatus(person.UserID, target.UserID)
+			targets = append(targets, GreenBlue{BLUE, target})
 		}
 	}
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	homeTemplate.Execute(w, struct {
 		Host      string
@@ -257,232 +225,11 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		LoggedOut: "none",
 		Person:    person,
 		Messages:  msgs,
-		Persons:   _persons.getAllLoggedIn(),
+		Persons:   _persons.getAllInRoom(person.Room),
 		Targets:   targets,
 	})
 }
 
-func profileHandler(w http.ResponseWriter, r *http.Request) {
-	var request Person;
-	if r.Method == "POST" {
-		decoder := json.NewDecoder(r.Body)
-		err := decoder.Decode(&request)
-		if err != nil {
-			log.Println("ERR> ", err)
-		}
-		defer r.Body.Close()
-		log.Printf("Main: Profile request for user UserID: %s \n", request.UserID)
-		var person Person
-		person, ok := _persons.findPersonByUserId(request.UserID)
-		person.Token = ""
-		if ok {
-			log.Printf("Main: User not found for UserID %s \n", request.UserID)
-		} else {
-			log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
-		}
-		data, err := json.Marshal(person)
-		if err != nil {
-			panic(err)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(data)
-
-	} else {
-		log.Println("Main Unknown HTTP method ", r.Method)
-	}
-}
-
-
-// case a   CLIENT ---> TARGET
-func (t PublishersTargets) collectAllTargets(pub UserId) (p PublishersTargets, targets Targets) {
-	p = make(PublishersTargets)
-	targets = make(Targets)
-	for k,_ := range t[pub] {
-		targets[k] = true
-		//	log.Println("target>>>>",k)
-		p[k]  = make(Targets)
-		//log.Println(k)
-		for k2, _ := range t[k] {
-			//	log.Println(k2)
-			p[k][k2] = t[k][k2]
-		}
-	}
-	return p,targets
-}
-
-
-
-func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	var request PublishRequest
-	response := PublishRequestResponse{"RequestResponse", Status{}, Person{}}
-	if r.Method == "POST" {
-		var client Person
-		var ok bool
-		token, _, err := getCookieAndTokenfromRequest(r, true)
-		if err != nil {
-			response.Status = Status{ERROR, err.Error()}
-		} else {
-			client, ok = _persons.findPersonByToken(token)
-			if ! ok {
-				response.Status = Status{ERROR, err.Error()}
-			} else {
-				decoder := json.NewDecoder(r.Body)
-				err = decoder.Decode(&request)
-				if err != nil {
-					log.Println("Json decoder error> ", err.Error())
-					panic(err)
-				}
-				log.Println(request)
-				targetID := UserId(request.Ids[0])
-				target, ok := _persons.findPersonByUserId(targetID)
-				if ! ok {
-					log.Printf("Main: Target  not found for UserID %s \n", targetID)
-					response.Status = Status{Status: WARNING, Detail: fmt.Sprintf("Receiver not found for UserID %s \n", targetID) }
-				} else {
-					log.Printf("Main: Profile request for Target %s UserID %s token %s \n", target.Email, target.UserID, target.Token)
-					targets, ok := _publishers[client.UserID]
-					if request.Op == "RemoveTarget" {
-						if ok && len(targets) >= 1 {
-							delete(_publishers[client.UserID], UserId(request.Ids[0]))
-						}
-						if ok && len(targets) < 1 {
-							delete(_publishers, client.UserID)
-						}
-						} else if request.Op == "AddTarget" {
-						if ! ok {
-							targets = make(Targets)
-						}
-						targets[targetID] = true
-						_publishers[client.UserID] = targets
-					}
-
-					// all the pictures of all possible targets
-					var pictures = make(map[UserId]string)
-					for k,_ := range _publishers {
-						for k2, _ := range _publishers[k] {
-							p,_  := _persons.findPersonByUserId(k2)
-							pictures[k2] = p.PictureURL
-						}
-					}
-
-					targetgraph  := Graph{Basenode: target.UserID, PublishersTargets: _publishers, Pictures: pictures}
-					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: target.Room, Sender: client.UserID, Targets: Targets{target.UserID: true}, Nic: "", Timestamp: timestamp(), Content: "", Graph: targetgraph}
-					clientgraph  := Graph{Basenode: client.UserID, PublishersTargets: _publishers, Pictures: pictures}
-					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{client.UserID: true}, Nic:"", Timestamp: timestamp(), Content: "", Graph: clientgraph}
-
-					response.Status = Status{SUCCESS, "DONT"}
-					response.Person = target
-				}
-			}
-		}
-		json_response, err := json.Marshal(response)
-		if err != nil {
-			panic(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json_response)
-
-	} else {
-		log.Println("Main Unknown HTTP method ", r.Method)
-	}
-}
-
-func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := sessionStore.Get(r, sessionName)
-	if err != nil {
-		log.Println("Main: mainProfileHandler() Call to sessionStore.Get returned ", err)
-		return
-	}
-	if session == nil {
-		log.Println("Main: mainProfileHander() returned session was nil")
-		return
-	}
-	token := session.Values[sessionToken].(string)
-	p, _ := _persons.findPersonByToken(token)
-	t := template.New("fieldname example")
-	t = template.Must(template.ParseFiles("profile.html"))
-	t.Execute(w, struct {
-		Languages          []string
-		Genders            []string
-		SexualOrientations []string
-		P                  Person
-		Host               string
-	}{
-		Languages:          LANGUAGES,
-		Genders:            GENDER,
-		SexualOrientations: ORIENTATION,
-		P:                  p,
-		Host:               r.Host,
-	})
-}
-func Contains(slice []string, item string) bool {
-	set := make(map[string]struct{}, len(slice))
-	for _, s := range slice {
-		set[s] = struct{}{}
-	}
-	_, ok := set[item]
-	return ok
-}
-
-func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	var status Status
-	if r.Method == "POST" {
-		session, err := sessionStore.Get(r, sessionName)
-		if err != nil {
-			log.Println("Main: UpdateProfileHandler() Call to sessionStore.Get returned ", err)
-			status.Status = ERROR
-			status.Detail = "Failed to get a valid cookie!"
-		} else if session == nil {
-			log.Println("Main: UpdateProfileHandler() returned session was nil")
-			status.Status = ERROR
-			status.Detail = "The session is not valid!"
-		} else {
-			token := session.Values[sessionToken].(string)
-			var p Person
-			p, _ = _persons.findPersonByToken(token)
-			p.FirstName = r.Form.Get("FirstName")
-			p.LastName = r.Form.Get("LastName")
-			p.Gender = r.Form.Get("Gender")
-			p.Country = r.Form.Get("Country")
-			p.Town = r.Form.Get("Town")
-			p.Nic = r.Form.Get("Nic")
-			p.Profession = r.Form.Get("Profession")
-			p.Education = r.Form.Get("Education")
-			p.SexualOrientation = r.Form.Get("SexualOrientation")
-			p.Description = r.Form.Get("Description")
-			p.BirthDate.Year = r.Form.Get("BirthYear")
-			p.BirthDate.Month = r.Form.Get("BirthMonth")
-			p.BirthDate.Month = r.Form.Get("BirthDay")
-			fmt.Printf("%+v\n", r.Form)
-			productsSelected := r.Form["Language"]
-			log.Println(Contains(productsSelected, "English"))
-			for i := 0; i < len(LANGUAGES); i++ {
-				if Contains(r.Form["Language"], LANGUAGES[i]) {
-					p.Languages[LANGUAGES[i]] = "checked"
-				}
-			}
-			if p.Keep == false {
-				status.Status = "New"
-				status.Detail = " A new profile was successfully created! <br> Public key: " + string(p.UserID) + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
-			} else {
-				status.Status = "Updated"
-				status.Detail = "The profile was successfully updated! <br> Public key: " + string(p.UserID) + " <br>Private Key: " + p.Token + " <br>(used for secure broadcasts)"
-			}
-			p.Keep = true
-			_persons.Save(p)
-		}
-	}
-	data, err := json.Marshal(status)
-	if err != nil {
-		panic(err)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(data)
-}
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux := http.NewServeMux()
@@ -492,6 +239,8 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.Handle("/ProfileUpdate", requireLogin(http.HandlerFunc(updateProfileHandler)))
 	mux.Handle("/MainProfile", requireLogin(http.HandlerFunc(mainProfileHandler)))
 	mux.Handle("/TargetManager", requireLogin(http.HandlerFunc(TargetManagerHandler)))
+	mux.Handle("/RoomManager", requireLogin(http.HandlerFunc(RoomManagerHandler)))
+
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
@@ -537,7 +286,6 @@ func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token strin
 	}
 	return token, cookie, nil
 }
-
 
 var _persons Persons
 var hub *Hub

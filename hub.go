@@ -58,18 +58,9 @@ func newHub(stack QueueStack) *Hub {
 		clients:    make(map[*Client]bool),
 		rooms:	    make(map[string]Room),
 		command:    make(chan Command),
-		messages:   map[string]QueueStack{
-				"Main":QueueStack{},
-			        "ReimersHotel" : QueueStack{},
-			        "EvaMonikaMalin":QueueStack{},
-				"Japanese": QueueStack{},
-			        "Lesbian": QueueStack{},
-			        "Gay": QueueStack{},
-			        "Trans":  QueueStack{}},
+		messages:   RoomManager_getRooms(),
 	}
-
 }
-
 
 func (h *Hub) run() {
 
@@ -105,7 +96,6 @@ func (h *Hub) run() {
 				}
 			}
 		case message := <-h.broadcast:
-
 			room := h.messages[message.Room]
 			room.Push(message)
 		        h.messages[message.Room] = room
@@ -115,12 +105,15 @@ func (h *Hub) run() {
 				room.TailPop()
 			}
 			for client := range h.clients {
-				select {
-				case client.send <- message:
-				default:
-					log.Println("Hub: Close Client")
-					close(client.send)
-					delete(h.clients, client)
+	                        person, ok  := _persons.findPersonByUserId(client.UserId);
+				if ok && person.Room == message.Room {
+					select {
+					case client.send <- message:
+					default:
+						log.Println("Hub: Close Client")
+						close(client.send)
+						delete(h.clients, client)
+					}
 				}
 			}
 

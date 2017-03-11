@@ -1,15 +1,45 @@
-
 <!--
-// (C) 2017 Yamato Digital Audio
-// Author: Malin af Lääkkö
 //
+// Copyright 2017 Malin Lääkkö -- Yamato Digital Audio.  All rights reserved.
+// https://github.com/MalinYamato
+//
+// Yamato Digital Audio https://yamato.xyz
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 -->
+
 <!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="js/SVGButton.js"> </script>
+    <script src="js/map.js"> </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -293,9 +323,8 @@
             margin-left: 10px;
         }
 
-
         .location-languages {
-            max-width: 500px;
+            max-width: 380px;
         }
         .my-story {
             min-width: 400px;
@@ -306,7 +335,7 @@
             -moz-box-shadow:  10px 10px 5px gray;
             box-shadow:  8px 8px 5px gray;
             height: 4em;
-            width: 500px;
+            width: 450px;
             font: 18px Arial, Helvetica, sans-serif;
             display: table-cell;
             vertical-align: middle;
@@ -314,6 +343,10 @@
             border-radius: 12px;
             background-color: #55aa2d;
         }
+        #StatusBox {
+            height: 6em;
+        }
+
         @media only screen and (max-width: 735px) {
             .stuff-m {
                  margin-top: 5px;
@@ -432,6 +465,7 @@
             </ul>
         </div>
         <div class="right-side">
+            <div id="StatusBox" style="width:100%" hidden  class="stuff stuff-m"><p  class="status-m status" id="status"></p></div>
         <div class=" my-story">
             <textarea id="introo" placeholder="My story" form="ProfileForm" name="Description" label="sdfsdf">{{.P.Description}}</textarea>
         </div>
@@ -463,30 +497,32 @@
                 </div>
             </fieldset>
             </div>
-        <div id="StatusBox" style="width:100%;height:500px" hidden  class="stuff stuff-m"><p  class="status-m status" id="status"></p></div>
+
     </div>
 </form>
 <div class="footer">
     <p></p>
 </div>
 <script>
-    window.onload = function () {
-        // All buttons
-        var stuff1 = new SVGButton("#stuff1", " Chat ", "small");
 
-        stuff1.t.onmousedown = function () {
-            stuff1.mouseDown();
+    window.onload = function () {
+
+        //// All buttons ////
+        var photosButton = new SVGButton("#stuff2", "Photos", "big");
+        var chatButton = new SVGButton("#stuff1", " Chat ", "small");
+        chatButton.t.onmousedown = function () {
+            chatButton.mouseDown();
             window.location = "https://{{.Host}}/session";
         };
-
-        var stuff2 = new SVGButton("#stuff2", "Photos", "big");
-
-        /////
-
 
         $("#StatusBox").hide();
         var town = document.getElementById("town");
         var city = document.getElementById("city");
+
+        var timeoutID;
+        function hideStatus() {
+            $("#StatusBox").hide();
+        }
 
         $("#ProfileForm").submit(function (event) {
             event.preventDefault();
@@ -503,6 +539,7 @@
                 } else {
                     $("#status").css("background-color", "green");
                 }
+                timeoutID = window.setTimeout(hideStatus, 10000);
                 $("#MapHolder").height(280);
                 $("#StatusBox").show();
                 $("#status").html(response.detail);
@@ -511,119 +548,13 @@
 
         function changed() {
             $("#MapHolder").height(280);
+
             $("#StatusBox").show();
             $("#status").html("Your changes have not been saved yet!");
             $("#status").css("background-color", "darkred")
         }
 
-        function getLocation() {
-            $("#MapHolder").show();
-            console.log("getLocation");
-            var timeoutVal = 10 * 1000 * 1000;
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, displayError,
-                    {enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0}
-                );
-            } else {
-                console.log("bad");
-                $("#country").val("Unknown");
-                $("#town").val("Unknown");
-            }
-        }
 
-        function displayError(err) {
-            console.log("Code " + err.code + " Err " + err.message);
-            $("#status").css("background-color", "red");
-            $("#status").text("Goolge is bad! " + err.message + " Code: " + err.code);
-            $("#MapHolder").height(280);
-            $("#StatusBox").show();
-        }
-
-        var pictureOverlay;
-        function setMapPoint(lat, long, message) {
-            $("#StatusBox").hide();
-            $("#MapHolder").height(350);
-            var latlong = new google.maps.LatLng(lat, long);
-            var mapCanvas = document.getElementById("MapHolder");
-            var mapOptions = {center: latlong, zoom: 10};
-            var map = new google.maps.Map(mapCanvas, mapOptions);
-            var myCity = new google.maps.Circle({
-                center: latlong,
-                radius: 5000,
-                strokeColor: "#0000FF",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#0000FF",
-                fillOpacity: 0.2
-            });
-            myCity.setMap(map);
-            var imageBounds = {
-                north: lat + 0.015,
-                south: lat - 0.015,
-                east: long + 0.025,
-                west: long - 0.025
-            };
-            pictureOverlay = new google.maps.GroundOverlay(
-                "{{.P.PictureURL}}",
-                imageBounds);
-            pictureOverlay.setMap(map);
-        }
-
-        function myMap() {
-            alat = 50.110924;
-            along = 8.682127;
-            $("#StatusBox").hide();
-            $("#MapHolder").height(350);
-            var latlong = new google.maps.LatLng(alat, along);
-            var mapCanvas = document.getElementById("MapHolder");
-            var mapOptions = {center: latlong, zoom: 4};
-            var map = new google.maps.Map(mapCanvas, mapOptions);
-            var myCity = new google.maps.Circle({
-                center: latlong,
-                radius: 450000,
-                strokeColor: "#0000FF",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#0000FF",
-                fillOpacity: 0.1
-            });
-            myCity.setMap(map);
-            var imageBounds = {
-                north: alat + 2.5,
-                south: alat - 2.5,
-                east: along + 3.5,
-                west: along - 3.5
-            };
-            pictureOverlay = new google.maps.GroundOverlay(
-                "https://{{.Host}}/images/krypinlogo.png",
-                imageBounds);
-            pictureOverlay.setMap(map);
-        }
-
-        function showPosition(position) {
-            var latlon = position.coords.latitude + "," + position.coords.longitude;
-            console.log("latlon " + latlon);
-            setMapPoint(position.coords.latitude, position.coords.longitude, $("#FirstName").val() + " " + $("#LastName").val());
-            var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon;
-            $.get(url, function (data, status) {
-
-                    var len = data.results[0].address_components.length;
-                    var comps = data.results[0].address_components;
-                    for (i = 0; i < len; i++) {
-                        for (g = 0; g < comps[i].types.length; g++) {
-                            if (comps[i].types[g] == "postal_town") {
-                                var town = comps[i].long_name;
-                                $("#Town").val(town)
-                            } else if (comps[i].types[g] == "country") {
-                                var country = comps[i].long_name;
-                                $("#Country").val(country);
-                            }
-                        }
-                    }
-                    console.log("City " + city + " Country " + country);
-                }
-            );
-        }
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0&callback=myMap" >

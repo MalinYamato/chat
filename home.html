@@ -1,6 +1,36 @@
 <!--
-// (C) 2017 Yamato Digital Audio
-// Author: Malin af Lääkkö
+//
+// Copyright 2017 Malin Lääkkö -- Yamato Digital Audio.  All rights reserved.
+// https://github.com/MalinYamato
+//
+// Yamato Digital Audio https://yamato.xyz
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 -->
 
 <!DOCTYPE html>
@@ -17,6 +47,8 @@
     <script type="text/javascript">
 
         window.onload = function () {
+
+
 
             var conn;
             var msg = document.getElementById("msg");
@@ -42,6 +74,28 @@
                 currentUsers.appendChild(newUser);
             }
 
+            function appendNewPerson(person) {
+                var newUser = document.createElement("li");
+                newUser.setAttribute("id", person.userId);
+                image = document.createElement("img");
+                image.setAttribute("src", person.pictureURL);
+                image.setAttribute("onclick", "RequestToPublish('" + getUniqueID(person.userId) + "')");
+                newUser.appendChild(image);
+                var name = document.createElement("span");
+                name.innerText = person.nic;
+                newUser.appendChild(name);
+                currentUsers.appendChild(newUser);
+                console.log("added user with " + person.userId)
+            }
+
+            function refreshRoomUsers(users) {
+                $("#CurrentUsers").empty();
+                for (key in users) {
+                    appendNewPerson(users[key]);
+                }
+            }
+
+
             //////////////////////// Button actions settings ///////////////////////////////
 
             var profile = new SVGButton("#profile", "Profile", "big");
@@ -60,12 +114,27 @@
                         url: "https://{{.Host}}/logout",
                         data: {token: "{{.Person.Token }}"},
                         success: function (result) {
-                            console.log("didit ", result);
                             window.location = "https://{{.Host}}/";
                         }
                     });
                 };
+
             }
+
+            function changeRoom(cmd, room) {
+                $.ajax({
+                    type: "POST",
+                    url: "https://{{.Host}}/RoomManager",
+                    data: JSON.stringify({"Op": "ChangeRoom", "Room": room}),
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.status != "SUCCESS") {
+                            console.log("Calling RooomManger::ChangeRoom returned " + result.status + " " + result.detail );
+                        }
+                    }
+                });
+            }
+
 
             if (!loggedIn()) {
 
@@ -115,45 +184,54 @@
                 return true;
             }
 
+            var RoomDefs = {"Main":         "Main本館",
+                            "Private":      "Private 秘密屋",
+                            "ReimersHotel": "Reimers Hotel屋",
+                            "MalinFriends": "MalinFriens屋",
+                            "Gay":          "Gayゲイ屋",
+                            "Lesbian" :     "Lesbianレズ屋",
+                            "Trans" :       "Trans　性転換屋",
+                            "Japanese":     "日本語屋" };
+
             document.getElementById("MainButton").onclick = function () {
-                $("#SelectedRoom").text("Main本館");
+                $("#SelectedRoom").text(RoomDefs["Main"]);
                 $("#log").empty();
-                sendMessage("ChangeRoom", "Main");
+                changeRoom("ChangeRoom", "Main");
             };
             document.getElementById("MPRButton").onclick = function () {
-                $("#SelectedRoom").text("Instant Private 秘密屋");
+                $("#SelectedRoom").text(RoomDefs["Private"]);
                 $("#log").empty();
-                sendMessage("ChangeRoom", "MPR");
+                changeRoom("ChangeRoom", "MPR");
             };
             document.getElementById("ReimersHotelButton").onclick = function () {
-                $("#SelectedRoom").text("Reimers Hotel屋");
+                $("#SelectedRoom").text(RoomDefs["ReimersHotel"]);
                 $("#log").empty();
-                sendMessage("ChangeRoom", "ReimersHotel");
+                changeRoom("ChangeRoom", "ReimersHotel");
             };
             document.getElementById("EvaMonikaMalinButton").onclick = function () {
-                $("#SelectedRoom").text("EvaMonikaMalin屋");
+                $("#SelectedRoom").text(RoomDefs["MalinFriends"]);
                 $("#log").empty();
-                sendMessage("ChangeRoom", "EvaMonikaMalin");
+                changeRoom("ChangeRoom", "EvaMonikaMalin");
             };
             document.getElementById("GayButton").onclick = function () {
-                $("#SelectedRoom").text("Gayゲイ屋");
+                $("#SelectedRoom").text(RoomDefs["Gay"]);
                 $("#log").empty();
-                sendMessage("ChangeRoom", "Gay");
+                changeRoom("ChangeRoom", "Gay");
             };
             document.getElementById("LesbianButton").onclick = function () {
-                $("#SelectedRoom").text("Lesbianレズ屋");
+                $("#SelectedRoom").text(RoomDefs["Lesbian"]);
                 $("#log").empty();
-                sendMessage("ChangeRoom", "Lesbian");
+                changeRoom("ChangeRoom", "Lesbian");
             };
             document.getElementById("JapaneseButton").onclick = function () {
-                $("#SelectedRoom").text("日本語屋");
+                $("#SelectedRoom").text(RoomDefs["Japaanese"]);
                 $("#log").empty();
-                sendMessage("ChangeRoom", "Japanese");
+                changeRoom("ChangeRoom", "Japanese");
             };
             document.getElementById("TransButton").onclick = function () {
-                $("#SelectedRoom").text("Trans　性転換屋");
+                $("#SelectedRoom").text(RoomDefs["Trans"]);
                 $("#log").empty();
-                sendMessage("ChangeRoom", "Trans");
+                changeRoom("ChangeRoom", "Trans");
             };
 
             var _id = 0;
@@ -164,16 +242,18 @@
                 _id++;
                 return _id;
             }
+            function getUniqueID(id) {
+                return id + "@" + getID();
+            }
 
             function loggedIn() {
-                if ("{{with .Person}}{{.Token}}{{end}}" == "") {
+               if ("{{with .Person}}{{.Token}}{{end}}" == "") {
                     return false;
                 }
                 return true;
             }
 
             document.getElementById("form").onsubmit = function () {
-
                 if (!conn) {
                     return false;
                 }
@@ -186,7 +266,6 @@
             };
 
             function myFunction(id) {
-                console.log("clicked");
                 var x = document.getElementById(id);
                 if (x.className.indexOf("w3-show") == -1) {
                     x.className += " w3-show";
@@ -194,27 +273,23 @@
                     x.className = x.className.replace(" w3-show", "");
                 }
             }
-            console.log("loading4");
+
             function targetStatus(message, targetID) {
                 var status;
                 var a_to_b = false;
                 var b_to_a = false;
-
                 graph = message.graph.publishersTargets;
                 basenode = message.graph.basenode;
                 targetnode = targetID;
-
                 if (basenode in graph) {
                     if (graph[basenode][targetnode] == true) {
                         a_to_b = true;
                     }
-
                     if (targetnode in graph) {
                         if (graph[targetnode][basenode] == true) {
                             b_to_a = true;
                         }
                     }
-
                     if (a_to_b && b_to_a) {
                         status = "GREEN";
                     } else {
@@ -224,14 +299,19 @@
                 }
             }
 
-                /////////////////////////////////////////////////// WEBSOCET STUFF ///////////////////////////////////////
+
+
+                /////////////////////////////////////////////////// WEBSOCKET ///////////////////////////////////////
                 if (window["WebSocket"]) {
                     console.log("try to open connection wesbocket!");
                     conn = new WebSocket("wss://{{.Host}}/ws");
 
                     conn.onopen = function (evt) {
+                        if (loggedIn()) {
+                            $("#SelectedRoom").text(RoomDefs["{{.Person.Room}}"]);
+                            changeRoom("ChangeRoom", "{{.Person.Room}}");
+                        }
                         console.log("Websocket connection opened!");
-                        sendMessage("SendAllMessages", "null");
                     };
 
                     conn.onclose = function (evt) {
@@ -252,10 +332,16 @@
                             if (message.op == "ExitUser" && message.token != "flash") {
                                 removeUser(message);
                             }
-                            /////// NewUser //////////////////////////////////////////////
+                            /////// Refress all users ////////
+                            if (message.op == "RefreshRoomUsers" && message.token != "flash") {
+                                refreshRoomUsers(message.roomUsers)
+                                return;
+                            }
+                            /////// New User Arrived to this room ////////
                             if (message.op == "NewUser" && message.token != "flash") {
                                 appendNewUser(message, uniqueID);
                             }
+
                             ////// UpdateTarget  /////////////////////////////////////////
                             if (message.op == "UpdateTargetGraph") {
                                 var publist = document.getElementById("PublishList");
@@ -353,12 +439,9 @@
         }
     </script>
 </head>
-
 <body>
-
 <ul id="menu">
     <li id="leftMenu">
-
         <ul>
             <li>
                 <object id="profile" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
@@ -372,7 +455,7 @@
                     <button id="MPRButton">Instant Private 秘密屋</button>
                     <button id="JapaneseButton">日本語屋さん</button>
                     <button id="ReimersHotelButton">Reimers Hotel屋</button>
-                    <button id="EvaMonikaMalinButton">EvaMonikaMali屋</button>
+                    <button id="EvaMonikaMalinButton">Malin friends 屋</button>
                     <button id="GayButton">Gay ゲイ屋</button>
                     <button id="LesbianButton">Lesbian レズ屋</button>
                     <button id="TransButton">Trans 性転換屋</button>
