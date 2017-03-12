@@ -25,6 +25,7 @@ body {
 	bottom: 4em;
 	overflow: auto;
 	border-radius: 1%;
+	index-z: 10;
 }
 
 
@@ -44,18 +45,6 @@ body {
 }
 
 
-#msg {
-	height: auto;
-	font-size: 6mm;
-	width: 60%;
-
-}
-
-#submit {
-	height: auto;
-	font-size: 6mm;
-
-}
 
 .fmt-row  {
 
@@ -118,9 +107,6 @@ body {
 	text-align: left;
 }
 
-#postitem li {
-	margin-top: -3px;
-}
 
 
 #postbutton {
@@ -181,9 +167,12 @@ body {
 	margin-left: 6px;
 	color: black;
 	text-align: left;
-
-
 }
+.emojioneemoji  {
+	width: 28px;
+	padding-left: 2px;
+}
+
 @media only screen and (min-width: 600px) {
 	/* For tablets: */
 	.col-m-1 {
@@ -301,12 +290,10 @@ body {
 	height:50px;
 	left: 0px;
 	width: 100%;
-	overflow: hidden;
-
 }
 
 #PublishList{
-	width: 60%;
+	width: 20%;
 }
 
 #PublishList li {
@@ -314,7 +301,6 @@ body {
 }
 
 #PublishList img {
-
 	border-style: solid;
 	border-radius: 50%;
 	border-color: #000000;
@@ -329,5 +315,38 @@ body {
 	border-color: red;
 	border-width: 4px;
 }
+
+.row:after, .row:before  {
+	content: " ";
+	display: table;
+	clear: both;
+}
+
+.row_elem  {
+	float: left;
+	width: 80%;
+    margin-left: 2px;
+}
+
+.row_elem  div {
+	-webkit-border-radius:20px;
+	-moz-border-radius:20px;
+	border-radius: 20px;
+
+
+}
+#msg {
+}
+
+#submit {
+	height: 2em;
+	width: 4em;
+	-webkit-border-radius:20px;
+	-moz-border-radius:20px;
+	border-radius: 20px;
+
+}
+
+
 
 

@@ -36,19 +36,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Chat Example</title>
+    <title>Krypin Chat</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
     <link href="/css/style.css" rel="stylesheet" type="text/css"/>
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/css/emojionearea.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-   <script src="/js/SVGButton.js"></script>
-    <script type="text/javascript">
+    <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
+    <script src="/js/SVGButton.js"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript" src="/js/emojionearea.min.js"></script>
+
+    <script>
+
 
         window.onload = function () {
 
-
+            var el = $("#msg").emojioneArea({
+                placeholder: "伝言入力",
+                pickerPosition: "top",
+                filtersPosition: "bottom",
+                tones: true,
+                inline: true,
+                autocomplete: false,
+                hidePickerOnBlur: false
+            });
+            el[0].emojioneArea.on('keydown', function(btn, event) {
+                if (event.keyCode == 13 || event.which == 13) {
+                    var x = document.getElementsByClassName("emojionearea-editor");
+                    var aMsg = x[0].innerHTML;
+                    sendMessage("Message", aMsg);
+                    $(".emojionearea-editor").empty();
+                }
+            });
 
             var conn;
             var msg = document.getElementById("msg");
@@ -163,9 +186,15 @@
                 if (doScroll) {
                     log.scrollTop = log.scrollHeight - log.clientHeight;
                 }
+
+
             }
 
             function sendMessage(op, msg) {
+
+                console.log("called message");
+
+
                 var t = new Date();
                 var time = t.getDate() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
                 var message = {
@@ -262,6 +291,7 @@
                 }
                 sendMessage("Message", msg.value);
                 msg.value = "";
+                $(".emojionearea-editor").empty();
                 return false;
             };
 
@@ -298,6 +328,7 @@
                     return status;
                 }
             }
+
 
 
 
@@ -401,7 +432,9 @@
                             message_item.setAttribute("id", "message");
                             var text_item = document.createElement("span");
                             text_item.setAttribute("id", "messageText");
-                            text_item.innerText = message.content;
+
+                            text_item.innerHTML = message.content;
+
                             message_item.appendChild(text_item);
                             var item = document.createElement("ul");
                             item.setAttribute("id", "postitem");
@@ -428,6 +461,11 @@
                                 btn.setAttribute("style", "background-color:#DEDEDE;");
                             }
                             appendLog(uberdiv);
+
+                            // 'I \u2764\uFE0F emoji!';
+
+                           // twemoji.size = '16x16';
+                            //twemoji.parse(log);
                         }
                     };
                 } else {
@@ -510,11 +548,14 @@
 
 <div id="log"></div>
 
-<div class="bottom flex-row">
-    <form id="form">
-        <input id="submit" type="submit" value="Send"/>
-        <input type="text" id="msg"/>
+<div class="bottom row-flex">
+    <form id="form" class="row">
+        <input class="row_elem" id="submit" type="submit" value="Send"/>
+        <div id="stuff" class="row_elem">
+            <input  type="text" id="msg"/>
+        </div>
     </form>
+
     <ul id="PublishList" class="flex-row">
         <!-- TEMPLATE CODE -->
         {{ range .Targets}}
@@ -522,9 +563,12 @@
         {{end}}
         <!-- TEMPLATE CODE -->
     </ul>
+
+
 </div>
 
-<script>
+<script type="text/javascript">
+
 
     function myFunction(myid) {
         console.log("clicked" + myid);

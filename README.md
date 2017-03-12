@@ -17,6 +17,10 @@ $ export CHAT_PRIVATE_KEY="secure.krypin.xyz bla bla blasdfsdff"
 
 The file environment.sh is an example. 
 
+##prerequisits 
+$ npm install -g emojionearea@^3.0.0
+$
+
 ### Running Krypin
 
 The example requires a working Go development environment. The [Getting

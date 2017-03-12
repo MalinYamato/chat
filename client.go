@@ -56,7 +56,7 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	maxMessageSize = 5000
 )
 
 var (
@@ -204,6 +204,8 @@ func (c *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-c.send:
+
+
 			log.Println("Client: Try to send message to browser", message.Sender, message.Content, message.Timestamp, message.Content)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
