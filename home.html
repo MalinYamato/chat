@@ -119,7 +119,7 @@
 
             //////////////////////// Button actions settings ///////////////////////////////
 
-            var profile = new SVGButton("#profile", "   Profile", "L");
+            var profile = new SVGButton("#profile", "  Profile", "L");
             profile.s.onmouseup = function () {
                 profile.mouseDown();
                 console.log("profile clicekd ");
@@ -128,7 +128,7 @@
 
 
             if (loggedIn()) {
-                var logout = new SVGButton("#logoutButton", "Logout", "S");
+                var logout = new SVGButton("#logoutButton", " Logout", "S");
                 logout.Cloud_Text.onmousedown = function () {
                     logout.mouseDown();
                     $.ajax({

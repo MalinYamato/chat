@@ -324,30 +324,47 @@
         table {
             width: 100%;
         }
+        html, body {
+            position: relative;
+            height: 100%;
+        }
+        body {
 
+            margin: 0;
+            padding: 0;
+        }
         .swiper-container {
-
-            width: 100%;
-            height: 400px;
+            width: auto;
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
         }
         .swiper-slide {
-            background-size: cover;
-            background-position: center;
+            background-repeat: no-repeat;
+          background-size: contain;
+           background-position: center;
             border-radius: 10px;
         }
+
         .gallery-top {
-            margin: 10px;
-            margin-top: 5px;
-            height: 300px;
-            width: 400px;
+            width: 450px;
+            height: auto;
+        }
+
+        .gallery-top img {
+
+            max-width: 450px;
+            max-height: 500px;
+            visibility: hidden;
 
         }
+
         .gallery-thumbs {
-            margin: 10px;
-            height: 20%;
+            margin-top: 10px;
+            height: 60px;
             width: 400px;
             box-sizing: border-box;
-            padding: 10px 0;
+
         }
         .gallery-thumbs .swiper-slide {
             width: 50px;
@@ -356,15 +373,18 @@
         }
         .gallery-thumbs .swiper-slide-active {
             opacity: 1;
+            height: 50px;
             border-width: 5px;
             border-style: solid;
         }
 
+
         .slideshow {
+
             background-color: #9cb8f5;
             margin-top: 10px;
-            height: 400px;
-            width: 420px;
+            height: auto;
+            width: auto;
             border-radius: 10px;
 
         }
@@ -624,7 +644,12 @@
                 success: function (r) {
                     console.log("Done......>! ", r.status + " " + r.images.length );
                     for (i = 0; i < (r.images).length; i++) {
-                        galleryTop.appendSlide('<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["normal"] + '") ></div>');
+
+                        var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
+                        galleryTop.appendSlide(s);
+
+
+
                         galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["small"] + '") ></div>');
                         console.log(r.images[i]["small"]);
                     }
@@ -733,7 +758,7 @@
                 $("#submitbutton").submit();
             };
 
-            var locationButton = new SVGButton("#locationButton", "  Location ", "L");
+            var locationButton = new SVGButton("#locationButton", " Location ", "L");
             locationButton.Cloud_Text.onmousedown = function () {
                 locationButton.mouseDown();
                 document.getElementById("myStory").style.display = "block";
@@ -746,7 +771,7 @@
                 logoutButton.mouseDown();
             };
 
-            var deletetButton = new SVGButton("#deleteButton", "   Delete", "L");
+            var deletetButton = new SVGButton("#deleteButton", "  Delete", "L");
             deletetButton.Cloud_Text.onmousedown = function () {
                 deletetButton.mouseDown();
 

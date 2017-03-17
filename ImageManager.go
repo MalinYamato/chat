@@ -14,7 +14,9 @@ import (
 	"image/jpeg"
 	"github.com/robfig/graphics-go/graphics"
 	"io/ioutil"
+
 )
+
 
 
 type ImagesResponse struct {
@@ -55,7 +57,7 @@ func cropImage(fileroot string, inputFile string, extension string) Status {
 		log.Fatal(err)
 	}
 	defer toimg.Close()
-	jpeg.Encode(toimg, dst, &jpeg.Options{jpeg.DefaultQuality})
+	jpeg.Encode(toimg, dst, &jpeg.Options{100})
 	return Status{SUCCESS, ""}
 }
 
