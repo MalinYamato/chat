@@ -76,7 +76,8 @@ function getLocation() {
 
 function displayError(err) {
     console.log("Code " + err.code + " Err " + err.message);
-    $("#status").css("background-color", "red");
+    timeoutID = window.setTimeout(hideStatus, 2000);
+    $("#status").css("background-color", "darkred");
     $("#status").text("Goolge is bad! " + err.message + " Code: " + err.code);
     $("#MapHolder").height(280);
     $("#StatusBox").show();

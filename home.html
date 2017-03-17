@@ -51,8 +51,6 @@
     <script type="text/javascript" src="/js/emojionearea.min.js"></script>
 
     <script>
-
-
         window.onload = function () {
 
             var el = $("#msg").emojioneArea({
@@ -121,15 +119,17 @@
 
             //////////////////////// Button actions settings ///////////////////////////////
 
-            var profile = new SVGButton("#profile", "Profile", "big");
-            profile.t.onmousedown = function () {
+            var profile = new SVGButton("#profile", "   Profile", "L");
+            profile.s.onmouseup = function () {
                 profile.mouseDown();
+                console.log("profile clicekd ");
                 window.location = "https://{{.Host}}/MainProfile";
                 };
 
+
             if (loggedIn()) {
-                var logout = new SVGButton("#logoutButton", "Logout", "big");
-                logout.t.onmousedown = function () {
+                var logout = new SVGButton("#logoutButton", "Logout", "S");
+                logout.Cloud_Text.onmousedown = function () {
                     logout.mouseDown();
                     $.ajax({
                         type: "POST",
@@ -161,15 +161,15 @@
 
             if (!loggedIn()) {
 
-                var google = new SVGImageButton("#google", "googleIcon", "small");
+                var google = new SVGImageButton("#google", "google", "S");
                 google.s.onmousedown = function () {
                     google.mouseDown();
                     window.location = "https://{{.Host}}/google/login";
                 };
 
-                var facebook = new SVGImageButton("#facebook", "facebookIcon", "small");
+                var facebook = new SVGImageButton("#facebook", "facebook", "S");
 
-                var loginLabel = new SVGButton("#loginLabel", " Login", "big");
+                var loginLabel = new SVGButton("#loginLabel", "   Login", "L");
 
             }
 

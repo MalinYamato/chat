@@ -14,7 +14,7 @@
 // copyright notice, this list of conditions and the following disclaimer
 // in the documentation and/or other materials provided with the
 // distribution.
-//     * Neither the name of Google Inc. nor the names of its
+//     * Neither the name of Yamato Digital Audio Inc. nor the names of its
 // contributors may be used to endorse or promote products derived from
 // this software without specific prior written permission.
 //
@@ -29,7 +29,6 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 
 package main
 
@@ -97,7 +96,6 @@ type Status struct {
 
 // publishers[].Targets[]
 
-
 type Message struct {
 	Op         string                           `json:"op"`
 	Token      string                           `json:"token"`
@@ -113,7 +111,6 @@ type Message struct {
 	RoomUsers []Person                         `json:"roomUsers,omitempty"`
 }
 
-
 func (endpoint *Endpoint) url() (string) {
 	return endpoint.protocol + "://" + endpoint.host + ":" + endpoint.port
 }
@@ -122,7 +119,12 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	if ( strings.Contains(r.URL.Path, "/session") ) {
 		log.Println("Main: Set path ", r.URL.Path)
 		r.URL.Path = "/"
-	} else if ( strings.Contains(r.URL.Path, "/images") ) {
+	} else if ( strings.Contains(r.URL.Path, "/user") ) {
+		//log.Println("Serve ", DocumentRoot+r.URL.Path)
+		fp := path.Join(DocumentRoot + r.URL.Path)
+		http.ServeFile(w, r, fp)
+		return
+	} else if ( strings.Contains(r.URL.Path, "/test") ) {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
@@ -137,7 +139,13 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
+	} else if ( strings.Contains(r.URL.Path, "/images") ) {
+		//log.Println("Serve ", DocumentRoot+r.URL.Path)
+		fp := path.Join(DocumentRoot + r.URL.Path)
+		http.ServeFile(w, r, fp)
+		return
 	}
+
 	if r.URL.Path != "/" {
 		http.Error(w, "Main: Illegal path "+r.URL.Path, 404)
 		return
@@ -230,7 +238,6 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", serveHome)
@@ -240,6 +247,9 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.Handle("/MainProfile", requireLogin(http.HandlerFunc(mainProfileHandler)))
 	mux.Handle("/TargetManager", requireLogin(http.HandlerFunc(TargetManagerHandler)))
 	mux.Handle("/RoomManager", requireLogin(http.HandlerFunc(RoomManagerHandler)))
+	mux.Handle("/ImageManager", requireLogin(http.HandlerFunc(ImageManager_UploadHandler)))
+	mux.Handle("/ImageManagerGetAll", requireLogin(http.HandlerFunc(ImageManger_GetHandler)))
+	mux.Handle("/ImageManagerDelete", requireLogin(http.HandlerFunc(ImageManager_DeleteHandler)))
 
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)

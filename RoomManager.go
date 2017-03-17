@@ -110,11 +110,8 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 				} else {
 					status = Status{Status: ERROR, Detail:"Unknown operation > " + request.Op}
 				}
-
 			}
-
 		}
-
 	} else {
 		status = Status{Status: ERROR}
 		log.Println("Main Unknown HTTP method ", r.Method)

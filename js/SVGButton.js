@@ -38,119 +38,149 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 function setDefaultActions (obj) {
     obj.s.onmouseover =  function () { obj.mouseIn(); };
     obj.s.onmouseup =    function () { obj.mouseUp(); };
-    obj.s.onmousedown    =   function () { obj.mouseDown(); };
-    obj.s.onmouseout =   function () { obj.mouseOut(); };
+    obj.s.onmousedown =   function () { obj.mouseDown(); };
+    obj.s.onmouseout  =   function () { obj.mouseOut(); };
 }
+
 
 function SVGImageButton(id, img, size) {
 
-    colorIn = "gray";
+    // class constants and setup
+    namespace = "http://www.inkscape.org/namespaces/inkscape";
+    colorIn =    "gray";
     colorPress = "gray";
-    colorOut = "#9cb8f5";
-    bigCloudExp = "no";
-    smallCloudExp = "layer7";
-    bigCloud = "no";
-    smallCloud = "layer2";
-    this.Id = id;
+    colorOut =  "#9cb8f5";
+    this.classMap = {};
+    this.Id   = id;
     this.size = size;
-    this.image = img;
+    this.Image = img;
 
-    this.s = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
+    googleIcon = "googleIcon";
+    facebookIcon = "facebookIcon";
 
-    document.querySelector(this.Id).getSVGDocument().getElementById("googleIcon").style.display = "none";
-    document.querySelector(this.Id).getSVGDocument().getElementById("facebookIcon").style.display = "none";
-    document.querySelector(this.Id).getSVGDocument().getElementById(smallCloudExp).style.display = "none";
-    document.querySelector(this.Id).getSVGDocument().getElementById(this.image).style.display = "inline";
 
-    this.big = function () {
-        this.cloud = bigCloud;
-        this.cloudE = bigCloudExp;
-        document.querySelector(this.Id).getSVGDocument().getElementById(bigCloud).setAttribute("visibility", "visible");
-        document.querySelector(this.Id).getSVGDocument().getElementById(smallCloud).setAttribute("visibility", "hidden");
-    };
-    this.small = function () {
-        this.cloud = smallCloud;
-        this.cloudE = smallCloudExp;
-      //  document.querySelector(this.Id).getSVGDocument().getElementById(bigCloud).setAttribute("visibility", "hidden");
-        document.querySelector(this.Id).getSVGDocument().getElementById(smallCloud).setAttribute("visibility", "visible");
-    };
-    if (this.size == "big") {
-        this.small();
-    } else {
-        this.small();
+
+    // search for nodes
+    this.s = document.querySelector(this.Id).contentDocument.getElementById("svg2");
+    this.es = document.querySelector(this.Id).contentDocument.getElementsByTagName("g");
+    for (i=0;i < this.es.length; i++) {
+        if ( this.es[i] != null && this.es[i].hasAttributeNS(namespace,'label')) {
+
+            var a = this.es[i].getAttributeNS(namespace,'label');
+            this.classMap[a] = this.es[i];
+            console.log("SVG> " + a);
+        }
     }
+
+    if (this.Image == "google") {
+        this.ImageNode = this.classMap["googleIcon"];
+    } else if (this.Image == "facebook") {
+        this.ImageNode = this.classMap["facebookIcon"];
+    }
+
+    this.ImageNode.style.display = "inline";
+
+    if (this.size == "S") {
+        this.Cloud = this.classMap["S_Cloud"];
+        this.Cloud_Text = this.classMap["S_Text"];
+        this.Cloud_Expanded = this.classMap["S_Cloud-Expanded"]
+    }
+    if (this.size == "L") {
+        this.Cloud = this.classMap["L_Cloud"];
+        this.Cloud_Text = this.classMap["L_Text"];
+        this.Cloud_Expanded = this.classMap["L_Cloud-Expanded"]
+    }
+    if (this.size == "XL") {
+        this.Cloud = this.classMap["XL_Cloud"];
+        this.Cloud_Text = this.classMap["XL_Text"];
+        this.Cloud_Expanded = this.classMap["XL_Cloud-Expanded"]
+    }
+
+    this.Cloud.style.display = "inline";
+   // this.Cloud_Text.style.display = "inline";
+   // this.TextElem = this.Cloud_Text.children[0].children[0];
+   // this.TextElem.textContent = this.text;
+
+
     this.mouseOut = function (e) {
-        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "none";;
+        this.TextElem.style.fill = colorOut;
     };
     this.mouseIn = function (e) {
-        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "inline";
+        this.TextElem.style.fill = colorIn;
     };
-    this.mouseDown = function () {
-        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "inline";
+    this.mouseDown = function (e) {
+        this.Cloud_Expanded.style.display = "inline";
     };
-    this.mouseUp = function () {
-        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "none";
+    this.mouseUp = function (e) {
+        this.Cloud_Expanded.style.display = "none";
     };
 
     setDefaultActions(this);
+
 }
 
 
 function SVGButton(id, text, size) {
 
-    this.Label = "text16838";
-    colorIn = "gray";
+    // class constants and setup
+    namespace = "http://www.inkscape.org/namespaces/inkscape";
+    colorIn =    "gray";
     colorPress = "gray";
-    colorOut = "#9cb8f5";
-    label = "layer3";
-    bigCloudExp = "layer8";
-    smallCloudExp = "layer7";
-    bigCloud = "layer5";
-    smallCloud = "layer4";
-    this.Id = id;
+    colorOut =  "#9cb8f5";
+    this.classMap = {};
+    this.Id   = id;
     this.size = size;
+    this.text = text;
 
-    this.s = document.querySelector(this.Id).getSVGDocument().getElementById("svg2");
-    this.t = document.querySelector(this.Id).getSVGDocument().getElementById(this.Label);
-    this.t.textContent = text;
-    document.querySelector(this.Id).getSVGDocument().getElementById(label).style.display = "inline";
-    document.querySelector(this.Id).getSVGDocument().getElementById(bigCloudExp).style.display = "none";
-    document.querySelector(this.Id).getSVGDocument().getElementById(smallCloudExp).style.display = "none"
-
-    this.big = function () {
-        this.cloud = bigCloud;
-        this.cloudE = bigCloudExp;
-        document.querySelector(this.Id).getSVGDocument().getElementById(bigCloud).setAttribute("visibility", "visible");
-        document.querySelector(this.Id).getSVGDocument().getElementById(smallCloud).setAttribute("visibility", "hidden");
-    };
-    this.small = function () {
-        this.cloud = smallCloud;
-        this.cloudE = smallCloudExp;
-        document.querySelector(this.Id).getSVGDocument().getElementById(bigCloud).setAttribute("visibility", "hidden");
-        document.querySelector(this.Id).getSVGDocument().getElementById(smallCloud).setAttribute("visibility", "visible");
-    };
-    if (this.size == "big") {
-        this.big();
-    } else {
-        this.small();
+    this.s = document.querySelector(this.Id).contentDocument.getElementById("svg2");
+    this.es = document.querySelector(this.Id).contentDocument.getElementsByTagName("g");
+    for (i=0;i < this.es.length; i++) {
+        if ( this.es[i] != null && this.es[i].hasAttributeNS(namespace,'label')) {
+            var a = this.es[i].getAttributeNS(namespace,'label');
+            this.classMap[a] = this.es[i];
+            console.log("SVG2> " + a);
+        }
     }
+
+    if (this.size == "S") {
+        this.Cloud = this.classMap["S_Cloud"];
+        this.Cloud_Text = this.classMap["S_Text"];
+        this.Cloud_Expanded = this.classMap["S_Cloud-Expanded"]
+    }
+    if (this.size == "L") {
+        this.Cloud = this.classMap["L_Cloud"];
+        this.Cloud_Text = this.classMap["L_Text"];
+        this.Cloud_Expanded = this.classMap["L_Cloud-Expanded"]
+    }
+    if (this.size == "XL") {
+        this.Cloud = this.classMap["XL_Cloud"];
+        this.Cloud_Text = this.classMap["XL_Text"];
+        this.Cloud_Expanded = this.classMap["XL_Cloud-Expanded"]
+    }
+
+    this.Cloud.style.display = "inline";
+    this.Cloud_Text.style.display = "inline";
+    this.TextElem = this.Cloud_Text.children[0].children[0];
+    this.TextElem.textContent = this.text;
+
     this.mouseOut = function (e) {
-        this.t.style.fill = colorOut;
+        this.TextElem.style.fill = colorOut;
     };
     this.mouseIn = function (e) {
-        this.t.style.fill = colorIn;
+        this.TextElem.style.fill = colorIn;
     };
-    this.mouseDown = function () {
-        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "inline";
+    this.mouseDown = function (e) {
+        this.Cloud_Expanded.style.display = "inline";
     };
-    this.mouseUp = function () {
-        document.querySelector(this.Id).getSVGDocument().getElementById(this.cloudE).style.display = "none";
+    this.mouseUp = function (e) {
+        this.Cloud_Expanded.style.display = "none";
     };
 
     setDefaultActions(this);
-
 }
+
+
+

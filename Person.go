@@ -14,7 +14,7 @@
 // copyright notice, this list of conditions and the following disclaimer
 // in the documentation and/or other materials provided with the
 // distribution.
-//     * Neither the name of Google Inc. nor the names of its
+//     * Neither the name of Yamato Digital Audio Inc. nor the names of its
 // contributors may be used to endorse or promote products derived from
 // this software without specific prior written permission.
 //
@@ -33,9 +33,11 @@
 
 package main
 
-import ()
 import (
 	"log"
+	"net/http"
+	"encoding/json"
+	"io/ioutil"
 )
 
 type Person struct {
@@ -55,12 +57,18 @@ type Person struct {
 	Education         string        `json:"education"`
 	Description       string        `json:"description,omitempty"`
 	GoogleID          string        `json:"googleId,omitempty"`
-	UserID            UserId        `json:"userId,omitempty"`
+	UserID            UserId        `json:"userId"`
 	Token             string        `json:"token,omitempty"`
 	Room              string        `json:"room"`
-	LoggedIn          bool          `json:"loggedIn,omitempty"`
+	LoggedIn          bool          `json:"loggedIn"`
+	_Persons          *Persons
 }
 
+/////////////// Person factory ////////////////////
+
+type Persons struct {
+	__pers map[UserId]Person
+}
 func (p *Person) getNic() string {
 	if p.Nic == "" {
 		return p.FirstName + " " + p.LastName
@@ -68,10 +76,6 @@ func (p *Person) getNic() string {
 		return p.Nic
 	}
 }
-type Persons struct {
-	__pers map[UserId]Person
-}
-
 func (pers *Persons) getAll() (persons []Person) {
 	var l = []Person{}
 	for _, p := range pers.__pers {
@@ -105,6 +109,20 @@ func (pers *Persons) findPersonByToken(token string) (person Person, ok bool) {
 	}
 	return Person{}, false
 }
+func (pers *Persons) findPersonByCookie(r *http.Request) (person Person, status Status) {
+	var client Person
+	var ok bool
+	token, _, err := getCookieAndTokenfromRequest(r, true)
+	if err != nil {
+		return Person{}, Status{ERROR, err.Error()}
+	} else {
+		client, ok = _persons.findPersonByToken(token)
+		if ! ok {
+			return Person{}, Status{ERROR, err.Error()}
+		}
+	}
+	return client, Status{SUCCESS, ""}
+}
 func (pers *Persons) findPersonByGoogleID(GoogleId string) (person Person, ok bool) {
 	for _, p := range pers.__pers {
 		if p.GoogleID == GoogleId {
@@ -118,7 +136,12 @@ func (pers *Persons) findPersonByUserId(UserId UserId) (person Person, ok bool) 
 	return
 }
 func (pers *Persons) Save(person Person) bool {
+	person._Persons = pers
 	pers.__pers[ person.UserID ] = person
+	if (person.Keep) {
+		json_person, _:= json.Marshal(person)
+		ioutil.WriteFile(person.path() + "/profile.json", json_person, 0777)
+	}
 	log.Println("Number of persons ", len(pers.__pers))
 	return true
 }
@@ -129,4 +152,12 @@ func (pers *Persons) DeleteById(UserId UserId) bool {
 func (pers *Persons) Delete(user Person) bool {
 	delete(pers.__pers, user.UserID)
 	return true
+}
+func (pers *Persons) path() string {
+	return "./users"
+}
+//////////// Person //////////////
+
+func (p *Person) path() string {
+	return p._Persons.path() + "/" + string(p.UserID)
 }

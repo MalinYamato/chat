@@ -18,15 +18,17 @@ li #me {
     text-align: left;
     width: 12em;
     padding-left: 10px;
-    padding-bottom: 2px;
-    margin-top: -10px;
+    padding-bottom: 6px;
+    margin-top: -12px;
 }
 #profile {
-    margin-top: -5px;
+    margin-top: -3px;
+    margin-left: -10px;
+    margin-right: -10px;
     margin-bottom: 0;
-    width: 84px;
+    width: 110px;
     height: 55px;
-    #background-color: #bfbfbf;
+    //background-color: #bfbfbf;
 }
 
 
@@ -71,7 +73,9 @@ li #me {
 
 #loginLabel {
     margin-top: 0px;
-    width: 84px;
+    margin-right: -10px;
+    margin-left: -15px;
+    width: 110px;
     height: 38px;
     //background-color: #bfbfbf;
 }
@@ -86,12 +90,11 @@ li #me {
 }
 
 #logoutButton {
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-right: 0px;
-    width:100px;
-    height: 70px;
-    #background-color: #bfbfbf;
+   margin-top: -4px;
+    margin-right: -20px;
+    width:120px;
+    height: 60px;
+    //background-color: #bfbfbf;
 }
 
 .loggedOut img {
@@ -134,11 +137,12 @@ li {
 }
 
 .dropbtn {
-    padding-top: 8px;
+    margin-left: 4px;
+    padding-top: 11px;
 }
 #SelectedRoom {
     padding-left: 3px;
-    padding-top: 8px;
+    padding-top: 11px;
 }
 
 li button, .dropbtn {

@@ -2,9 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-
 package main
-
 
 import (
 )
@@ -32,11 +30,7 @@ type Hub struct {
 	command chan Command
 
 	rooms map[string]Room
-
 }
-
-
-
 
 type Room struct {
 	Name string
@@ -63,8 +57,6 @@ func newHub(stack QueueStack) *Hub {
 }
 
 func (h *Hub) run() {
-
-
 	for {
 		select {
 		case client := <-h.register:
@@ -73,14 +65,12 @@ func (h *Hub) run() {
 				person, _ := _persons.findPersonByToken(client.Token)
 				client.UserId = person.UserID
 			}
-
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
 				//_persons.RemoveByToken(client.Token)
 				delete(h.clients, client)
 				close(client.send)
 			}
-
 		case message := <-h.multicast:
 
 			log.Printf("Hub: multicast from %s to %s in room %s ", message.Sender, message.Room, message.Targets)

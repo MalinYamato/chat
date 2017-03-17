@@ -39,6 +39,8 @@ import (
 	"fmt"
 	"encoding/json"
 	"html/template"
+	"os"
+
 )
 
 var (
@@ -135,6 +137,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			var p Person
 			p, _ = _persons.findPersonByToken(token)
 			p.FirstName = r.Form.Get("FirstName")
+			p.PictureURL = r.Form.Get("PictureURL")
 			p.LastName = r.Form.Get("LastName")
 			p.Gender = r.Form.Get("Gender")
 			p.Country = r.Form.Get("Country")
@@ -147,6 +150,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			p.BirthDate.Year = r.Form.Get("BirthYear")
 			p.BirthDate.Month = r.Form.Get("BirthMonth")
 			p.BirthDate.Month = r.Form.Get("BirthDay")
+			p.LoggedIn = true
 			fmt.Printf("%+v\n", r.Form)
 			productsSelected := r.Form["Language"]
 			log.Println(Contains(productsSelected, "English"))
@@ -156,15 +160,23 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			if p.Keep == false {
+				p.Keep = true
+				path := _persons.path() + "/" + string( p.UserID )
+				os.Mkdir(path, 0777)
+				os.Mkdir(path + "/img" , 0777)
+				_persons.Save(p)
 				status.Status = "New"
-				status.Detail = "Success! You are now a member with a profile <br> UserID: " + string(p.UserID) + " <br>SecretKey: " + p.Token;
+				status.Detail = "Your account was sucessfully created <br> UserID: " + string(p.UserID) + " <br>SecretKey: " + p.Token;
 			} else {
+				_persons.Save(p)
 				status.Status = "Updated"
 				status.Detail = "Success! Your profile was updated! <br> UserId: " + string(p.UserID);
 			}
-			p.Keep = true
-			_persons.Save(p)
+
 		}
+	} else {
+		status.Status = "ERROR"
+		status.Detail = "Wrong HTTPS Method. Reqire POST but you sent: " + r.Method;
 	}
 	data, err := json.Marshal(status)
 	if err != nil {
