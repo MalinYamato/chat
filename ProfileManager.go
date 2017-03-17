@@ -163,10 +163,12 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				p.Keep = true
 				path := _persons.path() + "/" + string( p.UserID )
 				err := os.Mkdir(path, 0777)
+				log.Println("Mkdirerr err ", err)
 				if err != nil {
 					panic(err)
 				}
 				err = os.Mkdir(path + "/img" , 0777)
+				log.Println("Mkdirerr err ", err)
 				if err != nil {
 					panic(err)
 				}
