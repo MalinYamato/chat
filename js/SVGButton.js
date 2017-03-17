@@ -45,7 +45,6 @@ function setDefaultActions (obj) {
     obj.s.onmouseout  =   function () { obj.mouseOut(); };
 }
 
-
 function SVGImageButton(id, img, size) {
 
     // class constants and setup
@@ -61,17 +60,14 @@ function SVGImageButton(id, img, size) {
     googleIcon = "googleIcon";
     facebookIcon = "facebookIcon";
 
-
-
     // search for nodes
     this.s = document.querySelector(this.Id).contentDocument.getElementById("svg2");
     this.es = document.querySelector(this.Id).contentDocument.getElementsByTagName("g");
     for (i=0;i < this.es.length; i++) {
         if ( this.es[i] != null && this.es[i].hasAttributeNS(namespace,'label')) {
-
             var a = this.es[i].getAttributeNS(namespace,'label');
             this.classMap[a] = this.es[i];
-            console.log("SVG> " + a);
+           // console.log("SVG> " + a);
         }
     }
 
@@ -141,7 +137,7 @@ function SVGButton(id, text, size) {
         if ( this.es[i] != null && this.es[i].hasAttributeNS(namespace,'label')) {
             var a = this.es[i].getAttributeNS(namespace,'label');
             this.classMap[a] = this.es[i];
-            console.log("SVG2> " + a);
+            //console.log("SVG2> " + a);
         }
     }
 

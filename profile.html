@@ -39,20 +39,13 @@
     <title>Krypin Chat Profile</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="css/swiper.css">
-    <meta name="author" content="Codrops" />
-    <link rel="shortcut icon" href="../favicon.ico">
-    <script src="js/modernizr.custom.17475.js"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="js/SVGButton.js"> </script>
     <script src="js/map.js"> </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/file.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="js/ajaxupload.js" type="text/javascript"></script>
 
     <style>
 
@@ -400,13 +393,12 @@
     <object id="locationButton" class="cloud" type="image/svg+xml" data="images/chat.svg">
         fail
     </object>
-
     <object id="logoutButton" class="cloud" type="image/svg+xml" data="images/chat.svg">
         fail
     </object>
 </div>
-<div class="flex-row">
 
+<div class="flex-row">
 <form id="ProfileForm" class="flex-row" action="https://{{.Host}}/ProfileUpdate">
     <div class="menu">
         <div class=" picture">
@@ -480,7 +472,6 @@
         </div>
 
     <div class="right-side">
-
         <div id="myStory" class="my-story">
             <textarea id="introo" placeholder="My story" form="ProfileForm" name="Description" label="sdfsdf">{{.P.Description}}</textarea>
         </div>
@@ -515,7 +506,6 @@
         </div>
    </form>
 <script>
-
     $("#ProfileForm").submit(function (event) {
     event.preventDefault();
     var post_url = $(this).attr("action");
@@ -526,23 +516,17 @@
         data: form_data
     }).done(function (response) {
         $("#mapholder").empty();
-
         reportStatus(response.status, response.detail, response.detail)
-
     });
 });
-
 </script>
 
     <div class="flex-column">
         <div id="StatusBox2"  hidden style="width:100%"   class="StatusMessage stuff-m"><p  class="status-m status" id="status2"></p></div>
-
-
         <div class="slideshow" id="photos">
             <!-- Swiper -->
             <div class="swiper-container gallery-top">
                 <div class="swiper-wrapper">
-
                 </div>
                 <!-- Add Arrows -->
                 <div class="swiper-button-next swiper-button-white"></div>
@@ -550,10 +534,8 @@
             </div>
             <div class="swiper-container gallery-thumbs">
                 <div class="swiper-wrapper">
-
                 </div>
             </div>
-
             <div id="upload">
                 <div>      <table>
                     <tr>
@@ -584,7 +566,6 @@
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="js/swiper.js"></script>
-
     <script type="text/javascript">
 
         function changed() {
@@ -599,6 +580,7 @@
             $("#StatusBox").hide();
             $("#StatusBox2").hide();
         }
+
         function reportStatus(status, message1, message2)
         {
             timeoutID = window.setTimeout(hideStatus, 2000);
@@ -642,7 +624,6 @@
                 success: function (r) {
                     console.log("Done......>! ", r.status + " " + r.images.length );
                     for (i = 0; i < (r.images).length; i++) {
-
                         galleryTop.appendSlide('<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["normal"] + '") ></div>');
                         galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["small"] + '") ></div>');
                         console.log(r.images[i]["small"]);
@@ -793,9 +774,14 @@
 
             };
 
-            var profilePictureSelectButton = new SVGButton("#profilePictureButton", "As profile img", "XL");
-            profilePictureSelectButton.t.onmousedown = function () {
+            var profilePictureSelectButton = new SVGButton("#profilePictureButton", "Profile picture", "XL");
+            profilePictureSelectButton.Cloud_Text.onmousedown = function () {
                 profilePictureSelectButton.mouseDown();
+
+              ///  node = document.getElementByClassName("swiper-slide-active");
+               // url = node.getAttribute("id");
+               // console.log("url>>> " + url);
+
                 node = galleryThumbs.clickedSlide;
                 url = node.getAttribute("id");
                 document.getElementById("PictureURL").setAttribute("src", url);
