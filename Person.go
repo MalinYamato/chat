@@ -140,7 +140,11 @@ func (pers *Persons) Save(person Person) bool {
 	pers.__pers[ person.UserID ] = person
 	if (person.Keep) {
 		json_person, _:= json.Marshal(person)
-		ioutil.WriteFile(person.path() + "/profile.json", json_person, 0777)
+		err := ioutil.WriteFile(person.path() + "/profile.json", json_person, 0777)
+		if err != nil {
+			panic(err)
+		}
+
 	}
 	log.Println("Number of persons ", len(pers.__pers))
 	return true

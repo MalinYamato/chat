@@ -162,9 +162,16 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			if p.Keep == false {
 				p.Keep = true
 				path := _persons.path() + "/" + string( p.UserID )
-				os.Mkdir(path, 0777)
-				os.Mkdir(path + "/img" , 0777)
+				err := os.Mkdir(path, 0777)
+				if err != nil {
+					panic(err)
+				}
+				err = os.Mkdir(path + "/img" , 0777)
+				if err != nil {
+					panic(err)
+				}
 				_persons.Save(p)
+
 				status.Status = "New"
 				status.Detail = "Your account was sucessfully created <br> UserID: " + string(p.UserID) + " <br>SecretKey: " + p.Token;
 			} else {

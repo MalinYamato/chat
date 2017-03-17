@@ -191,9 +191,17 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 				log.Println("file " + files[i].Filename)
 				fileroot := person.path() + "/img/" + fileid
 				filepath := fileroot + "/normal." + extension
-				os.Mkdir(fileroot, 0777)
+				err = os.Mkdir(fileroot, 0777)
+				if err != nil {
+					panic(err)
+				}
+
 				dst, err := os.Create(fileroot + "/normal." + extension)
 				defer dst.Close()
+				if err != nil {
+					panic(err)
+				}
+
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
