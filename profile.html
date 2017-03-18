@@ -395,7 +395,7 @@
             margin-top: 10px;
         }
 
-        #verified   {
+        #g, #fb, #e, #krypin   {
             color: rgb(212, 55, 30);
             font-weight: bold;
         }
@@ -491,14 +491,13 @@
                     <input  onchange="changed()" placeholder="Education" type="text" id="Education" name="Education" value="{{.P.Education}}">
                 </li>
                 <li>
-                    <span id="verified" >Your verified IDs<br></span>
-                    <span for="Facebook">Verified by Facebook<br></span>
+                    <span id="fb" for="Facebook">Verified by Facebook<br></span>
                     <input onchange="changed()" type="text" id="Facebook" name="FacebookID" value="{{.P.FacebookID}}" readonly>
-                    <span for="Google">Verified by Google<br></span>
+                    <span id="g" for="Google">Verified by Google<br></span>
                     <input onchange="changed()" type="text" id="Google" name="GoogleID" value="{{.P.GoogleID}}" readonly>
-                    <span for="email">Your Krypin public key<br></span>
+                    <span id="e" for="email">Your Krypin public key<br></span>
                     <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.UserID}}" readonly>
-                    <span for="email">Verified Email<br></span>
+                    <span id="krypin" for="email">Verified Email<br></span>
                     <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.Email}}" readonly>
                 </li>
                 <li class="submit">
