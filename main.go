@@ -268,7 +268,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 		Scopes:       []string{"profile", "email"},
 	}
 	// state param cookies require HTTPS by default; disable for localhost development
-	stateConfig := gologin.DebugOnlyCookieConfig
+	stateConfig :=  gologin.DebugOnlyCookieConfig
 	mux.Handle("/google/login", google.StateHandler(stateConfig, google.LoginHandler(oauth2Config, nil)))
 	mux.Handle("/google/callback", google.StateHandler(stateConfig, google.CallbackHandler(oauth2Config, issueSession(), nil)))
 
@@ -280,7 +280,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 		Endpoint:     facebookOAuth2.Endpoint,
 		//Scopes:       []string{"profile", "email"},
 	}
-	stateConfigFB := gologin.DebugOnlyCookieConfig
+	stateConfigFB := gologin.DefaultCookieConfig
 	mux.Handle("/facebook/login", facebook.StateHandler(stateConfigFB, facebook.LoginHandler(oauth2ConfigFB, nil)))
 	mux.Handle("/facebook/callback", facebook.StateHandler(stateConfigFB, facebook.CallbackHandler(oauth2ConfigFB, issueSessionFB(), nil)))
 
