@@ -62,7 +62,7 @@
                 autocomplete: false,
                 hidePickerOnBlur: false
             });
-            el[0].emojioneArea.on('keydown', function(btn, event) {
+            el[0].emojioneArea.on('keydown', function (btn, event) {
                 if (event.keyCode == 13 || event.which == 13) {
                     var x = document.getElementsByClassName("emojionearea-editor");
                     var aMsg = x[0].innerHTML;
@@ -124,7 +124,7 @@
                 profile.mouseDown();
                 console.log("profile clicekd ");
                 window.location = "https://{{.Host}}/MainProfile";
-                };
+            };
 
 
             if (loggedIn()) {
@@ -152,7 +152,7 @@
                     contentType: 'application/json',
                     success: function (result) {
                         if (result.status != "SUCCESS") {
-                            console.log("Calling RooomManger::ChangeRoom returned " + result.status + " " + result.detail );
+                            console.log("Calling RooomManger::ChangeRoom returned " + result.status + " " + result.detail);
                         }
                     }
                 });
@@ -168,6 +168,10 @@
                 };
 
                 var facebook = new SVGImageButton("#facebook", "facebook", "S");
+                facebook.s.onmousedown = function () {
+                    facebook.mouseDown();
+                    window.location = "https://{{.Host}}/facebook/login";
+                };
 
                 var loginLabel = new SVGButton("#loginLabel", "   Login", "L");
 
@@ -213,14 +217,16 @@
                 return true;
             }
 
-            var RoomDefs = {"Main":         "Main本館",
-                            "Private":      "Private 秘密屋",
-                            "ReimersHotel": "Reimers Hotel屋",
-                            "MalinFriends": "MalinFriens屋",
-                            "Gay":          "Gayゲイ屋",
-                            "Lesbian" :     "Lesbianレズ屋",
-                            "Trans" :       "Trans　性転換屋",
-                            "Japanese":     "日本語屋" };
+            var RoomDefs = {
+                "Main": "Main本館",
+                "Private": "Private 秘密屋",
+                "ReimersHotel": "Reimers Hotel屋",
+                "MalinFriends": "MalinFriens屋",
+                "Gay": "Gayゲイ屋",
+                "Lesbian": "Lesbianレズ屋",
+                "Trans": "Trans　性転換屋",
+                "Japanese": "日本語屋"
+            };
 
             document.getElementById("MainButton").onclick = function () {
                 $("#SelectedRoom").text(RoomDefs["Main"]);
@@ -264,6 +270,7 @@
             };
 
             var _id = 0;
+
             function getID() {
                 if (_id > 1000) {
                     _id = 0;
@@ -271,12 +278,13 @@
                 _id++;
                 return _id;
             }
+
             function getUniqueID(id) {
                 return id + "@" + getID();
             }
 
             function loggedIn() {
-               if ("{{with .Person}}{{.Token}}{{end}}" == "") {
+                if ("{{with .Person}}{{.Token}}{{end}}" == "") {
                     return false;
                 }
                 return true;
@@ -329,152 +337,172 @@
                 }
             }
 
+            function UpdateTargetGraph(message) {
+                var publist = document.getElementById("PublishList");
+                $(publist).empty();
+                for (var key1 in message.graph.publishersTargets) {
+                    console.log("key1 " + key1);
+                    if (key1 == message.graph.basenode) {
+                        for (var key2 in message.graph.publishersTargets[key1]) {
+                            console.log("key2:" + key2 + ":");
 
+                            stat = targetStatus(message, key2);
 
-
-                /////////////////////////////////////////////////// WEBSOCKET ///////////////////////////////////////
-                if (window["WebSocket"]) {
-                    console.log("try to open connection wesbocket!");
-                    conn = new WebSocket("wss://{{.Host}}/ws");
-
-                    conn.onopen = function (evt) {
-                        if (loggedIn()) {
-                            $("#SelectedRoom").text(RoomDefs["{{.Person.Room}}"]);
-                            changeRoom("ChangeRoom", "{{.Person.Room}}");
+                            var liIten = document.createElement("li");
+                            liIten.setAttribute("id", "Target:" + key2);
+                            var imagen = document.createElement("img");
+                            imagen.setAttribute("src", message.graph.pictures[key2]);
+                            if (stat == "GREEN") {
+                                imagen.setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
+                            } else if (stat == "BLUE") {
+                                imagen.setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;");
+                            } else if (stat == "RED") {
+                                imagen.setAttribute("style", "border-color:red; border-width: 4px; border-style:solid;");
+                            }
+                            imagen.setAttribute("onclick", "RemoveTarget('" + key2 + "')");
+                            liIten.appendChild(imagen);
+                            publist.appendChild(liIten);
                         }
-                        console.log("Websocket connection opened!");
-                    };
-
-                    conn.onclose = function (evt) {
-                        console.log("Wesocket connection closed!: " + evt);
-                        var item = document.createElement("div");
-                        item.innerHTML = "<b>Your connection is closed. " + evt.toString() + "  </b>";
-                        appendLog(item);
-                    };
-
-                    conn.onmessage = function (event) {
-                        var message = JSON.parse(event.data);
-                        if (message.content == "Unauthorized") {
-                            modal.style.display = "block";
-
-                        } else if (message.content != "Ignore") {
-                            console.log("New message", message);
-                            var uniqueID = message.sender + "@" + getID();
-                            if (message.op == "ExitUser" && message.token != "flash") {
-                                removeUser(message);
-                            }
-                            /////// Refress all users ////////
-                            if (message.op == "RefreshRoomUsers" && message.token != "flash") {
-                                refreshRoomUsers(message.roomUsers)
-                                return;
-                            }
-                            /////// New User Arrived to this room ////////
-                            if (message.op == "NewUser" && message.token != "flash") {
-                                appendNewUser(message, uniqueID);
-                            }
-
-                            ////// UpdateTarget  /////////////////////////////////////////
-                            if (message.op == "UpdateTargetGraph") {
-                                var publist = document.getElementById("PublishList");
-                                $(publist).empty();
-                                for (var key1 in message.graph.publishersTargets) {
-                                    console.log("key1 " + key1);
-                                    if (key1 == message.graph.basenode) {
-                                        for (var key2 in message.graph.publishersTargets[key1]) {
-                                            console.log("key2:" + key2 + ":");
-
-                                            stat = targetStatus(message, key2);
-
-                                            var liIten = document.createElement("li");
-                                            liIten.setAttribute("id", "Target:" + key2);
-                                            var imagen = document.createElement("img");
-                                            imagen.setAttribute("src", message.graph.pictures[key2]);
-                                            if (stat == "GREEN") {
-                                                imagen.setAttribute("style", "border-color:green; border-width: 4px; border-style:solid;")
-                                            } else if (stat == "BLUE") {
-                                                imagen.setAttribute("style", "border-color:blue; border-width: 4px; border-style:solid;");
-                                            } else if (stat == "RED") {
-                                                imagen.setAttribute("style", "border-color:red; border-width: 4px; border-style:solid;");
-                                            }
-                                            imagen.setAttribute("onclick", "RemoveTarget('" + key2 + "')");
-                                            liIten.appendChild(imagen);
-                                            publist.appendChild(liIten);
-                                        }
-                                    }
-                                }
-                                return;
-                            }
-
-                            // I do Dom not Jquery because I can, becase I am a dominatrix !!!!
-
-                            var uberdiv = document.createElement("div");
-                            // only show details for logged in users
-                            if (loggedIn()) {
-                                var diven = document.createElement("div");
-                                diven.setAttribute("id", uniqueID);
-                                diven.setAttribute("class", "w3-hide w3-container w3-ligth-grey fmt-row");
-                            }
-                            var picture_elem = document.createElement("img");
-                            picture_elem.setAttribute("src", message.pictureURL);
-                            var pictureURL_item = document.createElement("li");
-                            pictureURL_item.setAttribute("id", "pictureURL");
-                            pictureURL_item.appendChild(picture_elem);
-                            var from_span = document.createElement("span");
-                            from_span.setAttribute("id", "from");
-                            from_span.innerText = message.nic;
-                            var time_span = document.createElement("span");
-                            time_span.setAttribute("id", "timestamp");
-                            time_span.innerText = "[" + message.timestamp + "]";
-                            var li_item = document.createElement("li");
-                            li_item.appendChild(from_span);
-                            li_item.appendChild(time_span);
-                            var message_item = document.createElement("li");
-                            message_item.setAttribute("id", "message");
-                            var text_item = document.createElement("span");
-                            text_item.setAttribute("id", "messageText");
-
-                            text_item.innerHTML = message.content;
-
-                            message_item.appendChild(text_item);
-                            var item = document.createElement("ul");
-                            item.setAttribute("id", "postitem");
-                            item.appendChild((pictureURL_item));
-                            item.appendChild(li_item);
-                            item.appendChild(message_item);
-                            var btn = document.createElement("button");
-                            btn.setAttribute("class", "w3-btn");
-                            btn.setAttribute("id", "postbutton");
-                            btn.appendChild(item);
-                            // only show details for logged in users
-                            if (loggedIn()) {
-                                btn.setAttribute("onclick", "myFunction('" + uniqueID + "')");
-                            }
-                            uberdiv.appendChild(btn);
-                            if (loggedIn()) {
-                                uberdiv.appendChild(diven);
-                            }
-                            uberdiv.setAttribute("id", "post");
-                            if (message.op == "PrivateMessage") {
-                                message_item.setAttribute("style", "background-color:#DEDEDE;");
-                                uberdiv.setAttribute("style", "background-color:#DEDEDE;");
-                                item.setAttribute("style", "background-color:#DEDEDE;");
-                                btn.setAttribute("style", "background-color:#DEDEDE;");
-                            }
-                            appendLog(uberdiv);
-
-                            // 'I \u2764\uFE0F emoji!';
-
-                           // twemoji.size = '16x16';
-                            //twemoji.parse(log);
-                        }
-                    };
-                } else {
-                    console.log("faile to connect to websocket");
-                    var item = document.createElement("div");
-                    item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
-                    appendLog(item);
+                    }
                 }
+            }
+
+
+            /////////////////////////////////////////////////// WEBSOCKET ///////////////////////////////////////
+            if (window["WebSocket"]) {
+                console.log("try to open connection wesbocket!");
+                conn = new WebSocket("wss://{{.Host}}/ws");
+
+                conn.onopen = function (evt) {
+                    if (loggedIn()) {
+                        $("#SelectedRoom").text(RoomDefs["{{.Person.Room}}"]);
+                        changeRoom("ChangeRoom", "{{.Person.Room}}");
+                    }
+                    console.log("Websocket connection opened!");
+                };
+
+                conn.onclose = function (evt) {
+                    console.log("Wesocket connection closed!: " + evt);
+                    var item = document.createElement("div");
+                    item.innerHTML = "<b>Your connection is closed. " + evt.toString() + "  </b>";
+                    appendLog(item);
+                };
+
+                conn.onmessage = function (event) {
+                    var message = JSON.parse(event.data);
+
+                    if (message.content == "Unauthorized") {
+                        modal.style.display = "block";
+                        return;
+                    }
+
+                    console.log("New message", message);
+                    var uniqueID = message.sender + "@" + getID();
+
+                    if (message.token == "flash" && message.op != "Message" && message.op != "NewUser") {
+                        return;
+                    } else {
+                        switch (message.op) {
+                            case "EnterRoom":
+                                appendNewUser(message, uniqueID);
+                                return;
+                            case "LeaveRoom":
+                                removewUser(message, uniqueID);
+                                return;
+                            case "UserLoggedIn" :
+                                appendNewUser(message, uniqueID);
+                                return;
+                            case "UserLoggedOut" :
+                                removeNewUser(message, uniqueID);
+                                return;
+                            case "RefreshRoomUsers":
+                                refreshRoomUsers(message.roomUsers);
+                                return;
+                            case "NewUser":
+                                appendNewUser(message, uniqueID);
+                                break;
+                            case "UpdateTargetGraph" :
+                                UpdateTargetGraph(message);
+                                return;
+                        }
+                    }
+
+                    // Crete a message to be appended to the chat log
+                    //
+                    // I do Dom not Jquery because I can, becase I am a dominatrix !!!!
+
+                    console.log("Create message ", message);
+
+                    var uberdiv = document.createElement("div");
+                    // only show details for logged in users
+                    if (loggedIn()) {
+                        var diven = document.createElement("div");
+                        diven.setAttribute("id", uniqueID);
+                        diven.setAttribute("class", "w3-hide w3-container w3-ligth-grey fmt-row");
+                    }
+                    var picture_elem = document.createElement("img");
+                    picture_elem.setAttribute("src", message.pictureURL);
+                    var pictureURL_item = document.createElement("li");
+                    pictureURL_item.setAttribute("id", "pictureURL");
+                    pictureURL_item.appendChild(picture_elem);
+                    var from_span = document.createElement("span");
+                    from_span.setAttribute("id", "from");
+                    from_span.innerText = message.nic;
+                    var time_span = document.createElement("span");
+                    time_span.setAttribute("id", "timestamp");
+                    time_span.innerText = "[" + message.timestamp + "]";
+                    var li_item = document.createElement("li");
+                    li_item.appendChild(from_span);
+                    li_item.appendChild(time_span);
+                    var message_item = document.createElement("li");
+                    message_item.setAttribute("id", "message");
+                    var text_item = document.createElement("span");
+                    text_item.setAttribute("id", "messageText");
+
+                    text_item.innerHTML = message.content;
+
+                    message_item.appendChild(text_item);
+                    var item = document.createElement("ul");
+                    item.setAttribute("id", "postitem");
+                    item.appendChild((pictureURL_item));
+                    item.appendChild(li_item);
+                    item.appendChild(message_item);
+                    var btn = document.createElement("button");
+                    btn.setAttribute("class", "w3-btn");
+                    btn.setAttribute("id", "postbutton");
+                    btn.appendChild(item);
+                    // only show details for logged in users
+                    if (loggedIn()) {
+                        btn.setAttribute("onclick", "myFunction('" + uniqueID + "')");
+                    }
+                    uberdiv.appendChild(btn);
+                    if (loggedIn()) {
+                        uberdiv.appendChild(diven);
+                    }
+                    uberdiv.setAttribute("id", "post");
+                    if (message.op == "PrivateMessage") {
+                        message_item.setAttribute("style", "background-color:#DEDEDE;");
+                        uberdiv.setAttribute("style", "background-color:#DEDEDE;");
+                        item.setAttribute("style", "background-color:#DEDEDE;");
+                        btn.setAttribute("style", "background-color:#DEDEDE;");
+                    }
+                    appendLog(uberdiv);
+
+                    // 'I \u2764\uFE0F emoji!';
+
+                    // twemoji.size = '16x16';
+                    //twemoji.parse(log);
+                }
+            }
+
+            else {
+                console.log("failed to connect to websocket");
+                var item = document.createElement("div");
+                item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
+                appendLog(item);
+            }
         }
+
     </script>
 </head>
 <body>
@@ -568,7 +596,6 @@
 </div>
 
 <script type="text/javascript">
-
 
     function myFunction(myid) {
         console.log("clicked" + myid);

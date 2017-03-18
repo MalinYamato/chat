@@ -49,13 +49,17 @@ import (
 	"os"
 	"github.com/dghubble/sessions"
 	"fmt"
+	"github.com/dghubble/gologin/facebook"
+	facebookOAuth2 "golang.org/x/oauth2/facebook"
 )
 
 type Config struct {
-	ClientID       string
-	ClientSecret   string
-	ChatHost       string
-	ChatPrivateKey string
+	ClientID_FB     string
+	ClientSecret_FB string
+	ClientID        string
+	ClientSecret    string
+	ChatHost        string
+	ChatPrivateKey  string
 }
 
 type HTMLReplace struct {
@@ -255,7 +259,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 		serveWs(hub, w, r)
 	})
 	mux.HandleFunc("/logout", logoutHandler)
-	// 1. Register Login and Callback handlers
+
 	oauth2Config := &oauth2.Config{
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,
@@ -267,6 +271,19 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	stateConfig := gologin.DebugOnlyCookieConfig
 	mux.Handle("/google/login", google.StateHandler(stateConfig, google.LoginHandler(oauth2Config, nil)))
 	mux.Handle("/google/callback", google.StateHandler(stateConfig, google.CallbackHandler(oauth2Config, issueSession(), nil)))
+
+
+	oauth2ConfigFB := &oauth2.Config{
+		ClientID:     config.ClientID_FB,
+		ClientSecret: config.ClientSecret_FB,
+		RedirectURL:  endpoint.url() + "/facebook/callback",
+		Endpoint:     facebookOAuth2.Endpoint,
+		//Scopes:       []string{"profile", "email"},
+	}
+	stateConfigFB := gologin.DebugOnlyCookieConfig
+	mux.Handle("/facebook/login", facebook.StateHandler(stateConfigFB, facebook.LoginHandler(oauth2ConfigFB, nil)))
+	mux.Handle("/facebook/callback", facebook.StateHandler(stateConfigFB, facebook.CallbackHandler(oauth2ConfigFB, issueSessionFB(), nil)))
+
 	return mux
 }
 
@@ -312,10 +329,12 @@ func main() {
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
 	config := &Config{
-		ClientID:       os.Getenv("GOOGLE_CLIENT_ID"),
-		ClientSecret:   os.Getenv("GOOGLE_CLIENT_SECRET"),
-		ChatHost:       os.Getenv("CHAT_HOST"),
-		ChatPrivateKey: os.Getenv("CHAT_PRIVATE_KEY"),
+		ClientID_FB:      os.Getenv("FACEBOOK_CLIENT_ID"),
+		ClientSecret_FB:  os.Getenv("FACEBOOK_CLIENT_SECRET"),
+		ClientID:         os.Getenv("GOOGLE_CLIENT_ID"),
+		ClientSecret:     os.Getenv("GOOGLE_CLIENT_SECRET"),
+		ChatHost:         os.Getenv("CHAT_HOST"),
+		ChatPrivateKey:   os.Getenv("CHAT_PRIVATE_KEY"),
 	}
 	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
 	endpoint = Endpoint{"https", config.ChatHost, "443"}

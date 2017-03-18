@@ -15,6 +15,7 @@ import (
 	"github.com/robfig/graphics-go/graphics"
 	"io/ioutil"
 
+	"github.com/satori/go.uuid"
 )
 
 
@@ -157,6 +158,19 @@ func ImageManger_GetHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(json_response)
 }
 
+type ImageFile struct {
+	Name    string  `json:"name"`
+	Type    string  `json:"type"`
+	Height  int16   `json:"height"`
+	Width   int16   `json:"width"`
+}
+
+type ImageInfo struct {
+	OriginalFileName string   `json:"originalFileName"`
+	Description string        `json:"description"`
+	Variants []ImageFile      `json:"variants"`
+}
+
 func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("got ...image!")
 	defer r.Body.Close()
@@ -177,7 +191,6 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 			m := r.MultipartForm
 			files := m.File["images[]"]
 			lenght = len(files)
-			log.Println("here")
 			for i, _ := range files {
 				file, err := files[i].Open()
 				defer file.Close()
@@ -186,22 +199,20 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				res := strings.Split(files[i].Filename, ".")
-				fileid := res[0]
 				extension := res[1]
+
 				log.Println("file " + files[i].Filename)
-				fileroot := person.path() + "/img/" + fileid
-				filepath := fileroot + "/normal." + extension
+				fileroot := person.path() + "/img/" + uuid.NewV4().String()
 				err = os.Mkdir(fileroot, 0777)
 				if err != nil {
 					panic(err)
 				}
-
+				filepath := fileroot + "/normal." + extension
 				dst, err := os.Create(fileroot + "/normal." + extension)
 				defer dst.Close()
 				if err != nil {
 					panic(err)
 				}
-
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return

@@ -49,6 +49,8 @@ type Person struct {
 	Gender            string        `json:"gender"`
 	Town              string        `json:"country"`
 	Country           string        `json:"town"`
+	Long              string        `json:"long,omitempty"`
+	Lat               string        `json:"lat,omitempty"`
 	PictureURL        string        `json:"pictureURL,omitempty"`
 	SexualOrientation string        `json:"sexualOrienation"`
 	BirthDate         Date          `json:"birthDate"`
@@ -57,6 +59,7 @@ type Person struct {
 	Education         string        `json:"education"`
 	Description       string        `json:"description,omitempty"`
 	GoogleID          string        `json:"googleId,omitempty"`
+	FacebookID        string        `json:"facebookId,omitempty"`
 	UserID            UserId        `json:"userId"`
 	Token             string        `json:"token,omitempty"`
 	Room              string        `json:"room"`
@@ -131,6 +134,16 @@ func (pers *Persons) findPersonByGoogleID(GoogleId string) (person Person, ok bo
 	}
 	return Person{}, false
 }
+func (pers *Persons) findPersonByFacebookID(facebookId string) (person Person, ok bool) {
+	for _, p := range pers.__pers {
+		if p.FacebookID == facebookId {
+			return p, true
+		}
+	}
+	return Person{}, false
+}
+
+
 func (pers *Persons) findPersonByUserId(UserId UserId) (person Person, ok bool) {
 	person, ok = pers.__pers[UserId]
 	return

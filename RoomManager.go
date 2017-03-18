@@ -98,8 +98,8 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 					targets[person.UserID] = true
 					flushMessagesInRoom(person, targets)
 					RoomUsers := _persons.getAllInRoom(person.Room)
-					hub.broadcast <- Message{Op: "ExitUser", Token: "", Room: leavingRoom, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Leaving " + person.getNic() }
-					hub.broadcast <- Message{Op: "NewUser", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Entering " + person.getNic() }
+					hub.broadcast <- Message{Op: "LeaveRoom", Token: "", Room: leavingRoom, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Leaving " + person.getNic() }
+					hub.broadcast <- Message{Op: "EnterRoom", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Entering " + person.getNic() }
 					hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "", Room: person.Room, Timestamp: timestamp(), Targets: targets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "RoomUsers" + person.getNic(), RoomUsers: RoomUsers }
 					status = Status{Status: SUCCESS}
 				} else if request.Op == "RefressAllMessages" {

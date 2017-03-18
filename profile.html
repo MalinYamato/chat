@@ -395,6 +395,15 @@
             margin-top: 10px;
         }
 
+        #verified   {
+            color: rgb(212, 55, 30);
+            font-weight: bold;
+        }
+
+        .submit {
+            visibility: hidden;
+        }
+        
     </style>
 </head>
 
@@ -473,10 +482,6 @@
                     </select>
                 </li>
                 <li>
-                    <span for="email"><b>Email</b> (Verified) <br></span>
-                    <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.Email}}" readonly>
-                </li>
-                <li>
                     <span for="Profession"><b>Profession</b></span>
                     <input onchange="changed()"  placeholder="Profession" type="text" id="Profession" name="Profession"
                            value="{{.P.Profession}}">
@@ -486,6 +491,17 @@
                     <input  onchange="changed()" placeholder="Education" type="text" id="Education" name="Education" value="{{.P.Education}}">
                 </li>
                 <li>
+                    <span id="verified" >Your verified IDs<br></span>
+                    <span for="Facebook">Verified by Facebook<br></span>
+                    <input onchange="changed()" type="text" id="Facebook" name="FacebookID" value="{{.P.FacebookID}}" readonly>
+                    <span for="Google">Verified by Google<br></span>
+                    <input onchange="changed()" type="text" id="Google" name="GoogleID" value="{{.P.GoogleID}}" readonly>
+                    <span for="email">Your Krypin public key<br></span>
+                    <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.UserID}}" readonly>
+                    <span for="email">Verified Email<br></span>
+                    <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.Email}}" readonly>
+                </li>
+                <li class="submit">
                     <input  id="submitbutton" formmethod="post" class="button" type="submit" value="Save">
                 </li>
             </ul>
@@ -600,6 +616,12 @@
             $("#StatusBox").hide();
             $("#StatusBox2").hide();
         }
+        var timeoutDelayRemovalID;
+        function delayRemoval() {
+            $("#image-list").empty();
+        }
+
+
 
         function reportStatus(status, message1, message2)
         {
@@ -644,12 +666,8 @@
                 success: function (r) {
                     console.log("Done......>! ", r.status + " " + r.images.length );
                     for (i = 0; i < (r.images).length; i++) {
-
                         var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
                         galleryTop.appendSlide(s);
-
-
-
                         galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["small"] + '") ></div>');
                         console.log(r.images[i]["small"]);
                     }
@@ -683,12 +701,12 @@
 
         if (input.addEventListener) {
             input.addEventListener("change", function (evt) {
-                var response;
                 var err = false;
                 var i = 0, len = this.files.length, img, reader, file;
                 document.getElementById("response").innerHTML = "Uploading . . . " + len;
                 console.log("Uploading ... "+ len);
 
+                // collect all the requested files to send them all in one batch....
                 for (; i < len; i++) {
                     if (err) {
                         break;
@@ -705,29 +723,29 @@
                         if (formdata) {
                             formdata.append("images[]", file);
                         }
-                        if (formdata) {
-                            $.ajax({
-                                url: "https://{{.Host}}/ImageManager",
-                                type: "POST",
-                                data: formdata,
-                                async: false,
-                                processData: false,
-                                contentType: false,
-                                success: function (res) {
-                                    response = res;
-                                    if (response.status != "SUCCESS") {
-                                        err= true;
-                                    }
-                                }
-                            });
-                        }
                     }
                 }
-                document.getElementById("response").innerHTML = "";
-                var inp = document.getElementById("images");
-                getAllImages();
-                reportStatus(response.status, response.detail, response.detail);
-                formdata.delete("images[]");
+                // all files collected into images[],,, time to send them to the server
+                if (formdata) {
+                    $.ajax({
+                        url: "https://{{.Host}}/ImageManager",
+                        type: "POST",
+                        data: formdata,
+                        async: false,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.status == "SUCCESS") {
+                                getAllImages();
+                            }
+                            document.getElementById("response").innerHTML = "";
+                            reportStatus(response.status, response.detail, response.detail);
+                            formdata.delete("images[]");
+                            timeoutDelayRemovalID = window.setTimeout(delayRemoval, 5000);
+                        }
+                    });
+                }
+
             }, false);
         }
 
@@ -786,17 +804,14 @@
                         data: JSON.stringify(request),
                         contentType: 'application/json',
                         success: function (r) {
-                            var inp = document.getElementById("images");
-                            inp.value = null;
-                            inp.type = '';
-                            inp.type = 'file';
-                            getAllImages();
+                            if (r.status == "SUCCESS") {
+                                galleryThumbs.removeSlide(galleryThumbs.clickedIndex);
+                                galleryTop.removeSlide(galleryThumbs.clickedIndex);
+                            }
                             reportStatus(r.status, r.detail, r.detail);
-
                         }
                     });
                 }
-
             };
 
             var profilePictureSelectButton = new SVGButton("#profilePictureButton", "Profile picture", "XL");
