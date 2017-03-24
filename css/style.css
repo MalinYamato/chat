@@ -84,11 +84,10 @@ visibility: hidden;
 
 #localCam {
 	position: relative;
-
-	top: -35px;
-	left: 100px;
-	display: inline;
-	transform: scale(0.75, 0.75);
+	visibility: hidden;
+	top: 0px;
+	left: -106px;
+	transform: scale(0.80, 0.80);
 	z-index: 999;
 }
 

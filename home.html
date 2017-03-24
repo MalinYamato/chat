@@ -170,14 +170,14 @@
                         startVideo();
                         $(".screen").css("height", "220px");
                         $(".screen").css("border-width", "2px");
-                        document.getElementById("localCam").style.display = "inline";
+                        document.getElementById("localCam").style.visibility = "visible";
                         registered = false;
 
                     } else {
                         document.getElementById("camArea").style.height = "0px";
                         $(".screen").css("height", "0px");
                         $(".screen").css("border-width", "0px");
-                        document.getElementById("localCam").style.display = "none";
+                        document.getElementById("localCam").style.visibility = "hidden";
                         destroyVideo();
                         registered = false;
                     }
@@ -580,9 +580,7 @@
             </div>
             <div id="SelectedRoom"></div>
         </div>
-        <object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
-            Local Cam
-        </object>
+
 
     </div>
 
@@ -636,7 +634,9 @@
 <div  id="camArea" >
 
 <div class="flex-container" id="videos">
-
+    <object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
+        Local Cam
+    </object>
         <div class="flex-row flex-container">
 
             <div class="screen flexer" id="screen1">

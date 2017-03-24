@@ -207,10 +207,10 @@ function startVideo() {
                                             $('#videolocal').append('<video class="rounded centered" id="myvideo" width="100%" height="100%" autoplay muted="muted"/>');
 // Add a 'mute' button
                                             $('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style=" position: relative; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
-                                           $('#mute').click(toggleMute);
+                                            $('#mute').click(toggleMute);
 // Add an 'unpublish' button
-                                             $('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: relative; bottom: 0px; right: 0px; margin: 15px;">Unpublish</button>');
-                                             $('#unpublish').click(unpublishOwnFeed);
+                                             //$('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: relative; bottom: 0px; right: 0px; margin: 15px;">Unpublish</button>');
+                                             //$('#unpublish').click(unpublishOwnFeed);
                                         }
                                         $('#publisher').removeClass('hide').html(myusername).show();
                                         Janus.attachMediaStream($('#myvideo').get(0), stream);
@@ -240,10 +240,10 @@ function startVideo() {
                                     oncleanup: function () {
                                         Janus.log(" ::: Got a cleanup notification: we are unpublished now :::");
                                         mystream = null;
-                                        $('#videolocal').html('<button id="publish" class="btn btn-primary">Publish</button>');
-                                        $('#publish').click(function () {
-                                            publishOwnFeed(true);
-                                        });
+                                        //$('#videolocal').html('<button id="publish" class="btn btn-primary">Publish</button>');
+                                        //$('#publish').click(function () {
+                                          //  publishOwnFeed(true);
+                                        //});
                                         $("#videolocal").parent().parent().unblock();
                                     }
                                 });
