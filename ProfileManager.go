@@ -142,6 +142,8 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			p.Gender = r.Form.Get("Gender")
 			p.Country = r.Form.Get("Country")
 			p.Town = r.Form.Get("Town")
+			p.Lat = r.Form.Get("Lat")
+			p.Long = r.Form.Get("Long")
 			p.Nic = r.Form.Get("Nic")
 			p.Profession = r.Form.Get("Profession")
 			p.Education = r.Form.Get("Education")
@@ -149,7 +151,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			p.Description = r.Form.Get("Description")
 			p.BirthDate.Year = r.Form.Get("BirthYear")
 			p.BirthDate.Month = r.Form.Get("BirthMonth")
-			p.BirthDate.Month = r.Form.Get("BirthDay")
+			p.BirthDate.Day = r.Form.Get("BirthDay")
 			p.LoggedIn = true
 			fmt.Printf("%+v\n", r.Form)
 			productsSelected := r.Form["Language"]
@@ -175,11 +177,11 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				_persons.Save(p)
 
 				status.Status = "New"
-				status.Detail = "Your account was sucessfully created <br> UserID: " + string(p.UserID) + " <br>SecretKey: " + p.Token;
+				status.Detail = "The account was sucessfully created <br> You are now a member!";
 			} else {
 				_persons.Save(p)
 				status.Status = "Updated"
-				status.Detail = "Success! Your profile was updated! <br> UserId: " + string(p.UserID);
+				status.Detail = "Success! Your profile was updated!";
 			}
 
 		}

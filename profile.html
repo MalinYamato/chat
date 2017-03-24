@@ -15,7 +15,7 @@
 // copyright notice, this list of conditions and the following disclaimer
 // in the documentation and/or other materials provided with the
 // distribution.
-//     * Neither the name of Google Inc. nor the names of its
+//     * Neither the name of Yamato Digital Audio. nor the names of its
 // contributors may be used to endorse or promote products derived from
 // this software without specific prior written permission.
 //
@@ -111,7 +111,7 @@
             border-radius: 12px;
             border: 2px solid #9cb8f5;
             font: 18px Arial, Helvetica, sans-serif;
-            resize: vertical;
+            resize: both;
         }
 
         .button {
@@ -218,10 +218,26 @@
             width: 7em;
         }
 
-        #Town, #Country, .locationbutton {
-            width: 10em;
+        .td_size {
+            width:  6em;
         }
 
+        .td_size span {
+            width:  6em;
+        }
+
+
+        #Town, #Country {
+            width: 10em;
+        }
+        #Longitude, #Latitude {
+            width: 10em;
+
+        }
+        .location-languages {
+            max-width: 380px;
+            display: none;
+        }
         .locationbutton {
             margin-left: 2px;
         }
@@ -231,13 +247,9 @@
             margin-left: 10px;
         }
 
-        .location-languages {
-            max-width: 380px;
-            display: none;
-        }
         .my-story {
             min-width: 80%;
-            display: none;
+            display: inline;
         }
         .status, .status-m {
             color: white;
@@ -310,51 +322,64 @@
             width: 120px;
             height: 100px;
         }
-        .footer {
-            background-color: #9cb8f5;
-            color: #ffffff;
-            text-align: center;
-            font-size: 12px;
-            padding: 20px;
-        }
         .center {
             text-align: center;
         }
 
-        table {
-            width: 100%;
-        }
         html, body {
             position: relative;
             height: 100%;
         }
         body {
-
             margin: 0;
             padding: 0;
         }
+
+        .main-gallery {
+
+           width: 100%;
+
+        }
+
+        #photos {
+            background-color: #9cb8f5;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            height: 300px;
+            width: 400px;
+            min-height: 340px;
+            min-width: 300px;
+           overflow: hidden;
+           resize: both;
+       }
+
         .swiper-container {
             width: auto;
             height: auto;
             margin-left: auto;
             margin-right: auto;
+
+
         }
         .swiper-slide {
             background-repeat: no-repeat;
           background-size: contain;
-           background-position: center;
+           background-position: left;
             border-radius: 10px;
         }
 
         .gallery-top {
-            width: 450px;
-            height: auto;
+           width: 100%;
+            height: 80%;
+
         }
 
         .gallery-top img {
-
-            max-width: 450px;
-            max-height: 500px;
+            min-width: 100px;
+            min-height: 70px;
+            max-width: 6000px;
+            max-height: 4000px;
             visibility: hidden;
 
         }
@@ -378,17 +403,6 @@
             border-style: solid;
         }
 
-
-        .slideshow {
-
-            background-color: #9cb8f5;
-            margin-top: 10px;
-            height: auto;
-            width: auto;
-            border-radius: 10px;
-
-        }
-
         #StatusBox2 {
             height: 80px;
             width: 200px;
@@ -403,6 +417,13 @@
         .submit {
             visibility: hidden;
         }
+
+        .submit {
+            padding: 0;
+            margin: 0;
+            height: 0;
+        }
+
         
     </style>
 </head>
@@ -436,28 +457,28 @@
                 <input hidden id="PictureURL_hidden" type="text" name="PictureURL" value="{{.P.PictureURL}}">
             </div>
         </div>
-            <ul>
-                <li>
-                    <span for="Nic"><b>Nicname</b> <br> </span>
-                    <input onchange="changed()" type="text" id="Nic" name="Nic" placeholder="Nicname used during chat" value="{{.P.Nic}}">
-                </li>
-                <li>
-                    <span for="FirstName"><b>First Name </b>  </span>
-                    <input onchange="changed()" type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
-                </li>
-                <li>
-                    <span for="LastName"><b>Last Name </b></span>
-                    <input onchange="changed()" type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
-                </li>
-                <li>
-                    <span for="Gender"><b>Gender</b> </span>
-                    <select onchange="changed()" id="Gender" name="Gender">
-                        {{ $gs := .Genders }} {{ $selected := .P.Gender }}{{ range $gs}}{{$v := .}}
-                        <option onchange="changed()" value="{{$v}}" {{ if eq $selected $v }} selected {{end}}>{{$v}}</option>
-                        {{end}}
-                    </select>
-                </li>
-                <li>
+        <ul>
+            <li>
+                <span for="Nic"><b>Nicname</b> <br> </span>
+                <input onchange="changed()" type="text" id="Nic" name="Nic" placeholder="Nicname used during chat" value="{{.P.Nic}}">
+            </li>
+            <li>
+                <span for="FirstName"><b>First Name </b>  </span>
+                <input onchange="changed()" type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
+            </li>
+            <li>
+                <span for="LastName"><b>Last Name </b></span>
+                <input onchange="changed()" type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
+            </li>
+            <li>
+                <span for="Gender"><b>Gender</b> </span>
+                <select onchange="changed()" id="Gender" name="Gender">
+                    {{ $gs := .Genders }} {{ $selected := .P.Gender }}{{ range $gs}}{{$v := .}}
+                    <option onchange="changed()" value="{{$v}}" {{ if eq $selected $v }} selected {{end}}>{{$v}}</option>
+                    {{end}}
+                </select>
+            </li>
+            <li>
                     <div class="flex-row">
                         <div class="flex-column">
                             <span for="BirthDate"><b>Year</b> </span>
@@ -496,7 +517,7 @@
                     <span id="g" for="Google">Verified by Google<br></span>
                     <input onchange="changed()" type="text" id="Google" name="GoogleID" value="{{.P.GoogleID}}" readonly>
                     <span id="e" for="email">Your Krypin public key<br></span>
-                    <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.UserID}}" readonly>
+                    <input onchange="changed()" type="email" id="KrypinID" name="KrypinID" value="{{.P.UserID}}" readonly>
                     <span id="krypin" for="email">Verified Email<br></span>
                     <input onchange="changed()" type="email" id="Email" name="Email" value="{{.P.Email}}" readonly>
                 </li>
@@ -507,24 +528,29 @@
         </div>
 
     <div class="right-side">
-        <div id="myStory" class="my-story">
-            <textarea id="introo" placeholder="My story" form="ProfileForm" name="Description" label="sdfsdf">{{.P.Description}}</textarea>
-        </div>
         <div id="location-languages" class="location-languages">
             <fieldset>
                 <legend>Location and Languages</legend>
-                <div class="flex-column">
-                    <div class="flex-row">
-                        <div class="flex-column">
-                            <button type="button" class="button locationbutton" onclick="getLocation()">Get Your
-                                Location!
-                            </button>
-                            <span for="Country"><b>Country</b> </span>
-                            <input  onchange="changed()" type="text" id="Country" name="Country" value="{{.P.Country}}">
+                <div class="flex-columm ">
 
-                            <span for="Town"><b>Town</b> </span>
-                            <input onchange="changed()" type="text" id="Town" name="Town" value="{{.P.Town}}">
-                        </div>
+                        <div class="flex-column">
+                            <table class="locationTable">
+                                <tr> <td colspan="2"> <button type="button" class="button locationbutton" onclick="getLocation()">Get Your Location </button> </td> </tr>
+                                <tr>
+                                    <td class="td_size">Country</td> <td class="td_size">Town</td>
+                                </tr>
+                                <tr>
+                                <td class="td_size"> <input  onchange="changed()" type="text" id="Country" name="Country" value="{{.P.Country}}"></td>
+                                <td class="td_size" > <input onchange="changed()" type="text" id="Town" name="Town" value="{{.P.Town}}"></td>
+                                </tr>
+                                <tr>
+                                    <td class="td_size">Longitude</td> <td class="td_size">Latitude</td>
+                                </tr>
+                                <tr>
+                                    <td class="td_size"><input  onchange="changed()" type="text" id="Longitude"  name="Long" value="{{.P.Long}}"></td>
+                                    <td class="td_size"><input onchange="changed()" type="text" id="Latitude" name="Lat" value="{{.P.Lat}}"> </td>
+                                </tr>
+                            </table>
                         <div class="checkbox-container languages">
                             <!-- TEMPLATE CODE -->
                             {{ $all := .Languages }} {{ $some := .P.Languages}}
@@ -555,53 +581,64 @@
     });
 });
 </script>
-
-    <div class="flex-column">
+    <div>
+    <div class="main-gallery" id="main-gallery">
         <div id="StatusBox2"  hidden style="width:100%"   class="StatusMessage stuff-m"><p  class="status-m status" id="status2"></p></div>
-        <div class="slideshow" id="photos">
-            <!-- Swiper -->
-            <div class="swiper-container gallery-top">
-                <div class="swiper-wrapper">
+            <div class="slideshow"  on onmouseup="phtoBoxMouseUp()"  id="photos">
+                <!-- Swiper -->
+                <div class="swiper-container gallery-top">
+                    <div class="swiper-wrapper">
+                    </div>
+                    <!-- Add Arrows -->
+                    <div class="swiper-button-next swiper-button-white"></div>
+                    <div class="swiper-button-prev swiper-button-white"></div>
                 </div>
-                <!-- Add Arrows -->
-                <div class="swiper-button-next swiper-button-white"></div>
-                <div class="swiper-button-prev swiper-button-white"></div>
-            </div>
-            <div class="swiper-container gallery-thumbs">
-                <div class="swiper-wrapper">
+                <div class="swiper-container gallery-thumbs">
+                    <div class="swiper-wrapper">
+                    </div>
                 </div>
             </div>
-            <div id="upload">
-                <div>      <table>
-                    <tr>
-                        <td>
-                            <object id="profilePictureButton" class="profilePictureCloud" type="image/svg+xml" data="images/chat.svg"> fail
-                            </object>
-                        </td>
-                        <td> </td>
-                        <td>
-                            <object id="deleteButton" class="deleteCloud" type="image/svg+xml" data="images/chat.svg"> fail
-                            </object>
-                        </td>
-                    </tr>
-                    <tr><td colspan="3" class="center">Uload your photos here</td></tr>
-                    <tr><td colspan="3" class="center">Supported formats jpeg, png and gif</td></tr>
-                </table>
-                    <form method="post" enctype="multipart/form-data"  action="https://{{.Host}}/ImageManager">
-                        <input accept="image/jpg, image/jpeg, image/gif, image/png" type="file" name="images" id="images" multiple />
-                        <button type="submit" id="btn">Upload Files!</button>
-                    </form>
-                </div>
-                <div id="response"></div>
-                <ul id="image-list">
-                </ul>
-            </div>
+        <div id="upload">
+            <table>
+                <tr>
+                    <td>
+                        <object id="profilePictureButton" class="profilePictureCloud" type="image/svg+xml" data="images/chat.svg"> fail
+                        </object>
+                    </td>
+                    <td> </td>
+                    <td>
+                        <object id="deleteButton" class="deleteCloud" type="image/svg+xml" data="images/chat.svg"> fail
+                        </object>
+                    </td>
+                </tr>
+                <tr><td colspan="3" class="center">Uload your photos here</td></tr>
+                <tr><td colspan="3" class="center">Supported formats jpeg, png and gif</td></tr>
+            </table>
+            <form id="uploader" method="post" enctype="multipart/form-data"  action="https://{{.Host}}/ImageManager">
+                <input accept="image/jpg, image/jpeg, image/gif, image/png" type="file" name="images" id="images" multiple />
+                <button type="submit" id="btn">Upload Files!</button>
+            </form>
+            <div id="response"></div>
+            <ul id="image-list">
+            </ul>
         </div>
     </div>
+        <div id="myStory" class="my-story">
+            <textarea id="introo" placeholder="My story" form="ProfileForm" name="Description" label="sdfsdf">{{.P.Description}}</textarea>
+        </div>
+</div>
+
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="js/swiper.js"></script>
     <script type="text/javascript">
+
+
+        function phtoBoxMouseUp(e)
+        {
+            galleryTop.update(true);
+            galleryThumbs.update(true)
+        }
 
         function changed() {
             $("#StatusBox2").show()
@@ -618,9 +655,8 @@
         var timeoutDelayRemovalID;
         function delayRemoval() {
             $("#image-list").empty();
+            var gal  = document.getElementById("main-gallery");
         }
-
-
 
         function reportStatus(status, message1, message2)
         {
@@ -670,8 +706,8 @@
                         galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["small"] + '") ></div>');
                         console.log(r.images[i]["small"]);
                     }
-                   galleryTop.update(updateTranslate);
-                   galleryThumbs.update(updateTranslate);
+                    galleryTop.update(true);
+                    galleryThumbs.update(true);
                 }
             });
         }
@@ -740,7 +776,7 @@
                             document.getElementById("response").innerHTML = "";
                             reportStatus(response.status, response.detail, response.detail);
                             formdata.delete("images[]");
-                            timeoutDelayRemovalID = window.setTimeout(delayRemoval, 5000);
+                            timeoutDelayRemovalID = window.setTimeout(delayRemoval, 8000);
                         }
                     });
                 }
@@ -760,12 +796,13 @@
                 window.location = "https://{{.Host}}/session";
             };
 
-            var photosButton = new SVGButton("#photographs", "   Photos", "L");
+            var photosButton = new SVGButton("#photographs", "  Photos", "L");
             photosButton.Cloud_Text.onmousedown = function () {
                 photosButton.mouseDown();
-                document.getElementById("myStory").style.display = "none";
+                document.getElementById("myStory").style.display = "block";
                 document.getElementById("location-languages").style.display = "none";
-                document.getElementById("photos").style.display = "inline";
+                document.getElementById("photos").style.display = "block";
+                document.getElementById("upload").style.display = "block"
             };
 
             var saveButton = new SVGButton("#saveButton", " Save Profile", "XL");
@@ -778,14 +815,16 @@
             var locationButton = new SVGButton("#locationButton", " Location ", "L");
             locationButton.Cloud_Text.onmousedown = function () {
                 locationButton.mouseDown();
-                document.getElementById("myStory").style.display = "block";
+                document.getElementById("myStory").style.display = "none";
                 document.getElementById("location-languages").style.display = "block";
                 document.getElementById("photos").style.display = "none";
+                document.getElementById("upload").style.display = "none";
             };
 
             var logoutButton = new SVGButton("#logoutButton", "  Logout", "L");
             logoutButton.Cloud_Text.onmousedown = function () {
                 logoutButton.mouseDown();
+                galleryTop.update(true);
             };
 
             var deletetButton = new SVGButton("#deleteButton", "  Delete", "L");
@@ -806,6 +845,7 @@
                             if (r.status == "SUCCESS") {
                                 galleryThumbs.removeSlide(galleryThumbs.clickedIndex);
                                 galleryTop.removeSlide(galleryThumbs.clickedIndex);
+                                getAllImages();
                             }
                             reportStatus(r.status, r.detail, r.detail);
                         }
@@ -816,11 +856,6 @@
             var profilePictureSelectButton = new SVGButton("#profilePictureButton", "Profile picture", "XL");
             profilePictureSelectButton.Cloud_Text.onmousedown = function () {
                 profilePictureSelectButton.mouseDown();
-
-              ///  node = document.getElementByClassName("swiper-slide-active");
-               // url = node.getAttribute("id");
-               // console.log("url>>> " + url);
-
                 node = galleryThumbs.clickedSlide;
                 url = node.getAttribute("id");
                 document.getElementById("PictureURL").setAttribute("src", url);

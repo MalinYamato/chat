@@ -15,7 +15,7 @@
 // copyright notice, this list of conditions and the following disclaimer
 // in the documentation and/or other materials provided with the
 // distribution.
-//     * Neither the name of Google Inc. nor the names of its
+//     * Neither the name of Yamato Digital Audio. nor the names of its
 // contributors may be used to endorse or promote products derived from
 // this software without specific prior written permission.
 //
@@ -44,11 +44,26 @@
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="/css/emojionearea.min.css">
+
+
+    <!-- ---------------------------------------->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.1.5/adapter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <script type="text/javascript" src="/js/janus.js"></script>
+    <script type="text/javascript" src="/js/videoservices.js"></script>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
     <script src="/js/SVGButton.js"></script>
     <script type="text/javascript"></script>
     <script type="text/javascript" src="/js/emojionearea.min.js"></script>
+
 
     <script>
         window.onload = function () {
@@ -83,7 +98,7 @@
                 if (child != null) {
                     var status = currentUsers.removeChild(child);
                 }
-                var newUser = document.createElement("li");
+                var newUser = document.createElement("span");
                 newUser.setAttribute("id", message.sender);
                 image = document.createElement("img");
                 image.setAttribute("src", message.pictureURL);
@@ -96,7 +111,7 @@
             }
 
             function appendNewPerson(person) {
-                var newUser = document.createElement("li");
+                var newUser = document.createElement("span");
                 newUser.setAttribute("id", person.userId);
                 image = document.createElement("img");
                 image.setAttribute("src", person.pictureURL);
@@ -118,6 +133,7 @@
 
 
             //////////////////////// Button actions settings ///////////////////////////////
+
 
             var profile = new SVGButton("#profile", "  Profile", "L");
             profile.s.onmouseup = function () {
@@ -142,7 +158,44 @@
                     });
                 };
 
-            }
+                var tcam = new SVGWebcamButton("#webcam", "x", "x");
+                tcam.s.onmousedown = function () {
+                    console.log("clicked");
+                    tcam.mouseDown();
+                    tcam.toggle();
+                    var ca = document.getElementById("camArea");
+                    if (tcam.isOn()) {
+                        document.getElementById("camArea").style.height = "300px";
+                        startVideo();
+                        $(".screen").css("height", "220px");
+                        $(".screen").css("border-width", "2px");
+                        document.getElementById("localCam").style.display = "inline";
+                        register("{{.Person.Nic}}");
+
+                    } else {
+                        document.getElementById("camArea").style.height = "0px";
+                        $(".screen").css("height", "0px");
+                        $(".screen").css("border-width", "0px");
+                        document.getElementById("localCam").style.display = "none";
+                        leaving("{{.Person.Nic}}");
+
+                    }
+
+                };
+
+                var lcam = new SVGWebcamButton("#localCam", "x", "x");
+                lcam.s.onmousedown = function () {
+                    console.log("clicked");
+                    lcam.mouseDown();
+                    lcam.toggle();
+                    if (lcam.isOn()) {
+                        publishOwnFeed(true);
+                    } else {
+                        unpublishOwnFeed();
+                    }
+
+                };
+        }
 
             function changeRoom(cmd, room) {
                 $.ajax({
@@ -158,9 +211,7 @@
                 });
             }
 
-
             if (!loggedIn()) {
-
                 var google = new SVGImageButton("#google", "google", "S");
                 google.s.onmousedown = function () {
                     google.mouseDown();
@@ -172,8 +223,7 @@
                     facebook.mouseDown();
                     window.location = "https://{{.Host}}/facebook/login";
                 };
-
-                var loginLabel = new SVGButton("#loginLabel", "   Login", "L");
+                var loginLabel = new SVGButton("#loginLabel", " Login", "S");
 
             }
 
@@ -195,9 +245,6 @@
             }
 
             function sendMessage(op, msg) {
-
-                console.log("called message");
-
 
                 var t = new Date();
                 var time = t.getDate() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
@@ -270,7 +317,6 @@
             };
 
             var _id = 0;
-
             function getID() {
                 if (_id > 1000) {
                     _id = 0;
@@ -506,41 +552,42 @@
     </script>
 </head>
 <body>
-<ul id="menu">
-    <li id="leftMenu">
-        <ul>
-            <li>
-                <object id="profile" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
-                    Profile
-                </object>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)" class="dropbtn">Room: </a>
-                <div class="dropdown-content">
-                    <button id="MainButton">Main 本館</button>
-                    <button id="MPRButton">Instant Private 秘密屋</button>
-                    <button id="JapaneseButton">日本語屋さん</button>
-                    <button id="ReimersHotelButton">Reimers Hotel屋</button>
-                    <button id="EvaMonikaMalinButton">Malin friends 屋</button>
-                    <button id="GayButton">Gay ゲイ屋</button>
-                    <button id="LesbianButton">Lesbian レズ屋</button>
-                    <button id="TransButton">Trans 性転換屋</button>
-                </div>
-            </li>
-            <li id="SelectedRoom"></li>
-        </ul>
-        <span id="me">{{ with .Person}}{{.FirstName}} {{.LastName}}{{end}}</span>
-    </li>
-    <li id="centerMenu">
-        <ul id="CurrentUsers">  <!-- oyeaa, no more JSP, PHP or other stoneage server side stuff!!! Go Lang templating...-->
+
+
+<div id="menu">
+    <div id="leftMenu">
+        <div class="flex-row">
+            <object id="profile" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
+                Profile
+            </object>
+            <span id="me">{{ with .Person}}{{.FirstName}} {{end}}</span>
+        </div>
+        <div class="dropdown flex-row">
+            <a href="javascript:void(0)" class="dropbtn">Room</a>
+            <div class="dropdown-content">
+                <button id="MainButton">Main 本館</button>
+                <button id="MPRButton">Instant Private 秘密屋</button>
+                <button id="JapaneseButton">日本語屋さん</button>
+                <button id="ReimersHotelButton">Reimers Hotel屋</button>
+                <button id="EvaMonikaMalinButton">Malin friends 屋</button>
+                <button id="GayButton">Gay ゲイ屋</button>
+                <button id="LesbianButton">Lesbian レズ屋</button>
+                <button id="TransButton">Trans 性転換屋</button>
+            </div>
+            <div id="SelectedRoom"></div>
+        </div>
+    </div>
+
+    <div id="centerMenu">
+        <div id="CurrentUsers">  <!-- oyeaa, no more JSP, PHP or other stoneage server side stuff!!! Go Lang templating...-->
             <!-- TEMPLATE CODE -->
             {{ range .Persons}}
-            <li id="{{.UserID}}"><img onclick="RequestToPublish({{.UserID}})"  src="{{.PictureURL}}"> </img><span>{{.Nic}}</span></li>
+            <div id="{{.UserID}}"><img onclick="RequestToPublish({{.UserID}})"  src="{{.PictureURL}}"> </img><span>{{.Nic}}</span></div>
             {{end}}
             <!-- TEMPLATE CODE -->
-        </ul>
-    </li>
-    <li id="rightMenu">
+        </div>
+    </div>
+    <div id="rightMenu">
         <div class="flex-column" style="display:{{.LoggedOut}}">
 
         <object id="loginLabel" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
@@ -567,14 +614,42 @@
                        Lobgout
                    </object>
                 </li>
+                <li>
+                    <object class="webcam"  id="webcam" type="image/svg+xml" data="https://{{.Host}}/images/webcam.svg"> </object>
             </ul>
         </div>
-    </li>
-</ul>
+    </div>
+</div>
+
+<object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
+    Local Cam
+</object>
+<div  id="camArea" >
+<div class="flex-container" id="videos">
+
+        <div class="flex-row flex-container">
+          <div class="screen flexer" id="screen1">
+              <div class="panel-body narrow" id="videolocal"></div>
+              <h3 class="panel-title"><span class="label label-primary hide" id="publisher"></span></h3>
+          </div>
+            <div class="screen" id="screen2">
+                       <div class="panel-body narrow relative" id="videoremote1"></div>
+                       <h3 class="panel-title"><span class="label label-info hide" id="remote1"></span></h3>
+             </div>
+
+              <div class="screen" id="screen3">
 
 
+                        <div class="panel-body narrow relative" id="videoremote2"></div>
+                  <h3 class="panel-title"><span class="label label-info hide" id="remote2"></span></h3>
+
+              </div>
+        </div>
+</div>
+</div>
 
 <div id="log"></div>
+
 
 <div class="bottom row-flex">
     <form id="form" class="row">
@@ -584,14 +659,13 @@
         </div>
     </form>
 
-    <ul id="PublishList" class="flex-row">
+    <div id="PublishList" class="flex-row">
         <!-- TEMPLATE CODE -->
         {{ range .Targets}}
-        <li id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;" onclick="RemoveTarget({{.Target.UserID}})"  src="{{.Target.PictureURL}}"> </img> <!--<span>{{.Target.Nic}}</span>--> </li>
+        <div id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;" onclick="RemoveTarget({{.Target.UserID}})"  src="{{.Target.PictureURL}}"> </img> <!--<span>{{.Target.Nic}}</span>--> </div>
         {{end}}
         <!-- TEMPLATE CODE -->
-    </ul>
-
+    </div>
 
 </div>
 
@@ -612,6 +686,15 @@
                 contentType: 'application/json',
                 success: function (person) {
                     if (person.userId != null) {
+                        var t = new Date();
+                        var age =   t.getFullYear() - parseInt(person.birthDate.year);
+                        if (t.getMonth() < parseInt(person.birthDate.month)) {
+                            age = age - 1;
+                        }
+
+                         console.log(">>" + person.birthDate.year) ;
+                        console.log(">>>" + t.getFullYear());
+
                         var bigImage = document.createElement("img");
                         bigImage.setAttribute("src", person.pictureURL);
                         x.appendChild(bigImage);
@@ -622,7 +705,7 @@
                         var info4 = document.createElement("li");
                         var info5 = document.createElement("li");
                         var info6 = document.createElement("li");
-                        info1.innerText = "        " + person.nic;
+                        info1.innerText = "        " + person.nic + " " + age;
                         info2.innerText = "        " + person.firstName + " " + person.lastName;
                         info3.innerText = "        " + person.gender + " " + person.sexualOrienation;
                         info4.innerText = "        " + person.country + " " + person.town;

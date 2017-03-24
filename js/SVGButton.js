@@ -39,11 +39,83 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 function setDefaultActions (obj) {
-    obj.s.onmouseover =  function () { obj.mouseIn(); };
+    obj.s.onmouseover =  function () {
+        obj.s.style.cursor = "crosshair";
+        obj.mouseIn(); };
+
     obj.s.onmouseup =    function () { obj.mouseUp(); };
     obj.s.onmousedown =   function () { obj.mouseDown(); };
-    obj.s.onmouseout  =   function () { obj.mouseOut(); };
+
+    obj.s.onmouseout  =   function () {
+        obj.s.style.cursor = "default";
+        obj.mouseOut(); };
 }
+
+function SVGWebcamButton(id, img, size) {
+
+    // class constants and setup
+    namespace = "http://www.inkscape.org/namespaces/inkscape";
+    colorIn =    "gray";
+    colorPress = "gray";
+    colorOut =  "#9cb8f5";
+    this.classMap = {};
+    this.Id   = id;
+    this.size = size;
+    this.Image = img;
+
+    // search for nodes
+    this.s = document.querySelector(this.Id).contentDocument.getElementById("svg2");
+    this.es = document.querySelector(this.Id).contentDocument.getElementsByTagName("g");
+    for (i=0;i < this.es.length; i++) {
+        if ( this.es[i] != null && this.es[i].hasAttributeNS(namespace,'label')) {
+            var a = this.es[i].getAttributeNS(namespace,'label');
+            this.classMap[a] = this.es[i];
+            //console.log("SVG> " + a);
+        }
+    }
+
+    this.isOn =   this.toggle = function (e) {
+        if (this.classMap["on"].style.display == "none") {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+    this.toggle = function (e) {
+        if (this.classMap["on"].style.display == "none") {
+            this.setOn();
+        }
+        else {
+            this.setOff();
+        }
+    };
+
+    this.setOn = function (e) {
+        this.classMap["on"].style.display = "inherit";
+    };
+
+    this.setOff = function (e) {
+        this.classMap["on"].style.display = "none";
+    };
+
+    this.mouseOut = function (e) {
+        //this.TextElem.style.fill = colorOut;
+    };
+    this.mouseIn = function (e) {
+        //this.TextElem.style.fill = colorIn;
+    };
+    this.mouseDown = function (e) {
+        //this.Cloud_Expanded.style.display = "inline";
+    };
+    this.mouseUp = function (e) {
+        //this.Cloud_Expanded.style.display = "none";
+    };
+
+    setDefaultActions(this);
+
+}
+
 
 function SVGImageButton(id, img, size) {
 
@@ -163,16 +235,17 @@ function SVGButton(id, text, size) {
     this.TextElem.textContent = this.text;
 
     this.mouseOut = function (e) {
-        this.TextElem.style.fill = colorOut;
+        this.Cloud_Expanded.style.display = "none";
+
     };
     this.mouseIn = function (e) {
-        this.TextElem.style.fill = colorIn;
-    };
-    this.mouseDown = function (e) {
         this.Cloud_Expanded.style.display = "inline";
     };
+    this.mouseDown = function (e) {
+        this.TextElem.style.fill = colorIn;
+    };
     this.mouseUp = function (e) {
-        this.Cloud_Expanded.style.display = "none";
+        this.TextElem.style.fill = colorOut;
     };
 
     setDefaultActions(this);

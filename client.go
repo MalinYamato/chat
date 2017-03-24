@@ -99,16 +99,6 @@ func (c *Client) validSession() bool {
 	return true
 }
 
-//type Message struct {
-//	Op        string   `json:"op"`
-//	Token     string   `json:"token"`
-//	Room      string   `json:"room"`
-//	Sender    string   `json:"sender"`
-//	Receivers map[string]bool `json:"receivers,omitempty"`
-//	Timestamp string   `json:"timestamp,omitempty"`
-//	Content   string   `json:"content,omitempty"`
-//}
-
 func (c *Client) readPump() {
 	defer func() {
 
@@ -179,19 +169,6 @@ func (c *Client) readPump() {
 	}
 }
 
-/*
-type Message struct {
-	Op        string    `json:"op"`
-	Token     string    `json:"token"`
-	Room      string    `json:"room"`
-	Sender    string    `json:"sender"`
-	Nic       string    `json:"nic,omitempty"`
-	Receivers Receivers `json:"receivers,omitempty"`
-	Timestamp string    `json:"timestamp,omitempty"`
-	PictureURL string   `json:"pictureURL,omitemtpy"`
-	Content   string    `json:"content"`
-}
-*/
 
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)

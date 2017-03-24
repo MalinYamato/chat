@@ -102,14 +102,20 @@ function setMapPoint(lat, long, message) {
         fillOpacity: 0.1
     });
  //   myCity.setMap(map);
+    var lo = document.getElementById("Longitude");
+    lo.setAttribute("value",long);
+    var la = document.getElementById("Latitude");
+    la.setAttribute("value",lat);
+
     var imageBounds = {
         north: lat + 2,
         south: lat - 2,
         east: long + 4.5,
         west: long - 4.5
     };
+    var picture = document.getElementById("PictureURL").getAttribute("src");
     pictureOverlay = new google.maps.GroundOverlay(
-        "/images/google.png",
+        picture,
         imageBounds);
 
     alat = 50.110924;

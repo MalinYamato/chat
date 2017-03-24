@@ -4,14 +4,58 @@ html {
 }
 
 body {
+	position:absolute;
 	font:  18px Comic Sans MS , cursive, sans-serif;
 	overflow: hidden;
 	padding: 0;
 	margin: 0;
 	width: 100%;
 	height: 100%;
+	bottom: 0;
 	background: #9cb8f5;
 }
+
+.flex-container {
+	position:absolute;
+	bottom: 55px;
+	width: 100%;
+	top: 5px;
+	display: flex;
+	flex-direction: column;
+}
+
+.flexer {
+	display: flex;
+
+}
+
+#camArea {
+	position: absolute;
+	top: 4em;
+	left: 0.5em;
+	right: 0.5em;
+	display: inline;
+	height: 0px;
+	border-radius: 10px;
+	background-color: #1f1f1f;
+	transition: width 0s, height 2s;
+	z-index: 99;
+}
+
+.screen {
+	overflow-wrap: normal;
+	margin: 10px;
+	border-style: dotted;
+	border-color: #616161;
+    background-color: #4f4f4f;
+	border-radius: 5px;
+	border-width: 0px;
+    width: 100%;
+	height: 0px;
+	transition: width 0s, height 2s;
+
+}
+
 
 #log {
 
@@ -25,8 +69,24 @@ body {
 	bottom: 4em;
 	overflow: auto;
 	border-radius: 1%;
-	index-z: 10;
+
 }
+
+
+.bottom {
+	position:absolute;
+	//flex: 1 1 10%;
+	flex-direction: row;
+
+	display: flex;
+	width: 100%;
+	bottom: 0;
+	height: auto;
+}
+
+
+
+
 
 
 #divv {
@@ -54,6 +114,7 @@ body {
 
 	border-radius: 10%;
 }
+
 .fmt-row img {
 	-webkit-box-shadow:  10px 10px 5px gray;
 	-moz-box-shadow:  10px 10px 5px gray;
@@ -96,7 +157,6 @@ body {
 	height: auto;
 	background-color: white;
 	margin-bottom: -2px;
-
 }
 #postitem span {
 
@@ -104,20 +164,14 @@ body {
 	text-align: left;
 }
 
-
-
 #postbutton {
 	display: flex;
 	flex-direction: row;
 	margin-left: 2px;
 	height: auto;
 	background-color: white;
-
 	padding:0;
-
 }
-
-
 
 #post li {;
 	padding-right: 2px;
@@ -138,11 +192,10 @@ body {
 #timestamp {
 
 	font: bold 10px Arial, Helvetica, sans-serif;
-	color: #616161;
+	color: #262626;
 	width: auto;
 	text-align: left;
 	word-break: keep-all;
-
 }
 
 #from {
@@ -152,8 +205,6 @@ body {
 	font-size: 20px;
 	font-weight:bold;
 	color: #7994ce;
-
-
 }
 
 #messageText {
@@ -170,116 +221,6 @@ body {
 	padding-left: 2px;
 }
 
-@media only screen and (min-width: 600px) {
-	/* For tablets: */
-	.col-m-1 {
-		width: 8.33%;
-	}
-
-	.col-m-2 {
-		width: 16.66%;
-	}
-
-	.col-m-3 {
-		width: 25%;
-	}
-
-	.col-m-4 {
-		width: 33.33%;
-	}
-
-	.col-m-5 {
-		width: 41.66%;
-	}
-
-	.col-m-6 {
-		width: 50%;
-	}
-
-	.col-m-7 {
-		width: 58.33%;
-	}
-
-	.col-m-8 {
-		width: 66.66%;
-	}
-
-	.col-m-9 {
-		width: 75%;
-	}
-
-	.col-m-10 {
-		width: 83.33%;
-	}
-
-	.col-m-11 {
-		width: 91.66%;
-	}
-
-	.col-m-12 {
-		width: 100%;
-	}
-}
-
-@media only screen and (min-width: 768px) {
-	/* For desktop: */
-	.col-1 {
-		width: 8.33%;
-	}
-
-	.col-2 {
-		width: 16.66%;
-	}
-
-	.col-3 {
-		width: 25%;
-	}
-
-	.col-4 {
-		width: 33.33%;
-	}
-
-	.col-5 {
-		width: 41.66%;
-	}
-
-	.col-6 {
-		width: 50%;
-	}
-
-	.col-7 {
-		width: 58.33%;
-	}
-
-	.col-8 {
-		width: 66.66%;
-	}
-
-	.col-9 {
-		width: 75%;
-	}
-
-	.col-10 {
-		width: 83.33%;
-	}
-
-	.col-11 {
-		width: 91.66%;
-	}
-
-	.col-12 {
-		width: 100%;
-	}
-}
-
-
-.bottom {
-	display: flex;
-	flex-direction: row;
-	position: absolute;
-	bottom: 18px;
-	width: 100%
-}
 
 #form {
 	padding: 0 0.5em 0 0.5em;
@@ -329,11 +270,6 @@ body {
 	-webkit-border-radius:20px;
 	-moz-border-radius:20px;
 	border-radius: 20px;
-
-
-}
-
-#msg {
 }
 
 #submit {
@@ -345,6 +281,8 @@ body {
 
 }
 
-
-
-
+#localCam {
+	display: none;
+	transform: scale(0.75, 0.75);
+	z-index: 999;
+}

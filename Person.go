@@ -47,6 +47,7 @@ type Person struct {
 	LastName          string        `json:"lastName"`
 	Email             string        `json:"email"`
 	Gender            string        `json:"gender"`
+	Height            string        `json:"height,omitempty"`
 	Town              string        `json:"country"`
 	Country           string        `json:"town"`
 	Long              string        `json:"long,omitempty"`
