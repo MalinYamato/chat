@@ -29,6 +29,31 @@ body {
 
 }
 
+.panel-title {
+visibility: hidden;
+	width: 0;
+}
+.btn-xs {
+	background-color: gray;
+	top: -10px;
+	left: -4px;
+}
+
+
+#waitingvideo {}
+
+#curbitrate, #curbitrate2 {
+	position: relative;
+	bottom: 0;
+	color: red;
+}
+#curres, #curres2  {
+	position: relative;
+	bottom: 0;
+	color: red;
+}
+
+
 #camArea {
 	position: absolute;
 	top: 4em;
@@ -57,6 +82,15 @@ body {
 }
 
 
+#localCam {
+	position: relative;
+	top: 10px;
+	left: 0;
+	display: none;
+	transform: scale(0.75, 0.75);
+	z-index: 999;
+}
+
 #log {
 
 	background: white;
@@ -83,11 +117,6 @@ body {
 	bottom: 0;
 	height: auto;
 }
-
-
-
-
-
 
 #divv {
 	border: 1px solid #aaaaaa;
@@ -281,11 +310,4 @@ body {
 
 }
 
-#localCam {
-	position: absolute;
-	top: 10px;
-    left: 30px;
-	display: block;
-	transform: scale(0.75, 0.75);
-	z-index: 999;
-}
+

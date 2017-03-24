@@ -48,6 +48,10 @@ function leaving(name) {
     sfutest.send({"message": register});
 }
 
+function destroyVideo() {
+    janus.destroy();
+}
+
 function startVideo() {
 
     $(document).ready(function () {
@@ -202,7 +206,7 @@ function startVideo() {
                                         if ($('#myvideo').length === 0) {
                                             $('#videolocal').append('<video class="rounded centered" id="myvideo" width="100%" height="100%" autoplay muted="muted"/>');
 // Add a 'mute' button
-                                            $('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style="position: relative; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
+                                            $('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style=" position: relative; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
                                            $('#mute').click(toggleMute);
 // Add an 'unpublish' button
                                              $('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: relative; bottom: 0px; right: 0px; margin: 15px;">Unpublish</button>');
@@ -395,8 +399,8 @@ function newRemoteFeed(id, display) {
                     $('#videoremote' + remoteFeed.rfindex).append('<video class="rounded centered relative hide" id="remotevideo' + remoteFeed.rfindex + '" width="100%" height="100%" autoplay/>');
                 }
                 $('#videoremote' + remoteFeed.rfindex).append(
-                    '<span class="label label-primary hide" id="curres' + remoteFeed.rfindex + '" style="position: absolute; bottom: 0px; left: 0px; margin: 15px;"></span>' +
-                    '<span class="label label-info hide" id="curbitrate' + remoteFeed.rfindex + '" style="position: absolute; bottom: 0px; right: 0px; margin: 15px;"></span>');
+                    '<span class="label label-primary hide" id="curres' + remoteFeed.rfindex + '" style="position: absolute; bottom: -66px; left: 0px; margin: 15px;"></span>' +
+                    '<span class="label label-info hide" id="curbitrate' + remoteFeed.rfindex + '" style="position: absolute; bottom: -66px; right: 0px; margin: 15px;"></span>');
 // Show the video, hide the spinner and show the resolution when we get a playing event
                 $("#remotevideo" + remoteFeed.rfindex).bind("playing", function () {
                     if (remoteFeed.spinner !== undefined && remoteFeed.spinner !== null)
