@@ -204,10 +204,10 @@ function startVideo() {
                                         $('#videojoin').hide();
                                         $('#videos').removeClass('hide').show();
                                         if ($('#myvideo').length === 0) {
-                                            $('#videolocal').append('<video class="rounded centered" id="myvideo" width="100%" height="100%" autoplay muted="muted"/>');
+                                            $('#videolocal').append('<video class="rounded centered" id="myvideo" width="100%" height="100%" autoplay muted="unmuted"/>');
 // Add a 'mute' button
-                                            $('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style=" position: relative; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
-                                            $('#mute').click(toggleMute);
+                                           // $('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style=" position: relative; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
+                                           // $('#mute').click(toggleMute);
 // Add an 'unpublish' button
                                              //$('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: relative; bottom: 0px; right: 0px; margin: 15px;">Unpublish</button>');
                                              //$('#unpublish').click(unpublishOwnFeed);

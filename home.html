@@ -177,6 +177,10 @@
                         document.getElementById("camArea").style.height = "0px";
                         $(".screen").css("height", "0px");
                         $(".screen").css("border-width", "0px");
+                        $("#curres").text("");
+                        $("#curres2").text("");
+                        $("#curbitrate").text("");
+                        $("#curbitrate2").text("");
                         document.getElementById("localCam").style.visibility = "hidden";
                         destroyVideo();
                         registered = false;
@@ -632,11 +636,11 @@
 
 
 <div  id="camArea" >
-
-<div class="flex-container" id="videos">
     <object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
         Local Cam
     </object>
+<div class="flex-container" id="videos">
+
         <div class="flex-row flex-container">
 
             <div class="screen flexer" id="screen1">

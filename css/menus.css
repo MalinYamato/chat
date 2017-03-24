@@ -189,7 +189,7 @@ div.dropdown {
     -webkit-box-shadow:  10px 10px 5px gray;
     -moz-box-shadow:  10px 10px 5px gray;
     box-shadow:  8px 8px 5px gray;
-    z-index: 1;
+    z-index: 999;
 }
 
 .dropdown-content button {

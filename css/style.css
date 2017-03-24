@@ -47,7 +47,7 @@ visibility: hidden;
 	bottom: 0;
 	color: red;
 }
-#curres, #curres2  {
+ #curres, #curres2 {
 	position: relative;
 	bottom: 0;
 	color: red;
@@ -85,9 +85,9 @@ visibility: hidden;
 #localCam {
 	position: relative;
 	visibility: hidden;
-	top: 0px;
-	left: -106px;
-	transform: scale(0.80, 0.80);
+	top: -6px;
+	left: -10px;
+	transform: scale(0.85, 0.85);
 	z-index: 999;
 }
 
