@@ -49,21 +49,21 @@
     <!-- ---------------------------------------->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
 
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.1.5/adapter.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
     <script type="text/javascript" src="/js/janus.js"></script>
     <script type="text/javascript" src="/js/videoservices.js"></script>
 
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
     <script src="/js/SVGButton.js"></script>
     <script type="text/javascript"></script>
     <script type="text/javascript" src="/js/emojionearea.min.js"></script>
-
 
     <script>
         window.onload = function () {
@@ -160,7 +160,7 @@
 
                 var tcam = new SVGWebcamButton("#webcam", "x", "x");
                 tcam.s.onmousedown = function () {
-                    console.log("clicked");
+                    //console.log("clicked");
                     tcam.mouseDown();
                     tcam.toggle();
                     var ca = document.getElementById("camArea");
@@ -185,7 +185,7 @@
 
                 var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 lcam.s.onmousedown = function () {
-                    console.log("clicked");
+                    console.log("SWG Buton localcam clicked");
                     lcam.mouseDown();
                     lcam.toggle();
                     if (lcam.isOn()) {
@@ -550,6 +550,7 @@
         }
 
     </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
 </head>
 <body>
 

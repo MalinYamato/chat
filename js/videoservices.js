@@ -31,14 +31,16 @@ var mypvtid = null;
 var feeds = [];
 var bitrateTimer = [];
 
-
+function doit() {
+    bootbox.alert("stuff");
+}
 
 function register(name) {
 
     console.log(">>> " + name);
 
-    var register = {"request": "join", "room": 1234, "ptype": "publisher", "display": name};
-    sfutest.send({"message": register});
+   var register = {"request": "join", "room": 1234, "ptype": "publisher", "display": name};
+   sfutest.send({"message": register});
 }
 
 function leaving(name) {
@@ -123,7 +125,7 @@ function startVideo() {
                                             } else if (event === "destroyed") {
 // The room has been destroyed
                                                 Janus.warn("The room has been destroyed!");
-                                                bootbox.alert("The room has been destroyed", function () {
+                                                bootbox.log("The room has been destroyed", function () {
                                                     window.location.reload();
                                                 });
                                             } else if (event === "event") {
@@ -203,8 +205,8 @@ function startVideo() {
                                            // $('#videolocal').append('<button class="btn btn-warning btn-xs" id="mute" style="position: absolute; bottom: 0px; left: 0px; margin: 15px;">Mute</button>');
                                            // $('#mute').click(toggleMute);
 // Add an 'unpublish' button
-                                             // $('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: absolute; bottom: 0px; right: 0px; margin: 15px;">Unpublish</button>');  -->
-                                            // $('#unpublish').click(unpublishOwnFeed);
+                                              $('#videolocal').append('<button class="btn btn-warning btn-xs" id="unpublish" style="position: absolute; bottom: 0px; right: 0px; margin: 15px;">Unpublish</button>');
+                                             $('#unpublish').click(unpublishOwnFeed);
                                         }
                                         $('#publisher').removeClass('hide').html(myusername).show();
                                         Janus.attachMediaStream($('#myvideo').get(0), stream);
@@ -261,6 +263,8 @@ function startVideo() {
 
 function publishOwnFeed(useAudio) {    ////////////////////////
 // Publish our stream
+    useAudio = true;
+
     $('#publish').attr('disabled', true).unbind('click');
     sfutest.createOffer(
         {
