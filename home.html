@@ -185,18 +185,20 @@
 
                 var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 lcam.s.onmousedown = function () {
+                    console.log("clicked");
                     lcam.mouseDown();
                     lcam.toggle();
                     if (lcam.isOn()) {
-                       if (registered == false)  {
-                           register("{{.Person.Nic}}");
-                       }
-                       registered = true;
-                       publishOwnFeed(true);
+                        if (registered == false) {
+                            register("{{.Person.Nic}}");
+                            registered = true;
+                        }
+                        publishOwnFeed(true);
                     } else {
                         unpublishOwnFeed();
                     }
                 };
+
         }
 
             function changeRoom(cmd, room) {
@@ -555,9 +557,6 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
 </head>
 <body>
-<object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
-    Local Cam
-</object>
 
 <div id="menu">
     <div id="leftMenu">
@@ -581,7 +580,6 @@
             </div>
             <div id="SelectedRoom"></div>
         </div>
-
 
     </div>
 
@@ -659,6 +657,9 @@
 
 <div id="log"></div>
 
+<object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
+    Local Cam
+</object>
 
 <div class="bottom row-flex">
     <form id="form" class="row">
