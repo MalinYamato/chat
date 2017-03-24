@@ -576,6 +576,10 @@
             </div>
             <div id="SelectedRoom"></div>
         </div>
+        <object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
+            Local Cam
+        </object>
+
     </div>
 
     <div id="centerMenu">
@@ -586,8 +590,10 @@
             {{end}}
             <!-- TEMPLATE CODE -->
         </div>
+
     </div>
-    <div id="rightMenu">
+
+<div id="rightMenu">
         <div class="flex-column" style="display:{{.LoggedOut}}">
 
         <object id="loginLabel" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
@@ -624,9 +630,7 @@
 
 <div  id="camArea" >
 <div class="flex-container" id="videos">
-    <object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
-        Local Cam
-    </object>
+
         <div class="flex-row flex-container">
           <div class="screen flexer" id="screen1">
               <div class="panel-body narrow" id="videolocal"></div>
