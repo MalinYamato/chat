@@ -282,6 +282,9 @@ body {
 }
 
 #localCam {
+	position: absolute;
+	top: 10px;
+
 	display: none;
 	transform: scale(0.75, 0.75);
 	z-index: 999;
