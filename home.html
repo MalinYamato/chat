@@ -170,14 +170,13 @@
                         $(".screen").css("height", "220px");
                         $(".screen").css("border-width", "2px");
                         document.getElementById("localCam").style.display = "inline";
-                        register("{{.Person.Nic}}");
+
 
                     } else {
                         document.getElementById("camArea").style.height = "0px";
                         $(".screen").css("height", "0px");
                         $(".screen").css("border-width", "0px");
                         document.getElementById("localCam").style.display = "none";
-                        leaving("{{.Person.Nic}}");
 
                     }
 
@@ -189,11 +188,10 @@
                     lcam.mouseDown();
                     lcam.toggle();
                     if (lcam.isOn()) {
-                        publishOwnFeed(true);
+                        register("{{.Person.Nic}}");
                     } else {
-                        unpublishOwnFeed();
+                        leaving("{{.Person.Nic}}");
                     }
-
                 };
         }
 
@@ -633,19 +631,19 @@
 <div class="flex-container" id="videos">
 
         <div class="flex-row flex-container">
-          <div class="screen flexer" id="screen1">
+
+            <div class="screen flexer" id="screen1">
               <div class="panel-body narrow" id="videolocal"></div>
               <h3 class="panel-title"><span class="label label-primary hide" id="publisher"></span></h3>
           </div>
-            <div class="screen" id="screen2">
+
+            <div class="screen flexer" id="screen2">
                        <div class="panel-body narrow relative" id="videoremote1"></div>
                        <h3 class="panel-title"><span class="label label-info hide" id="remote1"></span></h3>
              </div>
 
-              <div class="screen" id="screen3">
-
-
-                        <div class="panel-body narrow relative" id="videoremote2"></div>
+              <div class="screen flexer" id="screen3">
+                  <div class="panel-body narrow relative" id="videoremote2"></div>
                   <h3 class="panel-title"><span class="label label-info hide" id="remote2"></span></h3>
 
               </div>
