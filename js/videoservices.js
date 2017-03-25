@@ -4,9 +4,10 @@
 //  a multiuser stable signlig porotocol possible for rtp in general and WebRTC in particular.
 //  The team: Amirante, A. and Castaldi, T. and Miniero, L. and Romano, S. P. of Chicaco.
 //
+//  I have made some minor changes to this code to integrate it with krypin.xyz
 //  Malin Lääkkö, Yamato Digital Audio - designer of Krypin
 //
-
+//
 var server = null;
 
 
