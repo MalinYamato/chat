@@ -109,12 +109,13 @@ function startVideo() {
                                         Janus.debug("Event: " + event);
                                         if (event != undefined && event != null) {
                                             if (event === "joined") {
-// Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
+                                                                         // Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
                                                 myid = msg["id"];
                                                 mypvtid = msg["private_id"];
                                                 Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
                                                 publishOwnFeed(true);
-// Any new feed to attach to?
+
+                                                // Any new feed to attach to?
                                                 if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
                                                     var list = msg["publishers"];
                                                     Janus.debug("Got a list of available publishers/feeds:");
@@ -133,7 +134,8 @@ function startVideo() {
                                                     window.location.reload();
                                                 });
                                             } else if (event === "event") {
-// Any new feed to attach to?
+
+                                                                   // Any new feed to attach to?
                                                 if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
                                                     var list = msg["publishers"];
                                                     Janus.debug("Got a list of available publishers/feeds:");
