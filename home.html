@@ -461,13 +461,13 @@
                                 appendNewUser(message, uniqueID);
                                 return;
                             case "LeaveRoom":
-                                removewUser(message, uniqueID);
+                                removeUser(message, uniqueID);
                                 return;
                             case "UserLoggedIn" :
                                 appendNewUser(message, uniqueID);
                                 return;
                             case "UserLoggedOut" :
-                                removeNewUser(message, uniqueID);
+                                removeUser(message, uniqueID);
                                 return;
                             case "RefreshRoomUsers":
                                 refreshRoomUsers(message.roomUsers);
