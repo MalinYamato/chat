@@ -153,17 +153,17 @@ function SVGImageButton(id, img, size) {
 
     if (this.size == "S") {
         this.Cloud = this.classMap["S_Cloud"];
-        this.Cloud_Text = this.classMap["S_Text"];
+      //  this.Cloud_Text = this.classMap["S_Text"];
         this.Cloud_Expanded = this.classMap["S_Cloud-Expanded"]
     }
     if (this.size == "L") {
         this.Cloud = this.classMap["L_Cloud"];
-        this.Cloud_Text = this.classMap["L_Text"];
+     //   this.Cloud_Text = this.classMap["L_Text"];
         this.Cloud_Expanded = this.classMap["L_Cloud-Expanded"]
     }
     if (this.size == "XL") {
         this.Cloud = this.classMap["XL_Cloud"];
-        this.Cloud_Text = this.classMap["XL_Text"];
+     //   this.Cloud_Text = this.classMap["XL_Text"];
         this.Cloud_Expanded = this.classMap["XL_Cloud-Expanded"]
     }
 
@@ -174,10 +174,10 @@ function SVGImageButton(id, img, size) {
 
 
     this.mouseOut = function (e) {
-        this.TextElem.style.fill = colorOut;
+      //  this.TextElem.style.fill = colorOut;
     };
     this.mouseIn = function (e) {
-        this.TextElem.style.fill = colorIn;
+      //  this.TextElem.style.fill = colorIn;
     };
     this.mouseDown = function (e) {
         this.Cloud_Expanded.style.display = "inline";
