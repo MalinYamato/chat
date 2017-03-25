@@ -1,11 +1,22 @@
 # Krypin Chat -- a little cozy place to stay at in Swedish 
-Krypin is a secure encrypted chat with profile managment and several ways to enage in private chat and establish a private chat room on the fly.You may log in by a Google or Fasebook acount.  
+Krypin is a secure encrypted chat with profile managment and several ways to enage in private chat, establish private chat rooms on the fly.
+You may log in by a Google or Fasebook acount thanks to the work of Dalton Hubble. The relationship between chatters and private chatters 
+is goverened by a Directed Asyclig Graph that has a limit on node depth. It is possbile to chat while you view and hear those whom you chat with
+thanks to the team of Chicago mentioned below who built a signaling layer of WebRTC. WebRTC implements the RTP stream and let other impelent the
+signaling. The photoalbume carosel is based on work by Vladimir Kharlampidi.
 
-It is bascially a non-comercial playground to test and learn new technologhy and solutions. Stuff I 
-cannot do at my company. My job is to design automated tradign sysgtems in Asia and is unrealted to 
-this.  The installation and setup are therefore very primitive at this point. 
+It is bascially a non-comercial playground to test and learn new technologhy and solutions. It has not gone through regular testing and is not at all for 
+production and should therefore be regarded as a demo of how things work or may be done. This are stuff that I cannot do at my company. My job is to design 
+automated tradign sysgtems in Asia and this stuff is totally unrealted to that. The installation and setup are therefore very very primitive at this point.
+ 
+No database! I have a file based database solution where I store data as serialized JSON, pictures, IMs and vids using directory structures. For me to see 
+ all files on disk where I may redesign with ease as well as the speed to implement a write through cace for persistance are major factos behind
+  my decision not to fall for the hype in getting a fance MYSql or Postgre just because I can or to show off that I have. The file based solution 
+  also makes it easer to scale and handle safe peristance with coroutines using threads (go routines) without much nead of too much wrt mutexes and syncs 
+  in the design. And, it will be easer to just dump the s/w on a server, chmod directories and hit run wihout wating for the elepaht to sit and serve, 
+  the DB. 
 
-The sofware is based on work by the follwing excellent egnineers 
+The sofware is based on work by the follwing excellent contributors 
    - Dalton Hubble  - San Fransicco, USA
    - Lorenzo Miniero  - Chickago. USA   
    - Alessandro Toppi - Chicago, USA
