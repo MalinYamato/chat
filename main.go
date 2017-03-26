@@ -314,11 +314,12 @@ func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token strin
 	return token, cookie, nil
 }
 
+var homepath = "/var/www/krypin/"
 var _persons Persons
 var hub *Hub
 var DocumentRoot string
 var endpoint Endpoint
-var homeTemplate = template.Must(template.ParseFiles("home.html"))
+var homeTemplate = template.Must(template.ParseFiles(homepath + "home.html"))
 var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
 
