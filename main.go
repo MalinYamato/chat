@@ -314,7 +314,7 @@ func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token strin
 	return token, cookie, nil
 }
 
-var homepath = "/var/www/krypin/"
+var homepath = ""
 var _persons Persons
 var hub *Hub
 var DocumentRoot string

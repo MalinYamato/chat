@@ -95,7 +95,7 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 	token := session.Values[sessionToken].(string)
 	p, _ := _persons.findPersonByToken(token)
 	t := template.New("fieldname example")
-	t = template.Must(template.ParseFiles("profile.html"))
+	t = template.Must(template.ParseFiles( homepath + "profile.html"))
 	t.Execute(w, struct {
 		Languages          []string
 		Genders            []string

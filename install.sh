@@ -41,7 +41,7 @@ do
    go get github.com/$i
 done
 
-install -v -m +x $GOPATH/bin/* /usr/local/bin
+install -v -m +x $GOPATH/bin/* $document_root
 
 for i in "${packages[@]}"
 do
