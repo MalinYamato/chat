@@ -319,7 +319,7 @@ var _persons Persons
 var hub *Hub
 var DocumentRoot string
 var endpoint Endpoint
-var homeTemplate = template.Must(template.ParseFiles(homepath + "./home.html"))
+var homeTemplate = template.Must(template.ParseFiles("./home.html"))
 var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
 
@@ -345,11 +345,11 @@ func main() {
 	var addr = flag.String("addr", ":"+endpoint.port, "http service address")
 
 	// Check if the cert files are available.
-	err := httpscerts.Check(homepath + "cert.pem", homepath + "key.pem")
+	err := httpscerts.Check("cert.pem", "key.pem")
 	//f they are not available, generate new ones.
 	if err != nil {
 		log.Println("Issuing autosigned Certs..")
-		err = httpscerts.Generate(homepath+ "cert.pem", homepath+ "key.pem", endpoint.host)
+		err = httpscerts.Generate("cert.pem", "key.pem", endpoint.host)
 		if err != nil {
 			log.Fatal("Error: Couldn't create https certs.")
 		}
