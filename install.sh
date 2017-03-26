@@ -10,7 +10,7 @@ src=$GOPATH/src/github.com
 bin=/usr/local/bin
 
 packages=("MalinYamato/chat")
-dirs=("css"  "images"  "js")
+dirs=("css"  "images"  "js" "etc")
 
 
 if [ ! -d "$document_root" ]; then
@@ -45,7 +45,7 @@ install -v -m +x $GOPATH/bin/* /usr/local/bin
 
 for i in "${packages[@]}"
 do
-   install -v -m +r $src/$i/etc/*.sh /etc/supervisor/conf.d
+   install -v -m +r +x $src/$i/etc/*.sh /etc/supervisor/conf.d
    install -v -m +r $src/$i/*.html $document_root
    install -v -m +r $src/$i/js/* $document_root/js
    install -v -m +r $src/$i/css/* $document_root/css

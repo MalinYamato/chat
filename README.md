@@ -17,7 +17,6 @@ No database! I have a file based database solution where I store data as seriali
   regions and syncs. Also, it will be easer to just dump the s/w onto a server, chmod directories and hit run without waiting for the elephant to sit and serve, 
   the DB. 
 
-
 The sofware is based on work by the follwing excellent contributors 
    - Dalton Hubble  - San Fransicco, USA
    - Lorenzo Miniero  - Chickago. USA   
