@@ -32,14 +32,7 @@ var mypvtid = null;
 var feeds = [];
 var bitrateTimer = [];
 
-function doit() {
-    bootbox.alert("stuff");
-}
-
 function register(name) {
-
-    console.log(">>> " + name);
-
    var register = {"request": "join", "room": 1234, "ptype": "publisher", "display": name};
    sfutest.send({"message": register});
 }
@@ -50,7 +43,7 @@ function leaving(name) {
 }
 
 function destroyVideo() {
-    janus.detach();
+    janus.destroy();
 }
 
 function startVideo() {
