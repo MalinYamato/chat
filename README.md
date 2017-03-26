@@ -4,7 +4,7 @@ You may log in by a Google or Facebook account thanks to the work of Dalton Hubb
 is governed by a Directed Acyclic Graph that has a limit on node depth. It is possible to chat while you view and hear those whom you chat with
 thanks to the team of Chicago mentioned below who built a SFU to implement pub/sub for streams, a gateway with various plug-ins to integrate the 
 signaling of other protocols such as SIP and a signaling layer of WebRTC for offer-answer handshakes based on a hard to comprehend SD. WebRTC 
-handles NAT traversals, audio/video conversions and a per to per RTP/RTPC stream, yet lets other implement the signaling layer. The photo albume 
+handles NAT traversals, audio/video conversions and a per to per RTP/RTPC streaming, yet lets other implement the signaling layer. The photo albume 
 carousel is based on work by Vladimir Kharlampidi.
 It is basically a non-commercial playground to test and learn new technology and solutions. It has not gone through regular testing and is not at all for 
 production and should therefore be regarded as a demo of how things work or may be done. This are stuff that I cannot do at my company. My job is to design 
