@@ -27,47 +27,47 @@ The sofware is based on work by the follwing excellent contributors
    
    Malin Lääkkö, Tokyo Japan
 
-### SSL,HTTPS, TLS, DTLS, WSS, SUDP, etc 
+### SSL, HTTPS, TLS, DTLS, WSS, etc 
 The server expects SSL keys and certificates. If there are no corresponding key cert files, those are self signed and generated automatically. 
 This is for testing purposes only and may only work with Firefox as a browser. For Opera and Chrome, however,  I recoomend "lets encrypt" or 
 youll upset those guys Opera and Chrome too much. 
 
-### Configuration 
-1. Aquire Google applikation key and secret <br>
-$ export GOOGLE_CLIENT_ID="your-google-id" <br>
-$ export GOOGLE_CLIENT_SECRET="your-secret" 
+### Get application keys and secrets at Facebook and Google 
+1. Aquire Google and Facebook applikation keys and secrets <br>
 2. Set the name of your your chat server hosts <br>
-$ export CHAT_HOST="localhost"
 3. Decide a secret key to encrypt and decrypt cokkies <br>
-$ export CHAT_PRIVATE_KEY="secure.krypin.xyz bla bla blasdfsdff"
+#### Do the following 
+- $  export GOOGLE_CLIENT_ID="your-google-id" <br>
+- $  export GOOGLE_CLIENT_SECRET="your-secret"
+- $  export CHAT_HOST="localhost"
+- $  export CHAT_PRIVATE_KEY="secure.krypin.xyz bla bla blasdfsdff"
+- The file environment.sh provides an example. 
+#### OR 
+- put all your keys and secrets into startup_krypin.sh
 
-The file environment.sh is an example. 
+
+
 
 ##prerequisits 
-$ npm install -g emojionearea@^3.0.0
-janus WebRTC server configured with websockets running on SSL wss. 
-
-### Running Krypin
-
-The example requires a working Go development environment. The [Getting
+- $ npm install -g emojionearea@^3.0.0
+- $ apt-get install supervisor
+- janus WebRTC gateway configured with websockets running on SSL wss. 
+- The example requires a working Go development environment. The [Getting
 Started](http://golang.org/doc/install) page describes how to install the
 development environment.
 
-The default target of installation; /var/www/krypin
+### Running Krypin
 
+The default target of installation is: /var/www/krypin
 Once you have Go up and running, you can download, build and run the babel
 using the following commands.
 
-    $ nano .bash_profile
-      export GOPATH=$HOME/usr/local/packages
-      export GOROOT=$HOME/usr/local/go
-    $ source .bash_profile
-    $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
-    $ sudo chmod +x install.sh; 
-    $ sudo ./install.sh
-    $ cd /var/www/secure.krypin.xyz
-    $ source environment.sh
-    $ sudo chat
 
-To use the chat example, open http://localhost/ in your browser. <br>
+    $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
+    $ sudo chmod +x install.sh
+    $ sudo ./install.sh
+    $ supervisorctl reread
+    $ supervisorctl update
+
+To use the chat example, open https://yourdomain/ in your browser. <br>
 
