@@ -65,8 +65,8 @@ using the following commands.
     $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
     $ sudo chmod +x install.sh
     $ sudo ./install.sh
-    $ supervisorctl reread
-    $ supervisorctl update
+    $ sudo supervisorctl reread
+    $ sudo supervisorctl update
 
 To use the chat example, open https://yourdomain/ in your browser. <br>
 

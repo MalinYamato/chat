@@ -10,7 +10,7 @@ src=$GOPATH/src/github.com
 bin=/usr/local/bin
 
 packages=("MalinYamato/chat")
-dirs=("css"  "images"  "js" "etc")
+dirs=("css"  "images"  "js")
 
 
 if [ ! -d "$document_root" ]; then
