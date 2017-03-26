@@ -41,7 +41,7 @@ do
    go get github.com/$i
 done
 
-install -v -m +x $GOPATH/bin/* $document_root
+
 
 for i in "${packages[@]}"
 do
@@ -52,4 +52,5 @@ do
    install -v -m +r $src/$i/images/* $document_root/images
    install -v -m +r $src/$i/*.html $document_root
 done
+install -v -m +x $GOPATH/bin/* $document_root
 #root@ubuntu-2gb-fra1-01:/var/www#
