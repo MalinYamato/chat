@@ -145,7 +145,7 @@ function startVideo() {
                                                     var leaving = msg["leaving"];
                                                     Janus.log("Publisher left: " + leaving);
                                                     var remoteFeed = null;
-                                                    for (var i = 1; i < 6; i++) {
+                                                    for (var i = 1; i < 3; i++) {
                                                         if (feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == leaving) {
                                                             remoteFeed = feeds[i];
                                                             break;
@@ -168,7 +168,7 @@ function startVideo() {
                                                         return;
                                                     }
                                                     var remoteFeed = null;
-                                                    for (var i = 1; i < 6; i++) {
+                                                    for (var i = 1; i < 3; i++) {
                                                         if (feeds[i] != null && feeds[i] != undefined && feeds[i].rfid == unpublished) {
                                                             remoteFeed = feeds[i];
                                                             break;
@@ -335,7 +335,7 @@ function newRemoteFeed(id, display) {
                 if (event != undefined && event != null) {
                     if (event === "attached") {
 // Subscriber created and attached
-                        for (var i = 1; i < 6; i++) {
+                        for (var i = 1; i < 3; i++) {
                             if (feeds[i] === undefined || feeds[i] === null) {
                                 feeds[i] = remoteFeed;
                                 remoteFeed.rfindex = i;
@@ -395,8 +395,8 @@ function newRemoteFeed(id, display) {
                     $('#videoremote' + remoteFeed.rfindex).append('<video class="rounded centered relative hide" id="remotevideo' + remoteFeed.rfindex + '" width="100%" height="100%" autoplay/>');
                 }
                 $('#videoremote' + remoteFeed.rfindex).append(
-                    '<span class="label label-primary hide" id="curres' + remoteFeed.rfindex + '" style="position: absolute; bottom: -66px; left: 0px; margin: 15px;"></span>' +
-                    '<span class="label label-info hide" id="curbitrate' + remoteFeed.rfindex + '" style="position: absolute; bottom: -66px; right: 0px; margin: 15px;"></span>');
+                    '<span class="label label-primary hide" id="curres' + remoteFeed.rfindex + '" style="position: absolute; bottom: -80px; left: 0px; margin: 15px;"></span>' +
+                    '<span class="label label-info hide" id="curbitrate' + remoteFeed.rfindex + '" style="position: absolute; bottom: -80px; right: 0px; margin: 15px;"></span>');
 // Show the video, hide the spinner and show the resolution when we get a playing event
                 $("#remotevideo" + remoteFeed.rfindex).bind("playing", function () {
                     if (remoteFeed.spinner !== undefined && remoteFeed.spinner !== null)
