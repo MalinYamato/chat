@@ -345,11 +345,11 @@ func main() {
 	var addr = flag.String("addr", ":"+endpoint.port, "http service address")
 
 	// Check if the cert files are available.
-	err := httpscerts.Check("cert.pem", "key.pem")
+	err := httpscerts.Check(homepath + "cert.pem", homepath + "key.pem")
 	//f they are not available, generate new ones.
 	if err != nil {
 		log.Println("Issuing autosigned Certs..")
-		err = httpscerts.Generate("cert.pem", "key.pem", endpoint.host)
+		err = httpscerts.Generate(homepath+ "cert.pem", homepath+ "key.pem", endpoint.host)
 		if err != nil {
 			log.Fatal("Error: Couldn't create https certs.")
 		}
