@@ -155,6 +155,23 @@
                     });
                 };
 
+                var lcam = new SVGWebcamButton("#localCam", "x", "x");
+                var lcam = new SVGWebcamButton("#localCam", "x", "x");
+                lcam.s.onmousedown = function () {
+                    console.log("clicked");
+                    lcam.mouseDown();
+                    lcam.toggle();
+                    if (lcam.isOn()) {
+                        if (registered == false) {
+                            register("{{.Person.Nic}}");
+                            registered = true;
+                        }
+                        publishOwnFeed(true);
+                    } else {
+                        unpublishOwnFeed();
+                    }
+                };
+
                 var registered = false;
                 var tcam = new SVGWebcamButton("#webcam", "x", "x");
                 tcam.s.onmousedown = function () {
@@ -171,6 +188,7 @@
                         registered = false;
 
                     } else {
+                        lcam.setOff();
                         document.getElementById("camArea").style.height = "0px";
                         $(".screen").css("height", "0px");
                         $(".screen").css("border-width", "0px");
@@ -181,26 +199,11 @@
                         document.getElementById("localCam").style.visibility = "hidden";
                         unpublishOwnFeed();
                         destroyVideo();
-                        lcam.setOff();
                         registered = false;
                     }
                 };
 
-                var lcam = new SVGWebcamButton("#localCam", "x", "x");
-                lcam.s.onmousedown = function () {
-                    console.log("clicked");
-                    lcam.mouseDown();
-                    lcam.toggle();
-                    if (lcam.isOn()) {
-                        if (registered == false) {
-                            register("{{.Person.Nic}}");
-                            registered = true;
-                        }
-                        publishOwnFeed(true);
-                    } else {
-                        unpublishOwnFeed();
-                    }
-                };
+
 
         }
 
