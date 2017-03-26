@@ -13,8 +13,8 @@ automated trading systems in Asia and this stuff is totally unrelated to that. T
 No database! I have a file based database solution where I store data as serialized JSON, pictures, IMs and vids using directory structures. For me to see 
  all files on disk where I may redesign with ease as well as the speed to implement a write through cache for persistence are major factors behind
   my decision not to fall for the hype in getting a fancy MYSql or Postgre just because I can or to show off that I have. The file based solution 
-  also makes it easer to scale and handle safe persistence with coroutines using threads (go routines) without much the need of too much work wrt mutexes and syncs 
-  in the design. And, it will be easer to just dump the s/w onto a server, chmod directories and hit run without waiting for the elephant to sit and serve, 
+  also makes it easer to scale and handle safe persistence with coroutines using threads (go routines) without much efforts to protect critical 
+  regions and syncs. Also, it will be easer to just dump the s/w onto a server, chmod directories and hit run without waiting for the elephant to sit and serve, 
   the DB. 
 
 
