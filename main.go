@@ -319,7 +319,7 @@ var _persons Persons
 var hub *Hub
 var DocumentRoot string
 var endpoint Endpoint
-var homeTemplate = template.Must(template.ParseFiles(homepath + "home.html"))
+var homeTemplate = template.Must(template.ParseFiles(homepath + "./home.html"))
 var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
 
