@@ -27,8 +27,10 @@ The sofware is based on work by the follwing excellent contributors
    
    Malin Lääkkö, Tokyo Japan
 
-### SSL/HTTPS 
-The server expects SSL keys and certificates. If there are no corresponding key cert files, those are self signed and generated automatically. This is for testing purposes only and may only work with Firefox as a browser. 
+### SSL,HTTPS, TLS, DTLS, WSS, SUDP, etc 
+The server expects SSL keys and certificates. If there are no corresponding key cert files, those are self signed and generated automatically. 
+This is for testing purposes only and may only work with Firefox as a browser. For Opera and Chrome, however,  I recoomend "lets encrypt" or 
+youll upset those guys Opera and Chrome too much. 
 
 ### Configuration 
 1. Aquire Google applikation key and secret <br>
