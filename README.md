@@ -1,20 +1,22 @@
 # Krypin Chat -- a little cozy place to stay at in Swedish 
-Krypin is a secure encrypted chat with profile managment and several ways to enage in private chat, establish private chat rooms on the fly.
-You may log in by a Google or Fasebook acount thanks to the work of Dalton Hubble. The relationship between chatters and private chatters 
-is goverened by a Directed Asyclig Graph that has a limit on node depth. It is possbile to chat while you view and hear those whom you chat with
-thanks to the team of Chicago mentioned below who built a signaling layer of WebRTC. WebRTC implements the RTP stream and let other impelent the
-signaling. The photoalbume carosel is based on work by Vladimir Kharlampidi.
-
-It is bascially a non-comercial playground to test and learn new technologhy and solutions. It has not gone through regular testing and is not at all for 
+Krypin is a secure encrypted chat with profile management and several ways to enage in private chat, establish private chat rooms on the fly.
+You may log in by a Google or Facebook account thanks to the work of Dalton Hubble. The relationship between chatters and private chatters 
+is governed by a Directed Acyclic Graph that has a limit on node depth. It is possible to chat while you view and hear those whom you chat with
+thanks to the team of Chicago mentioned below who built a SFU to implement pub/sub for streams, a gateway with various plug-ins to integrate the 
+signaling of other protocols such as SIP and a signaling layer of WebRTC for offer-answer handshakes based on a hard to comprehend SD. WebRTC 
+handles NAT traversals, audio/video conversions and a per to per RTP/RTPC stream, yet lets other implement the signaling layer. The photo albume 
+carousel is based on work by Vladimir Kharlampidi.
+It is basically a non-commercial playground to test and learn new technology and solutions. It has not gone through regular testing and is not at all for 
 production and should therefore be regarded as a demo of how things work or may be done. This are stuff that I cannot do at my company. My job is to design 
-automated tradign sysgtems in Asia and this stuff is totally unrealted to that. The installation and setup are therefore very very primitive at this point.
+automated trading systems in Asia and this stuff is totally unrelated to that. The installation and setup are therefore very very primitive at this point.
  
 No database! I have a file based database solution where I store data as serialized JSON, pictures, IMs and vids using directory structures. For me to see 
- all files on disk where I may redesign with ease as well as the speed to implement a write through cace for persistance are major factos behind
-  my decision not to fall for the hype in getting a fance MYSql or Postgre just because I can or to show off that I have. The file based solution 
-  also makes it easer to scale and handle safe peristance with coroutines using threads (go routines) without much the nead of too much work wrt mutexes and syncs 
-  in the design. And, it will be easer to just dump the s/w onto a server, chmod directories and hit run wihout wating for the elepaht to sit and serve, 
+ all files on disk where I may redesign with ease as well as the speed to implement a write through cache for persistence are major factors behind
+  my decision not to fall for the hype in getting a fancy MYSql or Postgre just because I can or to show off that I have. The file based solution 
+  also makes it easer to scale and handle safe persistence with coroutines using threads (go routines) without much the need of too much work wrt mutexes and syncs 
+  in the design. And, it will be easer to just dump the s/w onto a server, chmod directories and hit run without waiting for the elephant to sit and serve, 
   the DB. 
+
 
 The sofware is based on work by the follwing excellent contributors 
    - Dalton Hubble  - San Fransicco, USA
