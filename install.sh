@@ -4,7 +4,6 @@
 # Author: Malin af Lääkkö
 #
 
-domain=secure.krypin.xyz
 document_root="/var/www/krypin"
 src=$GOPATH/src/github.com
 
@@ -18,7 +17,6 @@ if [ ! -d "$document_root" ]; then
         echo "creating $document_root"
         mkdir $document_root
 fi
-
 
 for d in  "${dirs[@]}"
 do
@@ -47,10 +45,11 @@ install -v -m +x $GOPATH/bin/* /usr/local/bin
 
 for i in "${packages[@]}"
 do
+   install -v -m +r $src/$i/etc/*.sh /etc/supervisor/conf.d
    install -v -m +r $src/$i/*.html $document_root
    install -v -m +r $src/$i/js/* $document_root/js
    install -v -m +r $src/$i/css/* $document_root/css
    install -v -m +r $src/$i/images/* $document_root/images
    install -v -m +r $src/$i/*.html $document_root
 done
-root@ubuntu-2gb-fra1-01:/var/www#
+#root@ubuntu-2gb-fra1-01:/var/www#
