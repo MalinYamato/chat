@@ -50,7 +50,7 @@ function leaving(name) {
 }
 
 function destroyVideo() {
-    janus.destroy();
+    janus.detach();
 }
 
 function startVideo() {
