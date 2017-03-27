@@ -98,7 +98,65 @@ type Status struct {
 	Detail string `json:"detail"`
 }
 
+type VideoFormat struct {
+	Codec   string   		`json:"codec"`
+	Width   int16    		`json:"width"`// in pixels
+	Height  int16   		`json:"height"`// in pixels
+	BitRate int16   		`json:"bitRate"`// bits per second
+}
+
+type AudioFormat struct {
+	Codec      string   		`json:"codec"`
+	Channels   int16   		`json:"channels"`
+	BitRate    int16        	`json:"bitRate"`	// bits per second
+	BitDepth   int16    		`json:"bitDepth"`	// vertical resolution,  PCM
+	SampleRate int32    		`json:"sampleRate"`	// Number of vertical snapshots per second, PCM
+}
+
 // publishers[].Targets[]
+
+// Media Session Protocol
+//
+type MediaSession struct {
+	MediaServerURL string  			`json:"idMediaServerURL"`
+	IdMediaSession string  			`json:"idHandle"`
+	IdHandle string        			`json:"id"`
+	Id       string    	    		`json:"id"`
+	IdRoom   string         	        `json:"room"`
+	Audio    bool          			`json:"audio"`
+	Video    bool          			`json:"video"`
+	PubOrSub string        			`json:"pubOrSub"`
+	OnOrOff  string        			`json:"onOrOff"`
+	VideoFormat VideoFormat        	 	`json:"VideoFormat,omitempty"`
+	AudioFormat AudioFormat        		`json:"AudioFormast,omitempty"`
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Simplifed protocol and structure when handshake and interpreation of SDP
+// (Session Description Protocol) is supported by another layer such as JANUS. The purpose of the protocol
+// is to let users know without maintaning state on the server-side who are currently publishing video, audio
+// or both as well as control of whom is allwoed to se certain other users broadcasts. To dissalov certain users
+// from subscribing a certain stream, the normal procedure is to look up the UserId of the AnyPublishers package
+// received and decide to reply with a MediaStatus response or not based on that.
+// Most of media information is included in SDP and are therefore omitted except for video hight and width.
+
+type MediaStatus struct {
+        MedaiServerURL string                          `json:"mediaServerURL"`  // The url of SFU and MediaGateway
+	OnOff          string                          `json:"onOff"`
+	JanusId        string                          `json:"janusId"`         // the Id used by JAnus to identify streams
+	PubOrSub       string                          `json:"pubOrSub"`        // Janus room
+	Room           string                          `json:"room"`
+	Audio          bool                            `json:"audio"`
+	Video          bool                            `json:"video"`
+	VideoHeight    int16                           `json:"videoHeight"`     // Pixels. hint how to arrange the GUI to present video
+	VideoWidth     int16                           `json:"videoWidth"`      // Pixels. hint how to arrange the GUI to present video
+}
+
+//   AnyPuiblishers, broadcasted when interresed in knowing who is/are publishing.
+//   MediaStatus     sent as a response upon reception of AnyPublishers if
+//                          publishing, not blocking prospective subscribers or when start or stop publishing.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type Message struct {
 	Op         string                           `json:"op"`
@@ -109,10 +167,12 @@ type Message struct {
 	Nic        string                           `json:"nic,omitempty"`
 	Timestamp  string                           `json:"timestamp,omitempty"`
 	PictureURL string                           `json:"pictureURL,omitemtpy"`
+
 	//payload
 	Content   string                           `json:"content"`
 	Graph     Graph                            `json:"graph,omitempty"`
 	RoomUsers []Person                         `json:"roomUsers,omitempty"`
+	MediaSession MediaSession                  `json:"mediaSession,omitempty"`
 }
 
 func (endpoint *Endpoint) url() (string) {
