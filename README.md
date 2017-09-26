@@ -1,5 +1,5 @@
-# Krypin Chat -- a little cozy place to stay at in Swedish 
-Krypin is a secure encrypted chat with profile management and several ways to enage in private chat, establish private chat rooms on the fly.
+# Rakuen 楽園　Chat -- a little cozy place to stay at in Swedish 
+Rakuen is a secure encrypted chat with profile management and several ways to enage in private chat, establish private chat rooms on the fly.
 You may log in by a Google or Facebook account thanks to the work of Dalton Hubble. The relationship between chatters and private chatters 
 is governed by a Directed Acyclic Graph that has a limit on node depth. It is possible to chat while you view and hear those whom you chat with
 thanks to the team of Chicago mentioned below who built a SFU to implement pub/sub for streams, a gateway with various plug-ins to integrate the 
@@ -55,12 +55,12 @@ youll upset those guys Opera and Chrome too much.
 Started](http://golang.org/doc/install) page describes how to install the
 development environment.
 
-### Running Krypin
+### Running rakuen
 
 The default target of installation is: /var/www/krypin
 Once you have Go up and running, you can download, build and run the babel
 using the following commands.
-
+``
 
     $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
     $ sudo chmod +x install.sh
