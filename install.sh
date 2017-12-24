@@ -3,8 +3,8 @@
 # (C) 2017 Yamato Digital Audio
 # Author: Malin af Lääkkö
 #
-
-document_root="/var/www/krypin"
+SITE="secure.rakuen.asia"
+document_root="/var/www/$SITE"
 src=$GOPATH/src/github.com
 
 bin=/usr/local/bin
@@ -52,5 +52,9 @@ do
    install -v -m +r $src/$i/images/* $document_root/images
    install -v -m +r $src/$i/*.html $document_root
 done
+
 install -v -m +x $GOPATH/bin/* $document_root
-#root@ubuntu-2gb-fra1-01:/var/www#
+install -v -m +x /etc/letsencrypt/live/$SITE/fullchain.pem $document_root
+install -v -m +x /etc/letsencrypt/live/$SITE/privkey.pem $document_root
+
+#root@ubuntu-2gb-fra1-01:/etc/letsencrypt/live/$SITE/fullchain.pem

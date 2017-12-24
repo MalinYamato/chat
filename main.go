@@ -405,11 +405,11 @@ func main() {
 	var addr = flag.String("addr", ":"+endpoint.port, "http service address")
 
 	// Check if the cert files are available.
-	err := httpscerts.Check("cert.pem", "key.pem")
+	err := httpscerts.Check("fullchain.pem", "privkey.pem")
 	//f they are not available, generate new ones.
 	if err != nil {
 		log.Println("Issuing autosigned Certs..")
-		err = httpscerts.Generate("cert.pem", "key.pem", endpoint.host)
+		err = httpscerts.Generate("fullchain.pem", "privkey.pem", endpoint.host)
 		if err != nil {
 			log.Fatal("Error: Couldn't create https certs.")
 		}
@@ -437,7 +437,7 @@ func main() {
 	go hub.run()
 
 	log.Println("Starting service at ", endpoint.url())
-	err = http.ListenAndServeTLS(*addr, "cert.pem", "key.pem", NewMux(config, hub))
+	err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(config, hub))
 	//err = http.ListenAndServe(*addr, NewMux(config, hub) )
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
