@@ -38,7 +38,7 @@ do
 
    echo "Installing $i"
 
-   go get github.com/$i
+   /usr/local/go/bin/go get github.com/$i
 done
 
 
