@@ -45,7 +45,7 @@ done
 
 for i in "${packages[@]}"
 do
-   install -v -m +r +x $src/$i/etc/*.conf /etc/supervisor/conf.d
+   install -v -m +r $src/$i/etc/*.conf /etc/supervisor/conf.d
    install -v -m +r $src/$i/*.html $document_root
    install -v -m +r $src/$i/js/* $document_root/js
    install -v -m +r $src/$i/css/* $document_root/css
