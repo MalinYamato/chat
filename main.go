@@ -340,6 +340,9 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 		Endpoint:     facebookOAuth2.Endpoint,
 		//Scopes:       []string{"profile", "email"},
 	}
+	log.Println("Facebook Client ID ", config.ClientID_FB);
+	log.Println("Facebook Client secret ", config.ClientSecret_FB);
+
 	stateConfigFB := gologin.DefaultCookieConfig
 	mux.Handle("/facebook/login", facebook.StateHandler(stateConfigFB, facebook.LoginHandler(oauth2ConfigFB, nil)))
 	mux.Handle("/facebook/callback", facebook.StateHandler(stateConfigFB, facebook.CallbackHandler(oauth2ConfigFB, issueSessionFB(), nil)))
