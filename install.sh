@@ -3,7 +3,7 @@
 # (C) 2017 Yamato Digital Audio
 # Author: Malin af Lääkkö
 #
-SITE="www.rakuen.asia"
+SITE="secure.rakuen.asia"
 document_root="/var/www/$SITE"
 src=$GOPATH/src/github.com
 
