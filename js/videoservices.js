@@ -428,12 +428,12 @@ function newRemoteFeed(id, display) {
                         '</div>');
                 }
                 if (adapter.browserDetails.browser === "chrome" || adapter.browserDetails.browser === "firefox") {
-                    $('#curbitrate' + remoteFeed.rfindex).removeClass('hide').show();
-                    bitrateTimer[remoteFeed.rfindex] = setInterval(function () {
+                    //$('#curbitrate' + remoteFeed.rfindex).removeClass('hide').show();
+                    //bitrateTimer[remoteFeed.rfindex] = setInterval(function () {
 // Display updated bitrate, if supported
-                        var bitrate = remoteFeed.getBitrate();
-                        $('#curbitrate' + remoteFeed.rfindex).text(bitrate);
-                    }, 1000);
+                    //  var bitrate = remoteFeed.getBitrate();
+                    //   $('#curbitrate' + remoteFeed.rfindex).text(bitrate);
+                   // }, 1000);
                 }
             },
             oncleanup: function () {
