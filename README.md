@@ -58,7 +58,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     cert_pem = /etc/letsencrypt/live/yourhostname.yourdomain/fullchain.pem
     cert_key = /etc/letsencrypt/live/yourhostname.yourdomain/privkey.pem
 
-#### Secondly, create certificates for your chat server
+#### Secondly, create certificates for your chat server, must run on port 443
     $ sudo certbot certonly --standalone --preferred-challenges tls-sni  -d yourhost.yourdomain
 
 
