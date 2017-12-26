@@ -68,6 +68,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
 The default target of installation is: /var/www/rakuen.
 Once you have Go up and running, you can download, build and run the babel
 using the following commands.
+
     $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
     $ sudo nano ./install.sh
         set SITE="yourhostname.yourdomain"
