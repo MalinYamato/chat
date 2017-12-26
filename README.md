@@ -47,13 +47,12 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     $ sudo apt-get install python-certbot-nginx
 
 ### We must create two cectificates:
-#### First, we creat a certificte for janus as it needs to be run by SSL on a non standard
-port 8089
+#### First, we creat a certificte for janus as it needs to be run by SSL on a non standard port 8089
 
     $ sudo certbot -d media.yourdomain --manual --preferred-challenges dns certonly
     -- You will be asked to createa a TXT record on your DNS server.
 
-##### Modify /opt/janus/etc/janus/janus.transport.http.cfg
+    $ sudo nano /opt/janus/etc/janus/janus.transport.http.cfg
     #cert_pem = /opt/janus/share/janus/certs/mycert.pem
     #cert_key = /opt/janus/share/janus/certs/mycert.key
     cert_pem = /etc/letsencrypt/live/yourhostname.yourdomain/fullchain.pem
