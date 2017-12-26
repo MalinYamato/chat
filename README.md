@@ -41,12 +41,12 @@ youll upset those guys Opera and Chrome too much.
 - The example requires a working Go development environment. The [Getting
 Started](http://golang.org/doc/install) page describes how to install the development environment.
 
-## Setting up certificates -- iginx server
+## Setting up certificates -- nginx server
     $ sudo add-apt-repository ppa:certbot/certbot
     $ sudo apt-get update
     $ sudo apt-get install python-certbot-nginx
 
-### We must create two cectificates:
+### Create two cectificates:
 #### First, we creat a certificte for janus as it needs to be run by SSL on a non standard port 8089
 
     $ sudo certbot -d media.yourdomain --manual --preferred-challenges dns certonly
@@ -64,10 +64,10 @@ Started](http://golang.org/doc/install) page describes how to install the develo
 
 ### Running rakuen
 
-The default target of installation is: /var/www/krypin
+The default target of installation is: /var/www/rakuen
 Once you have Go up and running, you can download, build and run the babel
 using the following commands.
-``
+
     $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
     $ sudo nano ./install.sh
         set SITE="yourhostname.yourdomain"
