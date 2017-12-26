@@ -65,7 +65,6 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     cert_key = /etc/letsencrypt/live/yourhostname.yourdomain/privkey.pem
 
 ### Running rakuen
-
 The default target of installation is: /var/www/rakuen.
 Once you have Go up and running, you can download, build and run the babel
 using the following commands.
