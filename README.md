@@ -53,7 +53,7 @@ port 8089
     $ sudo certbot -d media.yourdomain --manual --preferred-challenges dns certonly
     -- You will be asked to createa a TXT record on your DNS server.
 
-## Modify /opt/janus/etc/janus/janus.transport.http.cfg
+### Modify /opt/janus/etc/janus/janus.transport.http.cfg
     #cert_pem = /opt/janus/share/janus/certs/mycert.pem
     #cert_key = /opt/janus/share/janus/certs/mycert.key
     cert_pem = /etc/letsencrypt/live/yourhostname.yourdomain/fullchain.pem
