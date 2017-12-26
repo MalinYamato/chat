@@ -42,13 +42,19 @@ youll upset those guys Opera and Chrome too much.
 Started](http://golang.org/doc/install) page describes how to install the development environment.
 
 ## Setting up certificates
+
+### install certbot of Letsencrypt
     $ sudo add-apt-repository ppa:certbot/certbot
     $ sudo apt-get update
     $ sudo apt-get install certbot
 
 ### Create two cectificates:
-#### First, we creat a certificte for janus as it needs to be run by SSL on a non standard port 8089
 
+#### First, create certificates for your chat server, which must run on port 443
+    $ sudo certbot certonly --standalone --preferred-challenges tls-sni  -d yourhost.yourdomain
+
+#### Secondly, creat a certificte and DNS recorrds for janus as it needs to be run over SSL on a non-standard port 8089
+    Note, you need to add hostname media and add that to DNS as A and a corresponding TXT record.
     $ sudo certbot -d media.yourdomain --manual --preferred-challenges dns certonly
     -- You will be asked to createa a TXT record on your DNS server.
 
@@ -57,10 +63,6 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     #cert_key = /opt/janus/share/janus/certs/mycert.key
     cert_pem = /etc/letsencrypt/live/yourhostname.yourdomain/fullchain.pem
     cert_key = /etc/letsencrypt/live/yourhostname.yourdomain/privkey.pem
-
-#### Secondly, create certificates for your chat server, must run on port 443
-    $ sudo certbot certonly --standalone --preferred-challenges tls-sni  -d yourhost.yourdomain
-
 
 ### Running rakuen
 
