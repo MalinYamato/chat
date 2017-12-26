@@ -24,36 +24,44 @@ The sofware is based on work by the follwing excellent contributors
    - Alexamirante  -    Chicago, USA
    - Vladimir Kharlampidi - Russia
    
-   Malin Lääkkö, Tokyo Japan
+   Malin Yamato Lääkkö, Tokyo Japan
 
 ### SSL, HTTPS, TLS, DTLS, WSS, etc 
 The server expects SSL keys and certificates. If there are no corresponding key cert files, those are self signed and generated automatically. 
 This is for testing purposes only and may only work with Firefox as a browser. For Opera and Chrome, however,  I recoomend "lets encrypt" or 
 youll upset those guys Opera and Chrome too much. 
 
-### Get application keys and secrets at Facebook and Google 
-1. Aquire Google and Facebook applikation keys and secrets <br>
-2. Set the name of your your chat server hosts <br>
-3. Decide a secret key to encrypt and decrypt cokkies <br>
-#### Do the following 
-- $  export GOOGLE_CLIENT_ID="your-google-id" <br>
-- $  export GOOGLE_CLIENT_SECRET="your-secret"
-- $  export CHAT_HOST="localhost"
-- $  export CHAT_PRIVATE_KEY="secure.krypin.xyz bla bla blasdfsdff"
-- The file environment.sh provides an example. 
-#### OR 
-- put all your keys and secrets into startup_krypin.sh
-
-
-
-
 ##prerequisits 
 - $ npm install -g emojionearea@^3.0.0
 - $ apt-get install supervisor
-- janus WebRTC gateway configured with websockets running on SSL wss. 
+
+- janus WebRTC gateway configured with websockets running on SSL wss.
+  for installation, go to: https://github.com/meetecho/janus-gateway
+
 - The example requires a working Go development environment. The [Getting
-Started](http://golang.org/doc/install) page describes how to install the
-development environment.
+Started](http://golang.org/doc/install) page describes how to install the development environment.
+
+## Setting up certificates -- iginx server
+    $ sudo add-apt-repository ppa:certbot/certbot
+    $ sudo apt-get update
+    $ sudo apt-get install python-certbot-nginx
+
+#We must create two cectificates:
+First, we creat a certificte for janus as it needs to be run by SSL on a non standard
+port 8089
+
+    $ sudo certbot -d media.yourdomain --manual --preferred-challenges dns certonly
+    -- You will be asked to createa a TXT record on your DNS server.
+
+Modify /opt/janus/etc/janus/janus.transport.http.cfg
+    #cert_pem = /opt/janus/share/janus/certs/mycert.pem
+    #cert_key = /opt/janus/share/janus/certs/mycert.key
+    cert_pem = /etc/letsencrypt/live/yourhostname.yourdomain/fullchain.pem
+    cert_key = /etc/letsencrypt/live/yourhostname.yourdomain/privkey.pem
+
+Secondly, create certificates for your chat server
+    $ sudo certbot --nginx -d yourhostname.yourdomain
+
 
 ### Running rakuen
 
@@ -61,12 +69,26 @@ The default target of installation is: /var/www/krypin
 Once you have Go up and running, you can download, build and run the babel
 using the following commands.
 ``
-
     $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
+    $ sudo nano ./install.sh
+        set SITE="yourhostname.yourdomain"
     $ sudo chmod +x install.sh
     $ sudo ./install.sh
-    $ sudo supervisorctl reread
-    $ sudo supervisorctl update
+    $ sudo nano /etc/supervisor/conf.d/startup_rakuen.conf
+        ### Get application keys and secrets at Facebook and Google
+        1. Aquire Google and Facebook applikation keys and secrets <br>
+        2. Set the name of your your chat server hosts <br>
+        3. Decide a secret key to encrypt and decrypt cokkies <br>
+        #### Configure startup_rakuen.conf as follow
+            environment=
+                - GOOGLE_CLIENT_ID="your-google-id" <br>
+                - GOOGLE_CLIENT_SECRET="your-secret"
+                - FACEBOOK_CLIENT_ID="your-google-id" <br>
+                - FACEBOOK_CLIENT_SECRET="your-secret"
+                - CHAT_HOST="yourhost.yourdomain"
+                - CHAT_PRIVATE_KEY=" bla bla blasdfsdff" R
+    $ sudo supervisorctl reload
+
 
 To use the chat example, open https://yourdomain/ in your browser. <br>
 
