@@ -32,12 +32,12 @@ This is for testing purposes only and may only work with Firefox as a browser. F
 youll upset those guys Opera and Chrome too much. 
 
 ## prerequisits
+- Domain name
+- DNS server
 - $ npm install -g emojionearea@^3.0.0
 - $ apt-get install supervisor
-
 - janus WebRTC gateway configured with websockets running on SSL wss.
-  for installation, go to: https://github.com/meetecho/janus-gateway
-
+  For installation, go to: https://github.com/meetecho/janus-gateway
 - The example requires a working Go development environment. The [Getting
 Started](http://golang.org/doc/install) page describes how to install the development environment.
 
@@ -64,10 +64,9 @@ Started](http://golang.org/doc/install) page describes how to install the develo
 
 ### Running rakuen
 
-The default target of installation is: /var/www/rakuen
+The default target of installation is: /var/www/rakuen.
 Once you have Go up and running, you can download, build and run the babel
 using the following commands.
-
     $ wget https://raw.githubusercontent.com/MalinYamato/chat/master/install.sh
     $ sudo nano ./install.sh
         set SITE="yourhostname.yourdomain"
