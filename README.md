@@ -32,8 +32,8 @@ This is for testing purposes only and may only work with Firefox as a browser. F
 youll upset those guys Opera and Chrome too much. 
 
 ## prerequisits
-- Domain name
-- DNS server
+- A domain name
+- A DNS server
 - $ npm install -g emojionearea@^3.0.0
 - $ apt-get install supervisor
 - janus WebRTC gateway configured with websockets running on SSL wss.
@@ -41,10 +41,10 @@ youll upset those guys Opera and Chrome too much.
 - The example requires a working Go development environment. The [Getting
 Started](http://golang.org/doc/install) page describes how to install the development environment.
 
-## Setting up certificates -- nginx server
+## Setting up certificates
     $ sudo add-apt-repository ppa:certbot/certbot
     $ sudo apt-get update
-    $ sudo apt-get install python-certbot-nginx
+    $ sudo apt-get install certbot
 
 ### Create two cectificates:
 #### First, we creat a certificte for janus as it needs to be run by SSL on a non standard port 8089
@@ -59,7 +59,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     cert_key = /etc/letsencrypt/live/yourhostname.yourdomain/privkey.pem
 
 #### Secondly, create certificates for your chat server
-    $ sudo certbot --nginx -d yourhostname.yourdomain
+    $ sudo certbot certonly --standalone --preferred-challenges tls-sni  -d yourhost.yourdomain
 
 
 ### Running rakuen
