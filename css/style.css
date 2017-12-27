@@ -202,7 +202,7 @@ visibility: hidden;
 
 #post li {;
 	padding-right: 2px;
-	height: 2.2em;
+	height: auto;
 }
 
 #pictureURL img {
