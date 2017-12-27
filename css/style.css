@@ -55,11 +55,10 @@ visibility: hidden;
 
 
 #camArea {
-	position: absolute;
-	top: 4em;
+	position: sticky;
 	left: 0.5em;
 	right: 0.5em;
-	display: inline;
+	display: block;
 	height: 0px;
 	border-radius: 10px;
 	background-color: #1f1f1f;
@@ -96,25 +95,23 @@ visibility: hidden;
 	background: white;
 	margin: 0;
 	padding: 0.1em 0.1em 0.1em 0.1em;
-	position: absolute;
-	top: 4em;
-	left: 0.5em;
-	right: 0.5em;
-	bottom: 4em;
-	overflow: auto;
+	position:relative;
+	height: 88%;
+	margin-bottom: 0.5em;
+	margin-right: 0.5em;
+	margin-left: 0.5em;
+	resize: both;
+	overflow: hidden;
 	border-radius: 1%;
 
 }
 
 
-.bottom {
-	position:absolute;
-	//flex: 1 1 10%;
+#chatform {
+	position: relative;
 	flex-direction: row;
-
 	display: flex;
 	width: 100%;
-	bottom: 0;
 	height: auto;
 }
 
