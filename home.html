@@ -268,13 +268,6 @@
 
                 $("#log").scrollTop(0);
 
-
-                //
-                //if (doScroll) {
-                //    log.scrollTop = log.scrollHeight - log.clientHeight;
-                //}
-
-
             }
 
             function sendMessage(op, msg) {
@@ -429,6 +422,7 @@
 
                             var liIten = document.createElement("li");
                             liIten.setAttribute("id", "Target:" + key2);
+                            liIten.setAttribute("style", "list-style-type:none");
                             var imagen = document.createElement("img");
                             imagen.setAttribute("src", message.graph.pictures[key2]);
                             if (stat == "GREEN") {

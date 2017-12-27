@@ -113,6 +113,7 @@ visibility: hidden;
 	display: flex;
 	width: 100%;
 	height: auto;
+	margin-left: 0.5em;
 }
 
 #divv {
@@ -201,18 +202,18 @@ visibility: hidden;
 
 #post li {;
 	padding-right: 2px;
-	height: auto;
+	height: 2.2em;
 }
 
 #pictureURL img {
 	left: 0px;
-	width: 30px;
-	height: 30px;
+	width: 2em;
+	height: 2em;
 	border-radius: 50%;
 	border-style: solid;
-	border-color: #000000;
-	border-width: 2px;
-	margin-top: 2px
+	border-color: #941537;
+	border-width: 1px;
+	margin-top: 1px
 }
 
 #timestamp {
@@ -229,8 +230,8 @@ visibility: hidden;
 	margin-bottom: -3px;
 	height: auto;
 	font-size: 20px;
-	font-weight:bold;
-	color: #7994ce;
+	font-weight:normal;
+	color: #941537;
 }
 
 #messageText {
@@ -251,9 +252,9 @@ visibility: hidden;
 #form {
 	padding: 0 0.5em 0 0.5em;
 	margin: 0;
-	height:50px;
+	height: 2em;
 	left: 0px;
-	width: 100%;
+	width: 80%;
 }
 
 #PublishList{
