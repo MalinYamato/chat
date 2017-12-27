@@ -250,7 +250,6 @@ visibility: hidden;
 
 
 #form {
-	padding: 0 0.5em 0 0.5em;
 	margin: 0;
 	height: 2em;
 	left: 0px;
@@ -302,7 +301,8 @@ visibility: hidden;
 	width: 4em;
 	-webkit-border-radius:20px;
 	-moz-border-radius:20px;
-	border-radius: 20px;
+	border-radius: 20px
+	m;
 
 }
 
