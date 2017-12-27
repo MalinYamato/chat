@@ -145,6 +145,7 @@ func (c *Client) readPump() {
 				targets, yes := _publishers[c.UserId]
 				if yes {
 					theMessage := "[" + strconv.Itoa(len(targets)) + "] " + message.Content
+					targets[person.UserID] = ok // the message should be sent to the sender herself.
 					message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage  }
 					c.hub.multicast <- message
 				} else {
