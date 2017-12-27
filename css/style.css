@@ -265,14 +265,12 @@ visibility: hidden;
 	height: 50px;
 }
 
-#PublishList img {
-	border-style: solid;
+#PublishList img {;
 	border-radius: 50%;
-	border-color: #000000;
-	border-width: 2px;
 	width: 2.5em;
 	display: block;
     margin-bottom: 5px;
+	margin-top: -0.5em;
 }
 
 #PublishList img:hover {
