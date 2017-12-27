@@ -252,14 +252,20 @@
 
             function appendLog(item) {
                 var doScroll = log.scrollTop === log.scrollHeight - log.clientHeight;
-                var nodes = log.childNodes;
-                if (nodes.length == 1) {
+
+                if (log.childNodes.length == 1) {
                     log.appendChild(item);
                 }
                 else {
-                    log.insertBefore(item, nodes[0]);
+                    log.insertBefore(item, log.childNodes[0]);
                 }
+
+                if (log.childNodes.length > 30) {
+                    log.removeChild(childNodes[29]);
+                }
+
                 $("#log").scrollTop(0);
+
 
                 //
                 //if (doScroll) {
