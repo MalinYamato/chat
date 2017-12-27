@@ -259,9 +259,12 @@
                 else {
                     log.insertBefore(item, nodes[0]);
                 }
-                if (doScroll) {
-                    log.scrollTop = log.scrollHeight - log.clientHeight;
-                }
+                $("#log").scrollTop(0);
+
+                //
+                //if (doScroll) {
+                //    log.scrollTop = log.scrollHeight - log.clientHeight;
+                //}
 
 
             }
