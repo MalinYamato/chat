@@ -252,7 +252,8 @@
 
             function appendLog(item) {
                 var doScroll = log.scrollTop === log.scrollHeight - log.clientHeight;
-                log.appendChild(item);
+                var firstElem = log.firstElementChild.innerHTML;
+                log.insertBefore(item,firstElem);
                 if (doScroll) {
                     log.scrollTop = log.scrollHeight - log.clientHeight;
                 }
