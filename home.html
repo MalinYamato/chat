@@ -261,7 +261,9 @@
                 }
 
                 if (log.childNodes.length > 30) {
-                    log.removeChild(childNodes[29]);
+                    for (i = 30; i < log.childNodes.length; i++) {
+                        log.removeChild(childNodes[i]);
+                    }
                 }
 
                 $("#log").scrollTop(0);
