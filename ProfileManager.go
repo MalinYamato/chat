@@ -142,7 +142,8 @@ func Contains(slice []string, item string) bool {
 
 func checkNicname(nic string) Status {
 	var status Status
-	var _, found= _persons.findPersonByNickName(nic)
+	log.Println("NIC " + nic)
+	var _, found = _persons.findPersonByNickName(nic)
 	if found == true {
 		status.Status = "WARNING"
 		status.Detail = "Nicna me is taken"
