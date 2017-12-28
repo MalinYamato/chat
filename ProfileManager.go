@@ -37,6 +37,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"html/template"
+	"google.golang.org/api/adexchangeseller/v1"
 )
 
 var (
@@ -233,6 +234,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		status.Status = "ERROR"
 		status.Detail = "Wrong HTTPS Method. Reqire POST but you sent: " + r.Method;
+		log.Println( status.Detail + " method " + r.Method)
 	}
 	data, err := json.Marshal(status)
 	if err != nil {
