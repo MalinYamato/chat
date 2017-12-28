@@ -178,7 +178,9 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			p, _ = _persons.findPersonByToken(token)
 			var op = r.Form.Get("OP")
 			if op == "checkNicname" {
-				status = checkNicname(r.Form.Get("NickName"))
+				var nic = r.Form.Get("NickName")
+				log.Println("The NIC " + nic)
+				status = checkNicname(nic)
 			} else if op == "register" {
 				var nic = r.Form.Get("NickName")
 				status = checkNicname(nic)
