@@ -239,9 +239,8 @@ What remains to do is to creat a handlename that you may change once a month.
         window.location.href = 'https://{{.Host}}/logout"';
     }
 
-
-
     function verifyNicName() {
+        var name = $("Nicname").val();
         $.ajax({
             type: "POST",
             async: false,
