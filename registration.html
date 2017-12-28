@@ -221,12 +221,12 @@ What remains to do is to creat a handlename that you may change once a month.
         }).done(function (response) {
             var registerForm = document.getElementById("ProfileForm");
             var goToChat = document.getElementById("GoToChat");
-            if (response.status == "WARNING" ) {
+            if (response.Status == "WARNING" ) {
                registerForm,style.display = "block";
                goToChat.style.display = "none";
                reportStatus(false)
             }
-            else if (response.status == "SUCCESS") {
+            else if (response.Status == "SUCCESS") {
                 registerForm,style.display = "none";
                 goToChat.style.display = "block";
                 reportStatus(true)
@@ -251,7 +251,7 @@ What remains to do is to creat a handlename that you may change once a month.
                 OP: "checkNicname",
                 success: function (result) {
                     console.log("mess " + result);
-                    if (result.status != "SUCCESS") {
+                    if (result.Status != "SUCCESS") {
                         reportStatus(true)
                     } else {
                         reportStatus(false);
