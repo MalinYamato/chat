@@ -80,6 +80,7 @@ func (pers *Persons) load() {
 
 	if _, err := os.Stat(pers.path()); err != nil {
 		if os.IsNotExist(err) {
+			fmt.Println("The directory: " + pers.path() + "does not exist, ignore loading" , err)
 			return
 		}
 	}
