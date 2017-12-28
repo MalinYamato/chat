@@ -37,8 +37,6 @@ import (
 	"fmt"
 	"encoding/json"
 	"html/template"
-	"os"
-
 )
 
 var (
@@ -46,6 +44,31 @@ var (
 	ORIENTATION = []string{"Straight", "Gay", "Lesbian", "BiSexual", "ASexual"}
 	GENDER      = []string{"Female", "Male", "TranssexualF", "TranssexualM", "CrossDresser", "None"}
 )
+
+func registrationHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := sessionStore.Get(r, sessionName)
+	if err != nil {
+		log.Println("Main: mainProfileHandler() Call to sessionStore.Get returned ", err)
+		return
+	}
+	if session == nil {
+		log.Println("Main: mainProfileHander() returned session was nil")
+		return
+	}
+	token := session.Values[sessionToken].(string)
+	p, _ := _persons.findPersonByToken(token)
+	t := template.New("fieldname example")
+	t = template.Must(template.ParseFiles( homepath + "registration.html"))
+	t.Execute(w, struct {
+		P                  Person
+		Host               string
+	}{
+		P:                  p,
+		Host:               r.Host,
+	})
+}
+
+
 
 func profileHandler(w http.ResponseWriter, r *http.Request) {
 	var request Person;
@@ -117,6 +140,19 @@ func Contains(slice []string, item string) bool {
 	return ok
 }
 
+func checkNicname(nic string) Status {
+	var status Status
+	var _, found= _persons.findPersonByNickName(nic)
+	if found == true {
+		status.Status = "WARNING"
+		status.Detail = "Nicname is taken"
+	} else {
+		status.Status = "SUCCESS"
+		status.Detail = "Nicname is valid"
+	}
+	return status
+}
+
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	var status Status
@@ -134,49 +170,45 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			token := session.Values[sessionToken].(string)
 			var p Person
 			p, _ = _persons.findPersonByToken(token)
-			p.FirstName = r.Form.Get("FirstName")
-			p.PictureURL = r.Form.Get("PictureURL")
-			p.LastName = r.Form.Get("LastName")
-			p.Gender = r.Form.Get("Gender")
-			p.Country = r.Form.Get("Country")
-			p.Town = r.Form.Get("Town")
-			p.Lat = r.Form.Get("Lat")
-			p.Long = r.Form.Get("Long")
-			p.Nic = r.Form.Get("Nic")
-			p.Profession = r.Form.Get("Profession")
-			p.Education = r.Form.Get("Education")
-			p.SexualOrientation = r.Form.Get("SexualOrientation")
-			p.Description = r.Form.Get("Description")
-			p.BirthDate.Year = r.Form.Get("BirthYear")
-			p.BirthDate.Month = r.Form.Get("BirthMonth")
-			p.BirthDate.Day = r.Form.Get("BirthDay")
-			p.LoggedIn = true
-			fmt.Printf("%+v\n", r.Form)
-			productsSelected := r.Form["Language"]
-			log.Println(Contains(productsSelected, "English"))
-			for i := 0; i < len(LANGUAGES); i++ {
-				if Contains(r.Form["Language"], LANGUAGES[i]) {
-					p.Languages[LANGUAGES[i]] = "checked"
+			var op = r.Form.Get("OP")
+			if op == "checkNicname" {
+				status = checkNicname(r.Form.Get("NickName"))
+			} else if op == "register" {
+				var nic = r.Form.Get("NickName")
+				status = checkNicname(nic)
+				if status.Status == "SUCCESS" {
+					p.Nic = nic
+					_persons.Save(p)
+					status.Detail = "Registration successful"
+					hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic() }
 				}
-			}
-			if p.Keep == false {
-				p.Keep = true
-				path := _persons.path() + "/" + string( p.UserID )
-				err := os.Mkdir(path, 0777)
-				log.Println("Mkdirerr err ", err)
-				if err != nil {
-					panic(err)
-				}
-				err = os.Mkdir(path + "/img" , 0777)
-				log.Println("Mkdirerr err ", err)
-				if err != nil {
-					panic(err)
-				}
-				_persons.Save(p)
+			} else if op == "update" {
 
-				status.Status = "New"
-				status.Detail = "The account was sucessfully created <br> You are now a member!";
-			} else {
+				p.FirstName = r.Form.Get("FirstName")
+				p.PictureURL = r.Form.Get("PictureURL")
+				p.LastName = r.Form.Get("LastName")
+				p.Gender = r.Form.Get("Gender")
+				p.Country = r.Form.Get("Country")
+				p.Town = r.Form.Get("Town")
+				p.Lat = r.Form.Get("Lat")
+				p.Long = r.Form.Get("Long")
+				//p.Nic = r.Form.Get("Nic")
+				p.Profession = r.Form.Get("Profession")
+				p.Education = r.Form.Get("Education")
+				p.SexualOrientation = r.Form.Get("SexualOrientation")
+				p.Description = r.Form.Get("Description")
+				p.BirthDate.Year = r.Form.Get("BirthYear")
+				p.BirthDate.Month = r.Form.Get("BirthMonth")
+				p.BirthDate.Day = r.Form.Get("BirthDay")
+				p.LoggedIn = true
+				fmt.Printf("%+v\n", r.Form)
+				productsSelected := r.Form["Language"]
+				log.Println(Contains(productsSelected, "English"))
+				for i := 0; i < len(LANGUAGES); i++ {
+					if Contains(r.Form["Language"], LANGUAGES[i]) {
+						p.Languages[LANGUAGES[i]] = "checked"
+					}
+				}
 				_persons.Save(p)
 				status.Status = "Updated"
 				status.Detail = "Success! Your profile was updated!";

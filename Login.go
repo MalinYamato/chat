@@ -95,7 +95,7 @@ func issueSessionFB() http.Handler {
 		v, ok = _persons.findPersonByFacebookID(facebookUser.ID)
 		if ok {
 			person := Person{
-				Nic:               checkSet(v.Nic, s[0]),
+				Nic:               checkSet(v.Nic, "unregistered"),
 				Keep:              v.Keep,
 				FirstName:         checkSet(v.FirstName, s[0]),
 				LastName:          checkSet(v.LastName, s[1]),
@@ -120,11 +120,11 @@ func issueSessionFB() http.Handler {
 			person.LoggedIn = true
 			_persons.Save(person)
 			user = "registred user"
-			hub.broadcast <- Message{Op: "NewUser", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "新入社員　" + person.getNic() }
+			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic() }
 		}
 		if ! ok {
 			person := Person{
-				Nic:               s[0],
+				//Nic:               s[0],
 				Keep:              false,
 				FirstName:         s[0],
 				LastName:          s[1],
@@ -147,8 +147,9 @@ func issueSessionFB() http.Handler {
 			user = "new user"
 			person.LoggedIn = true
 			_persons.Save(person)
-			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 " + person.getNic() }
-		}
+			http.Redirect(w, req, "/registration", http.StatusFound)
+			return
+			}
 		person, _ := _persons.findPersonByFacebookID(facebookUser.ID)
 		if person.PictureURL == "" {
 			person.PictureURL =  endpoint.url() + "/images/default.png";
@@ -193,7 +194,7 @@ func issueSession() http.Handler {
 		v, ok = _persons.findPersonByGoogleID(googleUser.Id)
 		if ok {
 			person := Person{
-				Nic:               checkSet(v.Nic, googleUser.GivenName),
+				Nic:               checkSet(v.Nic, "uregistered"),
 				Keep:              v.Keep,
 				FirstName:         checkSet(v.FirstName, googleUser.GivenName),
 				LastName:          checkSet(v.LastName, googleUser.FamilyName),
@@ -218,11 +219,11 @@ func issueSession() http.Handler {
 			person.LoggedIn = true
 			_persons.Save(person)
 			user = "registred user"
-			hub.broadcast <- Message{Op: "NewUser", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "新入社員　" + person.getNic() }
+			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic() }
 		}
 		if ! ok {
 			person := Person{
-				Nic:               googleUser.GivenName,
+				//Nic:               googleUser.GivenName,
 				Keep:              false,
 				FirstName:         googleUser.GivenName,
 				LastName:          googleUser.FamilyName,
@@ -245,7 +246,8 @@ func issueSession() http.Handler {
 			user = "new user"
 			person.LoggedIn = true
 			_persons.Save(person)
-			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 " + person.getNic() }
+			http.Redirect(w, req, "/registration", http.StatusFound)
+			return
 		}
 		person, _ := _persons.findPersonByGoogleID(googleUser.Id)
 		if person.PictureURL == "" {

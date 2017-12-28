@@ -155,10 +155,11 @@ You have already verified your email address by either Facebook or Google.
 What remains to do is to creat a handlename that you may change once a month.
 </p>
 </div>
-<form action="/action_page.php" style="border:1px solid #ccc">
+<form id="ProfileForm" action="https://{{.Host}}/register" style="border:1px solid #ccc">
     <div class="container">
         <label><b>Nicname</b></label>
-        <input maxlength="12" id="NicName" type="text" placeholder="Unique name" name="NicName" required>
+        <input maxlength="12" id="Nicname" type="text" placeholder="Unique name" name="NicName" required>
+        <input type="hidden" name="OP" value="registration"/>
         <div class="result">
             <img id="validNameImg"src="images/yes.png" style="display:none;">
             <img id="invalidNameImg" src="images/no.png"  style="display:none;">
@@ -171,47 +172,97 @@ What remains to do is to creat a handlename that you may change once a month.
         <p class="agree">By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
 
         <div class="clearfix">
-            <button type="button" class="cancelbtn">Cancel</button>
-            <button type="submit" class="signupbtn" disabled>Sign Up</button>
+            <button type="button" class="cancelbtn" onclick="cancel()">Cancel</button>
+            <button type="submit" class="signupbtn" >Sign Up</button>
         </div>
 
     </div>
 </form>
 
+<div id="GoToChat">
+    <span> Registration successful </span>
+    <form>
+        <button formaction="https://{{.Host}}/session">Go to Chat!</button>
+    </form>
+</div>
+
+
 <script>
 
-    function verifyNicName() {
-
+    function reportStatus(v)
+    {
         var valid = document.getElementById("validName");
         var invalid = document.getElementById("invalidName");
         var validImg = document.getElementById("validNameImg");
         var invalidImg = document.getElementById("invalidNameImg");
 
+        if (v) {
+            valid.style.display = "block";
+            invalid.style.display = "none";
+            validImg.style.display = "block";
+            invalidImg.style.display = "none";
+        } else {
+            valid.style.display = "none";
+            invalid.style.display = "block";
+            validImg.style.display = "none";
+            invalidImg.style.display = "block";
+        }
+    }
+
+
+    $("#ProfileForm").submit(function (event) {
+        event.preventDefault();
+        var post_url = $(this).attr("action");
+        var form_data = $(this).serialize();
+        $.ajax({
+            url: post_url,
+            type: "post",
+            data: form_data
+        }).done(function (response) {
+            var registerForm = document.getElementById("ProfileForm");
+            var goToChat = document.getElementById("GoToChat");
+            if (response.status == "WARNING" ) {
+               registerForm,style.display = "block";
+               goToChat.style.display = "none";
+               reportStatus(false)
+            }
+            else if (response.status == "SUCCESS") {
+                registerForm,style.display = "none";
+                goToChat.style.display = "block";
+                reportStatus(true)
+            }
+        });
+    } )
+
+    function cancel()
+    {
+        window.location.href = 'https://{{.Host}}/logout"';
+    }
+
+
+
+    function verifyNicName() {
         $.ajax({
             type: "POST",
             async: false,
-            url: "https://secure.rakuen.asia/registration",
+            url: "https://{{.Host}}/ProfileUpdate",
             data: {
                 NicName: name,
+                OP: "checkNicname",
                 success: function (result) {
                     console.log("mess " + result);
-                    return;
                     if (result.status != "SUCCESS") {
-                        valid.style.display = "block";
-                        invalid.style.display = "none";
-                        validImg.style.display = "block";
-                        invalidImg.style.display = "none";
+                        reportStatus(true)
                     } else {
-                        valid.style.display = "none";
-                        invalid.style.display = "block";
-                        validImg.style.display = "none";
-                        invalidImg.style.display = "block";
+                        reportStatus(false);
                     }
 
                 }
             }
         });
     }
+
+
 
 
 </script>

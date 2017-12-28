@@ -307,6 +307,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.HandleFunc("/", serveHome)
 	mux.Handle("/session/", requireLogin(http.HandlerFunc(sessionHandler)))
 	mux.Handle("/profile", requireLogin(http.HandlerFunc(profileHandler)))
+	mux.Handle("/registration", requireLogin(http.HandlerFunc(registrationHandler)))
 	mux.Handle("/ProfileUpdate", requireLogin(http.HandlerFunc(updateProfileHandler)))
 	mux.Handle("/MainProfile", requireLogin(http.HandlerFunc(mainProfileHandler)))
 	mux.Handle("/TargetManager", requireLogin(http.HandlerFunc(TargetManagerHandler)))
@@ -392,6 +393,7 @@ func main() {
 
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
+	_persons.load()
 	config := &Config{
 		ClientID_FB:      os.Getenv("FACEBOOK_CLIENT_ID"),
 		ClientSecret_FB:  os.Getenv("FACEBOOK_CLIENT_SECRET"),

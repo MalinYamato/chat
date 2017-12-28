@@ -37,6 +37,8 @@ import (
 	"net/http"
 	"encoding/json"
 	"io/ioutil"
+	"os"
+	"fmt"
 )
 
 type Person struct {
@@ -72,6 +74,27 @@ type Person struct {
 type Persons struct {
 	__pers map[UserId]Person
 }
+
+func (pers *Persons) load() {
+
+	files, err := ioutil.ReadDir( pers.path())
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, file := range files {
+		content, err := ioutil.ReadFile(file.Name())
+		if err != nil {
+			log.Fatal(err)
+		}
+		var person Person
+		err = json.Unmarshal(content, &person);
+		if err != nil {
+			fmt.Println("error:", err)
+		}
+		pers.__pers[ person.UserID ] = person
+	}
+}
+
 func (p *Person) getNic() string {
 	if p.Nic == "" {
 		return p.FirstName + " " + p.LastName
@@ -79,6 +102,8 @@ func (p *Person) getNic() string {
 		return p.Nic
 	}
 }
+
+
 func (pers *Persons) getAll() (persons []Person) {
 	var l = []Person{}
 	for _, p := range pers.__pers {
@@ -112,6 +137,15 @@ func (pers *Persons) findPersonByToken(token string) (person Person, ok bool) {
 	}
 	return Person{}, false
 }
+func (pers *Persons) findPersonByNickName(nic string) (person Person, ok bool) {
+	for _, p := range pers.__pers {
+		if p.Nic == nic {
+			return p, true
+		}
+	}
+	return Person{}, false
+}
+
 func (pers *Persons) findPersonByCookie(r *http.Request) (person Person, status Status) {
 	var client Person
 	var ok bool
@@ -151,13 +185,30 @@ func (pers *Persons) findPersonByUserId(UserId UserId) (person Person, ok bool) 
 func (pers *Persons) Save(person Person) bool {
 	person._Persons = pers
 	pers.__pers[ person.UserID ] = person
-	if (person.Keep) {
-		json_person, _:= json.Marshal(person)
-		err := ioutil.WriteFile(person.path() + "/profile.json", json_person, 0777)
-		if err != nil {
-			panic(err)
-		}
 
+	person.Keep = true
+
+	path := pers.path()
+	err := os.Mkdir(path, 0777)
+	log.Println("Mkdirerr err ", err)
+	if err != nil {
+		panic(err)
+	}
+	path = pers.path() + "/" + string(person.UserID)
+	err = os.Mkdir(path, 0777)
+	log.Println("Mkdirerr err ", err)
+	if err != nil {
+		panic(err)
+	}
+	err = os.Mkdir(path+"/img", 0777)
+	log.Println("Mkdirerr err ", err)
+	if err != nil {
+		panic(err)
+	}
+	json_person, _ := json.Marshal(person)
+	err = ioutil.WriteFile(person.path()+"/profile.json", json_person, 0777)
+	if err != nil {
+		panic(err)
 	}
 	log.Println("Number of persons ", len(pers.__pers))
 	return true
