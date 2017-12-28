@@ -444,7 +444,7 @@ func main() {
 	go hub.run()
 	log.Println("Loading persons database..")
 	_persons.load()
-	log.Println("Starting service at ", endpoint.url())
+	log.Println("dd Starting service at ", endpoint.url())
 	err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(config, hub))
 	//err = http.ListenAndServe(*addr, NewMux(config, hub) )
 	if err != nil {
