@@ -199,9 +199,9 @@ func (pers *Persons) Add(person Person) bool {
 }
 
 func (pers *Persons) Save(person Person) bool {
-
-	pers.Add(person)
 	person.Keep = true
+	pers.Add(person)
+
 
 	if _, err := os.Stat(pers.path()); err != nil {
 
