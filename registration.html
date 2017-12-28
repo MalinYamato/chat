@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.0.3/adapter.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="css/menus.css" rel="stylesheet" type="text/css"/>
+    <link href="css/modal.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="css/emojionearea.min.css">
+    <script src="js/SVGButton.js"></script>
+    <script type="text/javascript"></script>
+</head>
+<style>
+    /* Full-width input fields */
+    input[type=text], input[type=password] {
+        width: 40%;
+        padding: 10px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        float: left;
+
+    }
+
+    label {
+        color: #696969;
+        padding: 12px 20px;
+        font-size: 20px;
+        float: left;
+        margin: 8px 0px 0px 4px;
+    }
+
+    /* Set a style for all buttons */
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+        margin: 4px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 12px;
+        font-size: 20px;
+    }
+
+
+    .verifyButton {
+        background-color: #696969; /* Green */
+        color: white;
+        margin: 8px 4px 4px 8px;
+        width: 16%;
+        float: left;
+    }
+
+    /* Extra styles for the cancel button */
+    .cancelbtn {
+        background-color: #f44336;
+    }
+
+    /* Float cancel and signup buttons and add an equal width */
+    .cancelbtn,.signupbtn {
+        float: left;
+        width: 50%;
+    }
+
+    /* Add padding to container elements */
+    .container {
+        padding: 16px;
+    }
+
+    /* Clear floats */
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    /* Change styles for cancel button and signup button on extra small screens */
+    @media screen and (max-width: 300px) {
+        .cancelbtn, .signupbtn {
+            width: 100%;
+        }
+    }
+
+    #validNameImg, #invalidNameImg{
+        width: 45px;
+        height: 45px;
+        margin-bottom: 0;
+        margin-top: 8px;
+        margin-left: 5px;
+    }
+
+    #invalidName, #validName {
+        font-size: 16px;
+        text-align: center;
+        float: left;
+        width: 100%;
+
+    }
+
+    .container {
+        padding: 4px;
+    }
+
+    #invalidName {
+        color: red;
+
+    }
+    #validName {
+          color: #4CAF50;
+      }
+
+    .result {
+        float: left;
+    }
+
+    .agree {
+        font-size: 14px;
+        width: 100%;
+        float: right;
+        color: white;
+        text-align: center;
+    }
+
+    .welcome {
+        margin: 10px;
+        color: white;
+    }
+
+</style>
+
+
+
+<div class="welcome row-flow">
+    <h2>Signup Form Rakuen Chat </h2>
+
+<p >
+Welcome as a new member of Rakuen chat.
+You have already verified your email address by either Facebook or Google.
+What remains to do is to creat a handlename that you may change once a month.
+</p>
+</div>
+<form action="/action_page.php" style="border:1px solid #ccc">
+    <div class="container">
+        <label><b>Nicname</b></label>
+        <input maxlength="12" id="NicName" type="text" placeholder="Unique name" name="NicName" required>
+        <div class="result">
+            <img id="validNameImg"src="images/yes.png" style="display:none;">
+            <img id="invalidNameImg" src="images/no.png"  style="display:none;">
+        </div>
+        <button type="button" onclick="verifyNicName()" class="verifyButton">Verify</button>
+
+        <div id="validName" style="display:none;"><span> Congratuation! The name is OK!</span></div>
+        <div id="invalidName" style="display:none;"><span> Inalid name -- The name is taken!</span></div>
+
+        <p class="agree">By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
+
+        <div class="clearfix">
+            <button type="button" class="cancelbtn">Cancel</button>
+            <button type="submit" class="signupbtn" disabled>Sign Up</button>
+        </div>
+
+    </div>
+</form>
+
+<script>
+
+    function verifyNicName() {
+
+        var valid = document.getElementById("validName");
+        var invalid = document.getElementById("invalidName");
+        var validImg = document.getElementById("validNameImg");
+        var invalidImg = document.getElementById("invalidNameImg");
+
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "https://secure.rakuen.asia/registration",
+            data: {
+                NicName: name,
+                success: function (result) {
+                    console.log("mess " + result);
+                    return;
+                    if (result.status != "SUCCESS") {
+                        valid.style.display = "block";
+                        invalid.style.display = "none";
+                        validImg.style.display = "block";
+                        invalidImg.style.display = "none";
+                    } else {
+                        valid.style.display = "none";
+                        invalid.style.display = "block";
+                        validImg.style.display = "none";
+                        invalidImg.style.display = "block";
+                    }
+
+                }
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>
