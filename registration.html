@@ -174,33 +174,12 @@ What remains to do is to creat a handlename that you may change once a month.
 
         <div class="clearfix">
             <button type="button" class="cancelbtn" onclick="cancel()">Cancel</button>
-            <button type="submit" formmethod="post" class="signupbtn" >Sign Up</button>
+            <button type="button" onclick="register()" class="signupbtn" >Sign Up</button>
         </div>
 
     </div>
 </form>
 <script>
-
-    $("#ProfileForm").submit(function (event) {
-        event.preventDefault();
-        var post_url = $(this).attr("action");
-        var form_data = $(this).serialize();
-        console.log("data " + form_data);
-        $.post(post_url, form_data, function(response){
-            var registerForm = document.getElementById("ProfileForm");
-            var goToChat = document.getElementById("GoToChat");
-            if (response.Status == "WARNING" ) {
-                registerForm,style.display = "block";
-                goToChat.style.display = "none";
-                reportStatus(false)
-            }
-            else if (response.Status == "SUCCESS") {
-                registerForm,style.display = "none";
-                goToChat.style.display = "block";
-                reportStatus(true)
-            }
-
-    } )
 
 </script>
 
@@ -259,6 +238,26 @@ What remains to do is to creat a handlename that you may change once a month.
 
                 }
             })
+    }
+
+    function register() {
+        var name = $("#NicName").val();
+        console.log("Name " + name);
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "https://{{.Host}}/ProfileUpdate",
+            data: {"OP": "register", "NicName": name},
+            success: function (result) {
+                console.log("mess " + result);
+                if (result.status == "SUCCESS") {
+                    reportStatus(true)
+                } else {
+                    reportStatus(false);
+                }
+
+            }
+        })
     }
 
 
