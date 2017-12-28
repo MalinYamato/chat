@@ -156,10 +156,11 @@ What remains to do is to creat a handlename that you may change once a month.
 </p>
 </div>
 <form id="ProfileForm" action="https://{{.Host}}//ProfileUpdate" style="border:1px solid #ccc">
+    <input hidden name="OP" value="register"/>
     <div class="container">
         <label><b>Nicname</b></label>
         <input maxlength="12" id="NicName" type="text" placeholder="Unique name" name="NicName" required>
-        <input hidden name="OP" value="register"/>
+
         <div class="result">
             <img id="validNameImg"src="images/yes.png" style="display:none;">
             <img id="invalidNameImg" src="images/no.png"  style="display:none;">
@@ -178,6 +179,31 @@ What remains to do is to creat a handlename that you may change once a month.
 
     </div>
 </form>
+<script>
+    $("#ProfileForm").submit(function (event) {
+        event.preventDefault();
+        var post_url = $(this).attr("action");
+        var form_data = $(this).serialize();
+        $.ajax({
+            url: post_url,
+            type: "POST",
+            data: form_data
+        }).done(function (response) {
+            var registerForm = document.getElementById("ProfileForm");
+            var goToChat = document.getElementById("GoToChat");
+            if (response.Status == "WARNING" ) {
+                registerForm,style.display = "block";
+                goToChat.style.display = "none";
+                reportStatus(false)
+            }
+            else if (response.Status == "SUCCESS") {
+                registerForm,style.display = "none";
+                goToChat.style.display = "block";
+                reportStatus(true)
+            }
+        });
+    } )
+</script>
 
 <div id="GoToChat">
     <span> Registration successful </span>
@@ -185,7 +211,6 @@ What remains to do is to creat a handlename that you may change once a month.
         <button formaction="https://{{.Host}}/session">Go to Chat!</button>
     </form>
 </div>
-
 
 <script>
 
@@ -210,30 +235,7 @@ What remains to do is to creat a handlename that you may change once a month.
     }
 
 
-    $("#ProfileForm").submit(function (event) {
-        event.preventDefault();
-        var post_url = $(this).attr("action");
-        var form_data = $(this).serialize();
-        $.ajax({
-            url: post_url,
-            type: "POST",
-            async: false,
-            data: form_data
-        }).done(function (response) {
-            var registerForm = document.getElementById("ProfileForm");
-            var goToChat = document.getElementById("GoToChat");
-            if (response.Status == "WARNING" ) {
-               registerForm,style.display = "block";
-               goToChat.style.display = "none";
-               reportStatus(false)
-            }
-            else if (response.Status == "SUCCESS") {
-                registerForm,style.display = "none";
-                goToChat.style.display = "block";
-                reportStatus(true)
-            }
-        });
-    } )
+
 
     function cancel()
     {
