@@ -183,13 +183,12 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			var op = r.FormValue("OP")
+			var nic = r.FormValue("NicName")
+			log.Println("OP " + op + " nic " + nic )
 
 			if op == "checkNicname" {
-				var nic = r.FormValue("NicName")
-				log.Println("The NIC " + nic)
 				status = checkNicname(nic)
 			} else if op == "register" {
-				var nic = r.Form.Get("NicName")
 				status = checkNicname(nic)
 				if status.Status == "SUCCESS" {
 					p.Nic = nic
