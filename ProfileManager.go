@@ -164,6 +164,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	var status Status
 	if r.Method == "POST" {
 		session, err := sessionStore.Get(r, sessionName)
+		log.Println("here I am 2")
 		if err != nil {
 			log.Println("Main: UpdateProfileHandler() Call to sessionStore.Get returned ", err)
 			status.Status = ERROR
@@ -175,13 +176,16 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			token := session.Values[sessionToken].(string)
 			var p Person
+
+			log.Println("here I am 3")
+
 			p, _ = _persons.findPersonByToken(token)
 
 			if err := r.ParseForm(); err != nil {
 				fmt.Fprintf(w, "ParseForm() err: %v", err)
 				return
 			}
-
+			log.Println("here I am 4")
 			var op = r.FormValue("OP")
 			var nic = r.FormValue("NicName")
 			log.Println("OP " + op + " nic " + nic )
