@@ -37,7 +37,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"html/template"
-	"google.golang.org/api/adexchangeseller/v1"
+	//"google.golang.org/api/adexchangeseller/v1"
 )
 
 var (
