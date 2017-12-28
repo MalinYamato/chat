@@ -160,8 +160,10 @@ func checkNicname(nic string) Status {
 }
 
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
+
 	r.ParseForm()
-	log.Println("here I amx")
+	log.Println("here I amx method " + r.Method)
+
 	var status Status
 	if r.Method == "POST" {
 		log.Println("here I am 2a")
