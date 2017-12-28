@@ -176,9 +176,16 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			token := session.Values[sessionToken].(string)
 			var p Person
 			p, _ = _persons.findPersonByToken(token)
-			var op = r.Form.Get("OP")
+
+			if err := r.ParseForm(); err != nil {
+				fmt.Fprintf(w, "ParseForm() err: %v", err)
+				return
+			}
+
+			var op = r.FormValue("OP")
+			
 			if op == "checkNicname" {
-				var nic = r.Form.Get("NickName")
+				var nic = r.FormValue("NickName")
 				log.Println("The NIC " + nic)
 				status = checkNicname(nic)
 			} else if op == "register" {
