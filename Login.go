@@ -118,7 +118,7 @@ func issueSessionFB() http.Handler {
 				Room:              v.Room}
 
 			person.LoggedIn = true
-			//_persons.Save(person)
+			_persons.Save(person)
 			user = "registred user"
 			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic() }
 		}
@@ -146,7 +146,7 @@ func issueSessionFB() http.Handler {
 
 			user = "new user"
 			person.LoggedIn = true
-			//_persons.Save(person)
+			_persons.Add(person)
 			http.Redirect(w, req, "/registration", http.StatusFound)
 			return
 			}
@@ -217,7 +217,7 @@ func issueSession() http.Handler {
 				Room:              v.Room}
 
 			person.LoggedIn = true
-			//_persons.Save(person)
+			_persons.Save(person)
 			user = "registred user"
 			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic() }
 		}
@@ -245,7 +245,7 @@ func issueSession() http.Handler {
 
 			user = "new user"
 			person.LoggedIn = true
-			//_persons.Save(person)
+			_persons.Add(person)
 			http.Redirect(w, req, "/registration", http.StatusFound)
 			return
 		}
