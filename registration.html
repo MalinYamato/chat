@@ -180,16 +180,13 @@ What remains to do is to creat a handlename that you may change once a month.
     </div>
 </form>
 <script>
+
     $("#ProfileForm").submit(function (event) {
         event.preventDefault();
         var post_url = $(this).attr("action");
         var form_data = $(this).serialize();
         console.log("data " + form_data);
-        $.ajax({
-            url: post_url,
-            type: "post",
-            data: form_data
-        }).done(function (response) {
+        $.post(post_url, form_data, function(response){
             var registerForm = document.getElementById("ProfileForm");
             var goToChat = document.getElementById("GoToChat");
             if (response.Status == "WARNING" ) {
@@ -202,8 +199,9 @@ What remains to do is to creat a handlename that you may change once a month.
                 goToChat.style.display = "block";
                 reportStatus(true)
             }
-        });
+
     } )
+
 </script>
 
 <div id="GoToChat">
