@@ -246,7 +246,7 @@ What remains to do is to creat a handlename that you may change once a month.
             type: "POST",
             async: false,
             url: "https://{{.Host}}/ProfileUpdate",
-            data: {NicName: name, OP: "checkNicname"},
+            data: {NicName: "ndfsd", OP: "checkNicname"},
                 success: function (result) {
                     console.log("mess " + result);
                     if (result.status == "SUCCESS") {
