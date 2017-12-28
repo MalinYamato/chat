@@ -39,6 +39,7 @@ import (
 	"io/ioutil"
 	"os"
 	"fmt"
+	"os/user"
 )
 
 type Person struct {
@@ -190,10 +191,16 @@ func (pers *Persons) findPersonByUserId(UserId UserId) (person Person, ok bool) 
 	person, ok = pers.__pers[UserId]
 	return
 }
-func (pers *Persons) Save(person Person) bool {
+
+func (pers *Persons) Add(person Person) bool {
 	person._Persons = pers
 	pers.__pers[ person.UserID ] = person
+	return true
+}
 
+func (pers *Persons) Save(person Person) bool {
+
+	pers.Add(person)
 	person.Keep = true
 
 	if _, err := os.Stat(pers.path()); err != nil {
@@ -208,7 +215,7 @@ func (pers *Persons) Save(person Person) bool {
 			}
 		}
 	}
-	path := pers.path() + "/" + string(person.UserID)
+	path := person.path()
 	if _, err := os.Stat(path); err != nil {
 		if os.IsNotExist(err) {
 			err := os.Mkdir(path, 0777)
@@ -219,7 +226,7 @@ func (pers *Persons) Save(person Person) bool {
 		}
 	}
 
-	path = pers.path() + "/" + string(person.UserID) + "/img"
+	path = person.path() + "/img"
 	if _, err := os.Stat(path); err != nil {
 		if os.IsNotExist(err) {
 			err = os.Mkdir(path, 0777)
