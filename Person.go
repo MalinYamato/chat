@@ -39,6 +39,7 @@ import (
 	"io/ioutil"
 	"os"
 	"fmt"
+	"os/user"
 )
 
 type Person struct {
@@ -76,6 +77,12 @@ type Persons struct {
 }
 
 func (pers *Persons) load() {
+
+	if _, err := os.Stat(pers.path()); err != nil {
+		if os.IsNotExist(err) {
+			return
+		}
+	}
 
 	files, err := ioutil.ReadDir( pers.path())
 	if err != nil {
