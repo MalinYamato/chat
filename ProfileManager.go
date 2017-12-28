@@ -159,6 +159,7 @@ func checkNicname(nic string) Status {
 
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
+	log.Println("here I am")
 	var status Status
 	if r.Method == "POST" {
 		session, err := sessionStore.Get(r, sessionName)
