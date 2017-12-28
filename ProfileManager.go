@@ -160,11 +160,12 @@ func checkNicname(nic string) Status {
 
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	log.Println("here I am")
+	log.Println("here I amx")
 	var status Status
 	if r.Method == "POST" {
+		log.Println("here I am 2a")
 		session, err := sessionStore.Get(r, sessionName)
-		log.Println("here I am 2")
+		log.Println("here I am 2b")
 		if err != nil {
 			log.Println("Main: UpdateProfileHandler() Call to sessionStore.Get returned ", err)
 			status.Status = ERROR
@@ -181,10 +182,6 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 			p, _ = _persons.findPersonByToken(token)
 
-			if err := r.ParseForm(); err != nil {
-				fmt.Fprintf(w, "ParseForm() err: %v", err)
-				return
-			}
 			log.Println("here I am 4")
 			var op = r.FormValue("OP")
 			var nic = r.FormValue("NicName")
