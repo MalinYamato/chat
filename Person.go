@@ -77,15 +77,13 @@ type Persons struct {
 
 func (pers *Persons) load() {
 
-	log.Println("a here:")
 	if _, err := os.Stat(pers.path()); err != nil {
-		log.Println("c here:")
+
 		if os.IsNotExist(err) {
-			log.Println("The directory: " + pers.path() + "does not exist, ignore loading" , err)
+			log.Println("The directory: " + pers.path() + " does not exist, ignore loading" , err)
 			return
 		}
 	}
-	log.Println("b here:")
 
 	files, err := ioutil.ReadDir( pers.path())
 	if err != nil {
