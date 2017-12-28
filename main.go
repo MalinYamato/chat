@@ -391,11 +391,11 @@ func main() {
 	//testA()
 	//return
 
-	log.Println("Loading persons database..")
+
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
 
-	_persons.load()
+
 	config := &Config{
 		ClientID_FB:      os.Getenv("FACEBOOK_CLIENT_ID"),
 		ClientSecret_FB:  os.Getenv("FACEBOOK_CLIENT_SECRET"),
@@ -442,7 +442,8 @@ func main() {
 	flag.Parse()
 	hub = newHub(*queue)
 	go hub.run()
-
+	log.Println("Loading persons database..")
+	_persons.load()
 	log.Println("Starting service at ", endpoint.url())
 	err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(config, hub))
 	//err = http.ListenAndServe(*addr, NewMux(config, hub) )
