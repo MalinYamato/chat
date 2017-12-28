@@ -391,8 +391,10 @@ func main() {
 	//testA()
 	//return
 
+
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
+	log.Println("Loading persons database..")
 	_persons.load()
 	config := &Config{
 		ClientID_FB:      os.Getenv("FACEBOOK_CLIENT_ID"),
