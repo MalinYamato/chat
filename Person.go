@@ -208,24 +208,34 @@ func (pers *Persons) Save(person Person) bool {
 			}
 		}
 	}
-
-
 	path := pers.path() + "/" + string(person.UserID)
-	err := os.Mkdir(path, 0777)
-	log.Println("Mkdirerr err ", err)
-	if err != nil {
-		panic(err)
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			err := os.Mkdir(path, 0777)
+			log.Println("Mkdirerr err ", err)
+			if err != nil {
+				panic(err)
+			}
+		}
 	}
-	err = os.Mkdir(path+"/img", 0777)
-	log.Println("Mkdirerr err ", err)
-	if err != nil {
-		panic(err)
+
+	path = pers.path() + "/" + string(person.UserID) + "/img"
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			err = os.Mkdir(path, 0777)
+			log.Println("Mkdirerr err ", err)
+			if err != nil {
+				panic(err)
+			}
+		}
 	}
+
 	json_person, _ := json.Marshal(person)
-	err = ioutil.WriteFile(person.path()+"/profile.json", json_person, 0777)
+	err := ioutil.WriteFile(person.path()+"/profile.json", json_person, 0777)
 	if err != nil {
 		panic(err)
 	}
+
 	log.Println("Number of persons ", len(pers.__pers))
 	return true
 }
