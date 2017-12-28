@@ -184,6 +184,7 @@ What remains to do is to creat a handlename that you may change once a month.
         event.preventDefault();
         var post_url = $(this).attr("action");
         var form_data = $(this).serialize();
+        console.log("data " + form_data);
         $.ajax({
             url: post_url,
             type: "POST",
