@@ -90,7 +90,7 @@ func (pers *Persons) load() {
 		log.Fatal(err)
 	}
 	for _, file := range files {
-		content, err := ioutil.ReadFile(pers.path() + "/" + file.Name())
+		content, err := ioutil.ReadFile(pers.path() + "/" + file.Name() + "/profile.json")
 		if err != nil {
 			log.Fatal(err)
 		}
