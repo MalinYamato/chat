@@ -158,8 +158,8 @@ What remains to do is to creat a handlename that you may change once a month.
 <form id="ProfileForm" action="https://{{.Host}}//ProfileUpdate" style="border:1px solid #ccc">
     <div class="container">
         <label><b>Nicname</b></label>
-        <input maxlength="12" id="Nicname" type="text" placeholder="Unique name" name="NicName" required>
-        <input type="hidden" name="OP" value="register"/>
+        <input maxlength="12" id="NicName" type="text" placeholder="Unique name" name="NicName" required>
+        <input hidden name="OP" value="register"/>
         <div class="result">
             <img id="validNameImg"src="images/yes.png" style="display:none;">
             <img id="invalidNameImg" src="images/no.png"  style="display:none;">
@@ -240,7 +240,7 @@ What remains to do is to creat a handlename that you may change once a month.
     }
 
     function verifyNicName() {
-        var name = $("#Nicname").val();
+        var name = $("#NicName").val();
         console.log("Name " + name);
         $.ajax({
             type: "POST",
