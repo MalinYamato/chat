@@ -196,14 +196,22 @@ func (pers *Persons) Save(person Person) bool {
 
 	person.Keep = true
 
-	path := pers.path()
-	err := os.Mkdir(path, 0777)
-	log.Println("Mkdirerr err ", err)
-	if err != nil {
-		panic(err)
+	if _, err := os.Stat(pers.path()); err != nil {
+
+		if os.IsNotExist(err) {
+			log.Println("Creating " + pers.path(), err)
+			path := pers.path()
+			err := os.Mkdir(path, 0777)
+			log.Println("Mkdirerr err ", err)
+			if err != nil {
+				panic(err)
+			}
+		}
 	}
-	path = pers.path() + "/" + string(person.UserID)
-	err = os.Mkdir(path, 0777)
+
+
+	path := pers.path() + "/" + string(person.UserID)
+	err := os.Mkdir(path, 0777)
 	log.Println("Mkdirerr err ", err)
 	if err != nil {
 		panic(err)
