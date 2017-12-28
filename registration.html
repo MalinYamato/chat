@@ -216,7 +216,7 @@ What remains to do is to creat a handlename that you may change once a month.
         var form_data = $(this).serialize();
         $.ajax({
             url: post_url,
-            type: "post",
+            type: "POST",
             data: form_data
         }).done(function (response) {
             var registerForm = document.getElementById("ProfileForm");
