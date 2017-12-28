@@ -165,7 +165,7 @@ What remains to do is to creat a handlename that you may change once a month.
             <img id="validNameImg"src="images/yes.png" style="display:none;">
             <img id="invalidNameImg" src="images/no.png"  style="display:none;">
         </div>
-        <button type="button" onclick="verifyNicName()" class="verifyButton">Verify</button>
+        <button type="button"  onclick="verifyNicName()" class="verifyButton">Verify</button>
 
         <div id="validName" style="display:none;"><span> Congratuation! The name is OK!</span></div>
         <div id="invalidName" style="display:none;"><span> Inalid name -- The name is taken!</span></div>
@@ -174,7 +174,7 @@ What remains to do is to creat a handlename that you may change once a month.
 
         <div class="clearfix">
             <button type="button" class="cancelbtn" onclick="cancel()">Cancel</button>
-            <button type="submit" class="signupbtn" >Sign Up</button>
+            <button type="submit" formmethod="post" class="signupbtn" >Sign Up</button>
         </div>
 
     </div>
@@ -186,8 +186,8 @@ What remains to do is to creat a handlename that you may change once a month.
         var form_data = $(this).serialize();
         console.log("data " + form_data);
         $.ajax({
+            type: "POST",
             url: post_url,
-            type: "post",
             data: form_data
         }).done(function (response) {
             var registerForm = document.getElementById("ProfileForm");
