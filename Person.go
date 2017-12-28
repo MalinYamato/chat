@@ -39,7 +39,7 @@ import (
 	"io/ioutil"
 	"os"
 	"fmt"
-	"os/user"
+
 )
 
 type Person struct {
