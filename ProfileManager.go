@@ -145,11 +145,15 @@ func checkNicname(nic string) Status {
 	var _, found= _persons.findPersonByNickName(nic)
 	if found == true {
 		status.Status = "WARNING"
-		status.Detail = "Nicname is taken"
+		status.Detail = "Nicna me is taken"
+			log.Println(" nic ERROR")
+
 	} else {
 		status.Status = "SUCCESS"
 		status.Detail = "Nicname is valid"
+		log.Println("nic SUCCESS")
 	}
+
 	return status
 }
 
