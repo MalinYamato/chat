@@ -286,8 +286,30 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 
-func requireLogin(next http.Handler) http.Handler {
+
+func requireLoginNonMember(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, req *http.Request) {
+		if !isAuthenticated(req) {
+			http.Redirect(w, req, "/", http.StatusFound)
+			return
+		}
+		next.ServeHTTP(w, req)
+	}
+	return http.HandlerFunc(fn)
+}
+func requireLogin(next http.Handler) http.Handler {
+
+	fn := func(w http.ResponseWriter, req *http.Request) {
+		session, _ := sessionStore.Get(req, sessionName)
+		token := session.Values[sessionToken].(string)
+		var person Person
+		person, ok := _persons.findPersonByToken(token)
+		if ok && person.Keep == false {
+			_persons.Delete(person)
+			sessionStore.Destroy(w, sessionName)
+			http.Redirect(w, req, "/", http.StatusFound)
+			return
+		}
 		if !isAuthenticated(req) {
 			http.Redirect(w, req, "/", http.StatusFound)
 			return
