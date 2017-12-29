@@ -51,7 +51,7 @@ import (
 	"fmt"
 	"github.com/dghubble/gologin/facebook"
 	facebookOAuth2 "golang.org/x/oauth2/facebook"
-	"strconv"
+
 )
 
 type Config struct {
