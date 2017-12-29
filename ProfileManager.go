@@ -175,6 +175,11 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			var op = r.FormValue("OP")
 			var nic = r.FormValue("NicName")
 
+			if op == "cancel" {
+				_persons.Delete(p);
+				sessionStore.Destroy(w, sessionName)
+			}
+
 			if op == "checkNicname" {
 				status = checkNicname(nic)
 
