@@ -122,8 +122,7 @@ func issueSessionFB() http.Handler {
 			_persons.Save(person)
 			user = "registred user"
 			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic()}
-		}
-		if ! ok {
+		} else {
 			person := Person{
 				//Nic:               s[0],
 				Keep:              false,
@@ -223,8 +222,7 @@ func issueSession() http.Handler {
 			_persons.Save(person)
 			user = "registred user"
 			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic() }
-		}
-		if ! ok {
+		} else {
 			person := Person{
 				//Nic:               googleUser.GivenName,
 				Keep:              false,
