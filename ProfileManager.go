@@ -218,7 +218,6 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				status.Status = "Updated"
 				status.Detail = "Success! Your profile was updated!";
 			}
-
 		}
 	} else {
 		status.Status = "ERROR"

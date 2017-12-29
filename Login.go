@@ -120,7 +120,7 @@ func issueSessionFB() http.Handler {
 			person.LoggedIn = true
 			_persons.Save(person)
 			user = "registred user"
-			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic() }
+			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic()}
 		}
 		if ! ok {
 			person := Person{
@@ -142,22 +142,24 @@ func issueSessionFB() http.Handler {
 				UserID:            UserId(userID.String()),
 				Token:             secret.String(),
 				Description:       "",
-				Room:              "Main", }
+				Room:              "Main",}
 
 			user = "new user"
 			person.LoggedIn = true
 			_persons.Add(person)
-			http.Redirect(w, req, "/registration", http.StatusFound)
-			return
-			}
+		}
 		person, _ := _persons.findPersonByFacebookID(facebookUser.ID)
 		if person.PictureURL == "" {
-			person.PictureURL =  endpoint.url() + "/images/default.png";
-			_persons.Save(person)
+			person.PictureURL = endpoint.url() + "/images/default.png";
+			_persons.Add(person)
 		}
-
-		log.Printf("Login: Successful Login of %s Email: %s  FacebookID: %s Token: %s UserID %s ", user, person.Email, person.FacebookID, person.Token, person.UserID)
-		http.Redirect(w, req, "/session", http.StatusFound)
+		if ! ok {
+			http.Redirect(w, req, "/registration", http.StatusFound)
+		} else {
+			log.Printf("Login: Successful Login of %s Email: %s  FacebookID: %s Token: %s UserID %s ", user, person.Email, person.FacebookID, person.Token, person.UserID)
+			http.Redirect(w, req, "/session", http.StatusFound)
+		}
+	}
 	}
 	return http.HandlerFunc(fn)
 }
@@ -246,17 +248,19 @@ func issueSession() http.Handler {
 			user = "new user"
 			person.LoggedIn = true
 			_persons.Add(person)
-			http.Redirect(w, req, "/registration", http.StatusFound)
-			return
 		}
 		person, _ := _persons.findPersonByGoogleID(googleUser.Id)
 		if person.PictureURL == "" {
 			person.PictureURL =  endpoint.url() + "/images/default.png";
 			_persons.Save(person)
 		}
+		if ! ok {
+			http.Redirect(w, req, "/registration", http.StatusFound)
+		} else {
+			log.Printf("Login: Successful Login of %s Email: %s  FacebookID: %s Token: %s UserID %s ", user, person.Email, person.FacebookID, person.Token, person.UserID)
+			http.Redirect(w, req, "/session", http.StatusFound)
+		}
 
-		log.Printf("Login: Successful Login of %s Email: %s  GoogleId: %s Token: %s UserID %s ", user, person.Email, person.GoogleID, person.Token, person.UserID)
-		http.Redirect(w, req, "/session", http.StatusFound)
 	}
 	return http.HandlerFunc(fn)
 }
