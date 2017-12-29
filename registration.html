@@ -142,7 +142,7 @@
         color: white;
     }
 
-    .successText {
+    #message {
         width: 100%;
         text-align: center;
         font-size: 20px;
@@ -184,18 +184,18 @@ What remains to do is to creat a handlename that you may change once a month.
             <button type="button" onclick="register()" class="signupbtn" >Sign Up</button>
         </div>
         <div id="GoToChat" style="display:none;">
-
             <form>
-                <button formaction="https://{{.Host}}/session">Success! Go to Chat!</button>
+                <button formaction="https://{{.Host}}/profile">Go to profile!</button>
             </form>
         </div>
 
     </div>
 </form>
-<p id="message">  </p>
+<p id="message">Regi  </p>
 
 
 <script>
+    $("#message").text("Registration was denied with this Nic name!");
 
     function reportStatus(v)
     {
@@ -257,13 +257,13 @@ What remains to do is to creat a handlename that you may change once a month.
                 console.log("mess " + result);
                 if (result.status == "SUCCESS") {
                     reportStatus(true)
-                    $("#message").val("Registration successful");
+                    $("#message").text("Registration successful");
                     singin.style.display = "none";
                     goChat.style.display = "block"
 
                 } else {
                     reportStatus(false);
-                    $("#message").val("Registration was denied with this Nic name!");
+                    $("#message").text("Registration was denied! Try another nic!");
                     singin.style.display = "block";
                     goChat.style.display = "signIn"
                 }
