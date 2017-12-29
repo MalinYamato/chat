@@ -94,7 +94,7 @@ func issueSessionFB() http.Handler {
 		var ok bool
 		s := strings.Split(facebookUser.Name, " ")
 		v, ok = _persons.findPersonByFacebookID(facebookUser.ID)
-		if ok {
+		if ok && v.Keep {
 			person := Person{
 				Nic:               checkSet(v.Nic, "unregistered"),
 				Keep:              v.Keep,
@@ -191,7 +191,7 @@ func issueSession() http.Handler {
 		var v Person
 		var ok bool
 		v, ok = _persons.findPersonByGoogleID(googleUser.Id)
-		if ok {
+		if ok && v.Keep {
 			person := Person{
 				Nic:               checkSet(v.Nic, "uregistered"),
 				Keep:              v.Keep,
