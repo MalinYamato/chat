@@ -261,6 +261,15 @@ What remains to do is to creat a handlename that you may change once a month.
 
     function cancel()
     {
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "https://{{.Host}}/ProfileUpdate",
+            data: {"OP": "cancel", "NicName": name},
+            success: function (result) {
+                console.log("Cancel mess " + result);
+                }
+        })
         window.location.href = 'https://{{.Host}}';
     }
 
