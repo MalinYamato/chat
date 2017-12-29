@@ -143,32 +143,23 @@ func Contains(slice []string, item string) bool {
 
 func checkNicname(nic string) Status {
 	var status Status
-	log.Println("NIC " + nic)
 	var _, found = _persons.findPersonByNickName(nic)
 	if found == true {
 		status.Status = "WARNING"
 		status.Detail = "Nicna me is taken"
-			log.Println(" nic ERROR")
-
 	} else {
 		status.Status = "SUCCESS"
 		status.Detail = "Nicname is valid"
-		log.Println("nic SUCCESS")
 	}
-
 	return status
 }
 
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
-	log.Println("here I amx method " + r.Method)
-
 	var status Status
 	if r.Method == "POST" {
-		log.Println("here I am 2a")
 		session, err := sessionStore.Get(r, sessionName)
-		log.Println("here I am 2b")
 		if err != nil {
 			log.Println("Main: UpdateProfileHandler() Call to sessionStore.Get returned ", err)
 			status.Status = ERROR
@@ -180,18 +171,13 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			token := session.Values[sessionToken].(string)
 			var p Person
-
-			log.Println("here I am 3")
-
 			p, _ = _persons.findPersonByToken(token)
-
-			log.Println("here I am 4")
 			var op = r.FormValue("OP")
 			var nic = r.FormValue("NicName")
-			log.Println("OP " + op + " nic " + nic )
 
 			if op == "checkNicname" {
 				status = checkNicname(nic)
+
 			} else if op == "register" {
 				status = checkNicname(nic)
 				if status.Status == "SUCCESS" {
@@ -200,6 +186,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 					status.Detail = "Registration successful"
 					hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic() }
 				}
+
 			} else if op == "update" {
 
 				p.FirstName = r.Form.Get("FirstName")
