@@ -179,11 +179,11 @@ What remains to do is to creat a handlename that you may change once a month.
 
         <p class="agree">By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
 
-        <div class="clearfix" id="signIn" style="display:none;>
+        <div class="clearfix" id="signIn" style="display:block;">
             <button type="button" class="cancelbtn" onclick="cancel()">Cancel</button>
             <button type="button" onclick="register()" class="signupbtn" >Sign Up</button>
         </div>
-        <div id="GoToChat" style="display:block;">
+        <div id="GoToChat" style="display:none;">
 
             <form>
                 <button formaction="https://{{.Host}}/session">Go to Chat!</button>
@@ -212,7 +212,7 @@ What remains to do is to creat a handlename that you may change once a month.
         } else {
             valid.style.display = "none";
             invalid.style.display = "block";
-       ;
+
         }
     }
 
