@@ -178,6 +178,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			if op == "cancel" {
 				_persons.Delete(p);
 				sessionStore.Destroy(w, sessionName)
+				log.Println("User Deleted, session destroyed")
 			}
 
 			if op == "checkNicname" {
