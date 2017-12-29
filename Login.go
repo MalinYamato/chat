@@ -160,7 +160,7 @@ func issueSessionFB() http.Handler {
 			http.Redirect(w, req, "/session", http.StatusFound)
 		}
 	}
-	}
+
 	return http.HandlerFunc(fn)
 }
 
