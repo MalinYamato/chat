@@ -1,3 +1,4 @@
+
 //
 // Copyright 2017 Malin Yamato Lääkkö --  All rights reserved.
 // https://github.com/MalinYamato
@@ -144,21 +145,17 @@ func issueSessionFB() http.Handler {
 				Description:       "",
 				Room:              "Main",}
 
-			user = "new user"
+		    if (person.PictureURL == "") {
+		    	person.PictureURL = endpoint.url() + "/images/default.png";
+			}
 			person.LoggedIn = true
 			_persons.Add(person)
+			http.Redirect(w, req, "/registration", http.StatusFound)
+			return
 		}
 		person, _ := _persons.findPersonByFacebookID(facebookUser.ID)
-		if person.PictureURL == "" {
-			person.PictureURL = endpoint.url() + "/images/default.png";
-			_persons.Add(person)
-		}
-		if ! ok {
-			http.Redirect(w, req, "/registration", http.StatusFound)
-		} else {
-			log.Printf("Login: Successful Login of %s Email: %s  FacebookID: %s Token: %s UserID %s ", user, person.Email, person.FacebookID, person.Token, person.UserID)
-			http.Redirect(w, req, "/session", http.StatusFound)
-		}
+		log.Printf("Login: Successful Login of %s Email: %s  FacebookID: %s Token: %s UserID %s ", user, person.Email, person.FacebookID, person.Token, person.UserID)
+		http.Redirect(w, req, "/session", http.StatusFound)
 	}
 
 	return http.HandlerFunc(fn)
@@ -218,6 +215,10 @@ func issueSession() http.Handler {
 				Description:       v.Description,
 				Room:              v.Room}
 
+			if (person.PictureURL == "") {
+				person.PictureURL = endpoint.url() + "/images/default.png";
+			}
+
 			person.LoggedIn = true
 			_persons.Save(person)
 			user = "registred user"
@@ -245,21 +246,15 @@ func issueSession() http.Handler {
 				Description:       "",
 				Room:              "Main", }
 
-			user = "new user"
 			person.LoggedIn = true
 			_persons.Add(person)
+			http.Redirect(w, req, "/registration", http.StatusFound)
+			return
 		}
 		person, _ := _persons.findPersonByGoogleID(googleUser.Id)
-		if person.PictureURL == "" {
-			person.PictureURL =  endpoint.url() + "/images/default.png";
-			_persons.Save(person)
-		}
-		if ! ok {
-			http.Redirect(w, req, "/registration", http.StatusFound)
-		} else {
-			log.Printf("Login: Successful Login of %s Email: %s  FacebookID: %s Token: %s UserID %s ", user, person.Email, person.FacebookID, person.Token, person.UserID)
-			http.Redirect(w, req, "/session", http.StatusFound)
-		}
+		log.Printf("Login: Successful Login of %s Email: %s  FacebookID: %s Token: %s UserID %s ", user, person.Email, person.FacebookID, person.Token, person.UserID)
+		http.Redirect(w, req, "/session", http.StatusFound)
+
 
 	}
 	return http.HandlerFunc(fn)
