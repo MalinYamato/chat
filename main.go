@@ -226,6 +226,9 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(ifs); i++ {
 		msgs[i] = ifs[i].(Message)
 	}
+
+	sessionStore.Destroy(w, sessionName)
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	homeTemplate.Execute(w, struct {
 		Host      string
