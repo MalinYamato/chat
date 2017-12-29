@@ -174,7 +174,9 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			p, _ = _persons.findPersonByToken(token)
 			var op = r.FormValue("OP")
 			var nic = r.FormValue("NicName")
+
 			log.Println("Here " + op + " " + nic)
+
 
 			if op == "cancel" {
 				log.Println("User Deleted, session destroyed")
