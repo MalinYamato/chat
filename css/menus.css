@@ -150,7 +150,7 @@ li {
 }
 
 .dropdown {
-    color: #a2befc;
+    color: #b9d4ff;
     margin-top: 0px;
     margin-left: 10px;
 
@@ -172,7 +172,7 @@ div button, .dropbtn {
 }
 
 div button:hover, .dropdown:hover .dropbtn {
-    background-color: rgb(148, 175, 240);
+    background-color: rgb(185, 212, 255);
 }
 
 div.dropdown {
@@ -182,7 +182,7 @@ div.dropdown {
 .dropdown-content {
     border-radius: 10%;
     border-style:solid;
-    border-color: #88a3df;
+    border-color: #b9d4ff;
     display: none;
     position: absolute;
     background-color: rgba(162, 190, 252, 0);
@@ -207,7 +207,7 @@ div.dropdown {
     border-radius: 10%;
 }
 
-.dropdown-content button:hover {background-color: #94aff0
+.dropdown-content button:hover {background-color: #b9d4ff
 }
 
 .dropdown:hover .dropdown-content {
