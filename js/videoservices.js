@@ -100,30 +100,31 @@ function leaving(name) {
     sfutest.send({"message": register});
 }
 
-function destroyVideo() {
+function destroyVideo(host) {
     janus.destroy();
 }
 
-function publish(id) {
+var __host = "unknown"
+
+function publish(host, id) {
     request = {"Op":"publish", "CamID" : id};
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://{{.Host}}/VideoManager",
+        url: "https://"+$__host+"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
             console.log("Cancel mess " + result);
         }
-    })
 }
 
-function unpublish(id) {
+function unpublish(host, id) {
     request = {"Op":"unpublish", "CamID" : id};
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://{{.Host}}/VideoManager",
+        url: "https://"+$__host+"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
@@ -134,7 +135,9 @@ function unpublish(id) {
 }
 
 
-function startVideo() {
+function startVideo(host) {
+
+    __host = host;
 
     $(document).ready(function () {
         // Initialize the library (all console debuggers enabled)
@@ -195,8 +198,8 @@ function startVideo() {
                                                 myid = msg["id"];
                                                 mypvtid = msg["private_id"];
                                                 Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
-                                                publish(myid);
-                                                publishOwnFeed(true);
+                                                publish(host,myid);
+                                                publishOwnFeed(host,true);
 
                                                 // Any new feed to attach to?
                                                 if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
@@ -207,7 +210,7 @@ function startVideo() {
                                                         var id = list[f]["id"];
                                                         var display = list[f]["display"];
                                                         Janus.debug("  >> [" + id + "] " + display);
-                                                        newRemoteFeed(id, display)
+                                                        newRemoteFeed(host, id, display)
                                                     }
                                                 }
                                             } else if (event === "destroyed") {
@@ -227,7 +230,7 @@ function startVideo() {
                                                         var id = list[f]["id"];
                                                         var display = list[f]["display"];
                                                         Janus.debug("  >> [" + id + "] " + display);
-                                                        newRemoteFeed(id, display)
+                                                        newRemoteFeed(host, id, display)
                                                     }
                                                 } else if (msg["leaving"] !== undefined && msg["leaving"] !== null) {
 // One of the publishers has gone away?
@@ -350,7 +353,7 @@ function startVideo() {
 
 }
 
-function publishOwnFeed(useAudio) {    ////////////////////////
+function publishOwnFeed(host, useAudio) {    ////////////////////////
 // Publish our stream
     useAudio = true;
 
@@ -391,15 +394,15 @@ function toggleMute() {          ////////////////////////////////////////
     $('#mute').html(muted ? "Unmute" : "Mute");
 }
 
-function unpublishOwnFeed() {     ////////////////////////////////////////
+function unpublishOwnFeed(host) {     ////////////////////////////////////////
 // Unpublish our stream
     $('#unpublish').attr('disabled', true).unbind('click');
     var up = {"request": "unpublish"};
     sfutest.send({"message": up});
-    unpublish("unknown");
+    unpublish(host,"unknown");
 }
 
-function newRemoteFeed(id, display) {
+function newRemoteFeed(host, id, display) {
 // A new feed has been published, create a new plugin handle and attach to it as a listener
     var remoteFeed = null;
     janus.attach(
