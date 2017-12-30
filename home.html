@@ -173,9 +173,9 @@
                             register("{{.Person.Nic}}");
                             registered = true;
                         }
-                        publishOwnFeed(true);
+                        publishOwnFeed(true, "{{.Host}}");
                     } else {
-                        unpublishOwnFeed();
+                        unpublishOwnFeed("{{.Host}}");
                     }
                 };
 
@@ -188,7 +188,7 @@
                     var ca = document.getElementById("camArea");
                     if (tcam.isOn()) {
                         document.getElementById("camArea").style.height = "300px";
-                        startVideo();
+                        startVideo({{.Host}});
                         $(".screen").css("height", "260px");
                         $(".screen").css("border-width", "2px");
                         document.getElementById("localCam").style.visibility = "visible";
@@ -204,7 +204,7 @@
                         $("#curbitrate").text("");
                         $("#curbitrate2").text("");
                         document.getElementById("localCam").style.visibility = "hidden";
-                        destroyVideo();
+                        destroyVideo("{{.Host}}");
                         registered = false;
                     }
                 };
