@@ -117,6 +117,7 @@ function publish(host, id) {
         success: function (result) {
             console.log("Cancel mess " + result);
         }
+    });
 }
 
 function unpublish(host, id) {
@@ -130,8 +131,7 @@ function unpublish(host, id) {
         success: function (result) {
             console.log("Cancel mess " + result);
         }
-    })
-
+    });
 }
 
 
