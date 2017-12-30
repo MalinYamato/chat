@@ -120,7 +120,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #9cb8f5;
+    background-color: #b9d4ff;
 }
 li span {
 
@@ -133,7 +133,7 @@ li span {
 }
 
 li a:hover {
-    background-color: #9cb8f5;
+    background-color: #b9d4ff;
 }
 
 ul {
@@ -199,7 +199,7 @@ div.dropdown {
     width: 14em;
     #text-shadow: 2px 2px 4px #000000;
     color: #333333;
-    background-color: #a2befc;
+    background-color: #b9d4ff;
     padding: 2px;
     text-decoration: none;
     display: block;
