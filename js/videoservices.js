@@ -95,10 +95,6 @@ function register(name) {
    sfutest.send({"message": register});
 }
 
-function leaving(name) {
-    var register = {"request": "leaving", "room": 1234, "ptype": "publisher", "display": name};
-    sfutest.send({"message": register});
-}
 
 function destroyVideo(host) {
     janus.destroy();
@@ -190,6 +186,7 @@ function startVideo(host) {
                                     onmessage: function (msg, jsep) {
                                         Janus.debug(" ::: Got a message (publisher) :::");
                                         Janus.debug(JSON.stringify(msg));
+                                        console.log(JSON.stringify(msg) )
                                         var event = msg["videoroom"];
                                         Janus.debug("Event: " + event);
                                         if (event != undefined && event != null) {
@@ -355,6 +352,12 @@ function startVideo(host) {
     });
 
 }
+function leaving(name) {
+    var register = {"request": "leaving", "room": 1234, "ptype": "publisher", "display": name};
+    sfutest.send({"message": register});
+}
+
+
 
 function publishOwnFeed(host, useAudio) {
                                                                                             // Publish our stream
@@ -427,6 +430,9 @@ function newRemoteFeed(host, id, display) {
             onmessage: function (msg, jsep) {
                 Janus.debug(" ::: Got a message (listener) :::");
                 Janus.debug(JSON.stringify(msg));
+
+                log.console( JSON.stringify(msg));
+
                 var event = msg["videoroom"];
                 Janus.debug("Event: " + event);
                 if (event != undefined && event != null) {
