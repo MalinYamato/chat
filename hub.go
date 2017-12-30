@@ -67,8 +67,8 @@ type Hub struct {
 }
 
 type Room struct {
-	Name string
-        Messages []Message
+		Name string
+		Messages []Message
 }
 
 type Command struct {
