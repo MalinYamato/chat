@@ -34,23 +34,10 @@
 package main
 
 import (
-	"os"
-	"strings"
-	"io"
+
 	"log"
 	"encoding/json"
 	"net/http"
-	"strconv"
-	"image"
-	"image/gif"
-	"image/png"
-	"image/jpeg"
-	"github.com/robfig/graphics-go/graphics"
-	"io/ioutil"
-
-	"github.com/satori/go.uuid"
-	"unicode"
-	"golang.org/x/net/html/atom"
 )
 
 
