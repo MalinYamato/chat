@@ -761,14 +761,13 @@
                         info.appendChild(info4);
                         info.appendChild(info5);
                         info.appendChild(info6);
+                        info.setAttribute("id", "profileInfo");
                         if (person.camState == "ON") {
                             var cam = document.createElement("img");
                             cam.setAttribute("src", "/images/webcam.svg");
                             cam.setAttribute("class", "smallcam");
-                            info.appendChild(cam);
+                            x.appendChild(cam);
                         }
-                        info.setAttribute("id", "profileInfo");
-
                         x.appendChild(info);
 
                         console.log(person);
