@@ -365,6 +365,7 @@ function publishOwnFeed(host, useAudio) {    ////////////////////////
             success: function (jsep) {
                 Janus.debug("Got publisher SDP!");
                 Janus.debug(jsep);
+                console.log("Publish " + jsep.CamID + " " + jsep);
                 var publish = {"request": "configure", "audio": useAudio, "video": true};
                 sfutest.send({"message": publish, "jsep": jsep});
 
