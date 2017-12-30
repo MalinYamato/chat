@@ -472,6 +472,15 @@
                     console.log("New message", message);
                     var uniqueID = message.sender + "@" + getID();
 
+
+                    if (message.op == "VideoStarted") {
+                        console.log("Video Started");
+                    }
+                    if (message.op == "VideoStopped") {
+                        console.log("Video Stopped");
+                    }
+
+
                     if (message.token == "flash" && message.op != "Message" && message.op != "NewUser") {
                         return;
                     } else {
