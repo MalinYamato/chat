@@ -199,7 +199,7 @@ function startVideo(host) {
                                                 console.log("My stream is on " + myid);
 
                                                 publish(host,myid);
-                                                publishOwnFeed(host,true);
+                                               // publishOwnFeed(host,true);
 
                                                 // Any new feed to attach to?
                                                 if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
