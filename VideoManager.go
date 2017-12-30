@@ -80,10 +80,12 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 				if request.Op == "publish" {
 					p.CamID = request.CamID
 					p.CamState = "ON"
+					_persons.Save(p)
 					hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Vide started!" }
 					status.Status = SUCCESS
 				} else if request.Op == "unpublish" {
 					p.CamState = "OFF"
+					_persons.Save(p)
 					hub.broadcast <- Message{Op: "VideoStopped", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止 Video stopped!" }
 					status.Status = SUCCESS
 				}
