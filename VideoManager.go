@@ -38,18 +38,19 @@ import (
 	"log"
 	"encoding/json"
 	"net/http"
+	"math/big"
 )
 
 
 
 type VideoResponse struct {
-	Status          Status       `json:"status"`
-	CamID           string       `json:"camID"`
+	Status          Status        `json:"status"`
+	CamID           big.Int       `json:"camID"`
 }
 
 type VideoRequest struct {
-	Op              string       `json:"op"`
-	CamID           string       `json:"camID"`
+	Op              string        `json:"op"`
+	CamID           big.Int       `json:"camID"`
 }
 
 
