@@ -111,11 +111,11 @@ function publish(host, id) {
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://"+$__host+"/VideoManager",
+        url: "https://"+host+"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
-            console.log("Cancel mess " + result);
+            console.log("Published Video" + result);
         }
     });
 }
@@ -125,11 +125,11 @@ function unpublish(host, id) {
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://"+$__host+"/VideoManager",
+        url: "https://"+host+"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
-            console.log("Cancel mess " + result);
+            console.log("Unpublished Video " + result);
         }
     });
 }
