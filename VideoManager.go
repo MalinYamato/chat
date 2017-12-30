@@ -51,6 +51,7 @@ type VideoResponse struct {
 type VideoRequest struct {
 	Op              string        `json:"op"`
 	CamID           big.Int       `json:"camID"`
+	UserID          string        `json:"userID"`
 }
 
 
@@ -85,10 +86,7 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 					p.CamState = "OFF"
 					hub.broadcast <- Message{Op: "VideoStopped", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止 Video stopped!" }
 					status.Status = SUCCESS
-				} else if request.Op == "getCamId" {
-					response.CamID = p.CamID
-					status.Status = SUCCESS
-					}
+				}
 
 			}
 		}
