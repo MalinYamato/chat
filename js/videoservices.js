@@ -399,7 +399,7 @@ function unpublishOwnFeed(host) {     ////////////////////////////////////////
     $('#unpublish').attr('disabled', true).unbind('click');
     var up = {"request": "unpublish"};
     sfutest.send({"message": up});
-    unpublish(host,"unknown");
+    unpublish(host,123);
 }
 
 function newRemoteFeed(host, id, display) {
