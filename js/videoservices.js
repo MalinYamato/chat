@@ -198,6 +198,9 @@ function startVideo(host) {
                                                 myid = msg["id"];
                                                 mypvtid = msg["private_id"];
                                                 Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
+
+                                                console.log("My stream is on " + myid);
+
                                                 publish(host,myid);
                                                 publishOwnFeed(host,true);
 
@@ -323,7 +326,7 @@ function startVideo(host) {
                                         }
                                     },
                                     onremotestream: function (stream) {
-// The publisher stream is sendonly, we don't expect anything here
+                                           // The publisher stream is sendonly, we don't expect anything here
                                     },
                                     oncleanup: function () {
                                         Janus.log(" ::: Got a cleanup notification: we are unpublished now :::");
@@ -353,19 +356,18 @@ function startVideo(host) {
 
 }
 
-function publishOwnFeed(host, useAudio) {    ////////////////////////
-// Publish our stream
+function publishOwnFeed(host, useAudio) {
+                                                                                            // Publish our stream
     useAudio = true;
-
     $('#publish').attr('disabled', true).unbind('click');
     sfutest.createOffer(
         {
-// Add data:true here if you want to publish datachannels as well
+                                                                                            // Add data:true here if you want to publish datachannels as well
             media: {audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true},	// Publishers are sendonly
             success: function (jsep) {
                 Janus.debug("Got publisher SDP!");
                 Janus.debug(jsep);
-                console.log("Publish " + jsep.CamID + " " + jsep);
+                console.log("Publish ");
                 var publish = {"request": "configure", "audio": useAudio, "video": true};
                 sfutest.send({"message": publish, "jsep": jsep});
 
