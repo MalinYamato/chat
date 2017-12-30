@@ -58,6 +58,10 @@
     <script type="text/javascript"></script>
 </head>
 <style>
+
+    body {
+        background-color: #b9d4ff;
+    }
     /* Full-width input fields */
     input[type=text], input[type=password] {
         width: 40%;
@@ -177,7 +181,8 @@
 
     .welcome h2 {
         margin-left: 0.5em;
-        text-align: center;
+        font-size: 30px;
+
     }
 
     #message {color: #3f3f3f;
@@ -187,19 +192,19 @@
 
     }
     #signInIMG {
-        width: 55px;
-        height: 55px;
+        width: 4em;
+        height:3em;
     }
 </style>
-
+<body>
 <div class="welcome row-flow">
     <div class="flex-row">
-        <img id="signInIMG" src="images/rakuenlogo.png" img/>
-    <h2>Signup Rakuen Chat</h2>
+        <img id="signInIMG" src="images/rakurakuen.png" img/>
+    <h2>Signup Rakuen</h2>
 
     </div>
 <p >
-Welcome as a new member of Rakuen chat.
+Welcome as a new member of Rakuen.
 You have already verified your email address by either Facebook or Google.
 What remains to do is to creat a handlename that you may change once a month.
 </p>
@@ -234,7 +239,7 @@ What remains to do is to creat a handlename that you may change once a month.
     </div>
 </form>
 <p id="message"> </p>
-
+</body>
 
 <script>
     var valid = document.getElementById("validName");
