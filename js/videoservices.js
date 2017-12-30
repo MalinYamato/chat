@@ -104,6 +104,36 @@ function destroyVideo() {
     janus.destroy();
 }
 
+function publish(id) {
+    request = {"Op":"publish", "CamID" : id};
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "https://{{.Host}}/VideoManager",
+        data: JSON.stringify(request),
+        contentType: 'application/json',
+        success: function (result) {
+            console.log("Cancel mess " + result);
+        }
+    })
+}
+
+function unpublish(id) {
+    request = {"Op":"unpublish", "CamID" : id};
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "https://{{.Host}}/VideoManager",
+        data: JSON.stringify(request),
+        contentType: 'application/json',
+        success: function (result) {
+            console.log("Cancel mess " + result);
+        }
+    })
+
+}
+
+
 function startVideo() {
 
     $(document).ready(function () {
@@ -165,6 +195,7 @@ function startVideo() {
                                                 myid = msg["id"];
                                                 mypvtid = msg["private_id"];
                                                 Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
+                                                publish(myid);
                                                 publishOwnFeed(true);
 
                                                 // Any new feed to attach to?
@@ -333,6 +364,7 @@ function publishOwnFeed(useAudio) {    ////////////////////////
                 Janus.debug(jsep);
                 var publish = {"request": "configure", "audio": useAudio, "video": true};
                 sfutest.send({"message": publish, "jsep": jsep});
+
             },
             error: function (error) {
                 Janus.error("WebRTC error:", error);
@@ -362,8 +394,9 @@ function toggleMute() {          ////////////////////////////////////////
 function unpublishOwnFeed() {     ////////////////////////////////////////
 // Unpublish our stream
     $('#unpublish').attr('disabled', true).unbind('click');
-    var unpublish = {"request": "unpublish"};
-    sfutest.send({"message": unpublish});
+    var up = {"request": "unpublish"};
+    sfutest.send({"message": up});
+    unpublish("unknown");
 }
 
 function newRemoteFeed(id, display) {

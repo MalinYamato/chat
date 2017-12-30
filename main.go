@@ -317,6 +317,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.Handle("/ImageManager", requireLogin(http.HandlerFunc(ImageManager_UploadHandler)))
 	mux.Handle("/ImageManagerGetAll", requireLogin(http.HandlerFunc(ImageManger_GetHandler)))
 	mux.Handle("/ImageManagerDelete", requireLogin(http.HandlerFunc(ImageManager_DeleteHandler)))
+	mux.Handle("/VideoManager", requireLogin(http.HandlerFunc(VideoManager_handler)))
 
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)

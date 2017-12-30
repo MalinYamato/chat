@@ -62,7 +62,7 @@ type VideoResponse struct {
 
 type VideoRequest struct {
 	Op              string       `json:"op"`
-	CamID           string       `json:"camID`
+	CamID           string       `json:"camID"`
 }
 
 
@@ -72,13 +72,13 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 	var request VideoRequest
 	var response VideoResponse
 	if r.Method == "POST" {
-		var person Person
+		var p Person
 		var ok bool
 		token, _, err := getCookieAndTokenfromRequest(r, true)
 		if err != nil {
 			status = Status{ERROR, err.Error()}
 		} else {
-			person, ok = _persons.findPersonByToken(token)
+			p, ok = _persons.findPersonByToken(token)
 			if ! ok {
 				status = Status{ERROR, err.Error()}
 			} else {
@@ -89,15 +89,16 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 					panic(err)
 				}
 				if request.Op == "publish" {
-					person.CamID = request.CamID
-					hub.broadcast <- Message{Op: "Video", Token: "", Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始" + p.getNic() }
+					p.CamID = request.CamID
+					p.CamState = "ON"
+					hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始" + p.getNic() }
 					status.Status = SUCCESS
 				} else if request.Op == "unpublish" {
-					person.CamID = ""
-					hub.broadcast <- Message{Op: "Video", Token: "", Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止" + p.getNic() }
+					p.CamState = "OFF"
+					hub.broadcast <- Message{Op: "VideoStopped", Token: "", Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止" + p.getNic() }
 					status.Status = SUCCESS
 				} else if request.Op == "getCamId" {
-					response.CamID = person.CamID
+					response.CamID = p.CamID
 					status.Status = SUCCESS
 					}
 

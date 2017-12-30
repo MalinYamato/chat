@@ -739,8 +739,9 @@
                         var info4 = document.createElement("li");
                         var info5 = document.createElement("li");
                         var info6 = document.createElement("li");
+
+                        var caminfo =  document.createElement("li");
                         info1.innerText = "        " + person.nic + " " + age;
-                        info2.innerText = "        " + person.firstName + " " + person.lastName;
                         info3.innerText = "        " + person.gender + " " + person.sexualOrienation;
                         info4.innerText = "        " + person.country + " " + person.town;
                         info5.innerText = "        " + "";
@@ -751,8 +752,16 @@
                         info.appendChild(info4);
                         info.appendChild(info5);
                         info.appendChild(info6);
+                        if (person.camState = "ON") {
+                            var cam = document.createElement("img");
+                            cam.setAttribute("src", "/images/webcam.svg");
+                            cam.setAttribute("class", "smallcam");
+                            info.appendChild(cam);
+                        }
                         info.setAttribute("id", "profileInfo");
+
                         x.appendChild(info);
+
                         console.log(person);
                         x.className += " w3-show";
                     }
