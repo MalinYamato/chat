@@ -123,6 +123,18 @@ func (pers *Persons) getAll() (persons []Person) {
 	}
 	return l
 }
+
+func (pers *Persons) getAllMembers() (persons []Person) {
+	var l = []Person{}
+	for _, p := range pers.__pers {
+		if (p.Keep == true) {
+
+			l = append(l, p)
+		}
+	}
+	return l
+}
+
 func (pers *Persons) getAllLoggedIn() (persons []Person) {
 	var l = []Person{}
 	for _, p := range pers.__pers {
@@ -135,7 +147,7 @@ func (pers *Persons) getAllLoggedIn() (persons []Person) {
 func (pers *Persons) getAllInRoom(Room string) (persons []Person) {
 	var l = []Person{}
 	for _, p := range pers.__pers {
-		if p.LoggedIn == true && p.Room == Room {
+		if p.Keep == true && p.LoggedIn == true && p.Room == Room {
 			l = append(l, p)
 		}
 	}

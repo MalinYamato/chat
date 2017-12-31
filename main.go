@@ -228,6 +228,8 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		msgs[i] = ifs[i].(Message)
 	}
 
+	var none []Person
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	homeTemplate.Execute(w, struct {
 		Host      string
@@ -243,7 +245,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		LoggedOut: "flex",
 		Person:    Person{},
 		Messages:  msgs,
-		Persons:   _persons.getAllInRoom("Main"),
+		Persons:   none,
 		Targets:   nil,
 	})
 }
