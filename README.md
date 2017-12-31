@@ -69,29 +69,30 @@ Started](http://golang.org/doc/install) page describes how to install the develo
      go to> https://console.cloud.google.com/apis
      Go to Credentials
      Create credentials
-     Enter the OAuth client ID
-     Select Web application
+     Select "OAuth client ID"
+     Select "Web application"
      Authorized redirect URIs should be
         https:// yourhost.yourdomain /google/calllback
 ### Facebook login
      go to https://developers.facebook.com/apps/
-     + Add a New App
+     Select ""+ Add a New App"
      Settings
         Basic
             Add your domain
             Add your Site URL
-        Avanced
+        Advanced
             Domain Manger -- add the path to your server
      App Review
             Make Rakuen Chat public?
-            Yes
+            Set "Yes"
       + Add Product
-            Facebook Login
+            Select "Facebook Login"
       Facebook Login
             Settings
-              Valid OAuth redirect URIs
+              Enter into "Valid OAuth redirect URIs"
               https://yourhonst.yourdomain:443/facebook/callback
-
+### Finally
+     Enter all corresponding keys into the file raku.conf
 
 ### Running rakuen
 The default target of installation is: /var/www/rakuen.
