@@ -75,7 +75,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
         https:// yourhost.yourdomain /google/calllback
 ### Facebook login
      go to https://developers.facebook.com/apps/
-     Select ""+ Add a New App"
+     Select "+ Add a New App"
      Settings
         Basic
             Add your domain
