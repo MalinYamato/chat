@@ -65,7 +65,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     cert_key = /etc/letsencrypt/live/yourhostname.yourdomain/privkey.pem
 
 ## Setting upp application keys and callback
-     ### Google login
+### Google login
      go to> https://console.cloud.google.com/apis
      Go to Credentials
      Create credentials
@@ -73,7 +73,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
      Select Web application
      Authorized redirect URIs should be
         https:// yourhost.yourdomain /google/calllback
-     ### Facebook login
+### Facebook login
      go to https://developers.facebook.com/apps/
      + Add a New App
      Settings
