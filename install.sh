@@ -55,6 +55,7 @@ do
 done
 
 install -v -m +x $GOPATH/bin/* $document_root
+
 install -v -m +x /etc/letsencrypt/live/$SITE/fullchain.pem $document_root
 install -v -m +x /etc/letsencrypt/live/$SITE/privkey.pem $document_root
 

@@ -64,6 +64,35 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     cert_pem = /etc/letsencrypt/live/yourhostname.yourdomain/fullchain.pem
     cert_key = /etc/letsencrypt/live/yourhostname.yourdomain/privkey.pem
 
+## Setting upp application keys and callback
+     ### Google login
+     go to> https://console.cloud.google.com/apis
+     Go to Credentials
+     Create credentials
+     Enter the OAuth client ID
+     Select Web application
+     Authorized redirect URIs should be
+        https:// yourhost.yourdomain /google/calllback
+     ### Facebook login
+     go to https://developers.facebook.com/apps/
+     + Add a New App
+     Settings
+        Basic
+            Add your domain
+            Add your Site URL
+        Avanced
+            Domain Manger -- add the path to your server
+     App Review
+            Make Rakuen Chat public?
+            Yes
+      + Add Product
+            Facebook Login
+      Facebook Login
+            Settings
+              Valid OAuth redirect URIs
+              https://yourhonst.yourdomain:443/facebook/callback
+
+
 ### Running rakuen
 The default target of installation is: /var/www/rakuen.
 Once you have Go up and running, you can download, build and run the servers
