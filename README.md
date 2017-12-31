@@ -95,7 +95,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
      Enter all corresponding keys into the file raku.conf
 
 ### Running rakuen
-The default target of installation is: /var/www/rakuen.
+The default target of installation is: /var/www/raku.
 Once you have Go up and running, you can download, build and run the servers
 by using the following commands.
 
