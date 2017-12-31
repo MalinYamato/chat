@@ -1,4 +1,4 @@
-# Rakuen 楽園　- a secure chat with pubic and instant private rooms including video conferencing.
+# Raku Rakuen 楽園　- a secure chat with pubic and instant private rooms including video conferencing.
 Rakuen is a secure encrypted chat with profile management and several ways to enage in private chat, establish private chat rooms on the fly.
 You may log in by a Google or Facebook account thanks to the work of Dalton Hubble. The relationship between chatters and private chatters 
 is governed by a Directed Acyclic Graph that has a limit on node depth. It is possible to chat while you view and hear those whom you chat with
