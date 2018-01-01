@@ -73,8 +73,8 @@ visibility: hidden;
 	position: sticky;
 
 	display:block;
-//display: flex;
-//width: auto;
+     //display: flex;
+    //width: auto;
 	border-radius: 10px;
 	background-color: #ad242c;
 	transition: width 0s, height 2s;
