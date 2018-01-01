@@ -448,8 +448,6 @@ function publishOwnFeed(useAudio) {
 }
 
 
-}
-
 function mute() {
     sfutest.muteAudio();
 }
