@@ -388,7 +388,7 @@ var _persons Persons
 var hub *Hub
 var DocumentRoot string
 var endpoint Endpoint
-var homeTemplate = template.Must(template.ParseFiles("/var/www/rakuen/home.html"))
+var homeTemplate = template.Must(template.ParseFiles("/var/www/raku/home.html"))
 var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
 
