@@ -107,8 +107,13 @@ function leave()
 
 }
 
+var initialized = false;
 
 $(document).ready(function() {
+
+    if ( ! initialized) {
+
+
     console.log("Init Jaanus library");
     // Initialize the library (all console debuggers enabled)
     Janus.init({debug: "all", callback: function() {
@@ -391,6 +396,10 @@ $(document).ready(function() {
                     });
             });
         }});
+}
+
+initialized = true;
+
 });
 
 
@@ -436,6 +445,9 @@ function publishOwnFeed(useAudio) {
                 }
             }
         });
+}
+
+
 }
 
 function mute() {
