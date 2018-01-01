@@ -108,9 +108,7 @@ function leave()
 }
 
 
-// $(document).ready(function()
-
-function initJanus() {
+$(document).ready(function() {
     consoloe.log("Init Jaanus library");
     // Initialize the library (all console debuggers enabled)
     Janus.init({debug: "all", callback: function() {
