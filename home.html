@@ -58,7 +58,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
     <script type="text/javascript" src="/js/janus.js"></script>
-    <script type="text/javascript" src="/js/videoservices.js"></script>
+    <script type="text/javascript" src="/js/videoroom.js"></script>
 
     <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
     <script src="/js/SVGButton.js"></script>
@@ -137,6 +137,97 @@
 
 
             //////////////////////// Button actions settings ///////////////////////////////
+            var lmic = new SVGMicrophoneButton("#localMic", "x", "x");
+            lmic.s.onmousedown = function () {
+                console.log("clicked");
+                lmic.mouseDown();
+                lmic.toggle();
+                if (lmic.isOn()) {
+                    unmute();
+                } else {
+                    mute();
+                }
+            }
+
+            var lcam = new SVGWebcamButton("#localCam", "x", "x");
+            lcam.s.onmousedown = function () {
+                console.log("clicked");
+                lcam.mouseDown();
+                lcam.toggle();
+                if (lcam.isOn()) {
+                    pub();
+                    if( sfutest.isAudioMuted() )
+                    {
+                        console.log("audio is muted!")
+                        lmic.setOff();
+                    }
+                    else {
+                        console.log("audio is MOT muted!")
+                        lmic.setOn();
+                    }
+
+
+                } else {
+                    unpub();
+                }
+            }
+
+
+
+
+            var r1cam = new SVGWebcamButton("#rCam1", "x", "x");
+            r1cam.s.onmousedown = function () {
+                console.log("clicked");
+                r1cam.mouseDown();
+                r1cam.toggle();
+                if (lcam.isOn()) {
+                    //pub();
+                } else {
+                    //unpub();
+                }
+            }
+
+            var r1mic = new SVGMicrophoneButton("#rMic1", "x", "x");
+            r1mic.s.onmousedown = function () {
+                console.log("clicked");
+                r1mic.mouseDown();
+                r1mic.toggle();
+                if (r1mic.isOn()) {
+                    //unmte
+                } else {
+                    //mute
+                }
+            }
+
+            var r2cam = new SVGWebcamButton("#rCam2", "x", "x");
+            r2cam.s.onmousedown = function () {
+                console.log("clicked");
+                r2cam.mouseDown();
+                r2cam.toggle();
+                if (lcam.isOn()) {
+                    // pub();
+                } else {
+                    // unpub();
+                }
+            }
+            var r2mic = new SVGMicrophoneButton("#rMic2", "x", "x");
+            r2mic.s.onmousedown = function () {
+                console.log("clicked");
+                r2mic.mouseDown();
+                r2mic.toggle();
+                if (r2mic.isOn()) {
+                    //unmte
+                } else {
+                    //mute
+                }
+            }
+            lmic.setOn();
+            r1mic.setOn();
+            r2mic.setOn();
+
+
+
+
 
 
             var profile = new SVGButton("#profile", "  Profile", "L");
@@ -162,20 +253,15 @@
                     });
                 };
 
-              //  var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 lcam.s.onmousedown = function () {
                     console.log("clicked");
                     lcam.mouseDown();
                     lcam.toggle();
                     if (lcam.isOn()) {
-                        if (registered == false) {
-                            register("{{.Person.Nic}}");
-                            registered = true;
-                        }
-                        publishOwnFeed(true, "{{.Host}}");
+                        pub();
                     } else {
-                        unpublishOwnFeed("{{.Host}}");
+                        unpub();
                     }
                 };
 
@@ -187,30 +273,13 @@
                     tcam.toggle();
                     var ca = document.getElementById("camArea");
                     if (tcam.isOn()) {
-                        document.getElementById("camArea").style.height = "300px";
-                        startVideo({{.Host}});
-                        $(".screen").css("height", "260px");
-                        $(".screen").css("border-width", "2px");
-                        document.getElementById("localCam").style.visibility = "visible";
-                        registered = false;
-
+                        lcam.setOn();
+                         join();
                     } else {
                         lcam.setOff();
-                        document.getElementById("camArea").style.height = "0px";
-                        $(".screen").css("height", "0px");
-                        $(".screen").css("border-width", "0px");
-                        $("#curres").text("");
-                        $("#curres2").text("");
-                        $("#curbitrate").text("");
-                        $("#curbitrate2").text("");
-                        document.getElementById("localCam").style.visibility = "hidden";
-                        destroyVideo("{{.Host}}");
-                        registered = false;
+                        leave();
                     }
                 };
-
-
-
         }
 
             function changeRoom(cmd, room) {
@@ -663,6 +732,68 @@
 </div>
 
 
+<div id="camArea">
+
+    <div class="flex-container videos" id="videos" >
+        <div class="flex-row">
+            <div class="screen flexer " id="screen1">
+
+                <div class=" narrow" id="videolocal">
+                    <div class="videocontrols">
+                        <object id="localCam" class="" type="image/svg+xml" data="images/webcam.svg">
+                            Local Cam
+                        </object>
+                        <label id="camUser1">User</label>
+                        <object id="localMic" class="" type="image/svg+xml" data="images/microphone.svg">
+                            Local Cam
+                        </object>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="screen flexer" id="screen2">
+                <div class=" narrow " id="videoremote1">
+                    <div class="videocontrols">
+                        <object id="rCam1" class="" type="image/svg+xml" data="images/webcam.svg">
+                            Local Cam
+                        </object>
+                        <label id="camUser2">User</label>
+                        <object id="rMic1" class="" type="image/svg+xml" data="images/microphone.svg">
+                            Local Cam
+                        </object>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="screen flexer" id="screen3">
+                <div class=" narrow " id="videoremote2">
+                    <div class="videocontrols">
+                        <object id="rCam2" class="" type="image/svg+xml" data="images/webcam.svg">
+                            Local Cam
+                        </object>
+                        <label id="camUser3">User</label>
+                        <object id="rMic2" class="" type="image/svg+xml" data="images/microphone.svg">
+                            Local Cam
+                        </object>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--
 
 <div  id="camArea" >
     <object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
@@ -691,6 +822,7 @@
 
 </div>
 
+-->
 
 <div id="chatform" class="row-flex">
     <form id="form" class="row">

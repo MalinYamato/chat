@@ -47,6 +47,77 @@ function setDefaultActions (obj) {
         obj.mouseOut(); };
 }
 
+function SVGMicrophoneButton(id, img, size) {
+
+    // class constants and setup
+    namespace = "http://www.inkscape.org/namespaces/inkscape";
+    colorIn =    "gray";
+    colorPress = "gray";
+    colorOut =  "#9cb8f5";
+    this.classMap = {};
+    this.Id   = id;
+    this.size = size;
+    this.Image = img;
+
+    // search for nodes
+    var qs = document.querySelector(this.Id);
+    this.s = qs.contentDocument.getElementById("svg2");
+    this.es = document.querySelector(this.Id).contentDocument.getElementsByTagName("g");
+    for (i=0;i < this.es.length; i++) {
+        if ( this.es[i] != null && this.es[i].hasAttributeNS(namespace,'label')) {
+            var a = this.es[i].getAttributeNS(namespace,'label');
+            this.classMap[a] = this.es[i];
+            //console.log("SVG> " + a);
+        }
+    }
+
+    this.isOn =   this.toggle = function (e) {
+        if (this.classMap["off"].style.display == "none") {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    this.toggle = function (e) {
+        if (this.classMap["off"].style.display == "none") {
+            this.setOff();
+        }
+        else {
+            this.setOn();
+        }
+    };
+
+
+
+    this.setOn = function (e) {
+        this.classMap["off"].style.display = "none";
+    };
+
+    this.setOff = function (e) {
+        this.classMap["off"].style.display = "inherit";
+
+    };
+
+    this.mouseOut = function (e) {
+        //this.TextElem.style.fill = colorOut;
+    };
+    this.mouseIn = function (e) {
+        //this.TextElem.style.fill = colorIn;
+    };
+    this.mouseDown = function (e) {
+        //this.Cloud_Expanded.style.display = "inline";
+    };
+    this.mouseUp = function (e) {
+        //this.Cloud_Expanded.style.display = "none";
+    };
+
+    setDefaultActions(this);
+
+}
+
+
+
 function SVGWebcamButton(id, img, size) {
 
     // class constants and setup
@@ -60,7 +131,8 @@ function SVGWebcamButton(id, img, size) {
     this.Image = img;
 
     // search for nodes
-    this.s = document.querySelector(this.Id).contentDocument.getElementById("svg2");
+    var qs = document.querySelector(this.Id);
+    this.s = qs.contentDocument.getElementById("svg2");
     this.es = document.querySelector(this.Id).contentDocument.getElementsByTagName("g");
     for (i=0;i < this.es.length; i++) {
         if ( this.es[i] != null && this.es[i].hasAttributeNS(namespace,'label')) {
@@ -87,12 +159,15 @@ function SVGWebcamButton(id, img, size) {
         }
     };
 
+
+
     this.setOn = function (e) {
         this.classMap["on"].style.display = "inherit";
     };
 
     this.setOff = function (e) {
         this.classMap["on"].style.display = "none";
+
     };
 
     this.mouseOut = function (e) {
