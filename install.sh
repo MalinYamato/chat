@@ -27,6 +27,7 @@ do
     fi
 done
 
+
 echo "getting, building and installing packages"
 
 for i in "${packages[@]}"
