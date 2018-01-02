@@ -74,6 +74,7 @@
 
         function getUser(op)
         {
+            var res = null;
             $.ajax({
                         url: 'https://{{.Host}}/profile',
                         type: 'post',
@@ -84,10 +85,13 @@
 
                             if (response.status.status != "SUCCESS") {
                                 console.log("getUser failed> " + response.status + " " + response)
+                            } else {
+                                console.log("getUser failed> " + response.status + " " + response)
                             }
-                            return response;
+                            res = response;
                         }
                     });
+            return res;
 
         }
 
