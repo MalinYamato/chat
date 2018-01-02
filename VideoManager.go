@@ -39,6 +39,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"math/big"
+	"golang.org/x/net/idna"
+	"strconv"
 )
 
 
@@ -85,6 +87,8 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 				if request.Op == "setMyCamID" {
 					p.CamID = request.CamID
 					_persons.Save(p)
+					log.Println("setMyCamID" +  strconv.Itoa( request.CamID))
+
 					response.Status = Status{SUCCESS,  ""}
 				}
 
