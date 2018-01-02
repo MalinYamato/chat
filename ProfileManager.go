@@ -108,11 +108,11 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Main: Profile request for user UserID: %s \n", request.UserID)
 		var person Person
 		var ok bool
-		if request.Op == "getUserToken" {
+		if request.Op == "getUserByToken" {
 			person, ok = _persons.findPersonByToken(request.Token)
 		} else if request.Op == "getUserByNic" {
 			person, ok = _persons.findPersonByNickName(request.Nic)
-		} else if request.Op == "getUserID" {
+		} else if request.Op == "getUserByID" {
 			person, ok = _persons.findPersonByUserId(request.UserID)
 		} else if request.Op == "getMyself" {
 			person, response.Status = getSessionUser(r);
