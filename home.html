@@ -149,7 +149,7 @@
 
             if (loggedIn()) {
 
-
+/*
 
                 var lmic = new SVGMicrophoneButton("#localMic", "x", "x");
                 lmic.s.onmousedown = function () {
@@ -237,21 +237,6 @@
                 r1mic.setOn();
                 r2mic.setOn();
 
-
-                var logout = new SVGButton("#logoutButton", " Logout", "S");
-                logout.Cloud_Text.onmousedown = function () {
-                    logout.mouseDown();
-                    $.ajax({
-                        type: "POST",
-                        async: false,
-                        url: "https://{{.Host}}/logout",
-                        data: {token: "{{.Person.Token }}"},
-                        success: function (result) {
-                            window.location = "https://{{.Host}}/";
-                        }
-                    });
-                };
-
                 var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 lcam.s.onmousedown = function () {
                     console.log("clicked");
@@ -279,6 +264,26 @@
                         leave();
                     }
                 };
+
+
+
+*/
+
+                var logout = new SVGButton("#logoutButton", " Logout", "S");
+                logout.Cloud_Text.onmousedown = function () {
+                    logout.mouseDown();
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: "https://{{.Host}}/logout",
+                        data: {token: "{{.Person.Token }}"},
+                        success: function (result) {
+                            window.location = "https://{{.Host}}/";
+                        }
+                    });
+                };
+
+
         }
 
             function changeRoom(cmd, room) {
@@ -731,6 +736,7 @@
 </div>
 
 
+
 <div id="camArea">
 
     <div class="flex-container videos" id="videos" >
@@ -818,7 +824,7 @@
 
 </div>
 
--->
+
 
 <div id="chatform" class="row-flex">
     <form id="form" class="row">
