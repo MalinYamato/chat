@@ -822,14 +822,13 @@
                             c.setAttribute("id", aCam);
                             info.appendChild(cam1);
                             var camButton = new SVGWebcamButton("#" + aCam, "x", "x");
-                            tcam.s.onmousedown = function () {
+                            camButton.s.onmousedown = function () {
                                 //console.log("clicked");
-                                tcam.mouseDown();
-                                tcam.toggle();
-                                var ca = document.getElementById("camArea");
-                                if (tcam.isOn()) {
+                                camButton.mouseDown();
+                                camButton.toggle();
+                                if (camButton.isOn()) {
                                     setRemoteCam(aCam);
-                                } else if (!tcam.isOn()) {
+                                } else if (!camButton.isOn()) {
                                     unsetRemoteCam(aCam);
                                 }
                             };
