@@ -755,6 +755,17 @@
 
 <script type="text/javascript">
 
+
+    function setRemoteCam(aAam)
+    {
+        console.log(aCam + " set");
+    }
+
+    function unsetRemoteCam(cam) {
+
+        console.log(aCam + "unset");
+    }
+
     function myFunction(myid) {
         console.log("clicked" + myid);
         userId = myid.split("@")[0];
@@ -802,7 +813,7 @@
                         if (person.camState == "ON") {
 
                             var cams = ["cam1","cam2","cam3"];
-                            
+
                             for (var aCam in cams) {
 
                             var c = document.createElement("img");
@@ -817,9 +828,9 @@
                                 tcam.toggle();
                                 var ca = document.getElementById("camArea");
                                 if (tcam.isOn()) {
-                                    setRemoteVideo(aCam);
+                                    setRemoteCam(aCam);
                                 } else if (!tcam.isOn()) {
-                                    unsetsetRemoteVideo(aCam);
+                                    unsetRemoteCam(aCam);
                                 }
                             };
                         }
