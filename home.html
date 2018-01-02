@@ -169,13 +169,13 @@
                     lcam.mouseDown();
                     lcam.toggle();
                     if (lcam.isOn()) {
-                        if (registered == false) {
-                            register("{{.Person.Nic}}");
-                            registered = true;
-                        }
-                        publishOwnFeed(true, "{{.Host}}");
+                       // if (registered == false) {
+                         //   register("{{.Person.Nic}}");
+                           // registered = true;
+                        //}
+                        pub();
                     } else {
-                        unpublishOwnFeed("{{.Host}}");
+                        unpub();
                     }
                 };
 
@@ -676,7 +676,7 @@
                         <object id="localCam" class="" type="image/svg+xml" data="/images/webcam.svg">
                             Local Cam
                         </object>
-                        <label id="camUser2">User</label>
+                        <label id="camUser1">User</label>
 
                     </div>
 
@@ -685,11 +685,17 @@
 
             <div class="screen flexer" id="screen2">
                 <div class=" narrow " id="videoremote1">
+                    <div class="videocontrols">
+                        <label id="camUser2">User</label>
                 </div>
             </div>
 
             <div class="screen flexer" id="screen3">
                 <div class=" narrow " id="videoremote2">
+                    <div class=" narrow " id="videoremote1">
+                        <div class="videocontrols">
+                            <label id="camUser3">User</label>
+                        </div>
                 </div>
 
             </div>
