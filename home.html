@@ -80,6 +80,10 @@
                         data: JSON.stringify(op),
                         contentType: 'application/json',
                         success: function (response) {
+
+                            if (resonse.status.status != "SUCCESS") {
+                                console.log("getUser " + response.status.status + " " + response.status.detail)
+                            }
                             return response;
                         }
                     });
