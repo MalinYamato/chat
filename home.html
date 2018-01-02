@@ -169,11 +169,17 @@
                     lcam.mouseDown();
                     lcam.toggle();
                     if (lcam.isOn()) {
-                       // if (registered == false) {
-                         //   register("{{.Person.Nic}}");
-                           // registered = true;
-                        //}
                         pub();
+                        if( isMuted() )
+                        {
+                            console.log("audio is muted!")
+                            lmic.setOff();
+                        }
+                        else {
+                            console.log("audio is MOT muted!")
+                            lmic.setOn();
+                        }
+
                     } else {
                         unpub();
                     }

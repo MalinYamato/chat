@@ -71,6 +71,7 @@ function pub()
     //$("#screen3").css("height", "fit-content");
     //$("#camArea").css("height", "fit-content");
     document.getElementById("localMic").style.visibility = "visible";
+
     publishOwnFeed(true);
 
 }
@@ -456,6 +457,9 @@ function mute() {
 }
 function unmute() {
     sfutest.unmuteAudio();
+}
+function isMuted() {
+    return sfutest.isMuted();
 }
 
 

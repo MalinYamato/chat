@@ -121,10 +121,10 @@ visibility: hidden;
 #localMic, #rMic1, #rMic2 {
 	visibility: hidden;
 	position: absolute;
-	width: 50px;
-	height: 50px;
+	width: 60px;
+	height: 60px;
 	bottom: -2px;
-	right: -24px;
+	right: -20px;
 
 }
 
