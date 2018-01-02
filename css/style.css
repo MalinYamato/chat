@@ -116,7 +116,7 @@ visibility: hidden;
 
 #localCam, #rCam1, #rCam2 {
 	position: absolute;
-    visibility: visible;
+    visibility: hidden;
 }
 #localMic, #rMic1, #rMic2 {
 	visibility: hidden;
