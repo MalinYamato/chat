@@ -58,7 +58,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
     <script type="text/javascript" src="/js/janus.js"></script>
-    <script type="text/javascript" src="/js/videoroom.js"></script>
+
 
     <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
     <script src="/js/SVGButton.js"></script>
@@ -68,6 +68,7 @@
 
 
   <!--  <script type="text/javascript" src="videoroomtest.js"></script> -->
+    <script type="text/javascript" src="/js/videoroom.js"></script>
 
     <script>
         window.onload = function () {
@@ -149,20 +150,6 @@
 
             if (loggedIn()) {
 
-/*
-
-                var lmic = new SVGMicrophoneButton("#localMic", "x", "x");
-                lmic.s.onmousedown = function () {
-                    console.log("clicked");
-                    lmic.mouseDown();
-                    lmic.toggle();
-                    if (lmic.isOn()) {
-                        unmute();
-                    } else {
-                        mute();
-                    }
-                }
-
                 var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 lcam.s.onmousedown = function () {
                     console.log("clicked");
@@ -170,84 +157,10 @@
                     lcam.toggle();
                     if (lcam.isOn()) {
                         pub();
-                        if( sfutest.isAudioMuted() )
-                        {
-                            console.log("audio is muted!")
-                            lmic.setOff();
-                        }
-                        else {
-                            console.log("audio is MOT muted!")
-                            lmic.setOn();
-                        }
-
                     } else {
                         unpub();
-                    }
-                }
-
-                var r1cam = new SVGWebcamButton("#rCam1", "x", "x");
-                r1cam.s.onmousedown = function () {
-                    console.log("clicked");
-                    r1cam.mouseDown();
-                    r1cam.toggle();
-                    if (lcam.isOn()) {
-                        //pub();
-                    } else {
-                        //unpub();
-                    }
-                }
-
-                var r1mic = new SVGMicrophoneButton("#rMic1", "x", "x");
-                r1mic.s.onmousedown = function () {
-                    console.log("clicked");
-                    r1mic.mouseDown();
-                    r1mic.toggle();
-                    if (r1mic.isOn()) {
-                        //unmte
-                    } else {
-                        //mute
-                    }
-                }
-
-                var r2cam = new SVGWebcamButton("#rCam2", "x", "x");
-                r2cam.s.onmousedown = function () {
-                    console.log("clicked");
-                    r2cam.mouseDown();
-                    r2cam.toggle();
-                    if (lcam.isOn()) {
-                        // pub();
-                    } else {
-                        // unpub();
-                    }
-                }
-
-                var r2mic = new SVGMicrophoneButton("#rMic2", "x", "x");
-                r2mic.s.onmousedown = function () {
-                    console.log("clicked");
-                    r2mic.mouseDown();
-                    r2mic.toggle();
-                    if (r2mic.isOn()) {
-                        //unmte
-                    } else {
-                        //mute
                     }
                 };
-
-                lmic.setOn();
-                r1mic.setOn();
-                r2mic.setOn();
-
-                var lcam = new SVGWebcamButton("#localCam", "x", "x");
-                lcam.s.onmousedown = function () {
-                    console.log("clicked");
-                    lcam.mouseDown();
-                    lcam.toggle();
-                    if (lcam.isOn()) {
-                        pub();
-                    } else {
-                        unpub();
-                    }
-                }
 
                 var registered = false;
                 var tcam = new SVGWebcamButton("#webcam", "x", "x");
@@ -258,7 +171,7 @@
                     var ca = document.getElementById("camArea");
                     if (tcam.isOn()) {
                         lcam.setOn();
-                         join();
+                        join();
                     } else {
                         lcam.setOff();
                         leave();
@@ -267,7 +180,98 @@
 
 
 
-*/
+
+                /*
+
+                                var lmic = new SVGMicrophoneButton("#localMic", "x", "x");
+                                lmic.s.onmousedown = function () {
+                                    console.log("clicked");
+                                    lmic.mouseDown();
+                                    lmic.toggle();
+                                    if (lmic.isOn()) {
+                                        unmute();
+                                    } else {
+                                        mute();
+                                    }
+                                }
+
+                                var lcam = new SVGWebcamButton("#localCam", "x", "x");
+                                lcam.s.onmousedown = function () {
+                                    console.log("clicked");
+                                    lcam.mouseDown();
+                                    lcam.toggle();
+                                    if (lcam.isOn()) {
+                                        pub();
+                                        if( sfutest.isAudioMuted() )
+                                        {
+                                            console.log("audio is muted!")
+                                            lmic.setOff();
+                                        }
+                                        else {
+                                            console.log("audio is MOT muted!")
+                                            lmic.setOn();
+                                        }
+
+                                    } else {
+                                        unpub();
+                                    }
+                                }
+
+                                var r1cam = new SVGWebcamButton("#rCam1", "x", "x");
+                                r1cam.s.onmousedown = function () {
+                                    console.log("clicked");
+                                    r1cam.mouseDown();
+                                    r1cam.toggle();
+                                    if (lcam.isOn()) {
+                                        //pub();
+                                    } else {
+                                        //unpub();
+                                    }
+                                }
+
+                                var r1mic = new SVGMicrophoneButton("#rMic1", "x", "x");
+                                r1mic.s.onmousedown = function () {
+                                    console.log("clicked");
+                                    r1mic.mouseDown();
+                                    r1mic.toggle();
+                                    if (r1mic.isOn()) {
+                                        //unmte
+                                    } else {
+                                        //mute
+                                    }
+                                }
+
+                                var r2cam = new SVGWebcamButton("#rCam2", "x", "x");
+                                r2cam.s.onmousedown = function () {
+                                    console.log("clicked");
+                                    r2cam.mouseDown();
+                                    r2cam.toggle();
+                                    if (lcam.isOn()) {
+                                        // pub();
+                                    } else {
+                                        // unpub();
+                                    }
+                                }
+
+                                var r2mic = new SVGMicrophoneButton("#rMic2", "x", "x");
+                                r2mic.s.onmousedown = function () {
+                                    console.log("clicked");
+                                    r2mic.mouseDown();
+                                    r2mic.toggle();
+                                    if (r2mic.isOn()) {
+                                        //unmte
+                                    } else {
+                                        //mute
+                                    }
+                                };
+
+                                lmic.setOn();
+                                r1mic.setOn();
+                                r2mic.setOn();
+
+
+
+                */
 
                 var logout = new SVGButton("#logoutButton", " Logout", "S");
                 logout.Cloud_Text.onmousedown = function () {
