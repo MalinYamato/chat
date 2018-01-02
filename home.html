@@ -756,14 +756,11 @@
 <script type="text/javascript">
 
 
-    function setRemoteCam(aAam)
+    function setRemoteCam(aCam)
     {
-        console.log(aCam + " set");
-    }
-
-    function unsetRemoteCam(cam) {
-
-        console.log(aCam + "unset");
+        var data = aCam.split(":")
+        console.log("setRemoteCam "+ data);
+        //subscrbe(data[0], data[1]);
     }
 
     function myFunction(myid) {
@@ -819,27 +816,12 @@
                                 var aCam = cams[i];
                                 var attr = "#" + aCam;
                                 console.log(">>> " + attr);
-
-
-                                var o= document.createElement("object");
-                                o.setAttribute("data", "/images/webcam.svg");
+                                var o= document.createElement("img");
+                                o.setAttribute("src", "/images/webcam.svg");
                                 o.setAttribute("class", "smallWebCam");
-                                o.setAttribute("type", "image/svg+xml");
+                                o.setAttribute("onclick", "setRemoteCam('" + i+1 + ":" + person.camID +")");
                                 o.setAttribute("id", aCam);
                                 info.appendChild(o);
-                                x.appendChild(info);
-                                console.log(person);
-                                var camButton = new SVGWebcamButton("#" + aCam, "x", "x");
-                                camButton.s.onmousedown = function () {
-                                    //console.log("clicked");
-                                    camButton.mouseDown();
-                                    camButton.toggle();
-                                    if (camButton.isOn()) {
-                                        setRemoteCam(aCam);
-                                    } else if (!camButton.isOn()) {
-                                        unsetRemoteCam(aCam);
-                                    }
-                                };
                             }
                         }
                         else {
