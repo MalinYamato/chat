@@ -45,13 +45,13 @@ import (
 
 type VideoResponse struct {
 	Status          Status        `json:"status"`
-	CamID           big.Int       `json:"camID"`
+	CamID           int            `json:"camID"`
 	CamState        string        `json:"camState"`
 }
 
 type VideoRequest struct {
 	Op              string        `json:"op"`
-	CamID           big.Int       `json:"camID"`
+	CamID           int           `json:"camID"`
 	UserID          string        `json:"userID"`
 	Publisher       string        `json:"publisher"`
 }

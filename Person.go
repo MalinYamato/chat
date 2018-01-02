@@ -67,7 +67,7 @@ type Person struct {
 	UserID            UserId        `json:"userId"`
 	Token             string        `json:"token,omitempty"`
 	Room              string        `json:"room"`
-	CamID             big.Int       `json:"CamID"`
+	CamID             int           `json:"CamID"`
 	CamState          string        `json:"camState"`
 	LoggedIn          bool          `json:"loggedIn"`
 	_Persons          *Persons
