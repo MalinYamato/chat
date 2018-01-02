@@ -62,7 +62,7 @@ var mypvtid = null;
 var feeds = [];
 var bitrateTimer = [];
 
-var doSimulcast = (getQueryStringValue("simulcast") === "no" || getQueryStringValue("simulcast") === "true");
+var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
 
 function pub()
 {
@@ -89,6 +89,7 @@ function join() {
     myusername = 'malin';
     $("#start").trigger("click");
     document.getElementById("camArea").style.visibility = "visible";
+    document.getElementById("localCam").style.visibility = "visible";
 
 }
 
@@ -429,6 +430,7 @@ function publishOwnFeed(useAudio) {
                 // so the browser supports it), and (2) the codec is in the list of
                 // allowed codecs in a room. With respect to the point (2) above,
                 // refer to the text in janus.plugin.videoroom.cfg for more details
+
                 sfutest.send({"message": publish, "jsep": jsep});
                 var camUser = document.getElementById("camUser1");
                 camUser.style.visibility = "visible";
