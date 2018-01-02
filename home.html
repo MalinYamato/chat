@@ -812,26 +812,27 @@
                         info.setAttribute("id", "profileInfo");
                         if (person.camState == "ON") {
 
-                            var cams = ["cam1","cam2","cam3"];
+                            var cams = ["cam1", "cam2", "cam3"];
 
                             for (var aCam in cams) {
 
-                            var c = document.createElement("img");
-                            c.setAttribute("src", "/images/webcam.svg");
-                            c.setAttribute("class", "smallWebCam");
-                            c.setAttribute("id", aCam);
-                            info.appendChild(cam1);
-                            var camButton = new SVGWebcamButton("#" + aCam, "x", "x");
-                            camButton.s.onmousedown = function () {
-                                //console.log("clicked");
-                                camButton.mouseDown();
-                                camButton.toggle();
-                                if (camButton.isOn()) {
-                                    setRemoteCam(aCam);
-                                } else if (!camButton.isOn()) {
-                                    unsetRemoteCam(aCam);
-                                }
-                            };
+                                var c = document.createElement("img");
+                                c.setAttribute("src", "/images/webcam.svg");
+                                c.setAttribute("class", "smallWebCam");
+                                c.setAttribute("id", aCam);
+                                info.appendChild(c);
+                                var camButton = new SVGWebcamButton("#" + aCam, "x", "x");
+                                camButton.s.onmousedown = function () {
+                                    //console.log("clicked");
+                                    camButton.mouseDown();
+                                    camButton.toggle();
+                                    if (camButton.isOn()) {
+                                        setRemoteCam(aCam);
+                                    } else if (!camButton.isOn()) {
+                                        unsetRemoteCam(aCam);
+                                    }
+                                };
+                            }
                         }
                         x.appendChild(info);
                         console.log(person);
