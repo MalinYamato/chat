@@ -496,7 +496,7 @@ function unmute() {
     sfutest.unmuteAudio();
 }
 function isMuted() {
-    return sfutest.isMuted();
+    return sfutest.isAudioMuted();
 }
 
 
