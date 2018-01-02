@@ -85,6 +85,7 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 				///// My own webcam //////
 
 				if request.Op == "setMyCamID" {
+					log.Println("setMyCamID")
 					p.CamID = request.CamID
 					_persons.Save(p)
 					log.Println("setMyCamID" +  strconv.Itoa( request.CamID))
