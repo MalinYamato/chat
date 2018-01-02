@@ -37,9 +37,6 @@ import (
 	"fmt"
 	"encoding/json"
 	"html/template"
-	//"google.golang.org/api/adexchangeseller/v1"
-	"math/big"
-	"github.com/gorilla/context"
 )
 
 var (
