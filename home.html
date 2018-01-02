@@ -759,7 +759,7 @@
     function setRemoteCam(aCam)
     {
         var data = aCam.split(":");
-        console.log("setRemoteCam "+ data);
+        console.log("setRemoteCam " + data);
         //subscrbe(data[0], data[1]);
     }
 
@@ -820,7 +820,7 @@
                                 var o= document.createElement("img");
                                 o.setAttribute("src", "/images/webcam.svg");
                                 o.setAttribute("class", "smallWebCam");
-                                o.setAttribute("onclick", "setRemoteCam('" + c + ":" + person.camID +"')");
+                                o.setAttribute("onclick", "setRemoteCam('" + c + ":" + person.CamID +"')");
                                 o.setAttribute("id", aCam);
                                 info.appendChild(o);
                             }
