@@ -111,6 +111,7 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Main: Profile request for user UserID: %s \n", request.UserID)
 		var person Person
 		var ok bool
+		response.Status = Status{SUCCESS, ""}
 		if request.Op == "getUserByToken" {
 			person, ok = _persons.findPersonByToken(request.Token)
 		} else if request.Op == "getUserByNic" {
@@ -121,9 +122,7 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 			person, status = getSessionUser(r);
 		}
 		if !ok {
-			status.Status = WARNING;
-			status.Detail = "fail to find person"
-			response.Status = status
+			response.Status = Status{WARNING, "fail to find person"}
 			log.Printf("Main: User not found for UserID %s \n", request.UserID)
 		} else {
 			log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
