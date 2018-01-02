@@ -1,6 +1,6 @@
 <!--
 //
-// Copyright 2017 Malin Yamato Lääkkö --  All rights reserved.
+// Copyright 2017 Malin Yamato LÃ¤Ã¤kkÃ¶ --  All rights reserved.
 // https://github.com/MalinYamato
 //
 // MIT License
@@ -32,81 +32,48 @@
 
 -->
 
-    <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Raku Rakuen </title>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.0.3/adapter.min.js" ></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
-        <script type="text/javascript" src="/js/janus.js" ></script>
-        <script type="text/javascript" src="/js/videoroom.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Raku Rakuen</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/css/emojionearea.min.css">
 
-        <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
-        <script src="/js/SVGButton.js"></script>
-        <script type="text/javascript" src="/js/emojionearea.min.js"></script>
+    <!-- ---------------------------------------->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.0.3/adapter.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
 
-        <script>
-            $(function() {
-                $(".navbar-static-top").load("navbar.html", function() {
-                    $(".navbar-static-top li.dropdown").addClass("active");
-                    $(".navbar-static-top a[href='videoroomtest.html']").parent().addClass("active");
-                });
-                $(".footer").load("footer.html");
-            });
-        </script>
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <script type="text/javascript" src="/js/janus.js"></script>
+    <script type="text/javascript" src="/js/videosroom.js"></script>
 
-            ga('create', 'UA-47739846-3', 'auto');
-            ga('send', 'pageview');
-
-        </script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cerulean/bootstrap.min.css" type="text/css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.css"/>
-
-
-        <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
-        <link href="/css/style.css" rel="stylesheet" type="text/css"/>
-        <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
-        <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="/css/emojionearea.min.css">
-
-    </head>
-<body>
+    <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
+    <script src="/js/SVGButton.js"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript" src="/js/emojionearea.min.js"></script>
 
 
 
-
-
-
-
-
-
-
-
-
-  <!--  <script type="text/javascript" src="videoroomtest.js"></script> -->
-<!--    <script type="text/javascript" src="/js/videoroom.js"></script> -->
+    <!--  <script type="text/javascript" src="videoroomtest.js"></script> -->
 
     <script>
         window.onload = function () {
 
             var el = $("#msg").emojioneArea({
-                placeholder: "伝言入力",
+                placeholder: "ä¼è¨€å…¥åŠ›",
                 pickerPosition: "top",
                 filtersPosition: "bottom",
                 tones: true,
@@ -181,130 +148,6 @@
 
 
             if (loggedIn()) {
-
-                var lcam = new SVGWebcamButton("#localCam", "x", "x");
-                lcam.s.onmousedown = function () {
-                    console.log("clicked");
-                    lcam.mouseDown();
-                    lcam.toggle();
-                    if (lcam.isOn()) {
-                        pub();
-                    } else {
-                        unpub();
-                    }
-                };
-
-                var registered = false;
-                var tcam = new SVGWebcamButton("#webcam", "x", "x");
-                tcam.s.onmousedown = function () {
-                    //console.log("clicked");
-                    tcam.mouseDown();
-                    tcam.toggle();
-                    var ca = document.getElementById("camArea");
-                    if (tcam.isOn()) {
-                        lcam.setOn();
-                        join();
-                    } else {
-                        lcam.setOff();
-                        leave();
-                    }
-                };
-
-
-
-
-                /*
-
-                                var lmic = new SVGMicrophoneButton("#localMic", "x", "x");
-                                lmic.s.onmousedown = function () {
-                                    console.log("clicked");
-                                    lmic.mouseDown();
-                                    lmic.toggle();
-                                    if (lmic.isOn()) {
-                                        unmute();
-                                    } else {
-                                        mute();
-                                    }
-                                }
-
-                                var lcam = new SVGWebcamButton("#localCam", "x", "x");
-                                lcam.s.onmousedown = function () {
-                                    console.log("clicked");
-                                    lcam.mouseDown();
-                                    lcam.toggle();
-                                    if (lcam.isOn()) {
-                                        pub();
-                                        if( sfutest.isAudioMuted() )
-                                        {
-                                            console.log("audio is muted!")
-                                            lmic.setOff();
-                                        }
-                                        else {
-                                            console.log("audio is MOT muted!")
-                                            lmic.setOn();
-                                        }
-
-                                    } else {
-                                        unpub();
-                                    }
-                                }
-
-                                var r1cam = new SVGWebcamButton("#rCam1", "x", "x");
-                                r1cam.s.onmousedown = function () {
-                                    console.log("clicked");
-                                    r1cam.mouseDown();
-                                    r1cam.toggle();
-                                    if (lcam.isOn()) {
-                                        //pub();
-                                    } else {
-                                        //unpub();
-                                    }
-                                }
-
-                                var r1mic = new SVGMicrophoneButton("#rMic1", "x", "x");
-                                r1mic.s.onmousedown = function () {
-                                    console.log("clicked");
-                                    r1mic.mouseDown();
-                                    r1mic.toggle();
-                                    if (r1mic.isOn()) {
-                                        //unmte
-                                    } else {
-                                        //mute
-                                    }
-                                }
-
-                                var r2cam = new SVGWebcamButton("#rCam2", "x", "x");
-                                r2cam.s.onmousedown = function () {
-                                    console.log("clicked");
-                                    r2cam.mouseDown();
-                                    r2cam.toggle();
-                                    if (lcam.isOn()) {
-                                        // pub();
-                                    } else {
-                                        // unpub();
-                                    }
-                                }
-
-                                var r2mic = new SVGMicrophoneButton("#rMic2", "x", "x");
-                                r2mic.s.onmousedown = function () {
-                                    console.log("clicked");
-                                    r2mic.mouseDown();
-                                    r2mic.toggle();
-                                    if (r2mic.isOn()) {
-                                        //unmte
-                                    } else {
-                                        //mute
-                                    }
-                                };
-
-                                lmic.setOn();
-                                r1mic.setOn();
-                                r2mic.setOn();
-
-
-
-                */
-
                 var logout = new SVGButton("#logoutButton", " Logout", "S");
                 logout.Cloud_Text.onmousedown = function () {
                     logout.mouseDown();
@@ -319,8 +162,59 @@
                     });
                 };
 
+                //  var lcam = new SVGWebcamButton("#localCam", "x", "x");
+                var lcam = new SVGWebcamButton("#localCam", "x", "x");
+                lcam.s.onmousedown = function () {
+                    console.log("clicked");
+                    lcam.mouseDown();
+                    lcam.toggle();
+                    if (lcam.isOn()) {
+                        if (registered == false) {
+                            register("{{.Person.Nic}}");
+                            registered = true;
+                        }
+                        publishOwnFeed(true, "{{.Host}}");
+                    } else {
+                        unpublishOwnFeed("{{.Host}}");
+                    }
+                };
 
-        }
+                var registered = false;
+                var tcam = new SVGWebcamButton("#webcam", "x", "x");
+                tcam.s.onmousedown = function () {
+                    //console.log("clicked");
+                    tcam.mouseDown();
+                    tcam.toggle();
+                    var ca = document.getElementById("camArea");
+                    if (tcam.isOn()) {
+
+                        //document.getElementById("camArea").style.height = "300px";
+                        //startVideo({{.Host}});
+                       // $(".screen").css("height", "260px");
+                       // $(".screen").css("border-width", "2px");
+                       // document.getElementById("localCam").style.visibility = "visible";
+                        //registered = false;
+                        join();
+
+                    } else {
+
+                        //document.getElementById("camArea").style.height = "0px";
+                        //$(".screen").css("height", "0px");
+                        //$(".screen").css("border-width", "0px");
+                        //$("#curres").text("");
+                        //$("#curres2").text("");
+                        //$("#curbitrate").text("");
+                        //$("#curbitrate2").text("");
+                        //document.getElementById("localCam").style.visibility = "hidden";
+                        //destroyVideo("{{.Host}}");
+                        //registered = false;
+                        leave();
+                    }
+                };
+
+
+
+            }
 
             function changeRoom(cmd, room) {
                 $.ajax({
@@ -400,14 +294,14 @@
             }
 
             var RoomDefs = {
-                "Main": "Main本館",
-                "Private": "Private 秘密屋",
-                "ReimersHotel": "Reimers Hotel屋",
-                "MalinFriends": "MalinFriens屋",
-                "Gay": "Gayゲイ屋",
-                "Lesbian": "Lesbianレズ屋",
-                "Trans": "Trans　性転換屋",
-                "Japanese": "日本語屋"
+                "Main": "Mainæœ¬é¤¨",
+                "Private": "Private ç§˜å¯†å±‹",
+                "ReimersHotel": "Reimers Hotelå±‹",
+                "MalinFriends": "MalinFrienså±‹",
+                "Gay": "Gayã‚²ã‚¤å±‹",
+                "Lesbian": "Lesbianãƒ¬ã‚ºå±‹",
+                "Trans": "Transã€€æ€§è»¢æ›å±‹",
+                "Japanese": "æ—¥æœ¬èªžå±‹"
             };
 
             document.getElementById("MainButton").onclick = function () {
@@ -711,14 +605,14 @@
         <div class="dropdown flex-row">
             <a href="javascript:void(0)" class="dropbtn">Room</a>
             <div class="dropdown-content">
-                <button id="MainButton">Main 本館</button>
-                <button id="MPRButton">Instant Private 秘密屋</button>
-                <button id="JapaneseButton">日本語屋さん</button>
-                <button id="ReimersHotelButton">Reimers Hotel屋</button>
-                <button id="EvaMonikaMalinButton">Malin friends 屋</button>
-                <button id="GayButton">Gay ゲイ屋</button>
-                <button id="LesbianButton">Lesbian レズ屋</button>
-                <button id="TransButton">Trans 性転換屋</button>
+                <button id="MainButton">Main æœ¬é¤¨</button>
+                <button id="MPRButton">Instant Private ç§˜å¯†å±‹</button>
+                <button id="JapaneseButton">æ—¥æœ¬èªžå±‹ã•ã‚“</button>
+                <button id="ReimersHotelButton">Reimers Hotelå±‹</button>
+                <button id="EvaMonikaMalinButton">Malin friends å±‹</button>
+                <button id="GayButton">Gay ã‚²ã‚¤å±‹</button>
+                <button id="LesbianButton">Lesbian ãƒ¬ã‚ºå±‹</button>
+                <button id="TransButton">Trans æ€§è»¢æ›å±‹</button>
             </div>
             <div id="SelectedRoom"></div>
         </div>
@@ -729,20 +623,20 @@
     <div id="centerMenu">
         <div id="CurrentUsers">  <!-- oyeaa, no more JSP, PHP or other stoneage server side stuff!!! Go Lang templating...-->
             <!-- TEMPLATE CODE -->
-            {{ range .Persons}}
+        {{ range .Persons}}
             <div id="{{.UserID}}"><img onclick="RequestToPublish({{.UserID}})"  src="{{.PictureURL}}"> </img><span>{{.Nic}}</span></div>
-            {{end}}
+        {{end}}
             <!-- TEMPLATE CODE -->
         </div>
 
     </div>
 
-<div id="rightMenu">
+    <div id="rightMenu">
         <div class="flex-column" style="display:{{.LoggedOut}}">
 
-        <object id="loginLabel" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
-            Login
-        </object>
+            <object id="loginLabel" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
+                Login
+            </object>
 
             <ul class="flex-row loggedOut">
                 <li>
@@ -760,9 +654,9 @@
         <div class="flex-row" style="display:{{.LoggedIn}}">
             <ul>
                 <li>
-                  <object id="logoutButton" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
-                       Lobgout
-                   </object>
+                    <object id="logoutButton" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
+                        Lobgout
+                    </object>
                 </li>
                 <li>
                     <object class="webcam"  id="webcam" type="image/svg+xml" data="https://{{.Host}}/images/webcam.svg"> </object>
@@ -772,55 +666,26 @@
 </div>
 
 
-
-<div id="camArea">
-
+<div id="camArea" >
     <div class="flex-container videos" id="videos" >
         <div class="flex-row">
+            <object id="localCam" class="" type="image/svg+xml" data="/images/webcam.svg">
+                Local Cam
+            </object>
+
             <div class="screen flexer " id="screen1">
 
                 <div class=" narrow" id="videolocal">
-                    <div class="videocontrols">
-                        <object id="localCam" class="" type="image/svg+xml" data="images/webcam.svg">
-                            Local Cam
-                        </object>
-                        <label id="camUser1">User</label>
-                        <object id="localMic" class="" type="image/svg+xml" data="images/microphone.svg">
-                            Local Cam
-                        </object>
-
-                    </div>
                 </div>
             </div>
 
             <div class="screen flexer" id="screen2">
                 <div class=" narrow " id="videoremote1">
-                    <div class="videocontrols">
-                        <object id="rCam1" class="" type="image/svg+xml" data="images/webcam.svg">
-                            Local Cam
-                        </object>
-                        <label id="camUser2">User</label>
-                        <object id="rMic1" class="" type="image/svg+xml" data="images/webcam.svg">
-                            Local Cam
-                        </object>
-
-                    </div>
                 </div>
             </div>
 
             <div class="screen flexer" id="screen3">
                 <div class=" narrow " id="videoremote2">
-                    <div class="videocontrols">
-                        <object id="rCam2" class="" type="image/svg+xml" data="images/webcam.svg">
-                            Local Cam
-                        </object>
-                        <label id="camUser3">User</label>
-                        <object id="rMic2" class="" type="image/svg+xml" data="images/webcam.svg">
-                            Local Cam
-                        </object>
-
-                    </div>
-
                 </div>
 
             </div>
@@ -828,39 +693,6 @@
     </div>
 </div>
 
-
-
-
-<!--
-
-<div  id="camArea" >
-    <object id="localCam" class="cstuff" type="image/svg+xml" data="/images/webcam.svg">
-        Local Cam
-    </object>
-<div class="flex-container" id="videos">
-
-        <div class="flex-row flex-container">
-
-            <div class="screen flexer" id="screen1">
-              <div class="panel-body narrow" id="videolocal"></div>
-              <h3 class="panel-title"><span class="label label-primary hide" id="publisher"></span></h3>
-          </div>
-
-            <h3 class="panel-title"><span class="label label-info hide" id="remote1"></span></h3>
-            <div class="screen flexer" id="screen2">
-                <div class="panel-body narrow relative" id="videoremote1"></div>
-            </div>
-
-            <h3 class="panel-title"><span class="label label-info hide" id="remote2"></span></h3>
-              <div class="screen flexer" id="screen3">
-                  <div class="panel-body narrow relative" id="videoremote2"></div>
-              </div>
-        </div>
-</div>
-
-</div>
-
--->
 
 <div id="chatform" class="row-flex">
     <form id="form" class="row">
@@ -872,9 +704,9 @@
 
     <div id="PublishList" class="flex-row">
         <!-- TEMPLATE CODE -->
-        {{ range .Targets}}
+    {{ range .Targets}}
         <div id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;" onclick="RemoveTarget({{.Target.UserID}})"  src="{{.Target.PictureURL}}"> </img> <!--<span>{{.Target.Nic}}</span>--> </div>
-        {{end}}
+    {{end}}
         <!-- TEMPLATE CODE -->
     </div>
 
@@ -972,7 +804,7 @@
                 console.log("Add of target requested /targetManager: " + r.status.detail + " " + r.person.email);
 
             }
-            });
+        });
     }
 
     function RemoveTarget(targetId)
@@ -985,9 +817,9 @@
             contentType: 'application/json',
             success: function (r) {
                 console.log("Delete of target requested /targetManager: " + r.status.detail + " " + r.person.email);
-             //   var elem = document.getElementById("PublishList");
-             //   var child = document.getElementById("Target:"+targetId);
-             //   elem.removeChild(child);
+                //   var elem = document.getElementById("PublishList");
+                //   var child = document.getElementById("Target:"+targetId);
+                //   elem.removeChild(child);
             }
         });
     }
@@ -1010,7 +842,7 @@
             </p>
         </div>
         <div class="modal-footer">
-            <h3>Support: Malin Yamato Lääkkö, malin@raku.cloud -- sponsored by Yamato Digital Audio info@yamato.xyz</h3>
+            <h3>Support: Malin Yamato LÃ¤Ã¤kkÃ¶, malin@raku.cloud -- sponsored by Yamato Digital Audio info@yamato.xyz</h3>
         </div>
     </div>
 
