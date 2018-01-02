@@ -83,7 +83,7 @@
                         success: function (response) {
 
                             if (response.status.status != "SUCCESS") {
-                                console.log("getUser " + response.status.status + " " + response.status.detail)
+                                console.log("getUser failed> " + response.status + " " + response)
                             }
                             return response;
                         }
