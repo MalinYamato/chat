@@ -91,7 +91,7 @@ function join() {
     $("#start").trigger("click");
     document.getElementById("camArea").style.visibility = "visible";
     document.getElementById("localCam").style.visibility = "visible";
-    document.getElementById("localMic").style.visibility = "visible";
+  //  document.getElementById("localMic").style.visibility = "visible";
 
 }
 
