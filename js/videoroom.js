@@ -70,7 +70,7 @@ function pub()
     //$("#screen2").css("height", "fit-content");
     //$("#screen3").css("height", "fit-content");
     //$("#camArea").css("height", "fit-content");
-    document.getElementById("localMic").style.visibility = "visible";
+    //document.getElementById("localMic").style.visibility = "visible";
 
     publishOwnFeed(true);
 
