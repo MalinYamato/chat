@@ -820,11 +820,13 @@
                                 var attr = "#" + aCam;
                                 console.log(">>> " + attr);
 
-                                var c = document.createElement("img");
-                                c.setAttribute("src", "/images/webcam.svg");
-                                c.setAttribute("class", "smallWebCam");
-                                c.setAttribute("id", aCam);
-                                info.appendChild(c);
+
+                                var o= document.createElement("object");
+                                o.setAttribute("data", "/images/webcam.svg");
+                                o.setAttribute("class", "smallWebCam");
+                                o.setAttribute("type", "image/svg+xml");
+                                o.setAttribute("id", aCam);
+                                info.appendChild(o);
                                 x.appendChild(info);
                                 console.log(person);
                                 var camButton = new SVGWebcamButton("#" + aCam, "x", "x");
