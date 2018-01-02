@@ -242,6 +242,8 @@
                     }
                 };
 
+
+
             }
 
             function changeRoom(cmd, room) {
@@ -798,10 +800,28 @@
                         info.appendChild(info6);
                         info.setAttribute("id", "profileInfo");
                         if (person.camState == "ON") {
-                            var cam = document.createElement("img");
-                            cam.setAttribute("src", "/images/webcam.svg");
-                            cam.setAttribute("id", "smallcam");
-                            info.appendChild(cam);
+
+                            var cams = ["cam1","cam2","cam3"];
+                            
+                            for (var aCam in cams) {
+
+                            var c = document.createElement("img");
+                            c.setAttribute("src", "/images/webcam.svg");
+                            c.setAttribute("class", "smallWebCam");
+                            c.setAttribute("id", aCam);
+                            info.appendChild(cam1);
+                            var camButton = new SVGWebcamButton("#" + aCam, "x", "x");
+                            tcam.s.onmousedown = function () {
+                                //console.log("clicked");
+                                tcam.mouseDown();
+                                tcam.toggle();
+                                var ca = document.getElementById("camArea");
+                                if (tcam.isOn()) {
+                                    setRemoteVideo(aCam);
+                                } else if (!tcam.isOn()) {
+                                    unsetsetRemoteVideo(aCam);
+                                }
+                            };
                         }
                         x.appendChild(info);
                         console.log(person);
