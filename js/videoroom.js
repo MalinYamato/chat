@@ -64,16 +64,44 @@ var bitrateTimer = [];
 
 var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
 
+
+var _rakuhost = null;
+var _mediahost = null;
+
+function publish(id) {
+    request = {"Op":"publish", "CamID" : id};
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "https://"+_rakuhost +"/VideoManager",
+        data: JSON.stringify(request),
+        contentType: 'application/json',
+        success: function (result) {
+            console.log("Published Video" + result);
+        }
+    });
+}
+
+function unpublish(id) {
+    request = {"Op":"unpublish", "CamID" : id};
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "https://"+_rakuhost +"/VideoManager",
+        data: JSON.stringify(request),
+        contentType: 'application/json',
+        success: function (result) {
+            console.log("Unpublished Video " + result);
+        }
+    });
+}
+
+
+
 function pub()
 {
-    //$("#screen1").css("height", "fit-content");
-    //$("#screen2").css("height", "fit-content");
-    //$("#screen3").css("height", "fit-content");
-    //$("#camArea").css("height", "fit-content");
     document.getElementById("localMic").style.visibility = "visible";
-
     publishOwnFeed(true);
-
 }
 
 function unpub()
@@ -81,18 +109,18 @@ function unpub()
     unpublishOwnFeed();
     var camUser = document.getElementById("camUser1");
     camUser.style.visibility = "hidden";
-
+    unpublish(myid);
 }
 
-function join() {
+function join(host, mediahost) {
+    _rakuhost = host;
+    _mediahost = mediahost;
     document.getElementById("camArea").style.height = "278px";
     $(".screen").css("height", "260px");
     myusername = 'malin';
     $("#start").trigger("click");
     document.getElementById("camArea").style.visibility = "visible";
     document.getElementById("localCam").style.visibility = "visible";
-  // document.getElementById("localMic").style.visibility = "visible";
-
 }
 
 function register() {
@@ -107,7 +135,6 @@ function leave()
     janus.destroy();
     $(".screen").css("height", "0");
     document.getElementById("camArea").display = "hidden";
-
 }
 
 var initialized = false;
@@ -207,11 +234,7 @@ $(document).ready(function() {
 
                                                 Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
 
-
-
-                                                // update server with CamID = myid
-
-                                                // publishOwnFeed(true);
+                                                publish(myid);
 
                                                 // Any new feed to attach to?
                                                 if(msg["publishers"] !== undefined && msg["publishers"] !== null) {
@@ -476,9 +499,10 @@ function toggleMute() {
 
 function unpublishOwnFeed() {
     // Unpublish our stream
-    $('#unpublish').attr('disabled', true).unbind('click');
+   // $('#unpublish').attr('disabled', true).unbind('click');
     var unpublish = { "request": "unpublish" };
     sfutest.send({"message": unpublish});
+
 }
 
 function newRemoteFeed(id, display, audio, video) {

@@ -94,7 +94,7 @@ visibility: hidden;
 	min-width: 33.33%;
 	width:100%;
 	height: 0;
-	transition: width 0s, height 2.5s;
+	transition: width 0s, height 2s;
 }
 
 .videocontrols {
