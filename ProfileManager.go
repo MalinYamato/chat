@@ -100,7 +100,6 @@ func getSessionUser(r *http.Request) (p Person, s Status){
 func profileHandler(w http.ResponseWriter, r *http.Request) {
 	var request PersonRequest;
 	var response PersonResponse;
-	var status Status
 	if r.Method == "POST" {
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&request)
@@ -119,7 +118,7 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		} else if request.Op == "getUserByID" {
 			person, ok = _persons.findPersonByUserId(request.UserID)
 		} else if request.Op == "getMyself" {
-			person, status = getSessionUser(r);
+			person, response.Status = getSessionUser(r);
 		}
 		if !ok {
 			response.Status = Status{WARNING, "fail to find person"}
