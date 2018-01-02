@@ -825,6 +825,8 @@
                                 c.setAttribute("class", "smallWebCam");
                                 c.setAttribute("id", aCam);
                                 info.appendChild(c);
+                                x.appendChild(info);
+                                console.log(person);
                                 var camButton = new SVGWebcamButton("#" + aCam, "x", "x");
                                 camButton.s.onmousedown = function () {
                                     //console.log("clicked");
@@ -838,8 +840,11 @@
                                 };
                             }
                         }
-                        x.appendChild(info);
-                        console.log(person);
+                        else {
+                            x.appendChild(info);
+                            console.log(person);
+                        }
+
                         x.className += " w3-show";
                     }
 
