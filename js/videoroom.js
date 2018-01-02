@@ -125,12 +125,12 @@ function unpub()
     unpublishMe(myid);
 }
 
-function join(host, mediahost) {
-    _rakuhost = host;
+function join(host, mediahost, name) {
+    _rakuhost  = host;
     _mediahost = mediahost;
+    myusername = name;
     document.getElementById("camArea").style.height = "278px";
     $(".screen").css("height", "260px");
-    myusername = 'malin';
     $("#start").trigger("click");
     document.getElementById("camArea").style.visibility = "visible";
     document.getElementById("localCam").style.visibility = "visible";

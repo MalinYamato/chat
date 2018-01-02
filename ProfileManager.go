@@ -38,6 +38,8 @@ import (
 	"encoding/json"
 	"html/template"
 	//"google.golang.org/api/adexchangeseller/v1"
+	"math/big"
+	"github.com/gorilla/context"
 )
 
 var (
@@ -45,6 +47,19 @@ var (
 	ORIENTATION = []string{"Straight", "Gay", "Lesbian", "BiSexual", "ASexual"}
 	GENDER      = []string{"Female", "Male", "TranssexualF", "TranssexualM", "CrossDresser", "None"}
 )
+
+type PersonResponse struct {
+	Status          Status        `json:"status"`
+	Person          Person        `json:"person"`
+}
+
+type PersonRequest struct {
+	Op              string        `json:"op"`
+	Token           string        `json:"token"`
+	UserID          UserId        `json:"userID"`
+	Nic             string        `json:"nic"`
+}
+
 
 func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := sessionStore.Get(r, sessionName)
@@ -69,10 +84,23 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-
+func getSessionUser(r *http.Request) (p Person, s Status){
+	token, _, err := getCookieAndTokenfromRequest(r, true)
+	var ok bool = false
+	if err != nil {
+		s = Status{ERROR, err.Error()}
+	} else {
+		p, ok = _persons.findPersonByToken(token)
+		if ! ok {
+			s = Status{ERROR, err.Error()}
+		}
+	}
+	return p, s
+}
 
 func profileHandler(w http.ResponseWriter, r *http.Request) {
-	var request Person;
+	var request PersonRequest;
+	var response PersonResponse;
 	if r.Method == "POST" {
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&request)
@@ -82,14 +110,24 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		log.Printf("Main: Profile request for user UserID: %s \n", request.UserID)
 		var person Person
-		person, ok := _persons.findPersonByUserId(request.UserID)
-		person.Token = ""
-		if ok {
+		var ok bool
+		if request.Op == "getUserByID" {
+			person, ok = _persons.findPersonByToken(request.Token)
+		} else if request.Op == "getUserByNic" {
+			person, ok = _persons.findPersonByNickName(request.Nic)
+		} else if request.Op == "getUserByID" {
+			person, ok = _persons.findPersonByUserId(request.UserID)
+		} else if request.Op == "getMyself" {
+			person, response.Status = getSessionUser(r);
+		}
+		if !ok {
+			response.Status.Status = WARNING;
+			response.Status.Detail = "fail to find person"
 			log.Printf("Main: User not found for UserID %s \n", request.UserID)
 		} else {
 			log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
 		}
-		data, err := json.Marshal(person)
+		data, err := json.Marshal(response)
 		if err != nil {
 			panic(err)
 			return

@@ -70,6 +70,22 @@
     <!--  <script type="text/javascript" src="videoroomtest.js"></script> -->
 
     <script>
+
+
+        function getUser(op)
+        {
+            $.ajax({
+                        url: 'https://{{.Host}}/profile',
+                        type: 'post',
+                        data: JSON.stringify(op),
+                        contentType: 'application/json',
+                        success: function (response) {
+                            return response;
+                        }
+                    });
+        }
+
+
         window.onload = function () {
 
             var el = $("#msg").emojioneArea({
@@ -169,17 +185,17 @@
                     lcam.mouseDown();
                     lcam.toggle();
                     if (lcam.isOn()) {
-                        pub();
-                        if( isMuted() )
-                        {
-                            console.log("audio is muted!")
-                            lmic.setOff();
-                        }
-                        else {
-                            console.log("audio is MOT muted!")
-                            lmic.setOn();
-                        }
 
+                            pub(response.person.nic);
+                            if (isMuted()) {
+                                console.log("audio is muted!")
+                                lmic.setOff();
+                            }
+                            else {
+                                console.log("audio is MOT muted!")
+                                lmic.setOn();
+                            }
+                        }
                     } else {
                         unpub();
                     }
@@ -206,10 +222,13 @@
                     tcam.toggle();
                     var ca = document.getElementById("camArea");
                     if (tcam.isOn()) {
-
-                        join("{{.Host}}","{{.Host}}");
-
-                    } else {
+                        var response = getUser({"op": "getMyself", "UserID": "unknown"});
+                        if (response.status.status == "SUCCESS") {
+                            join("{{.Host}}", "{{.Host}}", response.person.nic);
+                        } else {
+                            console.log("getUser returned " + response.status.status + " " + response.status.detail);
+                        }
+                    } else if (!tcam.isOn()) {
 
                         leave();
                     }
@@ -574,10 +593,6 @@
                     }
                     appendLog(uberdiv);
 
-                    // 'I \u2764\uFE0F emoji!';
-
-                    // twemoji.size = '16x16';
-                    //twemoji.parse(log);
                 }
             }
 
@@ -736,14 +751,10 @@
         console.log(x);
         if (x.className.indexOf("w3-show") == -1) {
             // json format
-            var person = {"userId": userId};
-            $.ajax({
-                url: 'https://{{.Host}}/profile',
-                type: 'post',
-                data: JSON.stringify(person),
-                contentType: 'application/json',
-                success: function (person) {
-                    if (person.userId != null) {
+            var request = {"op": "getUserByID", "userID": userId};
+            response = getUser(request);
+                    var person = response.person;
+                    if (response.person.userId != null) {
                         var t = new Date();
                         var age =   t.getFullYear() - parseInt(person.birthDate.year);
                         if (t.getMonth() < parseInt(person.birthDate.month)) {
@@ -784,12 +795,10 @@
                             info.appendChild(cam);
                         }
                         x.appendChild(info);
-
                         console.log(person);
                         x.className += " w3-show";
                     }
-                }
-            });
+
         } else {
             while (x.lastChild) {
                 x.removeChild(x.lastChild);
