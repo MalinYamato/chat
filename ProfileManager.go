@@ -85,6 +85,7 @@ func getSessionUser(r *http.Request) (p Person, s Status){
 	var status Status
 	var person Person
 	token, _, err := getCookieAndTokenfromRequest(r, true)
+	status = Status{SUCCESS, ""}
 	var ok bool = false
 	if err != nil {
 		status = Status{ERROR, err.Error()}
@@ -120,12 +121,14 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		} else if request.Op == "getMyself" {
 			person, response.Status = getSessionUser(r);
 		}
+
 		if !ok {
 			response.Status = Status{WARNING, "fail to find person"}
 			log.Printf("Main: User not found for UserID %s \n", request.UserID)
 		} else {
 			log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
-		}
+			response.Person = person;
+			}
 		data, err := json.Marshal(response)
 		if err != nil {
 			panic(err)
