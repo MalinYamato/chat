@@ -62,7 +62,7 @@ var mypvtid = null;
 var feeds = [];
 var bitrateTimer = [];
 
-var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
+var doSimulcast = (getQueryStringValue("simulcast") === "no" || getQueryStringValue("simulcast") === "true");
 
 function pub()
 {
