@@ -137,7 +137,6 @@ function join(host, mediahost, name) {
 }
 
 function register() {
-    myusername = "malin";
     var register = { "request": "join", "room": myroom, "ptype": "publisher", "display": myusername };
     sfutest.send({"message": register});
 }
