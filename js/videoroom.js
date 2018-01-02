@@ -68,7 +68,7 @@ var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringV
 var _rakuhost = null;
 var _mediahost = null;
 
-function publish(id) {
+function publishMe(id) {
     request = {"Op":"publish", "CamID" : id};
     $.ajax({
         type: "POST",
@@ -82,8 +82,21 @@ function publish(id) {
     });
 }
 
-function unpublish(id) {
+function unpublishMe(id) {
     request = {"Op":"unpublish", "CamID" : id};
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "https://"+_rakuhost +"/VideoManager",
+        data: JSON.stringify(request),
+        contentType: 'application/json',
+        success: function (result) {
+            console.log("Unpublished Video " + result);
+        }
+    });
+}
+function setMyCamID(id) {
+    request = {"Op":"setMyCamID", "CamID" : id};
     $.ajax({
         type: "POST",
         async: false,
@@ -97,11 +110,11 @@ function unpublish(id) {
 }
 
 
-
 function pub()
 {
     document.getElementById("localMic").style.visibility = "visible";
     publishOwnFeed(true);
+
 }
 
 function unpub()
@@ -109,7 +122,7 @@ function unpub()
     unpublishOwnFeed();
     var camUser = document.getElementById("camUser1");
     camUser.style.visibility = "hidden";
-    unpublish(myid);
+    unpublishMe(myid);
 }
 
 function join(host, mediahost) {
@@ -234,7 +247,7 @@ $(document).ready(function() {
 
                                                 Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
 
-                                                publish(myid);
+                                                setMyCamID(myid);
 
                                                 // Any new feed to attach to?
                                                 if(msg["publishers"] !== undefined && msg["publishers"] !== null) {
@@ -460,6 +473,7 @@ function publishOwnFeed(useAudio) {
                 var camUser = document.getElementById("camUser1");
                 camUser.style.visibility = "visible";
                 $("#camUser1").text(myusername);
+                publishMe(myid);
 
             },
             error: function(error) {

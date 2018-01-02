@@ -46,12 +46,14 @@ import (
 type VideoResponse struct {
 	Status          Status        `json:"status"`
 	CamID           big.Int       `json:"camID"`
+	CamState        string        `json:"camState"`
 }
 
 type VideoRequest struct {
 	Op              string        `json:"op"`
 	CamID           big.Int       `json:"camID"`
 	UserID          string        `json:"userID"`
+	Publisher       string        `json:"publisher"`
 }
 
 
@@ -77,25 +79,71 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 					log.Println("Json decoder error> ", err.Error())
 					panic(err)
 				}
-				if request.Op == "publish" {
+
+				///// My own webcam //////
+
+				if request.Op == "setMyCamID" {
 					p.CamID = request.CamID
-					p.CamState = "ON"
 					_persons.Save(p)
-					hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Vide started!" }
+					status.Status = SUCCESS;
+				}
+
+				if request.Op == "publish" {
+					p.CamState = "ON"
+					hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Vide started!"}
 					status.Status = SUCCESS
 				} else if request.Op == "unpublish" {
 					p.CamState = "OFF"
 					_persons.Save(p)
-					hub.broadcast <- Message{Op: "VideoStopped", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止 Video stopped!" }
+					hub.broadcast <- Message{Op: "VideoStopped", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止 Video stopped!"}
 					status.Status = SUCCESS
 				}
 
+				///// Others webcam //////
+
+				if request.Op == "watchRequest" {
+
+					// get the token
+				}
+
+				if request.Op == "getCamID" {
+					publisher, ok := _persons.findPersonByToken(request.Publisher)
+					if ! ok {
+						status = Status{ERROR, "Could not find person"}
+					} else {
+						response.CamID = publisher.CamID;
+						status.Status = SUCCESS;
+					}
+
+				}
+				if request.Op == "getCamState" {
+
+					publisher, ok := _persons.findPersonByToken(request.Publisher)
+					if ! ok {
+						status = Status{ERROR, "Could not find person"}
+					} else {
+						response.CamID = publisher.CamID;
+						status.Status = SUCCESS;
+						if publisher.CamState == "ON" {
+							response.CamState = "ON"
+							status.Status = SUCCESS;
+						} else if publisher.CamState == "OFF" {
+							response.CamState = "OFF"
+							status.Status = SUCCESS;
+						} else {
+							response.CamState = "UNKNOWN"
+							status.Status = WARNING;
+							status.Detail = "Camstate is unknonw!"
+						}
+					}
+				}
 			}
 		}
 	} else {
 		status = Status{Status: ERROR, Detail:"Bad HTTPS method"}
 		log.Println("ImageManager: Unknown HTTP method ", r.Method)
 	}
+	response.Status = status;
 	json_response, err := json.Marshal(response)
 	if err != nil {
 		panic(err)
