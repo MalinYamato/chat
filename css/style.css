@@ -129,7 +129,7 @@ visibility: hidden;
 }
 
 #camUser1, #camUser2, #camUser3 {
-	visibility: visible;
+	visibility: hidden;
 	position: absolute;
 	width: 100%;
 	height: 30px;
