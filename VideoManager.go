@@ -67,11 +67,11 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 		var ok bool
 		token, _, err := getCookieAndTokenfromRequest(r, true)
 		if err != nil {
-			status = Status{ERROR, err.Error()}
+			response.Status = Status{ERROR, err.Error()}
 		} else {
 			p, ok = _persons.findPersonByToken(token)
 			if ! ok {
-				status = Status{ERROR, err.Error()}
+				response.Status = Status{ERROR, err.Error()}
 			} else {
 				decoder := json.NewDecoder(r.Body)
 				err = decoder.Decode(&request)
@@ -85,19 +85,20 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 				if request.Op == "setMyCamID" {
 					p.CamID = request.CamID
 					_persons.Save(p)
-					status.Status = SUCCESS;
+					response.Status = Status{SUCCESS,  ""}
 				}
 
 				if request.Op == "publish" {
 					p.CamState = "ON"
 					_persons.Save(p)
 					hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Vide started!"}
-					status.Status = SUCCESS
+					response.Status = Status{SUCCESS,  ""}
 				} else if request.Op == "unpublish" {
 					p.CamState = "OFF"
 					_persons.Save(p)
 					hub.broadcast <- Message{Op: "VideoStopped", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止 Video stopped!"}
-					status.Status = SUCCESS
+					response.Status = Status{SUCCESS,  ""}
+
 				}
 
 				///// Others webcam //////
@@ -110,10 +111,10 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 				if request.Op == "getCamID" {
 					publisher, ok := _persons.findPersonByToken(request.Publisher)
 					if ! ok {
-						status = Status{ERROR, "Could not find person"}
+						response.Status = Status{ERROR, "Could not find person"}
 					} else {
 						response.CamID = publisher.CamID;
-						status.Status = SUCCESS;
+						response.Status = Status{SUCCESS,  ""}
 					}
 
 				}
@@ -124,17 +125,18 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 						status = Status{ERROR, "Could not find person"}
 					} else {
 						response.CamID = publisher.CamID;
-						status.Status = SUCCESS;
+						response.Status = Status{SUCCESS,  ""}
 						if publisher.CamState == "ON" {
 							response.CamState = "ON"
-							status.Status = SUCCESS;
+							response.Status = Status{SUCCESS,  ""}
 						} else if publisher.CamState == "OFF" {
 							response.CamState = "OFF"
+							response.Status = Status{SUCCESS,  ""}
 							status.Status = SUCCESS;
 						} else {
 							response.CamState = "UNKNOWN"
-							status.Status = WARNING;
-							status.Detail = "Camstate is unknonw!"
+							response.Status = Status{WARNING,  "Camstate is unknonw!"}
+
 						}
 					}
 				}
@@ -144,7 +146,6 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 		status = Status{Status: ERROR, Detail:"Bad HTTPS method"}
 		log.Println("ImageManager: Unknown HTTP method ", r.Method)
 	}
-	response.Status = status;
 	json_response, err := json.Marshal(response)
 	if err != nil {
 		panic(err)
