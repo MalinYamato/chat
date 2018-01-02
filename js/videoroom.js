@@ -620,7 +620,7 @@ function newRemoteFeed(id, display, audio, video) {
                         var camID = remoteFeed.rfindex+1;
                         var camUser = document.getElementById("camUser" + camID);
                         camUser.style.visibility = "visible";
-                        document.getElementById("rMic" + camID).style.visibility = "visible";
+                      //  document.getElementById("rMic" + camID).style.visibility = "visible";
                         $("#camUser" + camID).text(remoteFeed.rfdisplay);
 
 
