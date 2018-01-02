@@ -86,7 +86,7 @@
                             if (response.status.status != "SUCCESS") {
                                 console.log("getUser failed> " + response.status + " " + response)
                             } else {
-                                console.log("getUser successul> " + response.status.sattus + " " + response.person.userID)
+                                console.log("getUser successul> " + response.status.status + " " + response.person.userID)
                             }
                             res = response;
                         }
@@ -195,7 +195,7 @@
                     lcam.mouseDown();
                     lcam.toggle();
                     if (lcam.isOn())  {
-                        pub(response.person.nic);
+                        pub();
                         if (isMuted()) {
                             console.log("audio is muted!")
                             lmic.setOff();
