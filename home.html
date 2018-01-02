@@ -179,6 +179,19 @@
                     }
                 };
 
+                var lmic = new SVGMicrophoneButton("#localMic", "x", "x");
+                lmic.s.onmousedown = function () {
+                    console.log("clicked");
+                    lmic.mouseDown();
+                    lmic.toggle();
+                    if (lmic.isOn()) {
+                        unmute();
+                    } else {
+                        mute();
+                    }
+                }
+
+
                 var registered = false;
                 var tcam = new SVGWebcamButton("#webcam", "x", "x");
                 tcam.s.onmousedown = function () {
@@ -678,7 +691,9 @@
                             Local Cam
                         </object>
                         <label id="camUser1">User</label>
-
+                        <object id="localMic" class="" type="image/svg+xml" data="images/microphone.svg">
+                            Local Cam
+                        </object>
                     </div>
 
                 </div>
