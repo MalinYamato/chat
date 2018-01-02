@@ -184,19 +184,17 @@
                     console.log("clicked");
                     lcam.mouseDown();
                     lcam.toggle();
-                    if (lcam.isOn()) {
-
-                            pub(response.person.nic);
-                            if (isMuted()) {
-                                console.log("audio is muted!")
-                                lmic.setOff();
-                            }
-                            else {
-                                console.log("audio is MOT muted!")
-                                lmic.setOn();
-                            }
+                    if (lcam.isOn())  {
+                        pub(response.person.nic);
+                        if (isMuted()) {
+                            console.log("audio is muted!")
+                            lmic.setOff();
                         }
-                    } else {
+                        else {
+                            console.log("audio is MOT muted!")
+                            lmic.setOn();
+                        }
+                    } else if (!lcam.isOn()) {
                         unpub();
                     }
                 };
