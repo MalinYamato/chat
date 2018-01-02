@@ -755,8 +755,8 @@
             // json format
             var request = {"op": "getUserByID", "userID": userId};
             response = getUser(request);
-                    var person = response.person;
-                    if (response.status.status == "SUCCESS" && response.person.userId != null) {
+                    if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
+                        var person = response.person;
                         var t = new Date();
                         var age =   t.getFullYear() - parseInt(person.birthDate.year);
                         if (t.getMonth() < parseInt(person.birthDate.month)) {
