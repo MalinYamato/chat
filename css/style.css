@@ -54,18 +54,9 @@ visibility: hidden;
 	color: red;
 }
 
-
-
-
-
 #videolocal, #videoremote1, #videoremote2 {
 	position: relative;
 	z-index: 9;
-}
-.bla {
-	position: static;
-	display: flex;
-	flex-direction: row;
 }
 
 #camArea {
@@ -365,6 +356,13 @@ visibility: hidden;
 }
 
 #smallcam {
+	width: 2.5em;
+	height: 2.5em;
+	border: none;
+	box-shadow: none;
+}
+
+.smallWebCam {
 	width: 2.5em;
 	height: 2.5em;
 	border: none;
