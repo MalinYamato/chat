@@ -245,7 +245,7 @@
                     data: JSON.stringify({"Op": "ChangeRoom", "Room": room}),
                     contentType: 'application/json',
                     success: function (result) {
-                        if (result.status != "SUCCESS") {
+                        if (result.status.status != "SUCCESS") {
                             console.log("Calling RooomManger::ChangeRoom returned " + result.status + " " + result.detail);
                         }
                     }
