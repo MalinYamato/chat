@@ -755,7 +755,7 @@
         if (x.className.indexOf("w3-show") == -1) {
             // json format
             var request = {"op": "getUserByID", "userID": userId};
-            response = getUser(request);
+            var response = getUser(request);
                     if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
                         var person = response.person;
                         var t = new Date();
