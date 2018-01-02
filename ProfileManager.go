@@ -118,28 +118,35 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 			person, ok = _persons.findPersonByNickName(request.Nic)
 		} else if request.Op == "getUserByID" {
 			person, ok = _persons.findPersonByUserId(request.UserID)
-		} else if request.Op == "getMyself" {
-			person, response.Status = getSessionUser(r);
 		}
-
 		if !ok {
 			response.Status = Status{WARNING, "fail to find person"}
+		}
+		if request.Op == "getMyself" {
+			person, response.Status = getSessionUser(r);
+			if (response.Status.Status == SUCCESS ) {
+				ok = true;
+			} else {
+				ok = false;
+			}
+		}
+		if !ok {
 			log.Printf("Main: User not found for UserID %s \n", request.UserID)
 		} else {
-			log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
-			response.Person = person;
-			}
-		data, err := json.Marshal(response)
-		if err != nil {
-			panic(err)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(data)
-
-	} else {
-		log.Println("Main Unknown HTTP method ", r.Method)
+		log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
+		response.Person = person;
 	}
+	data, err := json.Marshal(response)
+	if err != nil {
+		panic(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+
+} else {
+log.Println("Main Unknown HTTP method ", r.Method)
+}
 }
 
 // case a   CLIENT ---> TARGET
