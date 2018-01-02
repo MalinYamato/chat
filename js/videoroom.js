@@ -148,6 +148,7 @@ function leave()
     janus.destroy();
     $(".screen").css("height", "0");
     document.getElementById("camArea").display = "hidden";
+    unpublishMe(myid);
 }
 
 var initialized = false;
