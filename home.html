@@ -77,6 +77,7 @@
             $.ajax({
                         url: 'https://{{.Host}}/profile',
                         type: 'post',
+                        async: false,
                         data: JSON.stringify(op),
                         contentType: 'application/json',
                         success: function (response) {
@@ -87,6 +88,7 @@
                             return response;
                         }
                     });
+
         }
 
 
