@@ -82,22 +82,25 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getSessionUser(r *http.Request) (p Person, s Status){
+	var status Status
+	var person Person
 	token, _, err := getCookieAndTokenfromRequest(r, true)
 	var ok bool = false
 	if err != nil {
-		s = Status{ERROR, err.Error()}
+		status = Status{ERROR, err.Error()}
 	} else {
-		p, ok = _persons.findPersonByToken(token)
+		person, ok = _persons.findPersonByToken(token)
 		if ! ok {
-			s = Status{ERROR, err.Error()}
+			status = Status{ERROR, err.Error()}
 		}
 	}
-	return p, s
+	return person, status
 }
 
 func profileHandler(w http.ResponseWriter, r *http.Request) {
 	var request PersonRequest;
 	var response PersonResponse;
+	var status Status
 	if r.Method == "POST" {
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&request)
@@ -115,11 +118,12 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		} else if request.Op == "getUserByID" {
 			person, ok = _persons.findPersonByUserId(request.UserID)
 		} else if request.Op == "getMyself" {
-			person, response.Status = getSessionUser(r);
+			person, status = getSessionUser(r);
 		}
 		if !ok {
-			response.Status.Status = WARNING;
-			response.Status.Detail = "fail to find person"
+			status.Status = WARNING;
+			status.Detail = "fail to find person"
+			response.Status = status
 			log.Printf("Main: User not found for UserID %s \n", request.UserID)
 		} else {
 			log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
