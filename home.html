@@ -814,12 +814,13 @@
                             for (var i in cams) {
 
                                 var aCam = cams[i];
-                                var attr = "#" + aCam;
-                                console.log(">>> " + attr);
+
+                                var c = i + 1;
+
                                 var o= document.createElement("img");
                                 o.setAttribute("src", "/images/webcam.svg");
                                 o.setAttribute("class", "smallWebCam");
-                                o.setAttribute("onclick", "setRemoteCam('" + i+1 + ":" + person.camID +")");
+                                o.setAttribute("onclick", "setRemoteCam('" + c + ":" + person.camID +"')");
                                 o.setAttribute("id", aCam);
                                 info.appendChild(o);
                             }
