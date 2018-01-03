@@ -809,18 +809,17 @@
                         info.setAttribute("id", "profileInfo");
                         if (person.camState == "ON") {
 
-                            var cams = ["cam1", "cam2", "cam3"];
+                            var cams = ["cam0", "cam1", "cam2", "cam3"];
 
-                            for (var i in cams) {
+
+                            for (var i=1; i < 4; i++) {
 
                                 var aCam = cams[i];
-
-                                var c = i + 1;
 
                                 var o= document.createElement("img");
                                 o.setAttribute("src", "/images/webcam.svg");
                                 o.setAttribute("class", "smallWebCam");
-                                o.setAttribute("onclick", "setRemoteCam('" + c + ":" + person.CamID +"')");
+                                o.setAttribute("onclick", "setRemoteCam('" + i + ":" + person.CamID +"')");
                                 o.setAttribute("id", aCam);
                                 info.appendChild(o);
                             }
