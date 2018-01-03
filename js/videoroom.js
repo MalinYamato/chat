@@ -596,7 +596,8 @@ function newRemoteFeed(id, display, audio, video, screen) {
 
                         ////
                         remoteFeed.rfindex = screen;
-                        ////
+                        feeds[screen] = remoteFeed;
+                       ////
 
                         remoteFeed.rfid = msg["id"];
                         remoteFeed.rfdisplay = msg["display"];
