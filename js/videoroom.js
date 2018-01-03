@@ -107,6 +107,24 @@ function setMyCamID(id) {
             console.log("SetMyCamID Video " +id + " " + result.status.status);
         }
     });
+
+    request = {op:"getMyself","UserID":"unknonw"};
+    response = getUser(requiest);
+    consoloe.log(response.person);
+
+}
+function getMyCamId() {
+    request = {"Op":"setMyCamID", "CamID" : id};
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "https://"+_rakuhost +"/VideoManager",
+        data: JSON.stringify(request),
+        contentType: 'application/json',
+        success: function (result) {
+            console.log("SetMyCamID Video " +id + " " + result.status.status);
+        }
+    });
 }
 
 
