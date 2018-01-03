@@ -107,9 +107,9 @@ function setMyCamID(id) {
             console.log("SetMyCamID Video " +id + " " + result.status.status);
         }
     });
-
+    consoloe.log("here");
     request = {"op":"getMyself","UserID":"unknonw"};
-    response = getUser(requiest);
+    response = getUser(request);
     consoloe.log(response.person);
 
 }
