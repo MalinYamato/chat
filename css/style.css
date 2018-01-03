@@ -345,8 +345,6 @@ visibility: hidden;
 	-webkit-border-radius:20px;
 	-moz-border-radius:20px;
 	border-radius: 20px
-
-
 }
 
 #rakurakuen {
@@ -355,12 +353,20 @@ visibility: hidden;
 	margin: 2px;
 }
 
-#cam1, #cam2, #cam3 {
+#cam1 {
 	width: 2.5em;
 	height: 2.5em;
 	border: none;
 	box-shadow: none;
 }
+#cam2, #cam3 {
+	width: 2.5em;
+	height: 2.5em;
+	border: none;
+	box-shadow: none;
+	margin-left: 12px;
+}
+
 
 
 
