@@ -108,7 +108,7 @@ function setMyCamID(id) {
         }
     });
 
-    request = {op:"getMyself","UserID":"unknonw"};
+    request = {"op":"getMyself","UserID":"unknonw"};
     response = getUser(requiest);
     consoloe.log(response.person);
 
