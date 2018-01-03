@@ -353,13 +353,13 @@ visibility: hidden;
 	margin: 2px;
 }
 
-#cam1 {
+#cam0 {
 	width: 2.5em;
 	height: 2.5em;
 	border: none;
 	box-shadow: none;
 }
-#cam2, #cam3 {
+#cam1, #cam2 {
 	width: 2.5em;
 	height: 2.5em;
 	border: none;
