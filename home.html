@@ -756,23 +756,20 @@
 <script type="text/javascript">
 
 
-    var cams = ["cam0", "cam1", "cam2", "cam3"];
+    var cams = ["cam0", "cam1", "cam2"];
 
     function setRemoteCam(response)
     {
         var data = response.split(":");
         console.log("setRemoteCam " + data);
-
-        for (var i=1; i < cams.length; i++)  {
+        for (var i=0; i < cams.length; i++)  {
              var aCam = document.getElementById( cams[i] );
              aCam.setAttribute("src","/images/webcam.svg");
         }
-
-         var cam = document.getElementById("cam" + data[0]);
-         cam.setAttribute("src","/images/webcamOn.svg ");
+        var cam = document.getElementById("cam" + data[0]);
+        cam.setAttribute("src","/images/webcamOn.svg ");
 
         subscribe(data[0], data[1]);
-
     }
 
     function myFunction(myid) {
@@ -821,13 +818,8 @@
                         info.setAttribute("id", "profileInfo");
                         if (person.camState == "ON") {
 
-
-
-
-                            for (var i=1; i < cams.length; i++) {
-
+                            for (var i=0; i < cams.length; i++) {
                                 var aCam = cams[i];
-
                                 var o= document.createElement("img");
                                 o.setAttribute("src", "/images/webcam.svg");
                                 o.setAttribute("class", "smallWebCam");
@@ -839,11 +831,8 @@
 
                          x.appendChild(info);
                          console.log(person);
-
-
                         x.className += " w3-show";
                     }
-
         } else {
             while (x.lastChild) {
                 x.removeChild(x.lastChild);
