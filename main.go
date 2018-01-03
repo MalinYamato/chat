@@ -393,13 +393,9 @@ var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
 
 func main() {
-	//testA()
-	//return
-
 
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
-
 
 	config := &Config{
 		ClientID_FB:      os.Getenv("FACEBOOK_CLIENT_ID"),

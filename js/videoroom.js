@@ -81,7 +81,6 @@ function publishMe(id) {
         }
     });
 }
-
 function unpublishMe(id) {
     request = {"Op":"unpublish", "CamID" : id};
     $.ajax({
@@ -107,11 +106,6 @@ function setMyCamID(id) {
             console.log("SetMyCamID Video " +id + " " + result.status.status);
         }
     });
-    consoloe.log("here");
-    request = {"op":"getMyself","UserID":"unknonw"};
-    response = getUser(request);
-    consoloe.log(response.person);
-
 }
 function getMyCamId() {
     request = {"Op":"setMyCamID", "CamID" : id};
@@ -126,26 +120,22 @@ function getMyCamId() {
         }
     });
 }
-
 function subscribe(screen, id) {
     newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, parseInt(screen));
 }
-
 function pub()
 {
     document.getElementById("localMic").style.visibility = "visible";
     publishOwnFeed(true);
-
 }
-
 function unpub()
 {
-    unpublishOwnFeed();
+    var unpublish = { "request": "unpublish" };
+    sfutest.send({"message": unpublish});
     var camUser = document.getElementById("camUser1");
     camUser.style.visibility = "hidden";
     unpublishMe(myid);
 }
-
 function join(host, mediahost, name) {
     _rakuhost  = host;
     _mediahost = mediahost;
@@ -156,23 +146,39 @@ function join(host, mediahost, name) {
     document.getElementById("camArea").style.visibility = "visible";
     document.getElementById("localCam").style.visibility = "visible";
 }
-
 function register() {
     var register = { "request": "join", "room": myroom, "ptype": "publisher", "display": myusername };
     sfutest.send({"message": register});
 }
-
 function leave()
 {
-    unpublishOwnFeed()
+    unpub();
     janus.destroy();
     $(".screen").css("height", "0");
     document.getElementById("camArea").display = "hidden";
     unpublishMe(myid);
 }
+function mute() {
+    sfutest.muteAudio();
+}
+function unmute() {
+    sfutest.unmuteAudio();
+}
+function isMuted() {
+    return sfutest.isAudioMuted();
+}
+function toggleMute() {
+    var muted = sfutest.isAudioMuted();
+    Janus.log((muted ? "Unmuting" : "Muting") + " local stream...");
+    if(muted)
+        sfutest.unmuteAudio();
+    else
+        sfutest.muteAudio();
+    muted = sfutest.isAudioMuted();
+    $('#mute').html(muted ? "Unmute" : "Mute");
+}
 
 var initialized = false;
-
 $(document).ready(function() {
 
     if ( ! initialized) {
@@ -235,25 +241,12 @@ $(document).ready(function() {
                                         }
                                     },
                                     mediaState: function(medium, on) {
-                                        Janus.log("Janus " + (on ? "started" : "stopped") + " receiving our " + medium);
+                                    Janus.log("Janus " + (on ? "started" : "stopped") + " receiving our " + medium);
                                     },
                                     webrtcState: function(on) {
                                         Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
                                         $("#videolocal").parent().parent().unblock();
-                                        // This controls allows us to override the global room bitrate cap
-                                       // $('#bitrate').parent().parent().removeClass('hide').show();
-                                       // $('#bitrate a').click(function() {
-                                        //    var id = $(this).attr("id");
-                                        //    var bitrate = parseInt(id)*1000;
-                                        //    if(bitrate === 0) {
-                                        //        Janus.log("Not limiting bandwidth via REMB");
-                                        //    } else {
-                                        //        Janus.log("Capping bandwidth to " + bitrate + " via REMB");
-                                        //    }
-                                        //    $('#bitrateset').html($(this).html() + '<span class="caret"></span>').parent().removeClass('open');
-                                        //    sfutest.send({"message": { "request": "configure", "bitrate": bitrate }});
-                                        //    return false;
-                                        ///});
+
                                     },
                                     onmessage: function(msg, jsep) {
                                         Janus.debug(" ::: Got a message (publisher) :::");
@@ -282,7 +275,7 @@ $(document).ready(function() {
                                                         var video = list[f]["video_codec"];
                                                         Janus.debug("  >> [" + id + "] " + display + " (audio: " + audio + ", video: " + video + ")");
 
-
+                                                        /// im setting this myself
                                                         // newRemoteFeed(id, display, audio, video);
                                                     }
                                                 }
@@ -514,36 +507,6 @@ function publishOwnFeed(useAudio) {
 }
 
 
-function mute() {
-    sfutest.muteAudio();
-}
-function unmute() {
-    sfutest.unmuteAudio();
-}
-function isMuted() {
-    return sfutest.isAudioMuted();
-}
-
-
-function toggleMute() {
-    var muted = sfutest.isAudioMuted();
-    Janus.log((muted ? "Unmuting" : "Muting") + " local stream...");
-    if(muted)
-        sfutest.unmuteAudio();
-    else
-        sfutest.muteAudio();
-    muted = sfutest.isAudioMuted();
-    $('#mute').html(muted ? "Unmute" : "Mute");
-}
-
-function unpublishOwnFeed() {
-    // Unpublish our stream
-   // $('#unpublish').attr('disabled', true).unbind('click');
-    var unpublish = { "request": "unpublish" };
-    sfutest.send({"message": unpublish});
-
-}
-
 function newRemoteFeed(id, display, audio, video, screen) {
     // A new feed has been published, create a new plugin handle and attach to it as a listener
     var remoteFeed = null;
@@ -597,7 +560,7 @@ function newRemoteFeed(id, display, audio, video, screen) {
                         ////
                         remoteFeed.rfindex = screen;
                         feeds[screen] = remoteFeed;
-                       ////
+                        ////
 
                         remoteFeed.rfid = msg["id"];
                         remoteFeed.rfdisplay = msg["display"];

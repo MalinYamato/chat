@@ -41,7 +41,14 @@ import (
 	"strconv"
 )
 
-
+type WebRTC struct {
+	 Display string
+	 ID      int
+	 Session int
+	 Handle  int
+	 Id      int
+	 State   string
+}
 
 type VideoResponse struct {
 	Status          Status        `json:"status"`

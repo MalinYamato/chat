@@ -64,6 +64,8 @@ type Hub struct {
 	command chan Command
 
 	rooms map[string]Room
+
+	update chan Persons
 }
 
 type Room struct {
@@ -79,6 +81,7 @@ type Command struct {
 
 func newHub(stack QueueStack) *Hub {
 	return &Hub {
+		update:     make(chan Persons),
 		broadcast:  make(chan Message),
 		multicast : make(chan Message),
 		register:   make(chan *Client),
@@ -119,6 +122,9 @@ func (h *Hub) run() {
 					}
 				}
 			}
+
+
+
 		case message := <-h.broadcast:
 			room := h.messages[message.Room]
 			room.Push(message)
