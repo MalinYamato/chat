@@ -38,8 +38,6 @@ import (
 	"log"
 	"encoding/json"
 	"net/http"
-	"math/big"
-	"golang.org/x/net/idna"
 	"strconv"
 )
 
