@@ -127,6 +127,9 @@ function getMyCamId() {
     });
 }
 
+function subscribe(screen, id) {
+    newRemoteFeed(id, "sdfsdfsdf", true, true, screen);
+}
 
 function pub()
 {
@@ -278,7 +281,9 @@ $(document).ready(function() {
                                                         var audio = list[f]["audio_codec"];
                                                         var video = list[f]["video_codec"];
                                                         Janus.debug("  >> [" + id + "] " + display + " (audio: " + audio + ", video: " + video + ")");
-                                                        newRemoteFeed(id, display, audio, video);
+
+
+                                                        // newRemoteFeed(id, display, audio, video);
                                                     }
                                                 }
                                             } else if(event === "destroyed") {
@@ -299,7 +304,9 @@ $(document).ready(function() {
                                                         var audio = list[f]["audio_codec"];
                                                         var video = list[f]["video_codec"];
                                                         Janus.debug("  >> [" + id + "] " + display + " (audio: " + audio + ", video: " + video + ")");
-                                                        newRemoteFeed(id, display, audio, video);
+
+                                                        /// im setting this myself
+                                                        ///newRemoteFeed(id, display, audio, video);
                                                     }
                                                 } else if(msg["leaving"] !== undefined && msg["leaving"] !== null) {
                                                     // One of the publishers has gone away?
@@ -537,7 +544,7 @@ function unpublishOwnFeed() {
 
 }
 
-function newRemoteFeed(id, display, audio, video) {
+function newRemoteFeed(id, display, audio, video, screen) {
     // A new feed has been published, create a new plugin handle and attach to it as a listener
     var remoteFeed = null;
     janus.attach(
@@ -578,6 +585,7 @@ function newRemoteFeed(id, display, audio, video) {
                 } else if(event != undefined && event != null) {
                     if(event === "attached") {
                         // Subscriber created and attached
+
                         for(var i=1;i<6;i++) {
                             if(feeds[i] === undefined || feeds[i] === null) {
                                 feeds[i] = remoteFeed;
@@ -585,6 +593,11 @@ function newRemoteFeed(id, display, audio, video) {
                                 break;
                             }
                         }
+
+                        ////
+                        remoteFeed.rfindex = screen;
+                        ////
+
                         remoteFeed.rfid = msg["id"];
                         remoteFeed.rfdisplay = msg["display"];
 
