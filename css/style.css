@@ -355,18 +355,13 @@ visibility: hidden;
 	margin: 2px;
 }
 
-#smallcam {
+#cam1, #cam2, #cam3 {
 	width: 2.5em;
 	height: 2.5em;
 	border: none;
 	box-shadow: none;
 }
 
-.smallWebCam {
-	width: 2.5em;
-	height: 2.5em;
-	border: none;
-	box-shadow: none;
-}
+
 
 
