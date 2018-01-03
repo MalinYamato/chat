@@ -758,9 +758,9 @@
 
     var cams = ["cam0", "cam1", "cam2", "cam3"];
 
-    function setRemoteCam(aCam)
+    function setRemoteCam(response)
     {
-        var data = aCam.split(":");
+        var data = response.split(":");
         console.log("setRemoteCam " + data);
 
         for (var i=1; i < cams.length; i++)  {
