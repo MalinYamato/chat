@@ -128,7 +128,7 @@ function getMyCamId() {
 }
 
 function subscribe(screen, id) {
-    newRemoteFeed(id, "sdfsdfsdf", true, true, screen);
+    newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, parseInt(screen));
 }
 
 function pub()
@@ -595,7 +595,7 @@ function newRemoteFeed(id, display, audio, video, screen) {
                         }
 
                         ////
-                        remoteFeed.rfindex = 2; //screen;
+                        remoteFeed.rfindex = screen;
                         ////
 
                         remoteFeed.rfid = msg["id"];
