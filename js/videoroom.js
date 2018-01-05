@@ -132,7 +132,7 @@ function getCamId(userID) {
 function subscribe(screen, id) {
     var message = "";
     if (feeds[screen] != null ) {
-       message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen].getID()};
+       message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen].getId()};
        feeds[screen].send(message);
     }
 
