@@ -89,7 +89,6 @@ func (manager *RTCManager) start() {
 	for {
 		time.Sleep(5 * time.Second)
 		publishers := JanusCapture()
-		testJanusCapture()
 		log.Printf("%s %d", "CaptureJanus -- available publishers ",publishers.count())
 		manager.hub.updateMediaUsers <- publishers
 	}
