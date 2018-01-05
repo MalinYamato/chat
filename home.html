@@ -817,7 +817,6 @@
                         info.setAttribute("id", "profileInfo");
 
                         var camID = getCamId(person.token);
-                        console.log(">>>> " + camID);
                         if (camID != null)
                         {
                                 for (var i = 0; i < cams.length; i++) {
@@ -825,7 +824,6 @@
                                     var o = document.createElement("img");
                                     o.setAttribute("src", "/images/webcam.svg");
                                     o.setAttribute("class", "smallWebCam");
-                                    console.log("sdfsdfdf " + camID.toString());
                                     o.setAttribute("onclick", "setRemoteCam('" + i + ":" + camID.toString() + "')");
                                     o.setAttribute("id", aCam);
                                     info.appendChild(o);

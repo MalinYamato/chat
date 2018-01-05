@@ -104,7 +104,7 @@ func (manager *RTCManager) start() {
 	for {
 		time.Sleep(5 * time.Second)
 		publishers := JanusCapture()
-		log.Printf("%s %d", "CaptureJanus -- available publishers ",publishers.count())
+		// log.Printf("%s %d", "CaptureJanus -- available publishers ",publishers.count())
 		manager.hub.updateMediaUsers <- publishers
 	}
 }
@@ -177,6 +177,7 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 					} else {
 						lockMediaUsers()
 						pubs := getMediaUsers().getAll()
+						unlockMediaUsers()
 						mu, ok := pubs[publisher.Nic]
 						if ! ok {
 							response.Status = Status{WARNING, "Publisher not found!"}
@@ -186,9 +187,8 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 							response.Status = Status{SUCCESS, ""}
 							log.Printf("camid %d\n",response.CamID)
 						}
-						unlockMediaUsers()
-					}
 
+					}
 				}
 				if request.Op == "getCamState" {
 
