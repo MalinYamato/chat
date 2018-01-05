@@ -715,7 +715,7 @@
                 <div class=" narrow " id="videoremote1">
                     <div class="videocontrols">
                         <label id="camUser2">User</label>
-                        <img id="removeVideo" onclick="removeVideo('1')" src="/images/error.png"/>
+                        <img id="removeVideo" onclick="DetachTheVideo('1')" src="/images/error.png"/>
                     </div>
                 </div>
             </div>
@@ -731,6 +731,11 @@
         </div>
     </div>
 </div>
+<script>
+    function DetachTheVideo(id) {
+        detachVideo(id);
+    }
+</script>
 
 
 <div id="chatform" class="row-flex">
@@ -772,9 +777,6 @@
         subscribe(data[0], parseInt(data[1]));
     }
 
-    function removeVideo(number) {
-        detachVideo(number);
-    }
 
 
     function myFunction(myid) {
