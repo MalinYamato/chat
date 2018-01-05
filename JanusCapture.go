@@ -40,6 +40,7 @@ import (
 "strconv"
 "io/ioutil"
 "strings"
+	"log"
 )
 
 const http_server = "http://media.raku.cloud:7088"
@@ -115,14 +116,24 @@ func (mus *MediaUsers) count() (int) {
 	return len(mus.__mus)
 }
 
+func recover() {
+	log.Println("getDocument failed, Janus server problaby donw")
+}
+
+
 func getDocument(mess string, path string) (r *http.Response) {
+    defer recover()
+
 	url := server + "/admin" + "/" + path
 	message := JanusRequest{Janus: mess, Transation: "123", Secret: "janusoverlord"}
 
 	if _debug == true { fmt.Println(url) }
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(message)
-	res, _ := http.Post(url, "application/json; charset=utf-8", b)
+	res, err := http.Post(url, "application/json; charset=utf-8", b)
+	if (err != nil) {
+		log.Println("http.post returned error " + err.Error())
+	}
 	return res
 }
 func JanusCapture() (MediaUsers) {
