@@ -18,7 +18,9 @@ No database! I have a file based database solution where I store data as seriali
   the DB. 
   
 ### Screeshots
-![Alt text](/images/mainchat.png?raw=true "Optional Title")
+![Alt text](/images/mainchat.png?raw=true "Main chat screen")
+![Alt text](/images/profile2.png?raw=true "Finding your location and setting languages")
+![Alt text](/images/profile1.png?raw=true "Working with your photos")
 
 The sofware is based on work by the follwing excellent contributors 
    - Dalton Hubble  - San Fransicco, USA
