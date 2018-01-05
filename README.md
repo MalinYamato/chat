@@ -16,6 +16,9 @@ No database! I have a file based database solution where I store data as seriali
   also makes it easer to scale and handle safe persistence with coroutines using threads (go routines) without much efforts to protect critical 
   regions and syncs. Also, it will be easer to just dump the s/w onto a server, chmod directories and hit run without waiting for the elephant to sit and serve, 
   the DB. 
+  
+### Screeshots
+![Alt text](/images/mainchat.png?raw=true "Optional Title")
 
 The sofware is based on work by the follwing excellent contributors 
    - Dalton Hubble  - San Fransicco, USA
