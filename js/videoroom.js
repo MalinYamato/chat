@@ -134,6 +134,9 @@ function subscribe(screen, id) {
        message = {"janus":"detach","transaction":"123456","session_id":Janus.getSessionId(),"handle_id":feeds[screen].getID()}
        feeds[screen].send(message);
     }
+
+    console.log("screen " + screen + " mess> " + message);
+
     newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, parseInt(screen));
 }
 function pub()
