@@ -41,6 +41,7 @@ import (
 "io/ioutil"
 "strings"
 	"log"
+	"errors"
 )
 
 const http_server = "http://media.raku.cloud:7088"
@@ -121,7 +122,7 @@ func recover() {
 }
 
 
-func getDocument(mess string, path string) (r *http.Response) {
+func getDocument(mess string, path string) (r *http.Response, e error) {
     defer recover()
 
 	url := server + "/admin" + "/" + path
@@ -133,8 +134,9 @@ func getDocument(mess string, path string) (r *http.Response) {
 	res, err := http.Post(url, "application/json; charset=utf-8", b)
 	if (err != nil) {
 		log.Println("http.post returned error " + err.Error())
+		return nil,  err
 	}
-	return res
+	return res, nil
 }
 func JanusCapture() (MediaUsers) {
 
@@ -142,20 +144,29 @@ func JanusCapture() (MediaUsers) {
 	subscriptions := map[handleID]Subscription{}
 
 	var sessions JanusSessions
-	res := getDocument("list_sessions", "")
+	res, e := getDocument("list_sessions", "")
+	if e != nil {
+		return MediaUsers{}
+	}
 	err := json.NewDecoder(res.Body).Decode(&sessions)
 	if err != nil {
 		fmt.Println("err")
 	}
 	for i := 0; i < len(sessions.Sessions); i++ {
 		var handles JanusHandles
-		res := getDocument("list_handles", strconv.Itoa(sessions.Sessions[i]))
+		res, e := getDocument("list_handles", strconv.Itoa(sessions.Sessions[i]))
+		if e != nil {
+			return MediaUsers{}
+		}
 		err := json.NewDecoder(res.Body).Decode(&handles)
 		if err != nil {
 			fmt.Println("err")
 		}
 		for h := 0; h < len(handles.Handles); h++ {
-			res = getDocument("handle_info", strconv.Itoa(sessions.Sessions[i])+"/"+strconv.Itoa(handles.Handles[h]))
+			res, e = getDocument("handle_info", strconv.Itoa(sessions.Sessions[i])+"/"+strconv.Itoa(handles.Handles[h]))
+			if e != nil {
+				return MediaUsers{}
+			}
 			body, _ := ioutil.ReadAll(res.Body)
 			data := map[string]interface{}{}
 			dec := json.NewDecoder(strings.NewReader(string(body)))
