@@ -1,3 +1,4 @@
+![Alt text](/images/rakurakuen.png?raw=true "Profile with photos")
 # Raku Rakuen 楽園　- a secure chat with pubic and instant private rooms including video conferencing.
 Rakuen is a secure encrypted chat with profile management and several ways to enage in private chat, establish private chat rooms on the fly.
 You may log in by a Google or Facebook account thanks to the work of Dalton Hubble. The relationship between chatters and private chatters 
@@ -18,9 +19,10 @@ No database! I have a file based database solution where I store data as seriali
   the DB. 
   
 ### Screeshots
+
+![Alt text](/images/login.png?raw=true "Main chat screen")
 ![Alt text](/images/mainchat.png?raw=true "Main chat screen")
-![Alt text](/images/profile2.png?raw=true "Finding your location and setting languages")
-![Alt text](/images/profile1.png?raw=true "Working with your photos")
+![Alt text](/images/profile.png?raw=true "Profile with photos")
 
 The sofware is based on work by the follwing excellent contributors 
    - Dalton Hubble  - San Fransicco, USA
