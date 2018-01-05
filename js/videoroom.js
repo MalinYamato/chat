@@ -121,7 +121,7 @@ function getCamId(userID) {
                 return result.CamID;
             }
             else {
-                consoler.log(result.status.detail);
+                console.log(result.status.detail);
                 return null
             }
         }
