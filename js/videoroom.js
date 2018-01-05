@@ -44,7 +44,8 @@
 //
 
 var server = "https://" + "media.raku.cloud" + ":8089/janus";
-
+var _rakuhost = "https://secure.raku.cloud";
+var _mediahost = null;
 
 var janus = null;
 var sfutest = null;
@@ -65,8 +66,6 @@ var bitrateTimer = [];
 var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
 
 
-var _rakuhost = server;
-var _mediahost = null;
 
 function publishMe(id) {
     request = {"Op":"publish", "CamID" : id};
