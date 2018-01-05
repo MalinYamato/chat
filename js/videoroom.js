@@ -133,7 +133,9 @@ function detachVideo(number) {
     var screen_id = parseInt(number);
     if (feeds[screen_id] != null ) {
         message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen_id].getId()};
-        feeds[screen_id].send({"message": message});
+        feeds[screen_id].send(message);
+
+        console.log("Deeetach @@@@@@@@@@@@@@@@@@@@@@@@@screen " + screen_id + " mess> " + message);
     }
 }
 
@@ -146,7 +148,7 @@ function subscribe(screen, id) {
        feeds[screen_id].send( message);
     }
 
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@screen " + screen_id + " mess> " + message);
+
 
     newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, screen_id);
 }
