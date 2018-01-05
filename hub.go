@@ -41,7 +41,6 @@ package main
 import ()
 import (
 	"log"
-	"unicode"
 )
 
 // hub maintains the set of active clients and broadcasts messages to the
