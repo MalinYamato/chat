@@ -179,7 +179,7 @@ func JanusCapture() (MediaUsers) {
 				var aPublisher MediaUser
 				_, err := jq.Int("info", "streams", "0", "id")
 				if err != nil {
-					fmt.Println("no streams")
+					// fmt.Println("no streams")
 				} else {
 					// the publisher is broadcasting
 					_, ok := publishers.findByDisplay(display)
@@ -206,7 +206,7 @@ func JanusCapture() (MediaUsers) {
 				_, err := jq.Int("info", "streams", "0", "id")
 				if err != nil {
 					// the listener is not listening
-					fmt.Println("no listening streams")
+					//fmt.Println("no listening streams")
 				} else {
 					_, ok := subscriptions[handle_id]
 					if ! ok {
