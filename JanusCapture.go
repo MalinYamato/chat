@@ -122,7 +122,7 @@ func recover() {
 
 
 func getDocument(mess string, path string) (r *http.Response, e error) {
-    defer recover()
+   // defer recover()
 
 	url := server + "/admin" + "/" + path
 	message := JanusRequest{Janus: mess, Transation: "123", Secret: "janusoverlord"}
@@ -139,7 +139,7 @@ func getDocument(mess string, path string) (r *http.Response, e error) {
 }
 func JanusCapture() (MediaUsers) {
 
-	defer recover()
+	//defer recover()
 
 	publishers := MediaUsers{map[string]MediaUser{}}
 	subscriptions := map[handleID]Subscription{}
