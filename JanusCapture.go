@@ -45,6 +45,8 @@ import (
 const http_server = "http://media.raku.cloud:7088"
 const encrypted_server = "https://media.raku.cloud:7889"
 const server = encrypted_server
+var _debug = false
+
 
 type JanusRequest struct {
 	Janus      string `json:"janus"`
@@ -117,7 +119,7 @@ func getDocument(mess string, path string) (r *http.Response) {
 	url := server + "/admin" + "/" + path
 	message := JanusRequest{Janus: mess, Transation: "123", Secret: "janusoverlord"}
 
-	fmt.Println(url)
+	if _debug == true { fmt.Println(url) }
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(message)
 	res, _ := http.Post(url, "application/json; charset=utf-8", b)
@@ -209,6 +211,8 @@ func JanusCapture() (MediaUsers) {
 			}
 		}
 	}
+
+	if _debug == true { testJanusCapture()}
 
 	return publishers
 }
