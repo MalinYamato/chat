@@ -768,7 +768,7 @@
         var cam = document.getElementById("cam" + data[0]);
         cam.setAttribute("src","/images/webcamOn.svg ");
 
-        subscribe(data[0], data[1]);
+        subscribe(data[0], parseInt(data[1]));
     }
 
     function myFunction(myid) {
