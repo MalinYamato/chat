@@ -38,8 +38,7 @@ import (
 	"strconv"
 	"time"
 	"sync"
-	"google.golang.org/api/manager/v1beta2"
-	"golang.org/x/net/html/atom"
+
 )
 
 type WebRTCSubscribe struct {
@@ -84,9 +83,8 @@ type RTCManager struct {
 }
 
 var __mediaUsers MediaUsers
-func getMediaUsers() (MediaUsers) {
-	_mutex.Lock()
-	return  __mediaUsers
+func getMediaUsers() (*MediaUsers) {
+	return  &__mediaUsers
 }
 func unlockMediaUsers()  {
 	_mutex.Unlock()
