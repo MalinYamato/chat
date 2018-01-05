@@ -108,6 +108,9 @@ function setMyCamID(id) {
     });
 }
 function getCamId(userID) {
+
+    var camId = null;
+
     request = {"Op":"getCamID", "UserID" : userID};
     $.ajax({
         type: "POST",
@@ -118,7 +121,7 @@ function getCamId(userID) {
         success: function (result) {
             console.log("getCamID Video " + userID + "  " + result.camID + "  " + result.status.status);
             if (result.status.status == "SUCCESS") {
-                return result.camID;
+                camId = result.camID;
             }
             else {
                 console.log(result.status.detail);
@@ -126,6 +129,8 @@ function getCamId(userID) {
             }
         }
     });
+
+   return camId
 }
 
 function subscribe(screen, id) {
