@@ -131,14 +131,15 @@ function getCamId(userID) {
 
 function subscribe(screen, id) {
     var message = "";
-    if (feeds[screen] != null ) {
-       message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen].getId()};
-       feeds[screen].send({"message": message});
+    var screen_id = parseInt(screen);
+    if (feeds[screen_id] != null ) {
+       message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen_id].getId()};
+       feeds[idx].send({"message": message});
     }
 
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@screen " + screen + " mess> " + message);
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@screen " + screen_id + " mess> " + message);
 
-    newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, parseInt(screen));
+    newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, screen_id);
 }
 function pub()
 {
