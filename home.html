@@ -693,14 +693,6 @@
 
 <button hidden class="btn btn-default" autocomplete="off" id="start">Start</button>
 
-<script>
-
-    function removeVideo(number) {
-        detachVideo(number);
-    }
-
-</script>
-
 <div id="camArea">
     <div class="flex-container videos" id="videos">
         <div class="flex-row">
@@ -779,6 +771,11 @@
 
         subscribe(data[0], parseInt(data[1]));
     }
+
+    function removeVideo(number) {
+        detachVideo(number);
+    }
+
 
     function myFunction(myid) {
         console.log("clicked" + myid);
