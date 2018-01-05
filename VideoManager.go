@@ -171,7 +171,7 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if request.Op == "getCamID" {
-					publisher, ok := _persons.findPersonByToken(request.Publisher)
+					publisher, ok := _persons.findPersonByToken( request.UserID)
 					if !ok {
 						response.Status = Status{ERROR, "Could not find person"}
 					} else {
@@ -180,9 +180,11 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 						mu, ok := pubs[publisher.Nic]
 						if ! ok {
 							response.Status = Status{WARNING, "Publisher not found!"}
+							log.Println("user " + request.UserID + " not found")
 						} else {
 							response.CamID = mu.ID
 							response.Status = Status{SUCCESS, ""}
+							log.Printf("camid %d\n",response.CamID)
 						}
 						unlockMediaUsers()
 					}
