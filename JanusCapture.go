@@ -210,7 +210,7 @@ func JanusCapture() (MediaUsers) {
 		}
 	}
 
-	return MediaUsers{}
+	return publishers
 }
 
 
