@@ -132,7 +132,6 @@ function getCamId(userID) {
 function detachVideo(number) {
     var screen_id = parseInt(number);
     if (feeds[screen_id] != null ) {
-        console.log(">>> " +  feeds[screen_id].getId(),toString() )
         message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen_id].getId()};
         feeds[screen_id].send({"message": message});
     }
@@ -144,7 +143,7 @@ function subscribe(screen, id) {
     if (feeds[screen_id] != null ) {
         console.log(">>> " +  feeds[screen_id].getId(),toString() )
        message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen_id].getId()};
-       feeds[screen_id].send({"message": message});
+       feeds[screen_id].send( message);
     }
 
     console.log("@@@@@@@@@@@@@@@@@@@@@@@@@screen " + screen_id + " mess> " + message);

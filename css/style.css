@@ -367,7 +367,10 @@ visibility: hidden;
 	margin-left: -12px;
 }
 
-
+.detachVideo {
+	height: 50px;
+	width: 50px;
+}
 
 
 
