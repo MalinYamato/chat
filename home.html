@@ -82,7 +82,6 @@
                         data: JSON.stringify(op),
                         contentType: 'application/json',
                         success: function (response) {
-
                             if (response.status.status != "SUCCESS") {
                                 console.log("getUser failed> " + response.status + " " + response)
                             } else {
@@ -816,17 +815,20 @@
                         info.appendChild(info5);
                         info.appendChild(info6);
                         info.setAttribute("id", "profileInfo");
-                        if (person.camState == "ON") {
 
-                            for (var i=0; i < cams.length; i++) {
-                                var aCam = cams[i];
-                                var o= document.createElement("img");
-                                o.setAttribute("src", "/images/webcam.svg");
-                                o.setAttribute("class", "smallWebCam");
-                                o.setAttribute("onclick", "setRemoteCam('" + i + ":" + person.CamID +"')");
-                                o.setAttribute("id", aCam);
-                                info.appendChild(o);
-                            }
+                        camID = getCamId(person.token);
+                        if (CamID =! null)
+                        {
+                                for (var i = 0; i < cams.length; i++) {
+                                    var aCam = cams[i];
+                                    var o = document.createElement("img");
+                                    o.setAttribute("src", "/images/webcam.svg");
+                                    o.setAttribute("class", "smallWebCam");
+                                    o.setAttribute("onclick", "setRemoteCam('" + i + ":" + CamID + "')");
+                                    o.setAttribute("id", aCam);
+                                    info.appendChild(o);
+                                }
+
                         }
 
                          x.appendChild(info);
