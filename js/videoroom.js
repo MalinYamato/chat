@@ -44,7 +44,7 @@
 //
 
 var server = "https://" + "media.raku.cloud" + ":8089/janus";
-var _rakuhost = "https://secure.raku.cloud";
+var _rakuhost = "secure.raku.cloud";
 var _mediahost = null;
 
 var janus = null;
