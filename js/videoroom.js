@@ -116,7 +116,7 @@ function getCamId(userID) {
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
-            console.log("SetMyCamID Video " + id + " " + result.status.status);
+            console.log("SetMyCamID Video " + userID + " " + result.status.status);
             if (status.status.status == "SUCCESS") {
                 return result.camID;
             }
