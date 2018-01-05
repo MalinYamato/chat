@@ -123,7 +123,7 @@ func getDocument(mess string, path string) (r *http.Response) {
 	res, _ := http.Post(url, "application/json; charset=utf-8", b)
 	return res
 }
-func JanusCapture() (MediaUsers) {
+func JanusCapture() (*MediaUsers) {
 
 	publishers := MediaUsers{map[string]MediaUser{}}
 	subscriptions := map[handleID]Subscription{}
@@ -210,7 +210,7 @@ func JanusCapture() (MediaUsers) {
 		}
 	}
 
-	return publishers
+	return &publishers
 }
 
 
