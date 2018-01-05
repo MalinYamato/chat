@@ -368,9 +368,13 @@ visibility: hidden;
 }
 
 .detachVideo {
-	height: 50px;
-	width: 50px;
+	height: 35px;
+	width: 35px;
 }
 
+.detachVideo:hover {
+	height: 40px;
+	width: 40px;
+}
 
 
