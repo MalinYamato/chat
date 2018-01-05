@@ -105,12 +105,12 @@ func (mus *MediaUsers) listenersOf(display string) ([]MediaUser) {
 	}
 	return result
 }
-func (mus *MediaUsers) count() (int) {
-	return len(mus.__mus)
-}
 
 func (mus *MediaUsers) getAll() (map[string]MediaUser) {
 	return mus.__mus
+}
+func (mus *MediaUsers) count() (int) {
+	return len(mus.__mus)
 }
 
 func getDocument(mess string, path string) (r *http.Response) {
@@ -123,7 +123,7 @@ func getDocument(mess string, path string) (r *http.Response) {
 	res, _ := http.Post(url, "application/json; charset=utf-8", b)
 	return res
 }
-func JanusCapture() (*MediaUsers) {
+func JanusCapture() (MediaUsers) {
 
 	publishers := MediaUsers{map[string]MediaUser{}}
 	subscriptions := map[handleID]Subscription{}
@@ -210,13 +210,14 @@ func JanusCapture() (*MediaUsers) {
 		}
 	}
 
-	return &publishers
+	return publishers
 }
 
 
 func testJanusCapture() {
 
 	publishers := JanusCapture()
+	fmt.Printf("count %d\n",  publishers.count() )
 	for _, user := range publishers.__mus {
 		fmt.Print("User: ")
 		fmt.Printf("Display %s ID %d PvtID %d  Session %d\n", user.Display, user.ID, user.PrivateID, user.SessionID)
