@@ -134,7 +134,7 @@ function subscribe(screen, id) {
     var screen_id = parseInt(screen);
     if (feeds[screen_id] != null ) {
        message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen_id].getId()};
-       feeds[idx].send({"message": message});
+       feeds[screen_id].send({"message": message});
     }
 
     console.log("@@@@@@@@@@@@@@@@@@@@@@@@@screen " + screen_id + " mess> " + message);
