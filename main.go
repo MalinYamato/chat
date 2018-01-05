@@ -51,7 +51,7 @@ import (
 	facebookOAuth2 "golang.org/x/oauth2/facebook"
 	"os"
 	"path"
-	"golang.org/x/net/html/atom"
+
 )
 
 type Config struct {
