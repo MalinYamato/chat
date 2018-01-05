@@ -118,7 +118,7 @@ function getCamId(userID) {
         success: function (result) {
             console.log("SetMyCamID Video " + userID + " " + result.status.status);
             if (result.status.status == "SUCCESS") {
-                return result.CamID;
+                return result.camID;
             }
             else {
                 console.log(result.status.detail);
