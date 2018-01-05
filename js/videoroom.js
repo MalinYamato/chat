@@ -107,19 +107,27 @@ function setMyCamID(id) {
         }
     });
 }
-function getMyCamId() {
-    request = {"Op":"setMyCamID", "CamID" : id};
+function getCamId(userID) {
+    request = {"Op":"getCamID", "UserID" : userID};
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://"+_rakuhost +"/VideoManager",
+        url: "https://" + _rakuhost + "/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
-            console.log("SetMyCamID Video " +id + " " + result.status.status);
+            console.log("SetMyCamID Video " + id + " " + result.status.status);
+            if (status.status.status == "SUCCESS") {
+                return result.camID;
+            }
+            else {
+                consoler.log(result.status.detail);
+                return null
+            }
         }
     });
 }
+
 function subscribe(screen, id) {
     newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, parseInt(screen));
 }
