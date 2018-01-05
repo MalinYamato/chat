@@ -29,38 +29,35 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 package main
 
 import (
-	"os"
-	"strings"
-	"io"
-	"log"
 	"encoding/json"
-	"net/http"
-	"strconv"
+	"github.com/robfig/graphics-go/graphics"
 	"image"
 	"image/gif"
-	"image/png"
 	"image/jpeg"
-	"github.com/robfig/graphics-go/graphics"
+	"image/png"
+	"io"
 	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+	"strconv"
+	"strings"
 
 	"github.com/satori/go.uuid"
 )
 
-
-
 type ImagesResponse struct {
-	Status          Status                    `json:"status"`
-	ProfileImageURL string                    `json:"profileImageURL"`
-	Images          []map[string]string       `json:"images"`
+	Status          Status              `json:"status"`
+	ProfileImageURL string              `json:"profileImageURL"`
+	Images          []map[string]string `json:"images"`
 }
 
 type ImageRequest struct {
-	Op       string    `json:"op"`
-	ImageURL string    `json:"imageURL"`
+	Op       string `json:"op"`
+	ImageURL string `json:"imageURL"`
 }
 
 func cropImage(fileroot string, inputFile string, extension string) Status {
@@ -70,11 +67,11 @@ func cropImage(fileroot string, inputFile string, extension string) Status {
 	}
 	var src image.Image
 	defer fSrc.Close()
-	if (strings.ToLower(extension) == "jpg" || strings.ToLower(extension) == "jpeg") {
+	if strings.ToLower(extension) == "jpg" || strings.ToLower(extension) == "jpeg" {
 		src, _, err = image.Decode(fSrc)
-	} else if (strings.ToLower(extension) == "png") {
+	} else if strings.ToLower(extension) == "png" {
 		src, err = png.Decode(fSrc)
-	} else if (strings.ToLower(extension) == "gif") {
+	} else if strings.ToLower(extension) == "gif" {
 		src, err = gif.Decode(fSrc)
 	} else {
 		return Status{Status: ERROR, Detail: extension + " not suppored! Supported formats are jpg, png and gif"}
@@ -94,7 +91,6 @@ func cropImage(fileroot string, inputFile string, extension string) Status {
 	return Status{SUCCESS, ""}
 }
 
-
 func ImageManager_DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var status Status
@@ -107,7 +103,7 @@ func ImageManager_DeleteHandler(w http.ResponseWriter, r *http.Request) {
 			status = Status{ERROR, err.Error()}
 		} else {
 			person, ok = _persons.findPersonByToken(token)
-			if ! ok {
+			if !ok {
 				status = Status{ERROR, err.Error()}
 			} else {
 				decoder := json.NewDecoder(r.Body)
@@ -117,7 +113,7 @@ func ImageManager_DeleteHandler(w http.ResponseWriter, r *http.Request) {
 					panic(err)
 				}
 				if request.Op == "Delete" {
-					if (request.ImageURL == person.PictureURL) {
+					if request.ImageURL == person.PictureURL {
 						status = Status{Status: WARNING, Detail: "Users are not allowed to delete profile picture!"}
 					} else {
 						path := person.path() + "/img"
@@ -133,7 +129,7 @@ func ImageManager_DeleteHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		status = Status{Status: ERROR, Detail:"Bad HTTPS method"}
+		status = Status{Status: ERROR, Detail: "Bad HTTPS method"}
 		log.Println("ImageManager: Unknown HTTP method ", r.Method)
 	}
 	json_response, err := json.Marshal(status)
@@ -150,8 +146,8 @@ func ImageManger_GetHandler(w http.ResponseWriter, r *http.Request) {
 	var status Status
 	if r.Method == "POST" {
 		person, _ := _persons.findPersonByCookie(r)
-		if (person.Keep == false ) {
-			status = Status{Status: WARNING, Detail: "Only members have images!" }
+		if person.Keep == false {
+			status = Status{Status: WARNING, Detail: "Only members have images!"}
 		} else {
 			path := person.path() + "/img/"
 			files, err := ioutil.ReadDir(path)
@@ -191,16 +187,16 @@ func ImageManger_GetHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type ImageFile struct {
-	Name    string  `json:"name"`
-	Type    string  `json:"type"`
-	Height  int16   `json:"height"`
-	Width   int16   `json:"width"`
+	Name   string `json:"name"`
+	Type   string `json:"type"`
+	Height int16  `json:"height"`
+	Width  int16  `json:"width"`
 }
 
 type ImageInfo struct {
-	OriginalFileName string   `json:"originalFileName"`
-	Description string        `json:"description"`
-	Variants []ImageFile      `json:"variants"`
+	OriginalFileName string      `json:"originalFileName"`
+	Description      string      `json:"description"`
+	Variants         []ImageFile `json:"variants"`
 }
 
 func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -211,8 +207,8 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
 		person, _ := _persons.findPersonByCookie(r)
-		if (person.Keep == false ) {
-			status = Status{Status: WARNING, Detail: "Only members may save images!" }
+		if person.Keep == false {
+			status = Status{Status: WARNING, Detail: "Only members may save images!"}
 			log.Println("attemtp to upload pictures wihout being a member!")
 		} else {
 			err := r.ParseMultipartForm(100000)
@@ -257,9 +253,9 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if status.Status == SUCCESS {
-			status = Status{Status: SUCCESS, Detail: strconv.Itoa(lenght) + " file(s) uploaded!" }
+			status = Status{Status: SUCCESS, Detail: strconv.Itoa(lenght) + " file(s) uploaded!"}
 		}
-	}else {
+	} else {
 		status = Status{Status: ERROR}
 		log.Println("ImageManager: Unknown HTTP method ", r.Method)
 	}
@@ -270,4 +266,3 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json_response)
 }
-

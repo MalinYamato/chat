@@ -32,31 +32,30 @@
 package main
 
 import (
-	"net/http"
-	"log"
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"html/template"
+	"log"
+	"net/http"
 )
 
 var (
-	LANGUAGES   = []string{"English", "Finnish", "Same", "Swedish", "German", "French", "Spannish", "Italian", "Portogese", "Russian", "Chinese", "Japanese", "Korean", "Thai" }
+	LANGUAGES   = []string{"English", "Finnish", "Same", "Swedish", "German", "French", "Spannish", "Italian", "Portogese", "Russian", "Chinese", "Japanese", "Korean", "Thai"}
 	ORIENTATION = []string{"Straight", "Gay", "Lesbian", "BiSexual", "ASexual"}
 	GENDER      = []string{"Female", "Male", "TranssexualF", "TranssexualM", "CrossDresser", "None"}
 )
 
 type PersonResponse struct {
-	Status          Status        `json:"status"`
-	Person          Person        `json:"person"`
+	Status Status `json:"status"`
+	Person Person `json:"person"`
 }
 
 type PersonRequest struct {
-	Op              string        `json:"op"`
-	Token           string        `json:"token"`
-	UserID          UserId        `json:"userID"`
-	Nic             string        `json:"nic"`
+	Op     string `json:"op"`
+	Token  string `json:"token"`
+	UserID UserId `json:"userID"`
+	Nic    string `json:"nic"`
 }
-
 
 func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := sessionStore.Get(r, sessionName)
@@ -71,17 +70,17 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	token := session.Values[sessionToken].(string)
 	p, _ := _persons.findPersonByToken(token)
 	t := template.New("fieldname example")
-	t = template.Must(template.ParseFiles( homepath + "registration.html"))
+	t = template.Must(template.ParseFiles(homepath + "registration.html"))
 	t.Execute(w, struct {
-		P                  Person
-		Host               string
+		P    Person
+		Host string
 	}{
-		P:                  p,
-		Host:               r.Host,
+		P:    p,
+		Host: r.Host,
 	})
 }
 
-func getSessionUser(r *http.Request) (p Person, s Status){
+func getSessionUser(r *http.Request) (p Person, s Status) {
 	var status Status
 	var person Person
 	token, _, err := getCookieAndTokenfromRequest(r, true)
@@ -91,7 +90,7 @@ func getSessionUser(r *http.Request) (p Person, s Status){
 		status = Status{ERROR, err.Error()}
 	} else {
 		person, ok = _persons.findPersonByToken(token)
-		if ! ok {
+		if !ok {
 			status = Status{ERROR, err.Error()}
 		}
 	}
@@ -99,8 +98,8 @@ func getSessionUser(r *http.Request) (p Person, s Status){
 }
 
 func profileHandler(w http.ResponseWriter, r *http.Request) {
-	var request PersonRequest;
-	var response PersonResponse;
+	var request PersonRequest
+	var response PersonResponse
 	if r.Method == "POST" {
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&request)
@@ -123,30 +122,30 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 			response.Status = Status{WARNING, "fail to find person"}
 		}
 		if request.Op == "getMyself" {
-			person, response.Status = getSessionUser(r);
-			if (response.Status.Status == SUCCESS ) {
-				ok = true;
+			person, response.Status = getSessionUser(r)
+			if response.Status.Status == SUCCESS {
+				ok = true
 			} else {
-				ok = false;
+				ok = false
 			}
 		}
 		if !ok {
 			log.Printf("Main: User not found for UserID %s \n", request.UserID)
 		} else {
-		log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
-		response.Person = person;
-	}
-	data, err := json.Marshal(response)
-	if err != nil {
-		panic(err)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(data)
+			log.Printf("Main: Profile request for user %s UserID %s token %s \n", person.Email, person.UserID, person.Token)
+			response.Person = person
+		}
+		data, err := json.Marshal(response)
+		if err != nil {
+			panic(err)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(data)
 
-} else {
-log.Println("Main Unknown HTTP method ", r.Method)
-}
+	} else {
+		log.Println("Main Unknown HTTP method ", r.Method)
+	}
 }
 
 // case a   CLIENT ---> TARGET
@@ -164,7 +163,7 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 	token := session.Values[sessionToken].(string)
 	p, _ := _persons.findPersonByToken(token)
 	t := template.New("fieldname example")
-	t = template.Must(template.ParseFiles( homepath + "profile.html"))
+	t = template.Must(template.ParseFiles(homepath + "profile.html"))
 	t.Execute(w, struct {
 		Languages          []string
 		Genders            []string
@@ -224,10 +223,9 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 			log.Println("Here " + op + " " + nic)
 
-
 			if op == "cancel" {
 				log.Println("User Deleted, session destroyed")
-				_persons.Delete(p);
+				_persons.Delete(p)
 				sessionStore.Destroy(w, sessionName)
 			}
 
@@ -240,7 +238,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 					p.Nic = nic
 					_persons.Save(p)
 					status.Detail = "Registration successful"
-					hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic() }
+					hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic()}
 				}
 
 			} else if op == "update" {
@@ -272,13 +270,13 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				_persons.Save(p)
 				status.Status = "Updated"
-				status.Detail = "Success! Your profile was updated!";
+				status.Detail = "Success! Your profile was updated!"
 			}
 		}
 	} else {
 		status.Status = "ERROR"
-		status.Detail = "Wrong HTTPS Method. Reqire POST but you sent: " + r.Method;
-		log.Println( status.Detail + " method " + r.Method)
+		status.Detail = "Wrong HTTPS Method. Reqire POST but you sent: " + r.Method
+		log.Println(status.Detail + " method " + r.Method)
 	}
 	data, err := json.Marshal(status)
 	if err != nil {

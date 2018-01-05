@@ -32,33 +32,30 @@
 
 package main
 
-
 type QueueStack struct {
-	top *Element
+	top  *Element
 	size int
 }
 
 type Element struct {
 	value interface{}
-	next *Element
+	next  *Element
 }
-
 
 func (s *QueueStack) Len() int {
 	return s.size
 }
 
-func (s *QueueStack) GetAllAsList() []interface{}  {
+func (s *QueueStack) GetAllAsList() []interface{} {
 	list := make([]interface{}, s.size)
 	var cur *Element
 	cur = s.top
-	for i := s.size-1; i >= 0; i-- {
+	for i := s.size - 1; i >= 0; i-- {
 		list[i] = cur.value
 		cur = cur.next
 	}
 	return list
 }
-
 
 func (s *QueueStack) Push(value interface{}) {
 	s.top = &Element{value, s.top}
@@ -90,4 +87,3 @@ func (s *QueueStack) TailPop() (value interface{}) {
 		}
 	}
 }
-

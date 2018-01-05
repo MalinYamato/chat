@@ -29,47 +29,44 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"encoding/json"
-	"io/ioutil"
 	"os"
-	"fmt"
-
-
 )
 
 type Person struct {
-	Keep              bool          `json:"keep"`
-	Nic               string        `json:"nic"`
-	FirstName         string        `json:"firstName"`
-	LastName          string        `json:"lastName"`
-	Email             string        `json:"email"`
-	Gender            string        `json:"gender"`
-	Height            string        `json:"height,omitempty"`
-	Town              string        `json:"country"`
-	Country           string        `json:"town"`
-	Long              string        `json:"long,omitempty"`
-	Lat               string        `json:"lat,omitempty"`
-	PictureURL        string        `json:"pictureURL,omitempty"`
-	SexualOrientation string        `json:"sexualOrienation"`
-	BirthDate         Date          `json:"birthDate"`
+	Keep              bool              `json:"keep"`
+	Nic               string            `json:"nic"`
+	FirstName         string            `json:"firstName"`
+	LastName          string            `json:"lastName"`
+	Email             string            `json:"email"`
+	Gender            string            `json:"gender"`
+	Height            string            `json:"height,omitempty"`
+	Town              string            `json:"country"`
+	Country           string            `json:"town"`
+	Long              string            `json:"long,omitempty"`
+	Lat               string            `json:"lat,omitempty"`
+	PictureURL        string            `json:"pictureURL,omitempty"`
+	SexualOrientation string            `json:"sexualOrienation"`
+	BirthDate         Date              `json:"birthDate"`
 	Languages         map[string]string `json:"Languages,omitempty"`
-	Profession        string        `json:"profession"`
-	Education         string        `json:"education"`
-	Description       string        `json:"description,omitempty"`
-	GoogleID          string        `json:"googleId,omitempty"`
-	FacebookID        string        `json:"facebookId,omitempty"`
-	UserID            UserId        `json:"userId"`
-	Token             string        `json:"token,omitempty"`
-	Room              string        `json:"room"`
-	CamID             int           `json:"CamID"`
-	CamState          string        `json:"camState"`
-	LoggedIn          bool          `json:"loggedIn"`
+	Profession        string            `json:"profession"`
+	Education         string            `json:"education"`
+	Description       string            `json:"description,omitempty"`
+	GoogleID          string            `json:"googleId,omitempty"`
+	FacebookID        string            `json:"facebookId,omitempty"`
+	UserID            UserId            `json:"userId"`
+	Token             string            `json:"token,omitempty"`
+	Room              string            `json:"room"`
+	CamID             int               `json:"CamID"`
+	CamState          string            `json:"camState"`
+	LoggedIn          bool              `json:"loggedIn"`
 	_Persons          *Persons
 }
 
@@ -84,12 +81,12 @@ func (pers *Persons) load() {
 	if _, err := os.Stat(pers.path()); err != nil {
 
 		if os.IsNotExist(err) {
-			log.Println("The directory: " + pers.path() + " does not exist, ignore loading" , err)
+			log.Println("The directory: "+pers.path()+" does not exist, ignore loading", err)
 			return
 		}
 	}
 
-	files, err := ioutil.ReadDir( pers.path())
+	files, err := ioutil.ReadDir(pers.path())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -99,11 +96,11 @@ func (pers *Persons) load() {
 			log.Fatal(err)
 		}
 		var person Person
-		err = json.Unmarshal(content, &person);
+		err = json.Unmarshal(content, &person)
 		if err != nil {
 			fmt.Println("error:", err)
 		}
-		pers.__pers[ person.UserID ] = person
+		pers.__pers[person.UserID] = person
 	}
 }
 
@@ -114,7 +111,6 @@ func (p *Person) getNic() string {
 		return p.Nic
 	}
 }
-
 
 func (pers *Persons) getAll() (persons []Person) {
 	var l = []Person{}
@@ -127,7 +123,7 @@ func (pers *Persons) getAll() (persons []Person) {
 func (pers *Persons) getAllMembers() (persons []Person) {
 	var l = []Person{}
 	for _, p := range pers.__pers {
-		if (p.Keep == true) {
+		if p.Keep == true {
 
 			l = append(l, p)
 		}
@@ -178,7 +174,7 @@ func (pers *Persons) findPersonByCookie(r *http.Request) (person Person, status 
 		return Person{}, Status{ERROR, err.Error()}
 	} else {
 		client, ok = _persons.findPersonByToken(token)
-		if ! ok {
+		if !ok {
 			return Person{}, Status{ERROR, err.Error()}
 		}
 	}
@@ -201,7 +197,6 @@ func (pers *Persons) findPersonByFacebookID(facebookId string) (person Person, o
 	return Person{}, false
 }
 
-
 func (pers *Persons) findPersonByUserId(UserId UserId) (person Person, ok bool) {
 	person, ok = pers.__pers[UserId]
 	return
@@ -209,7 +204,7 @@ func (pers *Persons) findPersonByUserId(UserId UserId) (person Person, ok bool) 
 
 func (pers *Persons) Add(person Person) bool {
 	person._Persons = pers
-	pers.__pers[ person.UserID ] = person
+	pers.__pers[person.UserID] = person
 	return true
 }
 
@@ -217,11 +212,10 @@ func (pers *Persons) Save(person Person) bool {
 	person.Keep = true
 	pers.Add(person)
 
-
 	if _, err := os.Stat(pers.path()); err != nil {
 
 		if os.IsNotExist(err) {
-			log.Println("Creating " + pers.path(), err)
+			log.Println("Creating "+pers.path(), err)
 			path := pers.path()
 			err := os.Mkdir(path, 0777)
 			log.Println("Mkdirerr err ", err)
@@ -272,6 +266,7 @@ func (pers *Persons) Delete(user Person) bool {
 func (pers *Persons) path() string {
 	return "./users"
 }
+
 //////////// Person //////////////
 
 func (p *Person) path() string {

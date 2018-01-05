@@ -28,8 +28,6 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-
 package main
 
 //      expected return value
@@ -42,20 +40,19 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"fmt"
+	"log"
 	"net/http"
 )
 
 type Graph struct {
-	Basenode          UserId               `json:"basenode"`
-	PublishersTargets PublishersTargets    `json:"publishersTargets"`
-	Pictures          map[UserId]string    `json:"pictures"`
+	Basenode          UserId            `json:"basenode"`
+	PublishersTargets PublishersTargets `json:"publishersTargets"`
+	Pictures          map[UserId]string `json:"pictures"`
 }
 type UserId string
 type Targets map[UserId]bool
 type PublishersTargets map[UserId]map[UserId]bool
-
 
 func (t PublishersTargets) collectAllTargets(pub UserId) (p PublishersTargets, targets Targets) {
 	p = make(PublishersTargets)
@@ -109,9 +106,9 @@ type PublishRequest struct {
 }
 
 type PublishRequestResponse struct {
-	Op     string      `json:"op"`
-	Status Status      `json:"status"`
-	Person Person      `json:"person"`
+	Op     string `json:"op"`
+	Status Status `json:"status"`
+	Person Person `json:"person"`
 }
 
 func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
@@ -126,7 +123,7 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 			response.Status = Status{ERROR, err.Error()}
 		} else {
 			client, ok = _persons.findPersonByToken(token)
-			if ! ok {
+			if !ok {
 				response.Status = Status{ERROR, err.Error()}
 			} else {
 				decoder := json.NewDecoder(r.Body)
@@ -138,9 +135,9 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 				log.Println(request)
 				targetID := UserId(request.Ids[0])
 				target, ok := _persons.findPersonByUserId(targetID)
-				if ! ok {
+				if !ok {
 					log.Printf("Main: Target  not found for UserID %s \n", targetID)
-					response.Status = Status{Status: WARNING, Detail: fmt.Sprintf("Receiver not found for UserID %s \n", targetID) }
+					response.Status = Status{Status: WARNING, Detail: fmt.Sprintf("Receiver not found for UserID %s \n", targetID)}
 				} else {
 					log.Printf("Main: Profile request for Target %s UserID %s token %s \n", target.Email, target.UserID, target.Token)
 					targets, ok := _publishers[client.UserID]
@@ -152,7 +149,7 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 							delete(_publishers, client.UserID)
 						}
 					} else if request.Op == "AddTarget" {
-						if ! ok {
+						if !ok {
 							targets = make(Targets)
 						}
 						targets[targetID] = true

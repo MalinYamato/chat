@@ -29,15 +29,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-
 package main
 
 import (
+	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"time"
-	"github.com/gorilla/websocket"
 	//"encoding/json"
 	"encoding/json"
 	"github.com/gorilla/securecookie"
@@ -78,7 +76,7 @@ type Client struct {
 	Cookie string
 }
 
-func (c *Client) token() (string) {
+func (c *Client) token() string {
 
 	return c.Token
 }
@@ -129,10 +127,10 @@ func (c *Client) readPump() {
 
 		var message Message
 		json.Unmarshal(json_message, &message)
-		log.Println("Client: message from Browser ", message);
+		log.Println("Client: message from Browser ", message)
 
-		if ! c.validSession() {
-			json_message := Message{Op: "Status", Sender: "Server", Room: "none", Token: "null", Timestamp: "null", Content: "Unauthorized" }
+		if !c.validSession() {
+			json_message := Message{Op: "Status", Sender: "Server", Room: "none", Token: "null", Timestamp: "null", Content: "Unauthorized"}
 			c.send <- json_message
 			if err != nil {
 				log.Println("Client Fail to write JSON on websockets because: ", err)
@@ -146,17 +144,17 @@ func (c *Client) readPump() {
 				if yes {
 					theMessage := "[" + strconv.Itoa(len(targets)) + "] " + message.Content
 					targets[person.UserID] = ok // the message should be sent to the sender herself.
-					message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage  }
+					message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage}
 					c.hub.multicast <- message
 				} else {
 					if person.Room != "MPR" { // should not broadcast to this room
-						message := Message{Op: "Message", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: message.Content  }
+						message := Message{Op: "Message", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: message.Content}
 						c.hub.broadcast <- message
 					}
 				}
 			} else {
 				log.Println("Client: Invalid Token: ", message.Token)
-				json_message := Message{Op: "Status", Token: "Invalid Token", Room: person.Room, Sender: "Server", Timestamp: "null", Content: "Unauthorized" }
+				json_message := Message{Op: "Status", Token: "Invalid Token", Room: person.Room, Sender: "Server", Timestamp: "null", Content: "Unauthorized"}
 				c.send <- json_message
 				if err != nil {
 					log.Println("Client: Fail to write JSON on  websockets! Err: ", err)
@@ -169,7 +167,6 @@ func (c *Client) readPump() {
 	}
 }
 
-
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
@@ -181,7 +178,6 @@ func (c *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-c.send:
-
 
 			log.Println("Client: Try to send message to browser", message.Sender, message.Content, message.Timestamp, message.Content)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))

@@ -105,6 +105,13 @@ func (mus *MediaUsers) listenersOf(display string) ([]MediaUser) {
 	}
 	return result
 }
+func (mus *MediaUsers) count() (int) {
+	return len(mus.__mus)
+}
+
+func (mus *MediaUsers) getAll() (map[string]MediaUser) {
+	return mus.__mus
+}
 
 func getDocument(mess string, path string) (r *http.Response) {
 	url := server + "/admin" + "/" + path

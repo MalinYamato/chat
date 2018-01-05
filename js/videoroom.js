@@ -178,6 +178,9 @@ function toggleMute() {
     $('#mute').html(muted ? "Unmute" : "Mute");
 }
 
+
+
+
 var initialized = false;
 $(document).ready(function() {
 

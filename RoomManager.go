@@ -29,13 +29,12 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 package main
 
 import (
-	"net/http"
 	"encoding/json"
 	"log"
+	"net/http"
 )
 
 type RoomRequest struct {
@@ -58,14 +57,14 @@ func flushMessagesInRoom(person Person, targets Targets) {
 
 func RoomManager_getRooms() map[string]QueueStack {
 	queueStack := map[string]QueueStack{
-	"Main":QueueStack{},
-	"ReimersHotel" : QueueStack{},
-	"MalinFriends":QueueStack{},
-	"Japanese": QueueStack{},
-	"Lesbian": QueueStack{},
-	"Gay": QueueStack{},
-	"Trans":  QueueStack{}}
-        return queueStack
+		"Main":         QueueStack{},
+		"ReimersHotel": QueueStack{},
+		"MalinFriends": QueueStack{},
+		"Japanese":     QueueStack{},
+		"Lesbian":      QueueStack{},
+		"Gay":          QueueStack{},
+		"Trans":        QueueStack{}}
+	return queueStack
 }
 
 func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +79,7 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 			status = Status{ERROR, err.Error()}
 		} else {
 			person, ok = _persons.findPersonByToken(token)
-			if ! ok {
+			if !ok {
 				status = Status{ERROR, err.Error()}
 			} else {
 				decoder := json.NewDecoder(r.Body)
@@ -97,9 +96,9 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 					targets[person.UserID] = true
 					flushMessagesInRoom(person, targets)
 					RoomUsers := _persons.getAllInRoom(person.Room)
-					hub.broadcast <- Message{Op: "LeaveRoom", Token: "", Room: leavingRoom, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Leaving " + person.getNic() }
-					hub.broadcast <- Message{Op: "EnterRoom", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Entering " + person.getNic() }
-					hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "", Room: person.Room, Timestamp: timestamp(), Targets: targets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "RoomUsers" + person.getNic(), RoomUsers: RoomUsers }
+					hub.broadcast <- Message{Op: "LeaveRoom", Token: "", Room: leavingRoom, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Leaving " + person.getNic()}
+					hub.broadcast <- Message{Op: "EnterRoom", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Entering " + person.getNic()}
+					hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "", Room: person.Room, Timestamp: timestamp(), Targets: targets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "RoomUsers" + person.getNic(), RoomUsers: RoomUsers}
 					status = Status{Status: SUCCESS}
 				} else if request.Op == "RefressAllMessages" {
 					targets := make(Targets)
@@ -107,7 +106,7 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 					flushMessagesInRoom(person, targets)
 					status = Status{Status: SUCCESS}
 				} else {
-					status = Status{Status: ERROR, Detail:"Unknown operation > " + request.Op}
+					status = Status{Status: ERROR, Detail: "Unknown operation > " + request.Op}
 				}
 			}
 		}

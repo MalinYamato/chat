@@ -38,9 +38,11 @@
 
 package main
 
+import ()
 import (
+	"log"
+	"unicode"
 )
-import "log"
 
 // hub maintains the set of active clients and broadcasts messages to the
 // clients.
@@ -65,31 +67,32 @@ type Hub struct {
 
 	rooms map[string]Room
 
-	update chan Persons
+	updateMediaUsers chan MediaUsers
 }
 
 type Room struct {
-		Name string
-		Messages []Message
+	Name     string
+	Messages []Message
 }
 
 type Command struct {
-		client *Client
-		label string
-		value string
+	client *Client
+	label  string
+	value  string
 }
 
 func newHub(stack QueueStack) *Hub {
-	return &Hub {
-		update:     make(chan Persons),
+	return &Hub{
+
 		broadcast:  make(chan Message),
-		multicast : make(chan Message),
+		multicast:  make(chan Message),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[*Client]bool),
-		rooms:	    make(map[string]Room),
+		rooms:      make(map[string]Room),
 		command:    make(chan Command),
 		messages:   RoomManager_getRooms(),
+		updateMediaUsers: make(chan MediaUsers),
 	}
 }
 
@@ -98,7 +101,7 @@ func (h *Hub) run() {
 		select {
 		case client := <-h.register:
 			h.clients[client] = true
-		        if client.Token != "" {
+			if client.Token != "" {
 				person, _ := _persons.findPersonByToken(client.Token)
 				client.UserId = person.UserID
 			}
@@ -128,14 +131,14 @@ func (h *Hub) run() {
 		case message := <-h.broadcast:
 			room := h.messages[message.Room]
 			room.Push(message)
-		        h.messages[message.Room] = room
+			h.messages[message.Room] = room
 			log.Printf("Hub: broadcast to all from %s in room %s", message.Sender, message.Room)
 
 			if room.Len() > 50 {
 				room.TailPop()
 			}
 			for client := range h.clients {
-	                        person, ok  := _persons.findPersonByUserId(client.UserId);
+				person, ok := _persons.findPersonByUserId(client.UserId)
 				if ok && person.Room == message.Room {
 					select {
 					case client.send <- message:
@@ -146,6 +149,9 @@ func (h *Hub) run() {
 					}
 				}
 			}
+
+		case mediaUsers := <-h.updateMediaUsers:
+			 setMediaUsers(mediaUsers)
 
 		}
 	}

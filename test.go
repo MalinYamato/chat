@@ -12,11 +12,11 @@ import "log"
 
 func testA() {
 	_publishers = make(PublishersTargets)
-	_publishers["X"] = Targets{"B": true,"X":true}
+	_publishers["X"] = Targets{"B": true, "X": true}
 
 	//_publishers["B"] = Targets{"A": true, "F": true, "X": true}
 	//_publishers["C"] = Targets{"D": true, "X": true, "F": true}
-	allTargs, _ :=  _publishers.collectAllTargets("X")
+	allTargs, _ := _publishers.collectAllTargets("X")
 	for k, _ := range allTargs {
 		log.Printf("Target %s  \n", k)
 
@@ -34,8 +34,8 @@ func testA() {
 	}
 
 	log.Println("TEST B ##############")
-	allTargs, _ =  _publishers.collectAllTargets("X")
-	for at:= range allTargs{
+	allTargs, _ = _publishers.collectAllTargets("X")
+	for at := range allTargs {
 		pp, col := _publishers.Status("X", at)
 		log.Println("Col ", col.Status)
 		for t, _ := range pp {

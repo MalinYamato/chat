@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"crypto/rand"
+	"fmt"
 )
 
 func pseudo_uuid() (uuid string) {

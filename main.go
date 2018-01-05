@@ -34,24 +34,24 @@ package main
 
 import (
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
-	"html/template"
 	//"github.com/kabukky/httpscerts"
 	"github.com/dghubble/gologin"
-	googleOAuth2 "golang.org/x/oauth2/google"
-	"golang.org/x/oauth2"
-	"strings"
-	"github.com/kabukky/httpscerts"
 	"github.com/dghubble/gologin/google"
+	"github.com/kabukky/httpscerts"
+	"golang.org/x/oauth2"
+	googleOAuth2 "golang.org/x/oauth2/google"
+	"strings"
 	//"path"
-	"path"
-	"os"
-	"github.com/dghubble/sessions"
 	"fmt"
 	"github.com/dghubble/gologin/facebook"
+	"github.com/dghubble/sessions"
 	facebookOAuth2 "golang.org/x/oauth2/facebook"
-
+	"os"
+	"path"
+	"golang.org/x/net/html/atom"
 )
 
 type Config struct {
@@ -77,13 +77,12 @@ type Endpoint struct {
 }
 
 type Date struct {
-	Year  string  `json:"year"`
-	Month string  `json:"month"`
-	Day   string  `json:"day"`
+	Year  string `json:"year"`
+	Month string `json:"month"`
+	Day   string `json:"day"`
 }
 
-const
-(
+const (
 	ERROR   = "ERROR"
 	WARNING = "WARNING"
 	SUCCESS = "SUCCESS"
@@ -100,18 +99,18 @@ type Status struct {
 }
 
 type VideoFormat struct {
-	Codec   string   		`json:"codec"`
-	Width   int16    		`json:"width"`// in pixels
-	Height  int16   		`json:"height"`// in pixels
-	BitRate int16   		`json:"bitRate"`// bits per second
+	Codec   string `json:"codec"`
+	Width   int16  `json:"width"`   // in pixels
+	Height  int16  `json:"height"`  // in pixels
+	BitRate int16  `json:"bitRate"` // bits per second
 }
 
 type AudioFormat struct {
-	Codec      string   		`json:"codec"`
-	Channels   int16   		`json:"channels"`
-	BitRate    int16        	`json:"bitRate"`	// bits per second
-	BitDepth   int16    		`json:"bitDepth"`	// vertical resolution,  PCM
-	SampleRate int32    		`json:"sampleRate"`	// Number of vertical snapshots per second, PCM
+	Codec      string `json:"codec"`
+	Channels   int16  `json:"channels"`
+	BitRate    int16  `json:"bitRate"`    // bits per second
+	BitDepth   int16  `json:"bitDepth"`   // vertical resolution,  PCM
+	SampleRate int32  `json:"sampleRate"` // Number of vertical snapshots per second, PCM
 }
 
 // publishers[].Targets[]
@@ -119,17 +118,17 @@ type AudioFormat struct {
 // Media Session Protocol
 //
 type MediaSession struct {
-	MediaServerURL string  			`json:"idMediaServerURL"`
-	IdMediaSession string  			`json:"idHandle"`
-	IdHandle string        			`json:"id"`
-	Id       string    	    		`json:"id"`
-	IdRoom   string         	        `json:"room"`
-	Audio    bool          			`json:"audio"`
-	Video    bool          			`json:"video"`
-	PubOrSub string        			`json:"pubOrSub"`
-	OnOrOff  string        			`json:"onOrOff"`
-	VideoFormat VideoFormat        	 	`json:"VideoFormat,omitempty"`
-	AudioFormat AudioFormat        		`json:"AudioFormast,omitempty"`
+	MediaServerURL string      `json:"idMediaServerURL"`
+	IdMediaSession string      `json:"idHandle"`
+	IdHandle       string      `json:"id"`
+	Id             string      `json:"id"`
+	IdRoom         string      `json:"room"`
+	Audio          bool        `json:"audio"`
+	Video          bool        `json:"video"`
+	PubOrSub       string      `json:"pubOrSub"`
+	OnOrOff        string      `json:"onOrOff"`
+	VideoFormat    VideoFormat `json:"VideoFormat,omitempty"`
+	AudioFormat    AudioFormat `json:"AudioFormast,omitempty"`
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,15 +141,15 @@ type MediaSession struct {
 // Most of media information is included in SDP and are therefore omitted except for video hight and width.
 
 type MediaStatus struct {
-        MedaiServerURL string                          `json:"mediaServerURL"`  // The url of SFU and MediaGateway
-	OnOff          string                          `json:"onOff"`
-	JanusId        string                          `json:"janusId"`         // the Id used by JAnus to identify streams
-	PubOrSub       string                          `json:"pubOrSub"`        // Janus room
-	Room           string                          `json:"room"`
-	Audio          bool                            `json:"audio"`
-	Video          bool                            `json:"video"`
-	VideoHeight    int16                           `json:"videoHeight"`     // Pixels. hint how to arrange the GUI to present video
-	VideoWidth     int16                           `json:"videoWidth"`      // Pixels. hint how to arrange the GUI to present video
+	MedaiServerURL string `json:"mediaServerURL"` // The url of SFU and MediaGateway
+	OnOff          string `json:"onOff"`
+	JanusId        string `json:"janusId"`  // the Id used by JAnus to identify streams
+	PubOrSub       string `json:"pubOrSub"` // Janus room
+	Room           string `json:"room"`
+	Audio          bool   `json:"audio"`
+	Video          bool   `json:"video"`
+	VideoHeight    int16  `json:"videoHeight"` // Pixels. hint how to arrange the GUI to present video
+	VideoWidth     int16  `json:"videoWidth"`  // Pixels. hint how to arrange the GUI to present video
 }
 
 //   AnyPuiblishers, broadcasted when interresed in knowing who is/are publishing.
@@ -160,51 +159,51 @@ type MediaStatus struct {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type Message struct {
-	Op         string                           `json:"op"`
-	Token      string                           `json:"token"`
-	Room       string                           `json:"room"`
-	Sender     UserId                           `json:"sender"`
-	Targets    Targets                          `json:"targets,omitempty"`
-	Nic        string                           `json:"nic,omitempty"`
-	Timestamp  string                           `json:"timestamp,omitempty"`
-	PictureURL string                           `json:"pictureURL,omitemtpy"`
+	Op         string  `json:"op"`
+	Token      string  `json:"token"`
+	Room       string  `json:"room"`
+	Sender     UserId  `json:"sender"`
+	Targets    Targets `json:"targets,omitempty"`
+	Nic        string  `json:"nic,omitempty"`
+	Timestamp  string  `json:"timestamp,omitempty"`
+	PictureURL string  `json:"pictureURL,omitemtpy"`
 
 	//payload
-	Content   string                           `json:"content"`
-	Graph     Graph                            `json:"graph,omitempty"`
-	RoomUsers []Person                         `json:"roomUsers,omitempty"`
-	MediaSession MediaSession                  `json:"mediaSession,omitempty"`
+	Content      string       `json:"content"`
+	Graph        Graph        `json:"graph,omitempty"`
+	RoomUsers    []Person     `json:"roomUsers,omitempty"`
+	MediaSession MediaSession `json:"mediaSession,omitempty"`
 }
 
-func (endpoint *Endpoint) url() (string) {
+func (endpoint *Endpoint) url() string {
 	return endpoint.protocol + "://" + endpoint.host + ":" + endpoint.port
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
-	if ( strings.Contains(r.URL.Path, "/session") ) {
+	if strings.Contains(r.URL.Path, "/session") {
 		log.Println("Main: Set path ", r.URL.Path)
 		r.URL.Path = "/"
-	} else if ( strings.Contains(r.URL.Path, "/user") ) {
+	} else if strings.Contains(r.URL.Path, "/user") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
-	} else if ( strings.Contains(r.URL.Path, "/test") ) {
+	} else if strings.Contains(r.URL.Path, "/test") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
-	} else if ( strings.Contains(r.URL.Path, "/css") ) {
+	} else if strings.Contains(r.URL.Path, "/css") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
-	} else if ( strings.Contains(r.URL.Path, "/js") ) {
+	} else if strings.Contains(r.URL.Path, "/js") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
-	} else if ( strings.Contains(r.URL.Path, "/images") ) {
+	} else if strings.Contains(r.URL.Path, "/images") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
 		fp := path.Join(DocumentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
@@ -266,9 +265,9 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 	var person Person
 	var ok bool
 	person, ok = _persons.findPersonByToken(token)
-	if ! ok {
+	if !ok {
 		log.Println("Main: sessionHandler: User does not exist for token ", person.Token)
-		w.Write([]byte("Authorization Failure! User does not exist, The following token is invalid: " + token ))
+		w.Write([]byte("Authorization Failure! User does not exist, The following token is invalid: " + token))
 	}
 	room := hub.messages[person.Room]
 	ifs := room.GetAllAsList()
@@ -334,10 +333,9 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 		Scopes:       []string{"profile", "email"},
 	}
 	// state param cookies require HTTPS by default; disable for localhost development
-	stateConfig :=  gologin.DebugOnlyCookieConfig
+	stateConfig := gologin.DebugOnlyCookieConfig
 	mux.Handle("/google/login", google.StateHandler(stateConfig, google.LoginHandler(oauth2Config, nil)))
 	mux.Handle("/google/callback", google.StateHandler(stateConfig, google.CallbackHandler(oauth2Config, issueSession(), nil)))
-
 
 	oauth2ConfigFB := &oauth2.Config{
 		ClientID:     config.ClientID_FB,
@@ -346,8 +344,8 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 		Endpoint:     facebookOAuth2.Endpoint,
 		//Scopes:       []string{"profile", "email"},
 	}
-	log.Println("Facebook Client ID ", config.ClientID_FB);
-	log.Println("Facebook Client secret ", config.ClientSecret_FB);
+	log.Println("Facebook Client ID ", config.ClientID_FB)
+	log.Println("Facebook Client secret ", config.ClientSecret_FB)
 
 	stateConfigFB := gologin.DefaultCookieConfig
 	mux.Handle("/facebook/login", facebook.StateHandler(stateConfigFB, facebook.LoginHandler(oauth2ConfigFB, nil)))
@@ -358,10 +356,10 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 
 func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token string, cookie string, err error) {
 
-	if (!onlyTooken) {
+	if !onlyTooken {
 		//retrieve encrypted cookie
 		cookieInfo, err := r.Cookie(sessionName)
-		if (err != nil) {
+		if err != nil {
 			return "", "", fmt.Errorf("No cookie found for give cookie name %s detail %s", sessionName, err)
 		}
 		cookie = cookieInfo.Value
@@ -398,12 +396,12 @@ func main() {
 	_persons = Persons{__pers: make(map[UserId]Person)}
 
 	config := &Config{
-		ClientID_FB:      os.Getenv("FACEBOOK_CLIENT_ID"),
-		ClientSecret_FB:  os.Getenv("FACEBOOK_CLIENT_SECRET"),
-		ClientID:         os.Getenv("GOOGLE_CLIENT_ID"),
-		ClientSecret:     os.Getenv("GOOGLE_CLIENT_SECRET"),
-		ChatHost:         os.Getenv("CHAT_HOST"),
-		ChatPrivateKey:   os.Getenv("CHAT_PRIVATE_KEY"),
+		ClientID_FB:     os.Getenv("FACEBOOK_CLIENT_ID"),
+		ClientSecret_FB: os.Getenv("FACEBOOK_CLIENT_SECRET"),
+		ClientID:        os.Getenv("GOOGLE_CLIENT_ID"),
+		ClientSecret:    os.Getenv("GOOGLE_CLIENT_SECRET"),
+		ChatHost:        os.Getenv("CHAT_HOST"),
+		ChatPrivateKey:  os.Getenv("CHAT_PRIVATE_KEY"),
 	}
 	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
 	endpoint = Endpoint{"https", config.ChatHost, "443"}
@@ -445,6 +443,8 @@ func main() {
 	go hub.run()
 	log.Println("Loading persons database..")
 	_persons.load()
+	log.Println("Start RTC manager ")
+	startRTCManager()
 	log.Println("Starting service at ", endpoint.url())
 	err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(config, hub))
 	//err = http.ListenAndServe(*addr, NewMux(config, hub) )

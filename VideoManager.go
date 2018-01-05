@@ -1,4 +1,3 @@
-
 //
 // Copyright 2017 Malin Yamato Lääkkö --  All rights reserved.
 // https://github.com/MalinYamato
@@ -30,39 +29,77 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 package main
 
 import (
-
-	"log"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
-type WebRTC struct {
-	 Display string
-	 ID      int
-	 Session int
-	 Handle  int
-	 Id      int
-	 State   string
+type WebRTCSubscribe struct {
+	Display string
+	ID      int
 }
 
+type WebRTCUser struct {
+	Display       string
+	ID            int
+	Handle        int
+	Session       int
+	Id            int
+	Publishing    bool
+	Subscriptions map[string]WebRTCSubscribe
+}
+
+type WebRTC map[string]WebRTCUser
+
 type VideoResponse struct {
-	Status          Status        `json:"status"`
-	CamID           int            `json:"camID"`
-	CamState        string        `json:"camState"`
+	Status   Status `json:"status"`
+	CamID    int    `json:"camID"`
+	CamState string `json:"camState"`
 }
 
 type VideoRequest struct {
-	Op              string        `json:"op"`
-	CamID           int           `json:"camID"`
-	UserID          string        `json:"userID"`
-	Publisher       string        `json:"publisher"`
+	Op        string `json:"op"`
+	CamID     int    `json:"camID"`
+	UserID    string `json:"userID"`
+	Publisher string `json:"publisher"`
 }
 
+var netClient = &http.Client{
+	Timeout: time.Second * 10,
+}
+
+//////////// RTC ////////////////
+
+type RTCManager struct {
+	hub *Hub
+	publishers MediaUsers
+}
+
+var __mediaUsers MediaUsers
+func setMediaUsers(mediaUsers MediaUsers) {
+	__mediaUsers = mediaUsers
+}
+func (manager *RTCManager) start() {
+
+	for {
+		time.Sleep(5 * time.Second)
+		publishers := JanusCapture()
+		log.Printf("%s %d", "CaptureJanus -- available publishers ",publishers.count())
+		manager.hub.updateMediaUsers <- publishers
+	}
+}
+var __rtcManager RTCManager
+func startRTCManager() {
+	__rtcManager := &RTCManager{hub: hub}
+	go __rtcManager.start()
+}
+
+//////////// End RTC ////////////////
 
 func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
@@ -77,7 +114,7 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 			response.Status = Status{ERROR, err.Error()}
 		} else {
 			p, ok = _persons.findPersonByToken(token)
-			if ! ok {
+			if !ok {
 				response.Status = Status{ERROR, err.Error()}
 			} else {
 				decoder := json.NewDecoder(r.Body)
@@ -93,21 +130,21 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 					log.Println("setMyCamID")
 					p.CamID = request.CamID
 					_persons.Save(p)
-					log.Println("setMyCamID" +  strconv.Itoa( request.CamID))
+					log.Println("setMyCamID" + strconv.Itoa(request.CamID))
 
-					response.Status = Status{SUCCESS,  ""}
+					response.Status = Status{SUCCESS, ""}
 				}
 
 				if request.Op == "publish" {
 					p.CamState = "ON"
 					_persons.Save(p)
 					hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Vide started!"}
-					response.Status = Status{SUCCESS,  ""}
+					response.Status = Status{SUCCESS, ""}
 				} else if request.Op == "unpublish" {
 					p.CamState = "OFF"
 					_persons.Save(p)
 					hub.broadcast <- Message{Op: "VideoStopped", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止 Video stopped!"}
-					response.Status = Status{SUCCESS,  ""}
+					response.Status = Status{SUCCESS, ""}
 
 				}
 
@@ -120,32 +157,32 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 
 				if request.Op == "getCamID" {
 					publisher, ok := _persons.findPersonByToken(request.Publisher)
-					if ! ok {
+					if !ok {
 						response.Status = Status{ERROR, "Could not find person"}
 					} else {
-						response.CamID = publisher.CamID;
-						response.Status = Status{SUCCESS,  ""}
+						response.CamID = publisher.CamID
+						response.Status = Status{SUCCESS, ""}
 					}
 
 				}
 				if request.Op == "getCamState" {
 
 					publisher, ok := _persons.findPersonByToken(request.Publisher)
-					if ! ok {
+					if !ok {
 						status = Status{ERROR, "Could not find person"}
 					} else {
-						response.CamID = publisher.CamID;
-						response.Status = Status{SUCCESS,  ""}
+						response.CamID = publisher.CamID
+						response.Status = Status{SUCCESS, ""}
 						if publisher.CamState == "ON" {
 							response.CamState = "ON"
-							response.Status = Status{SUCCESS,  ""}
+							response.Status = Status{SUCCESS, ""}
 						} else if publisher.CamState == "OFF" {
 							response.CamState = "OFF"
-							response.Status = Status{SUCCESS,  ""}
-							status.Status = SUCCESS;
+							response.Status = Status{SUCCESS, ""}
+							status.Status = SUCCESS
 						} else {
 							response.CamState = "UNKNOWN"
-							response.Status = Status{WARNING,  "Camstate is unknonw!"}
+							response.Status = Status{WARNING, "Camstate is unknonw!"}
 
 						}
 					}
@@ -153,7 +190,7 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		status = Status{Status: ERROR, Detail:"Bad HTTPS method"}
+		status = Status{Status: ERROR, Detail: "Bad HTTPS method"}
 		log.Println("ImageManager: Unknown HTTP method ", r.Method)
 	}
 	json_response, err := json.Marshal(response)
@@ -163,5 +200,3 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json_response)
 }
-
-

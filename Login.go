@@ -1,4 +1,3 @@
-
 //
 // Copyright 2017 Malin Yamato Lääkkö --  All rights reserved.
 // https://github.com/MalinYamato
@@ -30,28 +29,28 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 package main
 
 import (
-	"net/http"
-	"log"
-	"github.com/satori/go.uuid"
-	"github.com/dghubble/gologin/google"
 	"github.com/dghubble/gologin/facebook"
+	"github.com/dghubble/gologin/google"
+	"github.com/satori/go.uuid"
+	"log"
+	"net/http"
 
-	"time"
 	"strconv"
 	"strings"
+	"time"
 )
+
 const (
-	sessionName    = "secure.krypin.xyz"
-	sessionToken   = "SessionToken"
+	sessionName  = "secure.krypin.xyz"
+	sessionToken = "SessionToken"
 )
 
 // Config configures the main ServeMux.
 
-func checkSet(a string, b string) (string) {
+func checkSet(a string, b string) string {
 	if a == "" {
 		return b
 	}
@@ -62,7 +61,6 @@ func timestamp() string {
 	date := time.Now()
 	return strconv.Itoa(date.Day()) + ":" + strconv.Itoa(date.Hour()) + ":" + strconv.Itoa(date.Minute()) + ":" + strconv.Itoa(date.Second())
 }
-
 
 func issueSessionFB() http.Handler {
 
@@ -122,7 +120,7 @@ func issueSessionFB() http.Handler {
 			_persons.Save(person)
 			user = "registred user"
 			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic()}
-		} else if ! ok {
+		} else if !ok {
 			person := Person{
 				//Nic:               s[0],
 				Keep:              false,
@@ -142,10 +140,10 @@ func issueSessionFB() http.Handler {
 				UserID:            UserId(userID.String()),
 				Token:             secret.String(),
 				Description:       "",
-				Room:              "Main",}
+				Room:              "Main"}
 
-		    if (person.PictureURL == "") {
-		    	person.PictureURL = endpoint.url() + "/images/default.png";
+			if person.PictureURL == "" {
+				person.PictureURL = endpoint.url() + "/images/default.png"
 			}
 			person.LoggedIn = true
 			_persons.Add(person)
@@ -159,7 +157,6 @@ func issueSessionFB() http.Handler {
 
 	return http.HandlerFunc(fn)
 }
-
 
 func issueSession() http.Handler {
 	fn := func(w http.ResponseWriter, req *http.Request) {
@@ -214,15 +211,15 @@ func issueSession() http.Handler {
 				Description:       v.Description,
 				Room:              v.Room}
 
-			if (person.PictureURL == "") {
-				person.PictureURL = endpoint.url() + "/images/default.png";
+			if person.PictureURL == "" {
+				person.PictureURL = endpoint.url() + "/images/default.png"
 			}
 
 			person.LoggedIn = true
 			_persons.Save(person)
 			user = "registred user"
-			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic() }
-		} else if ! ok {
+			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic()}
+		} else if !ok {
 			person := Person{
 				//Nic:               googleUser.GivenName,
 				Keep:              false,
@@ -242,7 +239,7 @@ func issueSession() http.Handler {
 				UserID:            UserId(userID.String()),
 				Token:             secret.String(),
 				Description:       "",
-				Room:              "Main", }
+				Room:              "Main"}
 
 			person.LoggedIn = true
 			_persons.Add(person)
@@ -252,7 +249,6 @@ func issueSession() http.Handler {
 		person, _ := _persons.findPersonByGoogleID(googleUser.Id)
 		log.Printf("Login: Successful Login of %s Email: %s  FacebookID: %s Token: %s UserID %s ", user, person.Email, person.FacebookID, person.Token, person.UserID)
 		http.Redirect(w, req, "/session", http.StatusFound)
-
 
 	}
 	return http.HandlerFunc(fn)
@@ -268,7 +264,7 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 		if ok {
 			person.LoggedIn = false
 			_persons.Save(person)
-			hub.broadcast <- Message{Op: "UserLoggedOut", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "出室、またね " + person.getNic() }
+			hub.broadcast <- Message{Op: "UserLoggedOut", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "出室、またね " + person.getNic()}
 			if person.Keep == false {
 				log.Printf("Login: Logout user and remove Remove her profile Email %s  UserId %s Token %s", person.Email, person.UserID, person.Token)
 				_persons.Delete(person)
@@ -280,10 +276,9 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 		sessionStore.Destroy(w, sessionName)
 	}
 	// redirect does not work for AJAX calls. Redirects have to be implemtend by client
-	w.Write([]byte(SUCCESS));
+	w.Write([]byte(SUCCESS))
 	http.Redirect(w, req, "/", http.StatusFound)
 }
-
 
 func requireLoginNonMember(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, req *http.Request) {
@@ -303,7 +298,7 @@ func requireLogin(next http.Handler) http.Handler {
 		var person Person
 		person.Keep = false
 		person, ok := _persons.findPersonByToken(token)
-		log.Println(" ok %s  %s", person.FirstName, person.Token, token, strconv.FormatBool(ok), strconv.FormatBool(person.Keep) )
+		log.Println(" ok %s  %s", person.FirstName, person.Token, token, strconv.FormatBool(ok), strconv.FormatBool(person.Keep))
 		if person.Keep == false {
 			_persons.Delete(person)
 			sessionStore.Destroy(w, sessionName)
@@ -320,7 +315,7 @@ func requireLogin(next http.Handler) http.Handler {
 }
 
 func isAuthenticated(req *http.Request) bool {
-	_, err := sessionStore.Get(req, sessionName);
+	_, err := sessionStore.Get(req, sessionName)
 	if err == nil {
 		return true
 	}
