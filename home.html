@@ -693,6 +693,14 @@
 
 <button hidden class="btn btn-default" autocomplete="off" id="start">Start</button>
 
+<script>
+
+    function removeVideo(number) {
+        detachVideo(number);
+    }
+
+</script>
+
 <div id="camArea">
     <div class="flex-container videos" id="videos">
         <div class="flex-row">
@@ -715,6 +723,7 @@
                 <div class=" narrow " id="videoremote1">
                     <div class="videocontrols">
                         <label id="camUser2">User</label>
+                        <img id="removeVideo" onclick="removeVideo('1')" src="/images/error.png"/>
                     </div>
                 </div>
             </div>
