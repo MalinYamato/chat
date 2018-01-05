@@ -65,7 +65,7 @@ var bitrateTimer = [];
 var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
 
 
-var _rakuhost = null;
+var _rakuhost = server;
 var _mediahost = null;
 
 function publishMe(id) {
