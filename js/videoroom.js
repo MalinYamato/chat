@@ -107,9 +107,7 @@ function setMyCamID(id) {
     });
 }
 function getCamId(userID) {
-
     var camId = null;
-
     request = {"Op":"getCamID", "UserID" : userID};
     $.ajax({
         type: "POST",
@@ -128,11 +126,14 @@ function getCamId(userID) {
             }
         }
     });
-
    return camId
 }
 
 function subscribe(screen, id) {
+    if (feeds[screen] != null ) {
+       message = {"janus":"detach","transaction":"123456","session_id":Janus.getSessionId(),"handle_id":feeds[screen].getID()}
+       feeds[screen].send(message);
+    }
     newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, parseInt(screen));
 }
 function pub()
@@ -548,6 +549,7 @@ function newRemoteFeed(id, display, audio, video, screen) {
                     listen["offer_video"] = false;
                 }
                 remoteFeed.send({"message": listen});
+
             },
             error: function(error) {
                 Janus.error("  -- Error attaching plugin...", error);
