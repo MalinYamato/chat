@@ -41,7 +41,7 @@ import (
 "io/ioutil"
 "strings"
 	"log"
-	"errors"
+
 )
 
 const http_server = "http://media.raku.cloud:7088"
