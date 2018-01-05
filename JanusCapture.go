@@ -140,6 +140,8 @@ func getDocument(mess string, path string) (r *http.Response, e error) {
 }
 func JanusCapture() (MediaUsers) {
 
+	defer recover()
+
 	publishers := MediaUsers{map[string]MediaUser{}}
 	subscriptions := map[handleID]Subscription{}
 
