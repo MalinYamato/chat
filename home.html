@@ -734,6 +734,7 @@
 <script>
     function showVideoMenu(videoID) {
             var menu = document.getElementById( "VideoMenu" + videoID);
+            $("#VideoMenu" + videoID.toString()).empty();
             var list = document.createElement("ul");
             list.setAttribute("class", "VideoMenu");
             var attach = document.createElement("li");
@@ -749,7 +750,7 @@
     }
     function hideVideoMenu(videoId) {
         var menu = document.getElementById( "VideoMenu" + videoId);
-        $( "#VideoMenu" + videoId).empty();
+        $( "#VideoMenu" + videoId,toString()).empty();
         menu.className = menu.className.replace(" w3-show", "");
     }
     function attachTheVideo(videoId) {
