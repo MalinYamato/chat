@@ -737,7 +737,7 @@
 <script>
     function showVideoMenu(videoID) {
         var menu = document.getElementById( "VideoMenu" + videoID);
-        if (menu == null) {
+
             var list = document.createElement("ul");
             var attach = document.createElement("li");
             attach.setAttribute("onclick", "attach(" + videoID + ")");
@@ -748,12 +748,12 @@
             list.appendChild(attach);
             list.appendChild(detach);
             menu.appendChild(list);
-        }
         menu.className += " w3-show";
     }
     function hideVideoMenu(videoId) {
-        var menu = document.getElementById( "CamMenu" + videoId);
-        menu.className = x.className.replace(" w3-show", "");
+        var menu = document.getElementById( "VideoMenu" + videoId);
+        $( "VideoMenu" + videoId).empty();
+        // menu.className = x.className.replace(" w3-show", "");
     }
     function attach(videoId) {
         hideVideoMenu(videoId);
