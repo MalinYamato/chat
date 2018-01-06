@@ -45,6 +45,7 @@ var (
 	GENDER      = []string{"Female", "Male", "TranssexualF", "TranssexualM", "CrossDresser", "None"}
 )
 
+
 type PersonResponse struct {
 	Status Status `json:"status"`
 	Person Person `json:"person"`

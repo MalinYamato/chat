@@ -72,8 +72,7 @@
     <script>
 
 
-        function getUser(op)
-        {
+        function getUser(op) {
             var res = null;
             $.ajax({
                         url: 'https://{{.Host}}/profile',
@@ -91,7 +90,27 @@
                         }
                     });
             return res;
+        }
 
+        function getAllPublishers() {
+            var res = null;
+            var request = {"op": "getAllPublishers", "userID": "null"};
+            $.ajax({
+                url: 'https://{{.Host}}/videoManager',
+                type: 'post',
+                async: false,
+                data: JSON.stringify(op),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response.status.status != "SUCCESS") {
+                        console.log("getAllPublishes failed> " + response.status + " " + response)
+                    } else {
+                        console.log("getAllPublishers successul> " + response.status.status + " " + response.person.userID)
+                    }
+                    res = response;
+                }
+            });
+            return res;
         }
 
 
@@ -757,7 +776,6 @@
             menu.className += " w3-show";
         }
     }
-
     function hideVideoMenu(videoId) {
         var menu = document.getElementById( "VideoMenu" + videoId);
 
@@ -766,6 +784,9 @@
     function attachTheVideo(videoId) {
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
+        var result = getAllPublishers();
+        console.log(result);
+
     }
     function detachTheVideo(videoId) {
         hideVideoMenu(videoId);
