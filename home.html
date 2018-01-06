@@ -712,7 +712,7 @@
                 <div class=" narrow " id="videoremote1">
                     <div class="videocontrols">
                         <label id="camUser2">User</label>
-                        <img class="detachVideo" onclick="showVideoMenu('1')" src="/images/menu.svg"/>
+                        <img class="detachVideo" onclick="VideoMenuClicked('1')" src="/images/menu.svg"/>
                         <div id="VideoMenu1" class="w3-hide w3-container fmt-row"></div>
                     </div>
                 </div>
@@ -722,7 +722,7 @@
                     <div class=" narrow " id="videoremote1">
                         <div class="videocontrols">
                             <label id="camUser3">User</label>
-                            <img class="detachVideo" onclick="showVideoMenu('2')" src="/images/menu.svg"/>
+                            <img class="detachVideo" onclick="VideoMenuClicked('2')" src="/images/menu.svg"/>
                             <div id="VideoMenu2" class="w3-hide w3-container fmt-row"></div>
                         </div>
                     </div>
@@ -732,8 +732,12 @@
     </div>
 </div>
 <script>
-    function showVideoMenu(videoID) {
-            var menu = document.getElementById( "VideoMenu" + videoID);
+    function VideoMenuClicked(videoID) {
+        var menu = document.getElementById("VideoMenu" + videoID);
+        var cls = menu.getAttribute("class");
+        if (cls.includes("w3-show")) {
+            hideVideoMenu(videoID);
+        } else {
             $("#VideoMenu" + videoID.toString()).empty();
             var list = document.createElement("ul");
             list.setAttribute("class", "VideoMenu");
@@ -747,10 +751,13 @@
             list.appendChild(detach);
             menu.appendChild(list);
             menu.className += " w3-show";
+        }
     }
+
     function hideVideoMenu(videoId) {
         var menu = document.getElementById( "VideoMenu" + videoId);
-        menu.className = menu.className.replace(" w3-show", "");
+
+        menu.className = menu.className.replace("w3-show", "");
     }
     function attachTheVideo(videoId) {
         hideVideoMenu(videoId);
