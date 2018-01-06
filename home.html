@@ -103,9 +103,9 @@
                 contentType: 'application/json',
                 success: function (response) {
                     if (response.status.status != "SUCCESS") {
-                        console.log("getAllPublishes failed> " + response.status + " " + response)
+                        console.log("getAllPublishes failed> " + response.response.status + " " + response.status.detail)
                     } else {
-                        console.log("getAllPublishers successul> " + response.status.status + " " + response.person.userID)
+                        console.log("getAllPublishers successul> " + response.person.userID)
                     }
                     res = response;
                 }
