@@ -94,7 +94,7 @@
 
         function getAllPublishers() {
             var res = null;
-            var request = {"op": "getAllPublishers", "userID": "null"};
+            var request = {"op": "getAllPublishers"};
             $.ajax({
                 url: 'https://{{.Host}}/VideoManager',
                 type: 'post',
