@@ -58,10 +58,21 @@ type WebRTCUser struct {
 
 type WebRTC map[string]WebRTCUser
 
-type VideoResponse struct {
-	Status   Status `json:"status"`
-	CamID    int    `json:"camID"`
-	CamState string `json:"camState"`
+
+type SinglePublisherResponse struct {
+	Status   Status   `json:"status"`
+	CamID    int      `json:"camID"`
+	CamState string   `json:"camState"`
+	Persons  []Person `json:"persons"`
+}
+
+type PublishersResponse struct {
+	Status   Status   `json:"status"`
+	Persons  []Person `json:"persons"`
+}
+
+type StatusResponse struct {
+Status   Status   `json:"status"`
 }
 
 type VideoRequest struct {
@@ -118,19 +129,17 @@ func startRTCManager() {
 
 func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var status Status
+	var json_response []byte
 	var request VideoRequest
-	var response VideoResponse
 	if r.Method == "POST" {
-		var p Person
 		var ok bool
 		token, _, err := getCookieAndTokenfromRequest(r, true)
 		if err != nil {
-			response.Status = Status{ERROR, err.Error()}
+
 		} else {
-			p, ok = _persons.findPersonByToken(token)
-			if !ok {
-				response.Status = Status{ERROR, err.Error()}
+			_, ok = _persons.findPersonByToken(token)
+			if ! ok {
+				json_response, err = json.Marshal(StatusResponse{Status{ERROR, "fail to find person by token" }})
 			} else {
 				decoder := json.NewDecoder(r.Body)
 				err = decoder.Decode(&request)
@@ -139,38 +148,8 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 					panic(err)
 				}
 
-				///// My own webcam //////
-
-				if request.Op == "setMyCamID" {
-					log.Println("setMyCamID")
-					p.CamID = request.CamID
-					_persons.Save(p)
-					log.Println("setMyCamID" + strconv.Itoa(request.CamID))
-
-					response.Status = Status{SUCCESS, ""}
-				}
-
-				if request.Op == "publish" {
-					p.CamState = "ON"
-					_persons.Save(p)
-					hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Vide started!"}
-					response.Status = Status{SUCCESS, ""}
-				} else if request.Op == "unpublish" {
-					p.CamState = "OFF"
-					_persons.Save(p)
-					hub.broadcast <- Message{Op: "VideoStopped", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送停止 Video stopped!"}
-					response.Status = Status{SUCCESS, ""}
-
-				}
-
-				///// Others webcam //////
-
-				if request.Op == "watchRequest" {
-
-					// get the token
-				}
-
 				if request.Op == "getCamID" {
+					var response SinglePublisherResponse
 					publisher, ok := _persons.findPersonByToken( request.UserID)
 					if !ok {
 						response.Status = Status{ERROR, "Could not find person"}
@@ -189,39 +168,40 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 						}
 
 					}
-				}
-				if request.Op == "getCamState" {
-
-					publisher, ok := _persons.findPersonByToken(request.Publisher)
-					if !ok {
-						status = Status{ERROR, "Could not find person"}
-					} else {
-						response.CamID = publisher.CamID
-						response.Status = Status{SUCCESS, ""}
-						if publisher.CamState == "ON" {
-							response.CamState = "ON"
-							response.Status = Status{SUCCESS, ""}
-						} else if publisher.CamState == "OFF" {
-							response.CamState = "OFF"
-							response.Status = Status{SUCCESS, ""}
-							status.Status = SUCCESS
-						} else {
-							response.CamState = "UNKNOWN"
-							response.Status = Status{WARNING, "Camstate is unknonw!"}
-
-						}
+					json_response, err = json.Marshal(response)
+					if err != nil {
+						panic(err)
 					}
 				}
+
+				if request.Op == "getAllPublishers" {
+					lockMediaUsers()
+					response := PublishersResponse{}
+					pubs := getMediaUsers().getAll()
+					for _, v := range pubs {
+						person, ok := _persons.findPersonByNickName(v.Display);
+						if ok {
+							response.Persons = append(response.Persons, person)
+							response.Status = Status{ SUCCESS, ""}
+						}
+					}
+					json_response, err = json.Marshal(response)
+					if err != nil {
+						panic(err)
+					}
+				}
+
 			}
 		}
 	} else {
-		status = Status{Status: ERROR, Detail: "Bad HTTPS method"}
+		var err error
+		json_response, err = json.Marshal(StatusResponse{Status{ERROR, "Wrong HTTP method" }})
+		if err != nil {
+			panic(err)
+		}
 		log.Println("ImageManager: Unknown HTTP method ", r.Method)
 	}
-	json_response, err := json.Marshal(response)
-	if err != nil {
-		panic(err)
-	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json_response)
 }
