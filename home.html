@@ -735,15 +735,15 @@
     </div>
 </div>
 <script>
-    function showVideoMenu(camID) {
-        var menu = document.getElementById( "CamMenu" + camID);
+    function showVideoMenu(videoID) {
+        var menu = document.getElementById( "VideoMenu" + videoID);
         var list = document.createElement("ul");
         var attach = document.createElement("li");
-        attach.setAttribute("onclick","attach(" + camID +")");
+        attach.setAttribute("onclick","attach(" + videoID +")");
         attach.innerText = "Attach";
         var detach = document.createElement("li");
         detach.innerText = "Detach";
-        detach.setAttribute("onclick","detach(" + camID +")");
+        detach.setAttribute("onclick","detach(" + videoID +")");
         list.appendChild(attach);
         list.appendChild(detach);
         menu.appendChild(list);
