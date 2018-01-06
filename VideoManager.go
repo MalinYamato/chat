@@ -174,9 +174,10 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if request.Op == "getAllPublishers" {
-					lockMediaUsers()
 					response := PublishersResponse{}
+					lockMediaUsers()
 					pubs := getMediaUsers().getAll()
+					unlockMediaUsers()
 					for _, v := range pubs {
 						person, ok := _persons.findPersonByNickName(v.Display);
 						if ok {
