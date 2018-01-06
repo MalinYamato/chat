@@ -138,7 +138,7 @@ function detachVideo(screen) {
 }
 function subscribe(screen, id) {
     detachVideo(screen);
-    newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, screen_id);
+    newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, parseInt(screen));
 }
 function pub()
 {
