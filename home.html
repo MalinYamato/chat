@@ -713,7 +713,7 @@
                     <div class="videocontrols">
                         <div class="VideoSelection">
                             <img class="VideoMenu" onclick="VideoMenuClicked('1')" src="/images/menu.svg"/>
-                            <div id="VideoMenu1" class=" w3-hide w3-container fmt-row"></div>
+                            <div id="VideoMenu1" class="w3-hide w3-container fmt-row"></div>
                         </div>
                         <label id="camUser2">User</label>
                     </div>
@@ -725,7 +725,7 @@
                         <div class="videocontrols">
                             <div class="VideoSelection">
                                 <img class="VideoMenu" onclick="VideoMenuClicked('2')" src="/images/menu.svg"/>
-                                <div id="VideoMenu2" class=" w3-hide w3-container fmt-row"></div>
+                                <div id="VideoMenu2" class="w3-hide w3-container fmt-row"></div>
                             </div>
                             <label id="camUser3">User</label>
                         </div>
@@ -737,14 +737,14 @@
 </div>
 <script>
     function VideoMenuClicked(videoID) {
-        var menu = document.getElementById("VideoMenuList" + videoID);
+        var menu = document.getElementById("VideoMenu" + videoID);
         var cls = menu.getAttribute("class");
         if (cls.includes("w3-show")) {
             hideVideoMenu(videoID);
         } else {
             $("#VideoMenu" + videoID.toString()).empty();
             var list = document.createElement("ul");
-            list.setAttribute("class", "VideoMenu");
+            list.setAttribute("class", "VideoMenuList");
             var attach = document.createElement("li");
             attach.setAttribute("onclick", "attachTheVideo(" + videoID + ")");
             attach.innerText = "Attach";
