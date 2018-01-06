@@ -2,10 +2,10 @@
 # Raku Rakuen 楽園　- a secure chat with pubic and instant private rooms including video conferencing.
 Rakuen is a secure encrypted comprehensive chat with profile management and several ways to engage in private chat, establish private chat rooms on the fly.
 You may log in by a Google or Facebook account thanks to the work of Dalton Hubble. The relationship between chatters and private chatters 
-is governed by a Directed Acyclic Graph that has a limit of two nodes depth. It is possible to chat while you view and hear those whom you chat with.
-Thanks to the team of Janus mentioned below, the team who built a WebRTC layer to implement WebRTC signalinig, Janus WebRTC. The photo albume
-carousel is based on work by Vladimir Kharlampidi.
-This is basically a non-commercial playground to test and learn new technology and solutions. It has not gone serious through regular testing and is not at all for
+is governed by a Directed Acyclic Graph that has a limit of two nodes depth. It is possible to chat while you view and hear those whom you chat with
+thanks to the team of Janus, who greately facilitate the management of video and voice streams baesed on WebRTC -- the team who built a WebRTC layer to implement WebRTC signalig,
+Janus WebRTC. The photo albume carousel is based on work by Vladimir Kharlampidi. </br>
+Raku Rakuen is basically a non-commercial playground to test and learn new technology and solutions. It has not gone serious through regular testing and is not at all for
 production -- and thus, should therefore be regarded as a demo of how things work or may be done. This are stuff that I cannot do at my company. My job is to design
 automated trading systems in Asia and this stuff is totally unrelated to that. The installation and setup are therefore very very primitive at this point.
  
