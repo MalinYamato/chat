@@ -385,7 +385,6 @@ visibility: hidden;
 .VideoMenuList {
 	border-width: 4px;
 	border-radius: 10%;
-	border-style: dashed;
 	padding: 4px;
 	border-color: #ad242c;
 	color: #b9d4ff;
@@ -393,7 +392,12 @@ visibility: hidden;
 }
 .VideoMenuList li:hover {
 	color: #ad242c;
+	background: transparent;
 }
+.VideoMenuList li {
+	background: transparent;
+}
+
 
 .VideoSelection {
 	display: flex;
