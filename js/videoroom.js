@@ -129,31 +129,15 @@ function getCamId(userID) {
    return camId
 }
 
-function detachVideo(number) {
-    var screen_id = parseInt(number);
-    if (feeds[screen_id] != null ) {
-
-     //   feeds[screen_id].getId()};
-        feeds[screen_id].detach(null);
-
-       // message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen_id].getId()};
-       // feeds[screen_id].send(message);
-
-        //console.log("Deeetach @@@@@@@@@@@@@@@@@@@@@@@@@screen " + screen_id + " mess> " + message);
-    }
-}
-
-function subscribe(screen, id) {
-    var message = "";
+function detachVideo(screen) {
     var screen_id = parseInt(screen);
     if (feeds[screen_id] != null ) {
-        console.log(">>> " +  feeds[screen_id].getId(),toString() )
-       message = {"janus":"detach","transaction":"123456","session_id":janus.getSessionId(),"handle_id":feeds[screen_id].getId()};
-       feeds[screen_id].send( message);
+        feeds[screen_id].detach(null);
+        feeds[screen_id] = null;
     }
-
-
-
+}
+function subscribe(screen, id) {
+    detachVideo(screen);
     newRemoteFeed( parseInt(id), "sdfsdfsdf", true, true, screen_id);
 }
 function pub()
