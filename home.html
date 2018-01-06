@@ -196,11 +196,11 @@
                     if (lcam.isOn())  {
                         pub();
                         if (isMuted()) {
-                            console.log("audio is muted!")
+                            console.log("audio is muted!");
                             lmic.setOff();
                         }
                         else {
-                            console.log("audio is MOT muted!")
+                            console.log("audio is MOT muted!");
                             lmic.setOn();
                         }
                     } else if (!lcam.isOn()) {
@@ -220,14 +220,11 @@
                     }
                 }
 
-
-                var registered = false;
                 var tcam = new SVGWebcamButton("#webcam", "x", "x");
                 tcam.s.onmousedown = function () {
                     //console.log("clicked");
                     tcam.mouseDown();
                     tcam.toggle();
-                    var ca = document.getElementById("camArea");
                     if (tcam.isOn()) {
                         var response = getUser({"op": "getMyself", "UserID": "unknown"});
                         if (response.status.status == "SUCCESS") {
@@ -738,13 +735,13 @@
     function showVideoMenu(videoID) {
             var menu = document.getElementById( "VideoMenu" + videoID);
             var list = document.createElement("ul");
-            list.setAttribute("class", "VideoMenu")
+            list.setAttribute("class", "VideoMenu");
             var attach = document.createElement("li");
-            attach.setAttribute("onclick", "attach(" + videoID + ")");
+            attach.setAttribute("onclick", "attachTheVideo(" + videoID + ")");
             attach.innerText = "Attach";
             var detach = document.createElement("li");
             detach.innerText = "Detach";
-            detach.setAttribute("onclick", "detach(" + videoID + ")");
+            detach.setAttribute("onclick", "detachTheVideo(" + videoID + ")");
             list.appendChild(attach);
             list.appendChild(detach);
             menu.appendChild(list);
@@ -754,14 +751,12 @@
         var menu = document.getElementById( "VideoMenu" + videoId);
         $( "VideoMenu" + videoId).empty();
         menu.className = menu.className.replace(" w3-show", "");
-
-
     }
-    function attach(videoId) {
+    function attachTheVideo(videoId) {
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
     }
-    function detach(videoId) {
+    function detachTheVideo(videoId) {
         hideVideoMenu(videoId);
         detachVideo(videoId);
         console.log("detachVideo " + videoId);
@@ -840,7 +835,6 @@
                         var info5 = document.createElement("li");
                         var info6 = document.createElement("li");
 
-                        var caminfo =  document.createElement("li");
                         info1.innerText = "        " + person.nic + " " + age;
                         info3.innerText = "        " + person.gender + " " + person.sexualOrienation;
                         info4.innerText = "        " + person.country + " " + person.town;
