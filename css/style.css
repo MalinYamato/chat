@@ -382,6 +382,11 @@ visibility: hidden;
 	width: 40px;
 }
 
+.VideoMenuList {
+	height: 35px;
+	width: 35px;
+}
+
 .VideoSelection {
 	display: flex;
 	flex-direction: column;
