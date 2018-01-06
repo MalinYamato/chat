@@ -174,6 +174,7 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if request.Op == "getAllPublishers" {
+					log.Println("getAllPublishers")
 					response := PublishersResponse{}
 					lockMediaUsers()
 					pubs := getMediaUsers().getAll()
