@@ -865,8 +865,9 @@
                                     var o = document.createElement("img");
                                     o.setAttribute("src", "/images/webcam.svg");
                                     o.setAttribute("class", "smallWebCam");
-                                    camID = camID +1;
-                                    o.setAttribute("onclick", "setRemoteCam('" + i + ":" + camID.toString() + "')");
+                                    c = i + 1
+
+                                    o.setAttribute("onclick", "setRemoteCam('" + c + ":" + camID.toString() + "')");
                                     o.setAttribute("id", aCam);
                                     info.appendChild(o);
                                 }
