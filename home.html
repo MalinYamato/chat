@@ -99,7 +99,7 @@
                 url: 'https://{{.Host}}/videoManager',
                 type: 'post',
                 async: false,
-                data: JSON.stringify(op),
+                data: JSON.stringify(request),
                 contentType: 'application/json',
                 success: function (response) {
                     if (response.status.status != "SUCCESS") {
