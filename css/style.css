@@ -372,14 +372,19 @@ visibility: hidden;
 	margin-left: -12px;
 }
 
-.detachVideo {
+.VideoMenu {
 	height: 35px;
 	width: 35px;
 }
 
-.detachVideo:hover {
+.VideoMenu:hover {
 	height: 40px;
 	width: 40px;
+}
+
+.VideoSelection {
+	display: flex;
+	flex-direction: column;
 }
 
 
