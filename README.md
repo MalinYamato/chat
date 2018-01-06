@@ -1,14 +1,12 @@
 ![Alt text](/images/rakurakuen.png?raw=true "Profile with photos")
 # Raku Rakuen 楽園　- a secure chat with pubic and instant private rooms including video conferencing.
-Rakuen is a secure encrypted chat with profile management and several ways to enage in private chat, establish private chat rooms on the fly.
+Rakuen is a secure encrypted comprehensive chat with profile management and several ways to engage in private chat, establish private chat rooms on the fly.
 You may log in by a Google or Facebook account thanks to the work of Dalton Hubble. The relationship between chatters and private chatters 
-is governed by a Directed Acyclic Graph that has a limit on node depth. It is possible to chat while you view and hear those whom you chat with
-thanks to the team of Chicago mentioned below who built a SFU to implement pub/sub for streams, a gateway with various plug-ins to integrate the 
-signaling of other protocols such as SIP and a signaling layer of WebRTC for offer-answer handshakes based on a hard to comprehend SD. WebRTC 
-handles NAT traversals, audio/video conversions and a per to per RTP/RTPC streaming, yet lets other implement the signaling layer. The photo albume 
+is governed by a Directed Acyclic Graph that has a limit of two nodes depth. It is possible to chat while you view and hear those whom you chat with.
+Thanks to the team of Janus mentioned below, the team who built a WebRTC layer to implement WebRTC signalinig, Janus WebRTC. The photo albume
 carousel is based on work by Vladimir Kharlampidi.
-It is basically a non-commercial playground to test and learn new technology and solutions. It has not gone through regular testing and is not at all for 
-production and should therefore be regarded as a demo of how things work or may be done. This are stuff that I cannot do at my company. My job is to design 
+This is basically a non-commercial playground to test and learn new technology and solutions. It has not gone serious through regular testing and is not at all for
+production -- and thus, should therefore be regarded as a demo of how things work or may be done. This are stuff that I cannot do at my company. My job is to design
 automated trading systems in Asia and this stuff is totally unrelated to that. The installation and setup are therefore very very primitive at this point.
  
 No database! I have a file based database solution where I store data as serialized JSON, pictures, IMs and vids using directory structures. For me to see 
