@@ -429,6 +429,7 @@ visibility: hidden;
 	float: left;
 	color: #ad242c;
 	margin: 2px;
+	border-color: white;
 
 }
 
@@ -436,8 +437,8 @@ visibility: hidden;
 	float: left;
 	width: 15px;
 	height: 15px;
-	margin-top: 4px;
-	margin-left: 3px;
+	margin-top: 5px;
+	margin-left: 2px;
 }
 
 .PublisherListItem li:hover {
