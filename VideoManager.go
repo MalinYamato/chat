@@ -38,7 +38,6 @@ import (
 	"time"
 	"sync"
 
-	"golang.org/x/net/html/atom"
 )
 
 type WebRTCSubscribe struct {
