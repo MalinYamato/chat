@@ -312,10 +312,8 @@
                 msg.value = "";
                 return true;
             }
-
-
+            f
             var _id = 0;
-
             function getID() {
                 if (_id > 1000) {
                     _id = 0;
@@ -475,10 +473,6 @@
                         }
                     }
 
-                    // Crete a message to be appended to the chat log
-                    //
-                    // I do Dom not Jquery because I can, becase I am a dominatrix !!!!
-
                     console.log("Create message ", message);
 
                     var uberdiv = document.createElement("div");
@@ -554,10 +548,11 @@
     var RoomDefs = {
         "Main":     "Main本館",
         "Private":  "Private 秘密屋",
+        "Japanese": "日本語屋",
         "Gay":      "Gayゲイ屋",
         "Lesbian":  "Lesbianレズ屋",
         "Trans":    "Trans　性転換屋",
-        "Japanese": "日本語屋"
+
     };
     function changeRoom(room) {
         $.ajax({
@@ -592,12 +587,12 @@
         <div class="dropdown flex-row">
             <a href="javascript:void(0)" class="dropbtn">Room:</a>
             <div class="dropdown-content">
-                <button onclick="SwitchRoom('Main','1')" id="MainButton">Main 本館</button>
-                <button onclick="SwitchRoom('Private','2')" id="PrivateButton">Instant Private 秘密屋</button>
-                <button onclick="SwitchRoom('Japanese','3')" id="JapaneseButton">日本語屋さん</button>
-                <button onclick="SwitchRoom('Gay','4')" id="GayButton">Gay ゲイ屋</button>
-                <button onclick="SwitchRoom('Lesbian','5')" id="LesbianButton">Lesbian レズ屋</button>
-                <button onclick="SwitchRoom('Trans','6')" id="TransButton">Trans 性転換屋</button>
+                <button onclick="SwitchRoom('Main')" id="MainButton">Main 本館</button>
+                <button onclick="SwitchRoom('Private')" id="PrivateButton">Instant Private 秘密屋</button>
+                <button onclick="SwitchRoom('Japanese')" id="JapaneseButton">日本語屋</button>
+                <button onclick="SwitchRoom('Gay')" id="GayButton">Gay ゲイ屋</button>
+                <button onclick="SwitchRoom('Lesbian')" id="LesbianButton">Lesbian レズ屋</button>
+                <button onclick="SwitchRoom('Trans')" id="TransButton">Trans 性転換屋</button>
             </div>
             <div id="SelectedRoom"></div>
         </div>
@@ -802,7 +797,6 @@
         if (cam != null) {
             cam.setAttribute("src", "/images/webcamOn.svg ");
         }
-
         subscribe(data[0], parseInt(data[1]));
     }
 
@@ -853,13 +847,11 @@
                         var o = document.createElement("img");
                         o.setAttribute("src", "/images/webcam.svg");
                         o.setAttribute("class", "smallWebCam");
-                        c = i + 1
-
+                        c = i + 1;
                         o.setAttribute("onclick", "setRemoteCam('" + c + ":" + camID.toString() + "')");
                         o.setAttribute("id", aCam);
                         info.appendChild(o);
                     }
-
                 }
                 x.appendChild(info);
                 console.log(person);
