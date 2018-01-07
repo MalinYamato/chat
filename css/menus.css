@@ -42,6 +42,7 @@
     justify-content: space-between;
     text-shadow: 2px 2px 4px #4d4d4d;
     font-size: 12px;
+    margin-left: 1px;
 }
 #CurrentUsers span {
     margin-top: 2px;
