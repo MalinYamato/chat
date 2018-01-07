@@ -71,7 +71,8 @@
 
     <script>
 
-
+        /// utilities
+        ///
         function getUser(op) {
             var res = null;
             $.ajax({
@@ -91,6 +92,18 @@
                     });
             return res;
         }
+        function genderShort(gender) {
+            if (gender == "Female") {
+                return "F"
+            }
+            else if (gender == "Male") {
+                return "M";
+            } else {
+                return "T";
+            }
+        }
+
+        ////////
 
         function getAllPublishers() {
             var res = null;
@@ -779,36 +792,20 @@
             list.appendChild(detach);
             menu.appendChild(list);
             menu.className += " w3-show";
-
-
         }
-
     }
 
-    function removePublisherMenu(videoID) {
-        $("#VideoMenu" + videoID.toString()).empty();
+    function publisherSelected(value) {
+        removePublisherMenu();
+        setRemoteCam(value);
     }
-
-    function genderShort(gender) {
-        if (gender == "Female") {
-            return "F"
-        }
-        else if (gender == "Male") {
-            return "M";
-        } else {
-            return "T";
-        }
+    function removePublisherMenu() {
+        $("#publishers").empty();
     }
 
     function hideVideoMenu(videoId) {
         var menu = document.getElementById( "VideoMenu" + videoId);
         menu.className = menu.className.replace("w3-show", "");
-    }
-
-
-    function publisherSelected(value) {
-        $("#publishers").empty();
-        setRemoteCam(value);
     }
 
     function attachTheVideo(videoId) {
@@ -831,7 +828,7 @@
         var cancel = document.createElement("ul");
         cancel.setAttribute("class", "PublisherListItem");
         cancel.innerText = "Cancel";
-        cancel.setAttribute("onclick", "removePublisherMenu(" + videoId +")");
+        cancel.setAttribute("onclick", "removePublisherMenu()");
         list.appendChild(cancel);
     }
 
