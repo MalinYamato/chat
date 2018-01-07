@@ -411,8 +411,10 @@ visibility: hidden;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: #333333;
+	background-color: #ad242c;
 }
 .PublisherListItem {
 	float: left;
+	color: #b9d4ff;
+	margin-left: 2px;
 }
