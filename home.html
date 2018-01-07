@@ -709,6 +709,10 @@
 
 <button hidden class="btn btn-default" autocomplete="off" id="start">Start</button>
 
+<div id="publishers">
+
+</div>
+
 <div id="camArea">
     <div class="flex-container videos" id="videos">
         <div class="flex-row">
@@ -781,13 +785,21 @@
 
         menu.className = menu.className.replace("w3-show", "");
     }
+
     function attachTheVideo(videoId) {
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
         var result = getAllPublishers();
-        console.log(result);
-
+        var list = document.createElement("ul");
+        for (var i = 0; i < result.persons.length; i++) {
+            var user = document.createElement("li");
+            user.innerText = result.persons[i].nic;
+            list.appendChild(user);
+        }
+        var pubs = document.getElementById("publishers");
+        pubs.appendChild(list);
     }
+
     function detachTheVideo(videoId) {
         hideVideoMenu(videoId);
         detachVideo(videoId);
