@@ -106,6 +106,16 @@ func lockMediaUsers() {
 var _mutex sync.Mutex
 func setMediaUsers(mediaUsers MediaUsers) {
 	_mutex.Lock()
+	// find new publishers
+	mus := __mediaUsers.getAll()
+	new_mus := mediaUsers.getAll();
+	for k, _ := range new_mus {
+		_, ok := mus[k];
+		if ! ok {
+			p, _ := _persons.findPersonByNickName(k)
+			hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Video ON!"}
+		}
+	}
 	__mediaUsers = mediaUsers
 	_mutex.Unlock()
 }
@@ -165,7 +175,6 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 							response.Status = Status{SUCCESS, ""}
 							log.Printf("camid %d\n",response.CamID)
 						}
-
 					}
 					json_response, err = json.Marshal(response)
 					if err != nil {
