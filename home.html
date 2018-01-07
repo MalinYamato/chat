@@ -780,6 +780,18 @@
             menu.className += " w3-show";
         }
     }
+
+    function genderShort(gender) {
+        if (gender == "Female") {
+            return "F"
+        }
+        else if (gender == "Male") {
+            return "M";
+        } else {
+            return "T";
+        }
+    }
+
     function hideVideoMenu(videoId) {
         var menu = document.getElementById( "VideoMenu" + videoId);
 
@@ -791,9 +803,11 @@
         console.log("attachVideo " + videoId);
         var result = getAllPublishers();
         var list = document.createElement("ul");
+        list.setAttribute("class", "PublisherList");
         for (var i = 0; i < result.persons.length; i++) {
             var user = document.createElement("li");
-            user.innerText = result.persons[i].nic;
+            user.setAttribute("class", "PublisherListItem");
+            user.innerText = result.persons[i].nic + " " + genderShort(result.persons[i].gender);
             list.appendChild(user);
         }
         var pubs = document.getElementById("publishers");

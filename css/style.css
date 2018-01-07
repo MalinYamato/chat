@@ -406,4 +406,13 @@ visibility: hidden;
 	flex-direction: column;
 }
 
-
+.PublisherList {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #333333;
+}
+.PublisherListItem {
+	float: left;
+}
