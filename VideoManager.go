@@ -179,6 +179,8 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 					lockMediaUsers()
 					pubs := getMediaUsers().getAll()
 					unlockMediaUsers()
+					response.Persons = nil
+					response.Status = Status{ SUCCESS, "No publishers"}
 					for _, v := range pubs {
 						person, ok := _persons.findPersonByNickName(v.Display);
 						if ok {
