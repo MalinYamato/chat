@@ -798,6 +798,12 @@
         menu.className = menu.className.replace("w3-show", "");
     }
 
+
+    function publisherSelected(value) {
+        $("#publishers").empty();
+        setRemoteCam(value);
+    }
+
     function attachTheVideo(videoId) {
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
@@ -807,7 +813,9 @@
         list.setAttribute("class", "PublisherList");
         for (var i = 0; i < result.persons.length; i++) {
             var user = document.createElement("li");
+            var camID = getCamId(person[i].token);
             user.setAttribute("class", "PublisherListItem");
+            user.setAttribute("onclick", "publisherSelected('" + videoId + ":" + camID.toString() + "')");
             user.innerText = result.persons[i].nic + " " + genderShort(result.persons[i].gender);
             list.appendChild(user);
         }
