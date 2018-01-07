@@ -15,7 +15,7 @@
 #me {
     color: white;
     font-size: 12px;
-    margin-top: 8px;
+    padding-top: 12px;
     text-align: left;
     margin-left: -8px;
     width: 6em;
@@ -42,6 +42,9 @@
     justify-content: space-between;
     text-shadow: 2px 2px 4px #4d4d4d;
     font-size: 12px;
+}
+#CurrentUsers span {
+    margin-top: 2px;
 }
 #CurrentUsers li img:hover {
     border-style: solid;
