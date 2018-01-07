@@ -47,23 +47,25 @@
     <!-- ---------------------------------------->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.0.3/adapter.min.js" ></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.0.3/adapter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
     <script type="text/javascript" src="/js/janus.js"></script>
     <script type="text/javascript" src="/js/videoroom.js"></script>
-
     <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
     <script src="/js/SVGButton.js"></script>
     <script type="text/javascript"></script>
     <script type="text/javascript" src="/js/emojionearea.min.js"></script>
-
     <!--  <script type="text/javascript" src="videoroomtest.js"></script> -->
 
     <script>
@@ -73,23 +75,22 @@
         function getUser(op) {
             var res = null;
             $.ajax({
-                        url: 'https://{{.Host}}/profile',
-                        type: 'post',
-                        async: false,
-                        data: JSON.stringify(op),
-                        contentType: 'application/json',
-                        success: function (response) {
-                            if (response.status.status != "SUCCESS") {
-                                console.log("getUser failed> " + response.status + " " + response)
-                            } else {
-                                console.log("getUser successul> " + response.status.status + " " + response.person.userID)
-                            }
-                            res = response;
-                        }
-                    });
+                url: 'https://{{.Host}}/profile',
+                type: 'post',
+                async: false,
+                data: JSON.stringify(op),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response.status.status != "SUCCESS") {
+                        console.log("getUser failed> " + response.status + " " + response)
+                    } else {
+                        console.log("getUser successul> " + response.status.status + " " + response.person.userID)
+                    }
+                    res = response;
+                }
+            });
             return res;
         }
-
         function getAllPublishers() {
             var res = null;
             var request = {"op": "getAllPublishers"};
@@ -110,12 +111,10 @@
             });
             return res;
         }
-
         function genderShort(gender) {
             if (gender == "Female") {
                 return "F"
-            }
-            else if (gender == "Male") {
+            } else if (gender == "Male") {
                 return "M";
             } else {
                 return "T";
@@ -167,7 +166,6 @@
                 newUser.appendChild(name);
                 currentUsers.appendChild(newUser);
             }
-
             function appendNewPerson(person) {
                 var newUser = document.createElement("span");
                 newUser.setAttribute("id", person.userId);
@@ -181,7 +179,6 @@
                 currentUsers.appendChild(newUser);
                 console.log("added user with " + person.userId)
             }
-
             function refreshRoomUsers(users) {
                 $("#CurrentUsers").empty();
                 for (key in users) {
@@ -212,14 +209,13 @@
                         }
                     });
                 };
-
                 //  var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 lcam.s.onmousedown = function () {
                     console.log("clicked");
                     lcam.mouseDown();
                     lcam.toggle();
-                    if (lcam.isOn())  {
+                    if (lcam.isOn()) {
                         pub();
                         if (isMuted()) {
                             console.log("audio is muted!");
@@ -233,7 +229,6 @@
                         unpub();
                     }
                 };
-
                 var lmic = new SVGMicrophoneButton("#localMic", "x", "x");
                 lmic.s.onmousedown = function () {
                     console.log("clicked");
@@ -245,7 +240,6 @@
                         mute();
                     }
                 }
-
                 var tcam = new SVGWebcamButton("#webcam", "x", "x");
                 tcam.s.onmousedown = function () {
                     //console.log("clicked");
@@ -259,12 +253,10 @@
                             console.log("getUser returned " + response.status.status + " " + response.status.detail);
                         }
                     } else if (!tcam.isOn()) {
-
                         leave();
                     }
                 };
             }
-
             function changeRoom(cmd, room) {
                 $.ajax({
                     type: "POST",
@@ -278,14 +270,12 @@
                     }
                 });
             }
-
             if (!loggedIn()) {
                 var google = new SVGImageButton("#google", "google", "S");
                 google.s.onmousedown = function () {
                     google.mouseDown();
                     window.location = "https://{{.Host}}/google/login";
                 };
-
                 var facebook = new SVGImageButton("#facebook", "facebook", "S");
                 facebook.s.onmousedown = function () {
                     facebook.mouseDown();
@@ -293,14 +283,12 @@
                 };
                 var loginLabel = new SVGButton("#loginLabel", " Login", "S");
             }
-
             function removeUser(message) {
                 var child = document.getElementById(message.sender);
                 if (child != null) {
                     var status = currentUsers.removeChild(child);
                 }
             }
-
             function appendLog(item) {
                 var doScroll = log.scrollTop === log.scrollHeight - log.clientHeight;
 
@@ -316,13 +304,9 @@
                         log.removeChild(log.childNodes[i]);
                     }
                 }
-
                 $("#log").scrollTop(0);
-
             }
-
             function sendMessage(op, msg) {
-
                 var t = new Date();
                 var time = t.getDate() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
                 var message = {
@@ -394,6 +378,7 @@
             };
 
             var _id = 0;
+
             function getID() {
                 if (_id > 1000) {
                     _id = 0;
@@ -401,18 +386,15 @@
                 _id++;
                 return _id;
             }
-
             function getUniqueID(id) {
                 return id + "@" + getID();
             }
-
             function loggedIn() {
                 if ("{{with .Person}}{{.Token}}{{end}}" == "") {
                     return false;
                 }
                 return true;
             }
-
             document.getElementById("form").onsubmit = function () {
                 if (!conn) {
                     return false;
@@ -425,7 +407,6 @@
                 $(".emojionearea-editor").empty();
                 return false;
             };
-
             function myFunction(id) {
                 var x = document.getElementById(id);
                 if (x.className.indexOf("w3-show") == -1) {
@@ -434,7 +415,6 @@
                     x.className = x.className.replace(" w3-show", "");
                 }
             }
-
             function targetStatus(message, targetID) {
                 var status;
                 var a_to_b = false;
@@ -459,7 +439,6 @@
                     return status;
                 }
             }
-
             function UpdateTargetGraph(message) {
                 var publist = document.getElementById("PublishList");
                 $(publist).empty();
@@ -620,9 +599,7 @@
                     }
                     appendLog(uberdiv);
                 }
-            }
-
-            else {
+            } else {
                 console.log("failed to connect to websocket");
                 var item = document.createElement("div");
                 item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
@@ -631,10 +608,11 @@
         }
 
     </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
 </head>
-<body>
 
+<body>
 <div id="menu">
     <div id="leftMenu">
         <div class="flex-row">
@@ -658,28 +636,25 @@
             </div>
             <div id="SelectedRoom"></div>
         </div>
-
-
     </div>
 
     <div id="centerMenu">
-        <div id="CurrentUsers">  <!-- oyeaa, no more JSP, PHP or other stoneage server side stuff!!! Go Lang templating...-->
+        <div id="CurrentUsers">
+            <!-- oyeaa, no more JSP, PHP or other stoneage server side stuff!!! Go Lang templating...-->
             <!-- TEMPLATE CODE -->
         {{ range .Persons}}
-            <div id="{{.UserID}}"><img onclick="RequestToPublish({{.UserID}})"  src="{{.PictureURL}}"> </img><span>{{.Nic}}</span></div>
+            <div id="{{.UserID}}"><img onclick="RequestToPublish({{.UserID}})" src="{{.PictureURL}}"> </img>
+                <span>{{.Nic}}</span></div>
         {{end}}
             <!-- TEMPLATE CODE -->
         </div>
-
     </div>
 
     <div id="rightMenu">
         <div class="flex-column" style="display:{{.LoggedOut}}">
-
             <object id="loginLabel" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
                 Login
             </object>
-
             <ul class="flex-row loggedOut">
                 <li>
                     <object id="google" class="cstuff" type="image/svg+xml" data="/images/icons.svg">
@@ -701,7 +676,8 @@
                     </object>
                 </li>
                 <li>
-                    <object class="webcam"  id="webcam" type="image/svg+xml" data="https://{{.Host}}/images/webcam.svg"> </object>
+                    <object class="webcam" id="webcam" type="image/svg+xml"
+                            data="https://{{.Host}}/images/webcam.svg"></object>
             </ul>
         </div>
     </div>
@@ -709,14 +685,11 @@
 
 <button hidden class="btn btn-default" autocomplete="off" id="start">Start</button>
 
-<div id="publishers">
-
-</div>
+<div id="publishers"></div>
 
 <div id="camArea">
     <div class="flex-container videos" id="videos">
         <div class="flex-row">
-
             <div class="screen flexer " id="screen1">
                 <div class=" narrow" id="videolocal">
                     <div class="videocontrols">
@@ -728,7 +701,6 @@
                             Local Cam
                         </object>
                     </div>
-
                 </div>
             </div>
             <div class="screen flexer" id="screen2">
@@ -761,7 +733,7 @@
 <script>
     function VideoMenuClicked(videoID) {
         removePublisherMenu(videoID);
-        var menu = document.getElementById( "VideoMenu" + videoID);
+        var menu = document.getElementById("VideoMenu" + videoID);
         var cls = menu.getAttribute("class");
         if (cls.includes("w3-show")) {
             hideVideoMenu(videoID);
@@ -781,7 +753,6 @@
             menu.className += " w3-show";
         }
     }
-
     function publisherSelected(value) {
         removePublisherMenu();
         setRemoteCam(value);
@@ -789,12 +760,10 @@
     function removePublisherMenu() {
         $("#publishers").empty();
     }
-
     function hideVideoMenu(videoId) {
-        var menu = document.getElementById( "VideoMenu" + videoId);
+        var menu = document.getElementById("VideoMenu" + videoId);
         menu.className = menu.className.replace("w3-show", "");
     }
-
     function attachTheVideo(videoId) {
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
@@ -818,7 +787,6 @@
         cancel.setAttribute("onclick", "removePublisherMenu()");
         list.appendChild(cancel);
     }
-
     function detachTheVideo(videoId) {
         hideVideoMenu(videoId);
         detachVideo(videoId);
@@ -830,33 +798,34 @@
     <form id="form" class="row">
         <input class="row_elem" id="submit" type="submit" value="Send"/>
         <div id="stuff" class="row_elem">
-            <input  type="text" id="msg"/>
+            <input type="text" id="msg"/>
         </div>
     </form>
-
     <div id="PublishList" class="flex-row">
         <!-- TEMPLATE CODE -->
     {{ range .Targets}}
-        <div id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;" onclick="RemoveTarget({{.Target.UserID}})"  src="{{.Target.PictureURL}}"> </img> <!--<span>{{.Target.Nic}}</span>--> </div>
+        <div id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;"
+                                                 onclick="RemoveTarget({{.Target.UserID}})"
+                                                 src="{{.Target.PictureURL}}"> </img>
+            <!--<span>{{.Target.Nic}}</span>--> </div>
     {{end}}
         <!-- TEMPLATE CODE -->
     </div>
-
 </div>
 
 <div id="log"></div>
 
 <script type="text/javascript">
     var cams = ["cam1", "cam2"];
-    function setRemoteCam(response)
-    {
+
+    function setRemoteCam(response) {
         var data = response.split(":");
         console.log("setRemoteCam " + data);
-        for (var i=0; i < cams.length; i++)  {
-             var aCam = document.getElementById( cams[i] );
-             if (aCam != null ) {
-                 aCam.setAttribute("src", "/images/webcam.svg");
-             }
+        for (var i = 0; i < cams.length; i++) {
+            var aCam = document.getElementById(cams[i]);
+            if (aCam != null) {
+                aCam.setAttribute("src", "/images/webcam.svg");
+            }
         }
         var cam = document.getElementById("cam" + data[0]);
         if (cam != null) {
@@ -875,57 +844,56 @@
             // json format
             var request = {"op": "getUserByID", "userID": userId};
             var response = getUser(request);
-                    if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
-                        var person = response.person;
-                        var t = new Date();
-                        var age =   t.getFullYear() - parseInt(person.birthDate.year);
-                        if (t.getMonth() < parseInt(person.birthDate.month)) {
-                            age = age - 1;
-                        }
-                        var bigImage = document.createElement("img");
-                        bigImage.setAttribute("src", person.pictureURL);
-                        x.appendChild(bigImage);
-                        var info = document.createElement("ul");
-                        var info1 = document.createElement("li");
-                        var info2 = document.createElement("li");
-                        var info3 = document.createElement("li");
-                        var info4 = document.createElement("li");
-                        var info5 = document.createElement("li");
-                        var info6 = document.createElement("li");
+            if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
+                var person = response.person;
+                var t = new Date();
+                var age = t.getFullYear() - parseInt(person.birthDate.year);
+                if (t.getMonth() < parseInt(person.birthDate.month)) {
+                    age = age - 1;
+                }
+                var bigImage = document.createElement("img");
+                bigImage.setAttribute("src", person.pictureURL);
+                x.appendChild(bigImage);
+                var info = document.createElement("ul");
+                var info1 = document.createElement("li");
+                var info2 = document.createElement("li");
+                var info3 = document.createElement("li");
+                var info4 = document.createElement("li");
+                var info5 = document.createElement("li");
+                var info6 = document.createElement("li");
 
-                        info1.innerText = "        " + person.nic + " " + age;
-                        info3.innerText = "        " + person.gender + " " + person.sexualOrienation;
-                        info4.innerText = "        " + person.country + " " + person.town;
-                        info5.innerText = "        " + "";
-                        info6.innerText = "        " + person.profession;
-                        info.appendChild(info1);
-                        info.appendChild(info2);
-                        info.appendChild(info3);
-                        info.appendChild(info4);
-                        info.appendChild(info5);
-                        info.appendChild(info6);
-                        info.setAttribute("id", "profileInfo");
+                info1.innerText = "        " + person.nic + " " + age;
+                info3.innerText = "        " + person.gender + " " + person.sexualOrienation;
+                info4.innerText = "        " + person.country + " " + person.town;
+                info5.innerText = "        " + "";
+                info6.innerText = "        " + person.profession;
+                info.appendChild(info1);
+                info.appendChild(info2);
+                info.appendChild(info3);
+                info.appendChild(info4);
+                info.appendChild(info5);
+                info.appendChild(info6);
+                info.setAttribute("id", "profileInfo");
 
-                        var camID = getCamId(person.token);
-                        if (camID != null)
-                        {
-                                for (var i = 0; i < cams.length; i++) {
-                                    var aCam = cams[i];
-                                    var o = document.createElement("img");
-                                    o.setAttribute("src", "/images/webcam.svg");
-                                    o.setAttribute("class", "smallWebCam");
-                                    c = i + 1
+                var camID = getCamId(person.token);
+                if (camID != null) {
+                    for (var i = 0; i < cams.length; i++) {
+                        var aCam = cams[i];
+                        var o = document.createElement("img");
+                        o.setAttribute("src", "/images/webcam.svg");
+                        o.setAttribute("class", "smallWebCam");
+                        c = i + 1
 
-                                    o.setAttribute("onclick", "setRemoteCam('" + c + ":" + camID.toString() + "')");
-                                    o.setAttribute("id", aCam);
-                                    info.appendChild(o);
-                                }
-
-                        }
-                         x.appendChild(info);
-                         console.log(person);
-                        x.className += " w3-show";
+                        o.setAttribute("onclick", "setRemoteCam('" + c + ":" + camID.toString() + "')");
+                        o.setAttribute("id", aCam);
+                        info.appendChild(o);
                     }
+
+                }
+                x.appendChild(info);
+                console.log(person);
+                x.className += " w3-show";
+            }
         } else {
             while (x.lastChild) {
                 x.removeChild(x.lastChild);
@@ -951,13 +919,10 @@
             contentType: 'application/json',
             success: function (r) {
                 console.log("Add of target requested /targetManager: " + r.status.detail + " " + r.person.email);
-
             }
         });
     }
-
-    function RemoveTarget(targetId)
-    {
+    function RemoveTarget(targetId) {
         var message = {"op": "RemoveTarget", "ids": [targetId]};
         $.ajax({
             url: 'https://{{.Host}}/TargetManager',
@@ -990,7 +955,8 @@
             </p>
         </div>
         <div class="modal-footer">
-            <h3>Support: Malin Yamato LÃ¤Ã¤kkÃ¶, malin@raku.cloud -- sponsored by Yamato Digital Audio info@yamato.xyz</h3>
+            <h3>Support: Malin Yamato LÃ¤Ã¤kkÃ¶, malin@raku.cloud -- sponsored by Yamato Digital Audio
+                info@yamato.xyz</h3>
         </div>
     </div>
 
