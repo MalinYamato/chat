@@ -573,7 +573,7 @@
     };
     function  SwitchRoom(room) {
         $("#SelectedRoom").text(RoomDefs[room]);
-        $("#log").emchangeRoom("ChangeRoom", "Main");pty();
+        $("#log").empty();
         changeRoom("ChangeRoom", room);
     }
 </script>
