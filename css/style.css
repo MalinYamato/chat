@@ -407,7 +407,8 @@ visibility: hidden;
 }
 
 .PublisherList {
-	padding: 1px;
+	margin: 2px;
+	padding: 2px;
 	color: #ad242c;
 	list-style-type: none;
 	margin: 0;
@@ -423,5 +424,6 @@ visibility: hidden;
 	margin-top: 5px;
 	float: left;
 	color: #ad242c;
-	margin-left: 2px;
+	margin: 2px;
+    padding: 2px;
 }
