@@ -105,7 +105,7 @@ func lockMediaUsers() {
 
 var _mutex sync.Mutex
 func setMediaUsers(mediaUsers MediaUsers) {
-	_mutex.Lock()
+
 	// find new publishers
 	mus := __mediaUsers.getAll()
 	new_mus := mediaUsers.getAll();
@@ -116,6 +116,7 @@ func setMediaUsers(mediaUsers MediaUsers) {
 			hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Video ON!"}
 		}
 	}
+	_mutex.Lock()
 	__mediaUsers = mediaUsers
 	_mutex.Unlock()
 }
