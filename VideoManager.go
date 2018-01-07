@@ -38,6 +38,7 @@ import (
 	"time"
 	"sync"
 
+	"golang.org/x/net/html/atom"
 )
 
 type WebRTCSubscribe struct {
@@ -105,27 +106,28 @@ func lockMediaUsers() {
 
 var _mutex sync.Mutex
 func setMediaUsers(mediaUsers MediaUsers) {
-
-	// find new publishers
-	mus := __mediaUsers.getAll()
-	new_mus := mediaUsers.getAll();
-	for k, _ := range new_mus {
-		_, ok := mus[k];
-		if ! ok {
-			p, _ := _persons.findPersonByNickName(k)
-			hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Video ON!"}
-		}
-	}
-	_mutex.Lock()
+	lockMediaUsers()
 	__mediaUsers = mediaUsers
-	_mutex.Unlock()
+	unlockMediaUsers()
 }
 func (manager *RTCManager) start() {
 	_mutex = sync.Mutex{}
 	for {
 		time.Sleep(5 * time.Second)
 		publishers := JanusCapture()
-		// log.Printf("%s %d", "CaptureJanus -- available publishers ",publishers.count())
+
+		lockMediaUsers()
+		mus := __mediaUsers.getAll()
+		new_mus := publishers.getAll();
+		for k, _ := range new_mus {
+			_, ok := mus[k];
+			if ! ok {
+				p, _ := _persons.findPersonByNickName(k)
+				hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Video ON!"}
+			}
+		}
+		unlockMediaUsers()
+
 		manager.hub.updateMediaUsers <- publishers
 	}
 }
