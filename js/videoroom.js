@@ -128,7 +128,11 @@ function getCamId(userID) {
 }
 
 function detachVideo(screen) {
-    var screen_id = parseInt(screen);
+
+  //  if(feeds[i] === undefined || feeds[i] === null)
+
+
+        var screen_id = parseInt(screen);
     if (feeds[screen_id] != null ) {
         feeds[screen_id].detach(null);
         feeds[screen_id] = null;
@@ -200,7 +204,9 @@ var initialized = false;
 $(document).ready(function() {
 
     if ( ! initialized) {
-
+    for (var i = 0; i < 6; i++) {
+        feeds[i] = nulll
+        }
 
     console.log("Init Jaanus library");
     // Initialize the library (all console debuggers enabled)
@@ -566,13 +572,13 @@ function newRemoteFeed(id, display, audio, video, screen) {
                     if(event === "attached") {
                         // Subscriber created and attached
 
-                        for(var i=1;i<6;i++) {
-                            if(feeds[i] === undefined || feeds[i] === null) {
-                                feeds[i] = remoteFeed;
-                                remoteFeed.rfindex = i;
-                                break;
-                            }
-                        }
+                        //for(var i=1;i<6;i++) {
+                         //   if(feeds[i] === undefined || feeds[i] === null) {
+                         //       feeds[i] = remoteFeed;
+                         //       remoteFeed.rfindex = i;
+                         //       break;
+                          //  }
+                        //}
 
                         ////
                         remoteFeed.rfindex = screen;
