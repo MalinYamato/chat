@@ -13,7 +13,8 @@
 }
 
 #me {
-    color: #ffeafc;
+    color: white;
+    font-size: 12px;
     margin-top: 8px;
     text-align: left;
     margin-left: -8px;
@@ -35,11 +36,12 @@
 
 
 #CurrentUsers {
-    color: #ffeafc;
+    color: white;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     text-shadow: 2px 2px 4px #4d4d4d;
+    font-size: 12px;
 }
 #CurrentUsers li img:hover {
     border-style: solid;
@@ -51,7 +53,7 @@
 #centerMenu img {
     border-style: solid;
     border-radius: 50%;
-    border-color: #f1dcee;
+    border-color: white;
     border-width: 2px;
     width: 2.5em;
     display: block;
@@ -157,9 +159,9 @@ li {
 }
 
 #SelectedRoom {
-    margin-left: 50px;
+    margin-left: 52px;
     margin-top: -24px;
-    color: #ffeafc;
+    color: white;
     text-shadow: 2px 2px 4px #4d4d4d;
 }
 
