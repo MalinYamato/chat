@@ -47,7 +47,6 @@
     <!-- ---------------------------------------->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.0.3/adapter.min.js" ></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
@@ -64,8 +63,6 @@
     <script src="/js/SVGButton.js"></script>
     <script type="text/javascript"></script>
     <script type="text/javascript" src="/js/emojionearea.min.js"></script>
-
-
 
     <!--  <script type="text/javascript" src="videoroomtest.js"></script> -->
 
@@ -92,18 +89,6 @@
                     });
             return res;
         }
-        function genderShort(gender) {
-            if (gender == "Female") {
-                return "F"
-            }
-            else if (gender == "Male") {
-                return "M";
-            } else {
-                return "T";
-            }
-        }
-
-        ////////
 
         function getAllPublishers() {
             var res = null;
@@ -126,6 +111,18 @@
             return res;
         }
 
+        function genderShort(gender) {
+            if (gender == "Female") {
+                return "F"
+            }
+            else if (gender == "Male") {
+                return "M";
+            } else {
+                return "T";
+            }
+        }
+
+        ///// end utilities
 
         window.onload = function () {
 
@@ -192,9 +189,7 @@
                 }
             }
 
-
             //////////////////////// Button actions settings ///////////////////////////////
-
 
             var profile = new SVGButton("#profile", "  Profile", "L");
             profile.s.onmouseup = function () {
@@ -202,7 +197,6 @@
                 console.log("profile clicekd ");
                 window.location = "https://{{.Host}}/MainProfile";
             };
-
 
             if (loggedIn()) {
                 var logout = new SVGButton("#logoutButton", " Logout", "S");
@@ -269,9 +263,6 @@
                         leave();
                     }
                 };
-
-
-
             }
 
             function changeRoom(cmd, room) {
@@ -301,7 +292,6 @@
                     window.location = "https://{{.Host}}/facebook/login";
                 };
                 var loginLabel = new SVGButton("#loginLabel", " Login", "S");
-
             }
 
             function removeUser(message) {
@@ -534,14 +524,12 @@
                     console.log("New message", message);
                     var uniqueID = message.sender + "@" + getID();
 
-
                     if (message.op == "VideoStarted") {
                         console.log("Video Started");
                     }
                     if (message.op == "VideoStopped") {
                         console.log("Video Stopped");
                     }
-
 
                     if (message.token == "flash" && message.op != "Message" && message.op != "NewUser") {
                         return;
@@ -631,7 +619,6 @@
                         btn.setAttribute("style", "background-color:#DEDEDE;");
                     }
                     appendLog(uberdiv);
-
                 }
             }
 
@@ -860,10 +847,7 @@
 <div id="log"></div>
 
 <script type="text/javascript">
-
-
     var cams = ["cam1", "cam2"];
-
     function setRemoteCam(response)
     {
         var data = response.split(":");
@@ -898,10 +882,6 @@
                         if (t.getMonth() < parseInt(person.birthDate.month)) {
                             age = age - 1;
                         }
-
-                        console.log(">>" + person.birthDate.year) ;
-                        console.log(">>>" + t.getFullYear());
-
                         var bigImage = document.createElement("img");
                         bigImage.setAttribute("src", person.pictureURL);
                         x.appendChild(bigImage);
@@ -942,7 +922,6 @@
                                 }
 
                         }
-
                          x.appendChild(info);
                          console.log(person);
                         x.className += " w3-show";
@@ -995,7 +974,6 @@
     }
 
 </script>
-
 
 <button id="myBtn">Open Modal</button>
 <!-- The Modal -->

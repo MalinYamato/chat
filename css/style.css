@@ -410,6 +410,7 @@ visibility: hidden;
 	margin: 2px;
 	padding: 2px;
 	color: #ad242c;
+
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
@@ -417,8 +418,13 @@ visibility: hidden;
 	background: transparent;
 	border-color: #ad242c;
 }
+.PublisherListItem:hover {
+	color: #262626;
+}
+
 .PublisherListItem {
-	border-width: 2px;
+	font-width: bold;
+	border-width: 4px;
 	border-style: solid;
 	border-radius: 10%;
 	margin-top: 5px;

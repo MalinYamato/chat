@@ -65,8 +65,6 @@ var bitrateTimer = [];
 
 var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
 
-
-
 function publishMe(id) {
     request = {"Op":"publish", "CamID" : id};
     $.ajax({
@@ -195,7 +193,7 @@ function toggleMute() {
     $('#mute').html(muted ? "Unmute" : "Mute");
 }
 
-
+/////////////////////////////////// Janus stuff /////////////////////////////////////////////////
 
 
 var initialized = false;
@@ -478,8 +476,6 @@ $(document).ready(function() {
 initialized = true;
 
 });
-
-
 
 function publishOwnFeed(useAudio) {
     // Publish our stream
