@@ -44,7 +44,7 @@ import (
 )
 
 const (
-	sessionName  = "secure.krypin.xyz"
+	sessionName  = "secure.raku.cloud"
 	sessionToken = "SessionToken"
 )
 
