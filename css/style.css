@@ -409,6 +409,7 @@ visibility: hidden;
 #publishers {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 }
 
 .PublisherList {
@@ -423,6 +424,15 @@ visibility: hidden;
 	background: transparent;
 	border-color: #ad242c;
 }
+
+.PublisherList img {
+	float: left;
+	width: 15px;
+	height: 15px;
+	margin: auto;
+	margin-left: 2px;
+}
+
 .PublisherListItem:hover {
 	color: #262626;
 }
