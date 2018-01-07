@@ -864,7 +864,9 @@
              aCam.setAttribute("src","/images/webcam.svg");
         }
         var cam = document.getElementById("cam" + data[0]);
-        cam.setAttribute("src","/images/webcamOn.svg ");
+        if (cam != null) {
+            cam.setAttribute("src", "/images/webcamOn.svg ");
+        }
 
         subscribe(data[0], parseInt(data[1]));
     }
