@@ -429,14 +429,14 @@ visibility: hidden;
 	float: left;
 	color: #ad242c;
 	margin: 2px;
-	padding: 2px;
+
 }
 
 .PublisherList img {
 	float: left;
 	width: 15px;
 	height: 15px;
-	margin-top: 8px;
+	margin-top: 4px;
 	margin-left: 3px;
 }
 
@@ -446,7 +446,8 @@ visibility: hidden;
 
 .PublisherListItem {
 	font-size: 12px;
-	border-width: 4px;
+	border-width: 2px;
 	border-style: solid;
 	border-radius: 6%;
+	padding: 4px;
 }
