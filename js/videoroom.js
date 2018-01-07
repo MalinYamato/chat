@@ -205,7 +205,7 @@ $(document).ready(function() {
 
     if ( ! initialized) {
     for (var i = 0; i < 6; i++) {
-        feeds[i] = nulll
+        feeds[i] = null;
         }
 
     console.log("Init Jaanus library");
