@@ -813,7 +813,7 @@
         list.setAttribute("class", "PublisherList");
         for (var i = 0; i < result.persons.length; i++) {
             var user = document.createElement("li");
-            var camID = getCamId(person[i].token);
+            var camID = getCamId(result.persons[i].token);
             user.setAttribute("class", "PublisherListItem");
             user.setAttribute("onclick", "publisherSelected('" + videoId + ":" + camID.toString() + "')");
             user.innerText = result.persons[i].nic + " " + genderShort(result.persons[i].gender);
