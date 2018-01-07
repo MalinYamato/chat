@@ -407,13 +407,20 @@ visibility: hidden;
 }
 
 .PublisherList {
+	color: #ad242c;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: #ad242c;
+	background: transparent;
+	border-color: #ad242c;
 }
 .PublisherListItem {
+	padding: 1px;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 10%;
+	margin-top: 5px;
 	float: left;
 	color: #b9d4ff;
 	margin-left: 2px;
