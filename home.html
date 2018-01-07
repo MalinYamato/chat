@@ -781,14 +781,16 @@
         }
         var pubs = document.getElementById("publishers");
         pubs.appendChild(list);
-        var cancel = document.createElement("ul");
+        var cancel = document.createElement("li");
         var img = document.createElement("img");
         img.setAttribute("src", "/images/error.png");
         img.setAttribute("onclick", "removePublisherMenu()");
         img.style.width = "10px";
         img.style.height = "10px";
+        img.style.margin = "auto";
+
         cancel.appendChild(img);
-        cancel.setAttribute("class", "PublisherListItem");
+       // cancel.setAttribute("class", "PublisherListItem");
 
         cancel.setAttribute("onclick", "removePublisherMenu()");
         list.appendChild(cancel);
