@@ -861,7 +861,9 @@
         console.log("setRemoteCam " + data);
         for (var i=0; i < cams.length; i++)  {
              var aCam = document.getElementById( cams[i] );
-             aCam.setAttribute("src","/images/webcam.svg");
+             if (aCam != null ) {
+                 aCam.setAttribute("src", "/images/webcam.svg");
+             }
         }
         var cam = document.getElementById("cam" + data[0]);
         if (cam != null) {
