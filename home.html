@@ -257,19 +257,7 @@
                     }
                 };
             }
-            function changeRoom(cmd, room) {
-                $.ajax({
-                    type: "POST",
-                    url: "https://{{.Host}}/RoomManager",
-                    data: JSON.stringify({"Op": "ChangeRoom", "Room": room}),
-                    contentType: 'application/json',
-                    success: function (result) {
-                        if (result.status.status != "SUCCESS") {
-                            console.log("Calling RooomManger::ChangeRoom returned " + result.status + " " + result.detail);
-                        }
-                    }
-                });
-            }
+
             if (!loggedIn()) {
                 var google = new SVGImageButton("#google", "google", "S");
                 google.s.onmousedown = function () {
@@ -563,6 +551,20 @@
 
 <body>
 <script>
+
+    function changeRoom(cmd, room) {
+        $.ajax({
+            type: "POST",
+            url: "https://{{.Host}}/RoomManager",
+            data: JSON.stringify({"Op": "ChangeRoom", "Room": room}),
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.status.status != "SUCCESS") {
+                    console.log("Calling RooomManger::ChangeRoom returned " + result.status + " " + result.detail);
+                }
+            }
+        });
+    }
     var RoomDefs = {
         "Main":     "Main本館",
         "Private":  "Private 秘密屋",
