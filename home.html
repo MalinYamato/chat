@@ -782,11 +782,7 @@
 
 
         }
-        var cancel = document.createElement("ul");
-        cancel.setAttribute("class", "VideoMenuListItem");
-        cancel.innerText = "Cancel";
-        cancel.setAttribute("onclick", "removePublisherMenu(" + videoID +")");
-        menu.appendChild(cancel);
+
     }
 
     function removePublisherMenu(videoID) {
@@ -832,6 +828,11 @@
         }
         var pubs = document.getElementById("publishers");
         pubs.appendChild(list);
+        var cancel = document.createElement("ul");
+        cancel.setAttribute("class", "VideoMenuListItem");
+        cancel.innerText = "Cancel";
+        cancel.setAttribute("onclick", "removePublisherMenu(" + videoId +")");
+        list.appendChild(cancel);
     }
 
     function detachTheVideo(videoId) {
