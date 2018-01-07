@@ -325,57 +325,6 @@
                 return true;
             }
 
-            var RoomDefs = {
-                "Main": "Main本館",
-                "Private": "Private 秘密屋",
-                "ReimersHotel": "Reimers Hotel屋",
-                "MalinFriends": "MalinFriens屋",
-                "Gay": "Gayゲイ屋",
-                "Lesbian": "Lesbianレズ屋",
-                "Trans": "Trans　性転換屋",
-                "Japanese": "日本語屋"
-            };
-
-            document.getElementById("MainButton").onclick = function () {
-                $("#SelectedRoom").text(RoomDefs["Main"]);
-                $("#log").empty();
-                changeRoom("ChangeRoom", "Main");
-            };
-            document.getElementById("MPRButton").onclick = function () {
-                $("#SelectedRoom").text(RoomDefs["Private"]);
-                $("#log").empty();
-                changeRoom("ChangeRoom", "MPR");
-            };
-            document.getElementById("ReimersHotelButton").onclick = function () {
-                $("#SelectedRoom").text(RoomDefs["ReimersHotel"]);
-                $("#log").empty();
-                changeRoom("ChangeRoom", "ReimersHotel");
-            };
-            document.getElementById("EvaMonikaMalinButton").onclick = function () {
-                $("#SelectedRoom").text(RoomDefs["MalinFriends"]);
-                $("#log").empty();
-                changeRoom("ChangeRoom", "EvaMonikaMalin");
-            };
-            document.getElementById("GayButton").onclick = function () {
-                $("#SelectedRoom").text(RoomDefs["Gay"]);
-                $("#log").empty();
-                changeRoom("ChangeRoom", "Gay");
-            };
-            document.getElementById("LesbianButton").onclick = function () {
-                $("#SelectedRoom").text(RoomDefs["Lesbian"]);
-                $("#log").empty();
-                changeRoom("ChangeRoom", "Lesbian");
-            };
-            document.getElementById("JapaneseButton").onclick = function () {
-                $("#SelectedRoom").text(RoomDefs["Japaanese"]);
-                $("#log").empty();
-                changeRoom("ChangeRoom", "Japanese");
-            };
-            document.getElementById("TransButton").onclick = function () {
-                $("#SelectedRoom").text(RoomDefs["Trans"]);
-                $("#log").empty();
-                changeRoom("ChangeRoom", "Trans");
-            };
 
             var _id = 0;
 
@@ -613,6 +562,21 @@
 </head>
 
 <body>
+<script>
+    var RoomDefs = {
+        "Main":     "Main本館",
+        "Private":  "Private 秘密屋",
+        "Gay":      "Gayゲイ屋",
+        "Lesbian":  "Lesbianレズ屋",
+        "Trans":    "Trans　性転換屋",
+        "Japanese": "日本語屋"
+    };
+    function  SwitchRoom(room) {
+        $("#SelectedRoom").text(RoomDefs[room]);
+        $("#log").emchangeRoom("ChangeRoom", "Main");pty();
+        changeRoom("ChangeRoom", room);
+    }
+</script>
 <div id="menu">
     <div id="leftMenu">
         <div class="flex-row">
@@ -627,14 +591,12 @@
         <div class="dropdown flex-row">
             <a href="javascript:void(0)" class="dropbtn">Room:</a>
             <div class="dropdown-content">
-                <button id="MainButton">Main 本館</button>
-                <button id="MPRButton">Instant Private 秘密屋</button>
-                <button id="JapaneseButton">日本語屋さん</button>
-                <button id="ReimersHotelButton">Reimers Hotel屋</button>
-                <button id="EvaMonikaMalinButton">Malin friends 屋</button>
-                <button id="GayButton">Gay ゲイ屋</button>
-                <button id="LesbianButton">Lesbian レズ屋</button>
-                <button id="TransButton">Trans 性転換屋</button>
+                <button onclick="SwitchRoom('Main')" id="MainButton">Main 本館</button>
+                <button onclick="SwitchRoom('Private')" id="PrivateButton">Instant Private 秘密屋</button>
+                <button onclick="SwitchRoom('Japanese')" id="JapaneseButton">日本語屋さん</button>
+                <button onclick="SwitchRoom('Gay')" id="GayButton">Gay ゲイ屋</button>
+                <button onclick="SwitchRoom('Lesbian')" id="LesbianButton">Lesbian レズ屋</button>
+                <button onclick="SwitchRoom('Trans')" id="TransButton">Trans 性転換屋</button>
             </div>
             <div id="SelectedRoom"></div>
         </div>

@@ -115,7 +115,7 @@ func (manager *RTCManager) start() {
 		time.Sleep(5 * time.Second)
 		publishers := JanusCapture()
 
-		lockMediaUsers()
+		lockMediaUsers()   ////////////// LOCK
 		mus := __mediaUsers.getAll()
 		new_mus := publishers.getAll();
 		for k, _ := range new_mus {
@@ -125,8 +125,7 @@ func (manager *RTCManager) start() {
 				hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Video ON!"}
 			}
 		}
-		unlockMediaUsers()
-
+		unlockMediaUsers()  ////////////// UN LOCK
 		manager.hub.updateMediaUsers <- publishers
 	}
 }

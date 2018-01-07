@@ -147,7 +147,7 @@ func (c *Client) readPump() {
 					message := Message{Op: "PrivateMessage", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Targets: targets, Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: theMessage}
 					c.hub.multicast <- message
 				} else {
-					if person.Room != "MPR" { // should not broadcast to this room
+					if person.Room != "Private" { // should not broadcast to this room
 						message := Message{Op: "Message", Token: "", Room: person.Room, Sender: person.UserID, Nic: person.getNic(), Timestamp: message.Timestamp, PictureURL: person.PictureURL, Content: message.Content}
 						c.hub.broadcast <- message
 					}

@@ -58,8 +58,6 @@ func flushMessagesInRoom(person Person, targets Targets) {
 func RoomManager_getRooms() map[string]QueueStack {
 	queueStack := map[string]QueueStack{
 		"Main":         QueueStack{},
-		"ReimersHotel": QueueStack{},
-		"MalinFriends": QueueStack{},
 		"Japanese":     QueueStack{},
 		"Lesbian":      QueueStack{},
 		"Gay":          QueueStack{},
