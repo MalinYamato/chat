@@ -130,12 +130,11 @@ function getCamId(userID) {
 function detachVideo(screen) {
 
   //  if(feeds[i] === undefined || feeds[i] === null)
-
-
-        var screen_id = parseInt(screen);
+    var screen_id = parseInt(screen);
     if (feeds[screen_id] != null ) {
         feeds[screen_id].detach(null);
         feeds[screen_id] = null;
+        $("#camUser" + screen).text("");
     }
 }
 function subscribe(screen, id) {
@@ -572,18 +571,8 @@ function newRemoteFeed(id, display, audio, video, screen) {
                     if(event === "attached") {
                         // Subscriber created and attached
 
-                        //for(var i=1;i<6;i++) {
-                         //   if(feeds[i] === undefined || feeds[i] === null) {
-                         //       feeds[i] = remoteFeed;
-                         //       remoteFeed.rfindex = i;
-                         //       break;
-                          //  }
-                        //}
-
-                        ////
                         remoteFeed.rfindex = screen;
                         feeds[screen] = remoteFeed;
-                        ////
 
                         remoteFeed.rfid = msg["id"];
                         remoteFeed.rfdisplay = msg["display"];
@@ -676,10 +665,7 @@ function newRemoteFeed(id, display, audio, video, screen) {
                         var camID = remoteFeed.rfindex+1;
                         var camUser = document.getElementById("camUser" + camID);
                         camUser.style.visibility = "visible";
-                      //  document.getElementById("rMic" + camID).style.visibility = "visible";
                         $("#camUser" + camID).text(remoteFeed.rfdisplay);
-
-
 
                     });
                 }
