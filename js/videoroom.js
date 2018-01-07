@@ -134,7 +134,7 @@ function detachVideo(screen) {
     if (feeds[screen_id] != null ) {
         feeds[screen_id].detach(null);
         feeds[screen_id] = null;
-        $("#camUser" + screen).text("");
+        $("#camUser" + (screen_id + 1).toString()).text("");
     }
 }
 function subscribe(screen, id) {
