@@ -406,6 +406,11 @@ visibility: hidden;
 	flex-direction: column;
 }
 
+#publishers {
+	display: flex;
+	align-items: center;
+}
+
 .PublisherList {
 	margin: 2px;
 	padding: 2px;
