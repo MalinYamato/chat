@@ -760,7 +760,7 @@
 </div>
 <script>
     function VideoMenuClicked(videoID) {
-        removePublisherMenu();
+        removePublisherMenu(videoID);
         var cls = menu.getAttribute("class");
         if (cls.includes("w3-show")) {
             hideVideoMenu(videoID);
@@ -784,11 +784,11 @@
         var cancel = document.createElement("ul");
         cancel.setAttribute("class", "VideoMenuListItem");
         cancel.innerText = "Cancel";
-        cancel.setAttribute("onclick", "removePublisherMenu()");
+        cancel.setAttribute("onclick", "removePublisherMenu(" + videoID +")");
         menu.appendChild(cancel);
     }
 
-    function removePublisherMenu() {
+    function removePublisherMenu(videoID) {
         $("#VideoMenu" + videoID.toString()).empty();
     }
 
