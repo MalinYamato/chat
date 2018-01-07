@@ -802,7 +802,7 @@
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
         var result = getAllPublishers();
-        $("#publishers" + videoID.toString()).empty();
+        $("#publishers").empty();
         var list = document.createElement("ul");
         list.setAttribute("class", "PublisherList");
         for (var i = 0; i < result.persons.length; i++) {
