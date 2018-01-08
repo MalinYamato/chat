@@ -769,8 +769,8 @@
         }
         var profilePicture = document.getElementById("ProfilePicture");
         profilePicture.setAttribute("src", user.pictureURL );
-        var secretChat = document.getElementById("secretChat");
-        secretChat.setAttribute("src", user.pictureURL );
+        var privateChat = document.getElementById("privateChat");
+        privateChat.setAttribute("src", user.pictureURL );
 
         response = getImages({'op':'getImages', 'userID':userId});
         $("#profileArea").show();
