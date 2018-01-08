@@ -673,6 +673,9 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <img onclick="CloseProfileView()" src="/images/error.png"/>
+            </div>
         </div>
     </div>
 </div>
@@ -717,7 +720,7 @@
         item.setAttribute("class","flex-row");
         var label = document.createElement("div");
         var text = document.createElement("div");
-        text.setAttribute("class","ProfileItemLabel");
+        label.setAttribute("class","ProfileItemLabel");
         label.innerText = label_text;
         text.setAttribute("class","ProfileItemValue");
         text.innerText = item_data;
@@ -737,6 +740,9 @@
         list.appendChild( creeteListItem("Orientation ",user.sexualOrientation));
         response = getImages({'op':'getImages', 'userID':userId});
         $("#profileArea").show();
+    }
+    function closeProfileView() {
+        $("#profileArea").hide();
     }
 </script>
 
