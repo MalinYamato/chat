@@ -692,7 +692,7 @@
         function getAllImages() {
             galleryTop.removeAllSlides();
             galleryThumbs.removeAllSlides();
-            request = {"Op":"GetMyImages"};
+            request = {"op":"getMyImages"};
             $.ajax({
                 url: 'https://{{.Host}}/ImageManagerGet',
                 type: 'post',
