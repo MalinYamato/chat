@@ -195,7 +195,7 @@ function toggleMute() {
     muted = sfutest.isAudioMuted();
     $('#mute').html(muted ? "Unmute" : "Mute");
 }
-function togleOfOffVideoInfo(id) {
+function togleOnOffVideoInfo(id) {
     $('#videoremote' + id).hide();
 }
 

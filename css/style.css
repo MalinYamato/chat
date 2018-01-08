@@ -258,9 +258,7 @@ visibility: hidden;
 	width: 2em;
 	height: 2em;
 	border-radius: 50%;
-	border-style: solid;
-	border-color: #941537;
-	border-width: 1px;
+	border-width: 0;
 	margin-top: 1px
 }
 
@@ -391,6 +389,7 @@ visibility: hidden;
 	color: #b9d4ff;
 	font-weight: bold;
 	background: #4f4f4f;
+	width: min-content;
 
 }
 .VideoMenuList li:hover {
