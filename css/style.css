@@ -531,7 +531,10 @@ visibility: hidden;
 	width: 40px;
 	border-radius: 50%;
 	margin-right: 4px;
-	margin-top:8px
+	margin-top:8px;
+	border-width: 3px;
+	border-style: solid;
+	border-color: green;
 }
 .CloseProfileViewBtn {
 	 width:  40px;
