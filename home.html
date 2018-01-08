@@ -737,7 +737,11 @@
         list.appendChild( creeteListItem("Nicname ",user.nic));
         list.appendChild( creeteListItem("Gender ",user.gender));
         list.appendChild( creeteListItem("Location ",user.town + " " + user.country));
-        list.appendChild( creeteListItem("Orientation ",user.sexualOrientation));
+        list.appendChild( creeteListItem("Style ",user.sexualOrientation));
+        list.appendChild( creeteListItem("Status ","Single");
+        list.appendChild( creeteListItem("Work ",user.profession));
+        list.appendChild( creeteListItem("Education ",user.educatioin));
+        list.appendChild( creeteListItem("",user.description));
         response = getImages({'op':'getImages', 'userID':userId});
         $("#profileArea").show();
     }
