@@ -463,10 +463,9 @@ visibility: hidden;
 }
 
 .ProfilePictures {
-	background-color: transparent;
-	margin: 5px;
+	background-color: lightgray;
 	border-radius: 10%;
-	height: 260px;
+	height: 220px;
 	width: 300px;
 	min-height: 200px;
 	min-width: 220px;
@@ -508,4 +507,10 @@ visibility: hidden;
 	height: auto;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.CloseProfileViewBtn {
+    width: 50px;
+    margin: 10px;
+
 }
