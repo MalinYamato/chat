@@ -714,6 +714,7 @@
     }
     function creeteListItem(label_text, item_data) {
         var item = document.createElement("li");
+        item.setAttribute("class","flex-row");
         var label = document.createElement("div");
         var text = document.createElement("div");
         label.innerText = label_text;
