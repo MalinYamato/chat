@@ -195,9 +195,9 @@ function toggleMute() {
     muted = sfutest.isAudioMuted();
     $('#mute').html(muted ? "Unmute" : "Mute");
 }
-function togleOnOffVideoInfo(id) {
-    $('#curbitrate' + id).hide();
-    $('#curres' + id).hide();
+function toggleOnOffVideoInfo(id) {
+    $('#curbitrate' + id).toggle();
+    $('#curres' + id).toggle();
 }
 
 /////////////////////////////////// Janus stuff /////////////////////////////////////////////////
