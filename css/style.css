@@ -510,11 +510,7 @@ visibility: hidden;
 	margin-right: auto;
 }
 
-.CloseProfileViewBtn {
-    width:  40px;
-	height: 40px;
-	margin:4px;
-}
+
 
 #ProfilePicture {
 	height: 60px;
@@ -522,15 +518,23 @@ visibility: hidden;
 	margin: 4px;
 	border-radius: 10%;
 }
+.Mail {
+	width: 40px;
+	height: 40px;
+	margin-right: 4px;
+	margin-top: 8px;
+	margin-left: 4px;
 
+}
 #privateChat {
 	height: 40px;
 	width: 40px;
 	border-radius: 50%;
-	margin:4px
+	margin-right: 4px;
+	margin-top:8px
 }
-.Mail {
-	width: 30px;
-	height: 30px;
-	margin: 4px;
+.CloseProfileViewBtn {
+	 width:  40px;
+	 height: 40px;
+	 margin-top: 8px;
 }
