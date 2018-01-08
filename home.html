@@ -716,6 +716,9 @@
         });
     }
     function creeteListItem(label_text, item_data) {
+        if (item_data == undefined) {
+            item_data = "";
+        }
         var item = document.createElement("li");
         item.setAttribute("class","flex-row");
         var label = document.createElement("div");
@@ -734,13 +737,13 @@
         var user = response.person;
         var list = document.getElementById("profileItems");
         $("#profileItems").empty();
-        list.appendChild( creeteListItem("Nicname ",user.nic));
+        list.appendChild( creeteListItem("Nicname ",user.nic + " " + getAge(person)));
         list.appendChild( creeteListItem("Gender ",user.gender));
-        list.appendChild( creeteListItem("Location ",user.town + " " + user.country));
         list.appendChild( creeteListItem("Style ",user.sexualOrientation));
+        list.appendChild( creeteListItem("Location ",user.town + " " + user.country));
         list.appendChild( creeteListItem("Status ","Single"));
         list.appendChild( creeteListItem("Work ",user.profession));
-        list.appendChild( creeteListItem("Education ",user.educatioin));
+        list.appendChild( creeteListItem("Education ",user.education));
         list.appendChild( creeteListItem("",user.description));
         response = getImages({'op':'getImages', 'userID':userId});
         $("#profileArea").show();
@@ -910,6 +913,15 @@
         subscribe(data[0], parseInt(data[1]));
     }
 
+    function getAge(person) {
+        var t = new Date();
+        var age = t.getFullYear() - parseInt(person.birthDate.year);
+        if (t.getMonth() < parseInt(person.birthDate.month)) {
+            age = age - 1;
+        }
+        return age;
+    }
+
     function myFunction(myid) {
         console.log("clicked" + myid);
         userId = myid.split("@")[0];
@@ -921,11 +933,7 @@
             var response = getUser(request);
             if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
                 var person = response.person;
-                var t = new Date();
-                var age = t.getFullYear() - parseInt(person.birthDate.year);
-                if (t.getMonth() < parseInt(person.birthDate.month)) {
-                    age = age - 1;
-                }
+                var age = getAge(person);
                 var bigImage = document.createElement("img");
                 bigImage.setAttribute("src", person.pictureURL);
                 x.appendChild(bigImage);
