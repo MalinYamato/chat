@@ -650,14 +650,14 @@
 <button hidden class="btn btn-default" autocomplete="off" id="start">Start</button>
 
 
-
 <div id="profileArea" hidden>
     <div class="ProfileArea">
         <div class="flex-row">
-            <div id="profileinfo"></div>
+            <div class="flex-column">
+                <div id="profileinfo"></div>
                 <img id="ProfilePicture" src=""/>
-                <ul id="profileItems"> </ul>
-
+                <ul id="profileItems"></ul>
+            </div>
             <div id="pictures" class="ProfilePictures">
                 <div class="slideshow" onmouseup="phtoBoxMouseUp()" id="photos">
                     <!-- Swiper -->
@@ -673,6 +673,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
             <div>
                 <img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
@@ -681,7 +682,6 @@
         <p id="description"></p>
     </div>
 </div>
-
 
 
 <script>
