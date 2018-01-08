@@ -654,9 +654,11 @@
     <div class="ProfileArea">
         <div class="flex-row">
             <div class="flex-column">
-                <div id="profileinfo"></div>
-                <img id="ProfilePicture" src=""/>
-                <ul id="profileItems"></ul>
+                <div class="flex-row">
+                    <img id="ProfilePicture" src=""/
+                    <ul id="profileItems"></ul>
+                </div>
+                <ul id="profileItemsOther"></ul>
             </div>
             <div id="pictures" class="ProfilePictures">
                 <div class="slideshow" onmouseup="phtoBoxMouseUp()" id="photos">
@@ -725,13 +727,15 @@
         }
         var item = document.createElement("li");
         item.setAttribute("class","flex-row");
-        var label = document.createElement("div");
+        if (label_text != "" || label_text == undefined) {
+            var label = document.createElement("div");
+            label.setAttribute("class", "ProfileItemLabel");
+            label.innerText = label_text;
+            tem.appendChild(label);
+        }
         var text = document.createElement("div");
-        label.setAttribute("class","ProfileItemLabel");
-        label.innerText = label_text;
         text.setAttribute("class","ProfileItemValue");
         text.innerText = item_data;
-        item.appendChild(label);
         item.appendChild(text)
         return item;
     }
@@ -740,14 +744,15 @@
         var response = getUser( {"op": "getUserByID", "userID": userId});
         var user = response.person;
         var list = document.getElementById("profileItems");
+        var listOthers = document.getElementById("profileItemsOthers");
         $("#profileItems").empty();
-        list.appendChild( creeteListItem("Nicname ",user.nic + " " + getAge(user)));
-        list.appendChild( creeteListItem("Gender ",user.gender));
-        list.appendChild( creeteListItem("Style ",user.sexualOrientation));
-        list.appendChild( creeteListItem("Location ",user.town + " " + user.country));
-        list.appendChild( creeteListItem("Status ","Single"));
-        list.appendChild( creeteListItem("Work ",user.profession));
-        list.appendChild( creeteListItem("Education ",user.education));
+        list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
+        list.appendChild( creeteListItem("",user.gender));
+        list.appendChild( creeteListItem("",user.sexualOrientation));
+        listOthers.appendChild( creeteListItem("Location ",user.town + " " + user.country));
+        listOthers.appendChild( creeteListItem("Status ","Single"));
+        listOthers.appendChild( creeteListItem("Work ",user.profession));
+        listOthers.appendChild( creeteListItem("Education ",user.education));
         var myStory = document.getElementById("description");
         myStory.innerText = user.description;
         var profilePicture = document.getElementById("ProfilePicture");
