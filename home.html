@@ -730,7 +730,7 @@
         list.appendChild( creeteListItem("Gender",user.gender));
         list.appendChild( creeteListItem("Location",user.town + " " + user.country));
         list.appendChild( creeteListItem("Orientation",user.sexualOrientation));
-        response = getImages("{'Op':'getImages', 'UserId':"+userId+"}");
+        response = getImages("{'Op':'getImages', 'userId':"+userId+"}");
         $("#profileArea").show();
     }
 </script>
