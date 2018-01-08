@@ -196,7 +196,8 @@ function toggleMute() {
     $('#mute').html(muted ? "Unmute" : "Mute");
 }
 function togleOnOffVideoInfo(id) {
-    $('#videoremote' + id).hide();
+    $('#curbitrate' + id).hide();
+    $('#curres' + id).hide();
 }
 
 /////////////////////////////////// Janus stuff /////////////////////////////////////////////////
