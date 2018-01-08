@@ -515,3 +515,8 @@ visibility: hidden;
     margin: 10px;
 
 }
+
+#PProfilePicture {
+	width: 50px;
+	border-radius: 10%;
+}

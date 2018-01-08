@@ -655,6 +655,7 @@
     <div class="ProfileArea">
         <div class="flex-row">
             <div id="profileinfo"></div>
+                <img id="ProfilePicture" src=""/>
                 <ul id="profileItems"> </ul>
 
             <div id="pictures" class="ProfilePictures">
@@ -749,6 +750,8 @@
         list.appendChild( creeteListItem("Education ",user.education));
         var myStory = document.getElementById("description");
         myStory.innerText = user.description;
+        var profilePicture = document.getElementById("ProfilePicture");
+        profilePicture.setAttribute("src", user.pictureURL );
 
         response = getImages({'op':'getImages', 'userID':userId});
         $("#profileArea").show();
