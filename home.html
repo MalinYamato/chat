@@ -746,6 +746,7 @@
         var list = document.getElementById("profileItems");
         var listOthers = document.getElementById("profileItemsOther");
         $("#profileItems").empty();
+        $("#profileItemsOther").empty();
         list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
         list.appendChild( creeteListItem("",user.gender));
         listOthers.appendChild( creeteListItem("Style ",user.sexualOrientation));
