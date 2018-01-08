@@ -485,3 +485,10 @@ visibility: hidden;
 
 
 }
+.gallery-top img {
+	min-width: 100px;
+	min-height: 70px;
+	max-width: 6000px;
+	max-height: 4000px;
+	visibility: hidden;
+}
