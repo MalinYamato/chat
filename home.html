@@ -749,13 +749,17 @@
         $("#profileItemsOther").empty();
         list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
         list.appendChild( creeteListItem("",user.gender));
+        list.appendChild( creeteListItem("",user.town + " " + user.country));
         listOthers.appendChild( creeteListItem("Style ",user.sexualOrientation));
-        listOthers.appendChild( creeteListItem("Location ",user.town + " " + user.country));
         listOthers.appendChild( creeteListItem("Status ","Single"));
         listOthers.appendChild( creeteListItem("Work ",user.profession));
         listOthers.appendChild( creeteListItem("Education ",user.education));
         var myStory = document.getElementById("description");
-        myStory.innerText = user.description;
+        if  (user.description == undefined ) {
+                  myStory.innerText = "";
+        } else {
+            myStory.innerText =       user.description
+        }
         var profilePicture = document.getElementById("ProfilePicture");
         profilePicture.setAttribute("src", user.pictureURL );
 
