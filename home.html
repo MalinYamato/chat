@@ -657,38 +657,41 @@
                 <div class="flex-row">
                     <img id="ProfilePicture" src=""/>
                     <ul id="profileItems"></ul>
-                    <div class="flex-row">
-                    <img src="/images/mail.svg"/>
-                        <img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
-                        <div>PVT</div><img id="privateChat" src=""/></div>
-                    </div>
+
 
                 </div>
-                <ul id="profileItemsOther"></ul>
-            </div>
-            <div id="pictures" class="ProfilePictures">
-                <div class="slideshow" onmouseup="phtoBoxMouseUp()" id="photos">
-                    <!-- Swiper -->
-                    <div class="swiper-container gallery-top">
-                        <div class="swiper-wrapper">
-                        </div>
-                        <!-- Add Arrows -->
-                        <div class="swiper-button-next swiper-button-white"></div>
-                        <div class="swiper-button-prev swiper-button-white"></div>
-                    </div>
-                    <div class="swiper-container gallery-thumbs">
-                        <div class="swiper-wrapper">
-                        </div>
-                    </div>
-                </div>
+                <div class="flex-row">
+                    <img class="Mail" src="/images/mail.svg"/>
+                    <div>PVT</div>
+                    <img id="privateChat" src=""/></div>
+                <img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
 
             </div>
-            <div>
-
-            </div>
+            <ul id="profileItemsOther"></ul>
         </div>
-        <p id="description"></p>
+        <div id="pictures" class="ProfilePictures">
+            <div class="slideshow" onmouseup="phtoBoxMouseUp()" id="photos">
+                <!-- Swiper -->
+                <div class="swiper-container gallery-top">
+                    <div class="swiper-wrapper">
+                    </div>
+                    <!-- Add Arrows -->
+                    <div class="swiper-button-next swiper-button-white"></div>
+                    <div class="swiper-button-prev swiper-button-white"></div>
+                </div>
+                <div class="swiper-container gallery-thumbs">
+                    <div class="swiper-wrapper">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div>
+
+        </div>
     </div>
+    <p id="description"></p>
+</div>
 </div>
 
 

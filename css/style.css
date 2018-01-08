@@ -523,8 +523,11 @@ visibility: hidden;
 	border-radius: 10%;
 }
 
-#secretChat {
+#privateChat {
 	height: 30px;
-	widthh: 30px;
+	width: 30px;
 	border-radius: 50%;
+}
+.Mail {
+	width: 30px;
 }
