@@ -453,3 +453,11 @@ visibility: hidden;
 	border-radius: 12%;
 	padding: 4px;
 }
+
+.ProfileArea {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	margin: 5px;
+	width: 100%;
+}
