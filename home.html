@@ -744,7 +744,7 @@
         var response = getUser( {"op": "getUserByID", "userID": userId});
         var user = response.person;
         var list = document.getElementById("profileItems");
-        var listOthers = document.getElementById("profileItemsOthers");
+        var listOthers = document.getElementById("profileItemsOther");
         $("#profileItems").empty();
         list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
         list.appendChild( creeteListItem("",user.gender));
