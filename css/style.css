@@ -390,7 +390,7 @@ visibility: hidden;
 	border-color: #ad242c;
 	color: #b9d4ff;
 	font-weight: bold;
-	background: transparent;
+	background: #4f4f4f;
 
 }
 .VideoMenuList li:hover {
@@ -398,7 +398,7 @@ visibility: hidden;
 
 }
 .VideoMenuList li {
-	background: transparent;
+	background: #4f4f4f;
 }
 
 .VideoSelection {

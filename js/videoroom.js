@@ -195,6 +195,9 @@ function toggleMute() {
     muted = sfutest.isAudioMuted();
     $('#mute').html(muted ? "Unmute" : "Mute");
 }
+function togleOfOffVideoInfo(id) {
+    $('#videoremote' + id).hide();
+}
 
 /////////////////////////////////// Janus stuff /////////////////////////////////////////////////
 
@@ -640,8 +643,8 @@ function newRemoteFeed(id, display, audio, video, screen) {
                     $('#videoremote'+remoteFeed.rfindex).append('<video class="rounded centered" id="waitingvideo' + remoteFeed.rfindex + '" width=320 height=240 />');
                     $('#videoremote'+remoteFeed.rfindex).append('<video class="rounded centered relative hide" id="remotevideo' + remoteFeed.rfindex + '" width="100%" height="100%" autoplay/>');
                     $('#videoremote'+remoteFeed.rfindex).append(
-                        '<span class="label label-primary hide" id="curres'+remoteFeed.rfindex+'" style="position: absolute; bottom: 0px; left: 0px; margin: 15px;"></span>' +
-                        '<span class="label label-info hide" id="curbitrate'+remoteFeed.rfindex+'" style="position: absolute; bottom: 0px; right: 0px; margin: 15px;"></span>');
+                        '<span class="label label-primary hide" id="curres'+remoteFeed.rfindex+'" style="color: #ad242c; position: absolute; bottom: 0px; left: 0px; margin: 15px;"></span>' +
+                        '<span class="label label-info hide" id="curbitrate'+remoteFeed.rfindex+'" style="color: #ad242c; position: absolute; bottom: 0px; right: 0px; margin: 15px;"></span>');
                     // Show the video, hide the spinner and show the resolution when we get a playing event
                     $("#remotevideo"+remoteFeed.rfindex).bind("playing", function () {
                         if(remoteFeed.spinner !== undefined && remoteFeed.spinner !== null)

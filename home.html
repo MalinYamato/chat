@@ -539,8 +539,7 @@
         }
 
     </script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
 </head>
 
 <body>
@@ -552,7 +551,6 @@
         "Gay":      "Gayゲイ屋",
         "Lesbian":  "Lesbianレズ屋",
         "Trans":    "Trans　性転換屋",
-
     };
     function changeRoom(room) {
         $.ajax({
@@ -707,11 +705,17 @@
             var detach = document.createElement("li");
             detach.innerText = "Detach";
             detach.setAttribute("onclick", "detachTheVideo(" + videoID + ")");
+            var detach = document.createElement("li");
+            detach.innerText = "Info";
+            detach.setAttribute("onclick", "toggleInfo(" + videoID + ")");
             list.appendChild(attach);
             list.appendChild(detach);
             menu.appendChild(list);
             menu.className += " w3-show";
         }
+    }
+    function togleInfo(videoId) {
+        togleOfOffVideoInfo(videoId);
     }
     function publisherSelected(value) {
         removePublisherMenu();
@@ -900,7 +904,6 @@
             }
         });
     }
-
 </script>
 
 <button id="myBtn">Open Modal</button>
@@ -922,7 +925,6 @@
                 info@yamato.xyz</h3>
         </div>
     </div>
-
 </div>
 <script type="text/javascript" src="/js/modal.js"></script>
 </body>
