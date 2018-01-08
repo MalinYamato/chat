@@ -584,7 +584,7 @@
     <div>
     <div class="main-gallery" id="main-gallery">
         <div id="StatusBox2"  hidden style="width:100%"   class="StatusMessage stuff-m"><p  class="status-m status" id="status2"></p></div>
-            <div class="slideshow"  on onmouseup="phtoBoxMouseUp()"  id="photos">
+            <div class="slideshow" onmouseup="phtoBoxMouseUp()"  id="photos">
                 <!-- Swiper -->
                 <div class="swiper-container gallery-top">
                     <div class="swiper-wrapper">
@@ -692,9 +692,9 @@
         function getAllImages() {
             galleryTop.removeAllSlides();
             galleryThumbs.removeAllSlides();
-            request = {"Op":"GetAllImages"};
+            request = {"Op":"GetMyImages"};
             $.ajax({
-                url: 'https://{{.Host}}/ImageManagerGetAll',
+                url: 'https://{{.Host}}/ImageManager',
                 type: 'post',
                 data: JSON.stringify(request),
                 contentType: 'application/json',

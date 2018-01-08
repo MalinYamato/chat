@@ -57,6 +57,7 @@ type ImagesResponse struct {
 
 type ImageRequest struct {
 	Op       string `json:"op"`
+	UserID   string `json:"userID"`
 	ImageURL string `json:"imageURL"`
 }
 
@@ -140,12 +141,25 @@ func ImageManager_DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(json_response)
 }
 
+
 func ImageManger_GetHandler(w http.ResponseWriter, r *http.Request) {
 	var images ImagesResponse
 	defer r.Body.Close()
 	var status Status
+	var person Person
 	if r.Method == "POST" {
-		person, _ := _persons.findPersonByCookie(r)
+		var request ImageRequest
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&request)
+		if err != nil {
+			log.Println("Json decoder error> ", err.Error())
+			panic(err)
+		}
+		if request.Op == "getImages" {
+			person, _ = _persons.findPersonByToken(request.UserID)
+		} else if request.Op == "getMyImages"{
+			person, _ = _persons.findPersonByCookie(r)
+		}
 		if person.Keep == false {
 			status = Status{Status: WARNING, Detail: "Only members have images!"}
 		} else {

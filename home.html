@@ -43,7 +43,7 @@
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="/css/emojionearea.min.css">
-
+    <link rel="stylesheet" href="css/swiper.css">
     <!-- ---------------------------------------->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
@@ -66,12 +66,17 @@
     <script src="/js/SVGButton.js"></script>
     <script type="text/javascript"></script>
     <script type="text/javascript" src="/js/emojionearea.min.js"></script>
+    <script src="js/swiper.js"></script>
     <!--  <script type="text/javascript" src="videoroomtest.js"></script> -->
 
     <script>
 
         /// utilities
         ///
+
+
+
+
         function getUser(op) {
             var res = null;
             $.ajax({
@@ -171,7 +176,8 @@
                 newUser.setAttribute("id", person.userId);
                 image = document.createElement("img");
                 image.setAttribute("src", person.pictureURL);
-                image.setAttribute("onclick", "RequestToPublish('" + getUniqueID(person.userId) + "')");
+                //image.setAttribute("onclick", "RequestToPublish('" + getUniqueID(person.userId) + "')");
+                image.setAttribute("onclick", "FillPersonalProfile(" + person.userId + ")");
                 newUser.appendChild(image);
                 var name = document.createElement("span");
                 name.innerText = person.nic;
@@ -644,6 +650,89 @@
 <button hidden class="btn btn-default" autocomplete="off" id="start">Start</button>
 
 <div id="publishers"></div>
+
+<div id="profileArea" hidden>
+    <div class="flex-container videos" id="videos">
+        <div class="flex-row">
+            <div id="profileinfo"></div>
+                <ul id="profileItems">
+                </ul>
+            <div id="pictures">
+                <div class="slideshow" onmouseup="phtoBoxMouseUp()" id="photos">
+                    <!-- Swiper -->
+                    <div class="swiper-container gallery-top">
+                        <div class="swiper-wrapper">
+                        </div>
+                        <!-- Add Arrows -->
+                        <div class="swiper-button-next swiper-button-white"></div>
+                        <div class="swiper-button-prev swiper-button-white"></div>
+                    </div>
+                    <div class="swiper-container gallery-thumbs">
+                        <div class="swiper-wrapper">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var galleryTop = new Swiper('.gallery-top', {
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        spaceBetween: 10,
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto'
+    });
+
+    function phtoBoxMouseUp(e)
+    {
+        galleryTop.update(true);
+    }
+    function getImages(request) {
+        galleryTop.removeAllSlides();
+        galleryThumbs.removeAllSlides();
+        $.ajax({
+            url: 'https://{{.Host}}/ImageManager',
+            type: 'post',
+            data: JSON.stringify(request),
+            contentType: 'application/json',
+            success: function (r) {
+                console.log("Done......>! ", r.status + " " + r.images.length );
+                for (i = 0; i < (r.images).length; i++) {
+                    var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
+                    galleryTop.appendSlide(s);
+                  //  galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["small"] + '") ></div>');
+                    console.log(r.images[i]["small"]);
+                }
+                galleryTop.update(true);
+                // galleryThumbs.update(true);
+            }
+        });
+    }
+    function creeteListItem(label_text, data) {
+        var item = document.createElement("li");
+        var label = document.createElement("div");
+        var text = document.createElement("div");
+        label.innerText = label_text;
+        text.innerText = data;
+        item.appendChild(label);
+        item.appendChild(text)
+        return elem;
+    }
+    function FillPersonalProfile(userId) {
+        user = getUser( {"op": "getUserByID", "userID": userId});
+        var list = document.getElementById("profileItems");
+        list.appendChild( creeteListItem("Nicname",user.nic));
+        list.appendChild( creeteListItem("Gender",user.gender));
+        list.appendChild( creeteListItem("Location",user.town + " " + user.country));
+        list.appendChild( creeteListItem("Orientation",user.sexualOrientation));
+        response = getImages("{'Op':'getImages', 'UserId':"+userId+"}");
+        $("#profileArea").show();
+    }
+</script>
 
 <div id="camArea">
     <div class="flex-container videos" id="videos">
