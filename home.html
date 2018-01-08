@@ -657,6 +657,12 @@
                 <div class="flex-row">
                     <img id="ProfilePicture" src=""/>
                     <ul id="profileItems"></ul>
+                    <div class="flex-row">
+                    <img src="/images/mail.svg"/>
+                        <img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
+                        <div>PVT</div><img id="privateChat" src=""/></div>
+                    </div>
+
                 </div>
                 <ul id="profileItemsOther"></ul>
             </div>
@@ -678,7 +684,7 @@
 
             </div>
             <div>
-                <img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
+
             </div>
         </div>
         <p id="description"></p>
@@ -755,6 +761,7 @@
         listOthers.appendChild( creeteListItem("Work ",user.profession));
         listOthers.appendChild( creeteListItem("Education ",user.education));
         var myStory = document.getElementById("description");
+
         if  (user.description == undefined ) {
                   myStory.innerText = "";
         } else {
@@ -762,6 +769,8 @@
         }
         var profilePicture = document.getElementById("ProfilePicture");
         profilePicture.setAttribute("src", user.pictureURL );
+        var secretChat = document.getElementById("secretChat");
+        secretChat.setAttribute("src", user.pictureURL );
 
         response = getImages({'op':'getImages', 'userID':userId});
         $("#profileArea").show();

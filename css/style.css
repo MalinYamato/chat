@@ -522,3 +522,9 @@ visibility: hidden;
 	margin: 4px;
 	border-radius: 10%;
 }
+
+#secretChat {
+	height: 30px;
+	widthh: 30px;
+	border-radius: 50%;
+}
