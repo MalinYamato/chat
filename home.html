@@ -649,14 +649,14 @@
 
 <button hidden class="btn btn-default" autocomplete="off" id="start">Start</button>
 
-<div id="publishers"></div>
+
 
 <div id="profileArea" hidden>
     <div class="ProfileArea">
         <div class="flex-row">
             <div id="profileinfo"></div>
-                <ul id="profileItems">
-                </ul>
+                <ul id="profileItems"> </ul>
+                <p id="description"></p>
             <div id="pictures" class="ProfilePictures">
                 <div class="slideshow" onmouseup="phtoBoxMouseUp()" id="photos">
                     <!-- Swiper -->
@@ -679,6 +679,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script>
     var galleryTop = new Swiper('.gallery-top', {
@@ -744,7 +746,9 @@
         list.appendChild( creeteListItem("Status ","Single"));
         list.appendChild( creeteListItem("Work ",user.profession));
         list.appendChild( creeteListItem("Education ",user.education));
-        list.appendChild( creeteListItem("",user.description));
+        var myStory = document.getElementById("description");
+        myStorl.innerText = user.description;
+
         response = getImages({'op':'getImages', 'userID':userId});
         $("#profileArea").show();
     }
@@ -752,6 +756,8 @@
         $("#profileArea").hide();
     }
 </script>
+
+<div id="publishers"></div>
 
 <div id="camArea">
     <div class="flex-container videos" id="videos">
