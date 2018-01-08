@@ -723,7 +723,7 @@
         return elem;
     }
     function FillPersonalProfile(userId) {
-        console.log("UserID >> " + UserId);
+        console.log("UserID >> " + userId);
         user = getUser( {"op": "getUserByID", "userID": userId});
         var list = document.getElementById("profileItems");
         list.appendChild( creeteListItem("Nicname",user.nic));
