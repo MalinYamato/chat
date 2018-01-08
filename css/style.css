@@ -511,9 +511,10 @@ visibility: hidden;
 }
 
 .CloseProfileViewBtn {
-    width: 50px;
-    margin: 10px;
-
+    width:  40px;
+	height: 40px;
+    margin-left: 2px;
+	margin-right: 2px;
 }
 
 #ProfilePicture {
@@ -530,4 +531,7 @@ visibility: hidden;
 }
 .Mail {
 	width: 30px;
+	height: 30px;
+	margin-left: 2px;
+	margin-right: 2px;
 }
