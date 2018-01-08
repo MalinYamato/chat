@@ -712,19 +712,20 @@
             }
         });
     }
-    function creeteListItem(label_text, data) {
+    function creeteListItem(label_text, item_data) {
         var item = document.createElement("li");
         var label = document.createElement("div");
         var text = document.createElement("div");
         label.innerText = label_text;
-        text.innerText = data;
+        text.innerText = item_data;
         item.appendChild(label);
         item.appendChild(text)
         return item;
     }
     function FillPersonalProfile(userId) {
         console.log("UserID >> " + userId);
-        var user = getUser( {"op": "getUserByID", "userID": userId});
+        var response = getUser( {"op": "getUserByID", "userID": userId});
+        var user = response.person;
         var list = document.getElementById("profileItems");
         list.appendChild( creeteListItem("Nicname",user.nic));
         list.appendChild( creeteListItem("Gender",user.gender));
