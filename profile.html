@@ -694,7 +694,7 @@
             galleryThumbs.removeAllSlides();
             request = {"Op":"GetMyImages"};
             $.ajax({
-                url: 'https://{{.Host}}/ImageManager',
+                url: 'https://{{.Host}}/ImageManagerGet',
                 type: 'post',
                 data: JSON.stringify(request),
                 contentType: 'application/json',
