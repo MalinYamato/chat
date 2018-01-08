@@ -473,6 +473,7 @@ visibility: hidden;
 }
 .ProfileItemValue {
 	margin-left : 5px;
+	width: 12em;
 }
 .ProfileItemLabel {
 	color: #949494;
@@ -516,6 +517,8 @@ visibility: hidden;
 }
 
 #ProfilePicture {
-	width: 50px;
+	height: 60px;
+	width: 60px;
+	margin: 4px;
 	border-radius: 10%;
 }
