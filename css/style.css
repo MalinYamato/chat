@@ -474,3 +474,14 @@ visibility: hidden;
 	overflow: hidden;
 	resize: both;
 }
+.gallery-top {
+	width: 100%;
+	height: 80%;
+
+}
+.swiper-container {
+	margin-left: auto;
+	margin-right: auto;
+
+
+}
