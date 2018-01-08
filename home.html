@@ -705,11 +705,12 @@
             var detach = document.createElement("li");
             detach.innerText = "Detach";
             detach.setAttribute("onclick", "detachTheVideo(" + videoID + ")");
-            var detach = document.createElement("li");
-            detach.innerText = "Info";
-            detach.setAttribute("onclick", "toggleInfo(" + videoID + ")");
+            var info = document.createElement("li");
+            info.innerText = "Info";
+            info.setAttribute("onclick", "toggleInfo(" + videoID + ")");
             list.appendChild(attach);
             list.appendChild(detach);
+            list.appendChild(info);
             menu.appendChild(list);
             menu.className += " w3-show";
         }
