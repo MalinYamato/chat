@@ -747,7 +747,7 @@
         list.appendChild( creeteListItem("Work ",user.profession));
         list.appendChild( creeteListItem("Education ",user.education));
         var myStory = document.getElementById("description");
-        myStorl.innerText = user.description;
+        myStory.innerText = user.description;
 
         response = getImages({'op':'getImages', 'userID':userId});
         $("#profileArea").show();
