@@ -53,7 +53,7 @@ type Person struct {
 	Long              string            `json:"long,omitempty"`
 	Lat               string            `json:"lat,omitempty"`
 	PictureURL        string            `json:"pictureURL,omitempty"`
-	SexualOrientation string            `json:"sexualOrienation"`
+	SexualOrientation string            `json:"sexualOrientation"`
 	BirthDate         Date              `json:"birthDate"`
 	Languages         map[string]string `json:"Languages,omitempty"`
 	Profession        string            `json:"profession"`
