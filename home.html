@@ -724,7 +724,7 @@
     }
     function FillPersonalProfile(userId) {
         console.log("UserID >> " + userId);
-        user = getUser( {"op": "getUserByToken", "token": userId});
+        var user = getUser( {"op": "getUserByID", "userID": userId});
         var list = document.getElementById("profileItems");
         list.appendChild( creeteListItem("Nicname",user.nic));
         list.appendChild( creeteListItem("Gender",user.gender));
