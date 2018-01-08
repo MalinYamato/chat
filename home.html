@@ -717,7 +717,9 @@
         item.setAttribute("class","flex-row");
         var label = document.createElement("div");
         var text = document.createElement("div");
+        text.setAttribute("class","ProfileItemLabel");
         label.innerText = label_text;
+        text.setAttribute("class","ProfileItemValue");
         text.innerText = item_data;
         item.appendChild(label);
         item.appendChild(text)
@@ -728,7 +730,7 @@
         var response = getUser( {"op": "getUserByID", "userID": userId});
         var user = response.person;
         var list = document.getElementById("profileItems");
-        $("profileItems").empty();
+        $("#profileItems").empty();
         list.appendChild( creeteListItem("Nicname ",user.nic));
         list.appendChild( creeteListItem("Gender ",user.gender));
         list.appendChild( creeteListItem("Location ",user.town + " " + user.country));

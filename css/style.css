@@ -473,6 +473,13 @@ visibility: hidden;
 	overflow: hidden;
 	resize: both;
 }
+.ProfileItemValue {
+	margin-left : 5px;
+}
+.ProfileItemLabel {
+	color: #949494;
+}
+
 .gallery-top {
 	width: 100%;
 	height: 80%;
