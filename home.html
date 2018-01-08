@@ -737,7 +737,7 @@
         var user = response.person;
         var list = document.getElementById("profileItems");
         $("#profileItems").empty();
-        list.appendChild( creeteListItem("Nicname ",user.nic + " " + getAge(person)));
+        list.appendChild( creeteListItem("Nicname ",user.nic + " " + getAge(user)));
         list.appendChild( creeteListItem("Gender ",user.gender));
         list.appendChild( creeteListItem("Style ",user.sexualOrientation));
         list.appendChild( creeteListItem("Location ",user.town + " " + user.country));
