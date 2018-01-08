@@ -57,7 +57,7 @@ type ImagesResponse struct {
 
 type ImageRequest struct {
 	Op       string `json:"op"`
-	UserID   string `json:"userID"`
+	UserID   UserId `json:"userID"`
 	ImageURL string `json:"imageURL"`
 }
 
@@ -156,7 +156,7 @@ func ImageManger_GetHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		if request.Op == "getImages" {
-			person, _ = _persons.findPersonByToken(request.UserID)
+			person, _ = _persons.findPersonByUserId(request.UserID)
 		} else if request.Op == "getMyImages"{
 			person, _ = _persons.findPersonByCookie(r)
 		}
