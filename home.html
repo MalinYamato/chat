@@ -43,7 +43,7 @@
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="/css/emojionearea.min.css">
-    <link rel="stylesheet" href="css/swiper.css">
+    <link rel="stylesheet" href="/css/swiper.css">
     <!-- ---------------------------------------->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
@@ -66,7 +66,7 @@
     <script src="/js/SVGButton.js"></script>
     <script type="text/javascript"></script>
     <script type="text/javascript" src="/js/emojionearea.min.js"></script>
-    <script src="js/swiper.js"></script>
+    <script src="/js/swiper.js"></script>
     <!--  <script type="text/javascript" src="videoroomtest.js"></script> -->
 
     <script>
@@ -693,7 +693,7 @@
     }
     function getImages(request) {
         galleryTop.removeAllSlides();
-        galleryThumbs.removeAllSlides();
+      //  galleryThumbs.removeAllSlides();
         $.ajax({
             url: 'https://{{.Host}}/ImageManager',
             type: 'post',
