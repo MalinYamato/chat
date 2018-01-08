@@ -461,3 +461,16 @@ visibility: hidden;
 	margin: 5px;
 	width: 100%;
 }
+
+.ProfilePictures {
+	background-color: #9cb8f5;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+	height: 300px;
+	width: 400px;
+	min-height: 340px;
+	min-width: 300px;
+	overflow: hidden;
+	resize: both;
+}
