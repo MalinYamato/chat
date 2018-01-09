@@ -467,11 +467,11 @@
                            value="{{.P.Nic}}">
                 </li>
                 <li>
-                    <span for="FirstName"><b>First Name </b>  </span> <input type="checkbox" name="FirstNamePublic" value="{{.P.FirstNamePublic}}">Public<br>
+                    <span for="FirstName"><b>First Name </b>  </span> <input type="checkbox" id="FirstNamePublic" name="FirstNamePublic" value="{{.P.FirstNamePublic}}">Pub<br>
                     <input onchange="changed()" type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
                 </li>
                 <li>
-                    <span for="LastName"><b>Last Name </b></span> </span> <input type="checkbox" name="LastNamePublic" value="{{.P.LastNamePublic}}">Public<br>
+                    <span for="LastName"><b>Last Name </b></span> </span> <input type="checkbox" id="LastNamePublic"  name="LastNamePublic" value="{{.P.LastNamePublic}}">Pub</li>
                     <input onchange="changed()" type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
                 </li>
                 <li>
@@ -570,6 +570,21 @@
                 } else {
                     $("#eValue").text("Yes: " + v);
                 }
+
+                if ("{{.P.FirstNamePublic}}" == "true") {
+                    $('#FirstNamePublic').prop('checked', true);
+                } else {
+                    $('#FirstNamePublic').prop('checked', false);
+                }
+                if ("{{.P.LastNamePublic}}" == "true") {
+                    $('#LastNamePublic').prop('checked', true);
+                } else {
+                    $('#LastNamePublic').prop('checked', false);
+                }
+
+
+
+
             }
         </script>
 
