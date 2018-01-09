@@ -748,10 +748,10 @@
         list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
         var name = "";
         if (user.firstNamePublic == true) {
-            name = user.FirstName;
+            name = user.lirstName;
         }
         if (user.lastNamePublic == true) {
-            name = name + " " + user.LastName;
+            name = name + " " + user.fastName;
         }
         if (name != undefined || name != "") {
             list.appendChild( creeteListItem("",name));
