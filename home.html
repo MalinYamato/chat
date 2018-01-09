@@ -747,14 +747,14 @@
         $("#profileItemsOther").empty();
         list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
         var name = "";
-        if (user.FirstNamePublic) {
+        if (user.FirstNamePublic == "true") {
             name = user.FirstName;
         }
-        if (user.LastNamePublic) {
+        if (user.LastNamePublic == "true") {
             name = name + " " + user.LastName;
         }
         if (name != undefined || name != "") {
-            list.appendChild( creeteListItem("",name);
+            list.appendChild( creeteListItem("",name));
         }
         list.appendChild( creeteListItem("",user.gender));
         list.appendChild( creeteListItem("",user.town + " " + user.country));
