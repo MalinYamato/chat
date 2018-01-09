@@ -747,10 +747,10 @@
         $("#profileItemsOther").empty();
         list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
         var name = "";
-        if (user.FirstNamePublic == "true") {
+        if (user.FirstNamePublic == true) {
             name = user.FirstName;
         }
-        if (user.LastNamePublic == "true") {
+        if (user.LastNamePublic == true) {
             name = name + " " + user.LastName;
         }
         if (name != undefined || name != "") {
