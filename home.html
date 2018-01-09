@@ -74,9 +74,17 @@
         /// utilities
         ///
 
-
-
-
+        var _id = 0;
+        function getID() {
+            if (_id > 1000) {
+                _id = 0;
+            }
+            _id++;
+            return _id;
+        }
+        function getUniqueID(id) {
+            return id + "@" + getID();
+        }
         function getUser(op) {
             var res = null;
             $.ajax({
@@ -319,17 +327,6 @@
                 return true;
             }
 
-            var _id = 0;
-            function getID() {
-                if (_id > 1000) {
-                    _id = 0;
-                }
-                _id++;
-                return _id;
-            }
-            function getUniqueID(id) {
-                return id + "@" + getID();
-            }
             function loggedIn() {
                 if ("{{with .Person}}{{.Token}}{{end}}" == "") {
                     return false;
