@@ -194,17 +194,6 @@
             border-width: 2px;
         }
 
-        #fileToUpload {
-            margin-left: 10px;
-            margin-right: 10px;
-            background-color: #9cb8f5;
-            width: auto;
-        }
-
-        #fileToUpload:hover {
-            background-color: #88a3df;
-        }
-
         .checkbox-container {
             display: flex;
             flex-wrap: wrap;
@@ -408,7 +397,7 @@
             margin-top: 10px;
         }
 
-        #g, #fb, #e, #krypin   {
+        #g, #fb, #e, #rakuID   {
             color: rgb(212, 55, 30);
             font-weight: bold;
         }
@@ -512,16 +501,16 @@
                     <input  onchange="changed()" placeholder="Education" type="text" id="Education" name="Education" value="{{.P.Education}}">
                 </li>
                 <li>
-                    <div id="fb" >Verified by Facebook<br></div>
-                    <div> {{.P.FacebookID}}</div>
+                    <div id="fb" >Verified by Facebook</div>
+                    <div id="fbValue" > {{.P.FacebookID}}</div>
 
-                    <div id="g" >Verified by Google<br></div>
-                    <div>  {{.P.GoogleID}}</div>
+                    <div id="g" >Verified by Google</div>
+                    <div id="gValue">  {{.P.GoogleID}}</div>
 
-                    <div id="e" >Verified email<br></div>
-                    <div>  {{.P.Email}}</div>
+                    <div id="e" >Verified email</div>
+                    <div id="eValue">  {{.P.Email}}</div>
 
-                    <div  id="rakuID">Raku ID<br></div>
+                    <div  id="rakuID">Raku ID</div>
                     <div> {{.P.UserID}}</div>
 
                 </li>
@@ -530,6 +519,23 @@
                 </li>
             </ul>
         </div>
+
+    <script>
+        function checkVerifications() {
+            var v = $("#fbValue").text();
+            if (v == undefined || v == "") {
+                $("#fbValue").text("NO");
+            }
+            v = $("#eValue").text();
+            if(v == undefined || v == "") {
+                $("#ebValue").text("NO");
+            }
+            v = $("#gValue").text();
+            if (v == undefined || v == "") {
+                $("#gValue").text("NO");
+            }
+        }
+    </script>
 
     <div class="right-side">
         <div id="location-languages" class="location-languages">
@@ -791,6 +797,8 @@
         window.onload = function () {
 
             getAllImages();
+
+            checkVerifications();
 
             ///////////// All buttons ///////////////
 
