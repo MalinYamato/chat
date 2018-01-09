@@ -524,15 +524,21 @@
         function checkVerifications() {
             var v = $("#fbValue").text();
             if (v == undefined || v == "") {
-                $("#fbValue").text("NO");
-            }
-            v = $("#eValue").text();
-            if(v == undefined || v == "") {
-                $("#ebValue").text("NO");
+                $("#fbValue").text("Unverified");
+            } else {
+                $("#fbValue").text("Yes: " + v);
             }
             v = $("#gValue").text();
+            if(v == undefined || v == "") {
+                $("#gValue").text("Unverified");
+            }else {
+                $("#gValue").text("Yes: " + v);
+            }
+            v = $("#eValue").text();
             if (v == undefined || v == "" ) {
-                $("#gValue").text("NO");
+                $("#eValue").text("Unverified");
+            }else {
+                $("#eValue").text("Yes: " + v);
             }
         }
     </script>
