@@ -463,11 +463,9 @@ visibility: hidden;
 
 .ProfilePictures {
 	background-color: lightgray;
-	border-radius: 10%;
-	height: 220px;
-	width: 300px;
-	min-height: 200px;
-	min-width: 220px;
+	border-radius: 8%;
+	height: fit-content;
+	width: 250px;
 	overflow: hidden;
 	resize: both;
 }
