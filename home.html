@@ -747,10 +747,10 @@
         $("#profileItemsOther").empty();
         list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
         var name = "";
-        if (user.FirstNamePublic == true) {
+        if (user.firstNamePublic == true) {
             name = user.FirstName;
         }
-        if (user.LastNamePublic == true) {
+        if (user.lastNamePublic == true) {
             name = name + " " + user.LastName;
         }
         if (name != undefined || name != "") {
@@ -759,7 +759,7 @@
         list.appendChild( creeteListItem("",user.gender));
         list.appendChild( creeteListItem("",user.town + " " + user.country));
         listOthers.appendChild( creeteListItem("Style ",user.sexualOrientation));
-        listOthers.appendChild( creeteListItem("Status ",user.Relationship));
+        listOthers.appendChild( creeteListItem("Status ",user.relationship));
         listOthers.appendChild( creeteListItem("Work ",user.profession));
         listOthers.appendChild( creeteListItem("Education ",user.education));
         var myStory = document.getElementById("description");
@@ -975,7 +975,6 @@
                 var info4 = document.createElement("li");
                 var info5 = document.createElement("li");
                 var info6 = document.createElement("li");
-
                 info1.innerText = "        " + person.nic + " " + age;
                 info3.innerText = "        " + person.gender + " " + person.sexualOrienation;
                 info4.innerText = "        " + person.country + " " + person.town;
