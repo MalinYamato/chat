@@ -766,6 +766,7 @@
         }
         var profilePicture = document.getElementById("ProfilePicture");
         profilePicture.setAttribute("src", user.pictureURL );
+        profilePicture.setAttribute("onclick", "RequestToPublish('" + getUniqueID(user.userId) + "')");
         var privateChat = document.getElementById("privateChat");
         privateChat.setAttribute("src", user.pictureURL );
 
