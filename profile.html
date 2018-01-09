@@ -471,7 +471,7 @@
                     <input onchange="changed()" type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
                 </li>
                 <li>
-                    <span for="LastName"><b>Last Name </b> <input type="checkbox" id="LastNamePublic"   onclick="toggleCheckBox('FirstNamePublic')" name="LastNamePublic" value="{{.P.LastNamePublic}}"> public</span>
+                    <span for="LastName"><b>Last Name </b> <input type="checkbox" id="LastNamePublic"   onclick="toggleCheckBox('LastNamePublic')" name="LastNamePublic" value="{{.P.LastNamePublic}}"> public</span>
                     <input onchange="changed()" type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
                 </li>
                 <li>
@@ -519,6 +519,11 @@
                                 selected {{end}}>{{$ov}}</option>
                     {{end}}'
                     </select>
+                </li>
+                <li>
+                    <span for="Children"><b>Children (number)</b></span>
+                    <input onchange="changed()" placeholder="Children" type="number" id="Children" name="Children"
+                           value="{{.P.Children}}">
                 </li>
                 <li>
                     <span for="Profession"><b>Profession</b></span>
