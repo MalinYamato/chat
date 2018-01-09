@@ -114,7 +114,13 @@ func issueSessionFB() http.Handler {
 				UserID:            v.UserID,
 				Token:             secret.String(),
 				Description:       v.Description,
-				Room:              v.Room}
+				Room:              v.Room,
+				RakuMail:          v.RakuMail,
+				Relationship:      v.Relationship,
+				Children:          v.Children,
+				FirstNamePublic:   v.FirstNamePublic,
+				LastNamePublic:    v.LastNamePublic,
+				Password:          v.Password}
 
 			person.LoggedIn = true
 			_persons.Save(person)
@@ -140,6 +146,8 @@ func issueSessionFB() http.Handler {
 				UserID:            UserId(userID.String()),
 				Token:             secret.String(),
 				Description:       "",
+				FirstNamePublic:    true,
+				LastNamePublic:     true,
 				Room:              "Main"}
 
 			if person.PictureURL == "" {
@@ -209,7 +217,13 @@ func issueSession() http.Handler {
 				UserID:            v.UserID,
 				Token:             secret.String(),
 				Description:       v.Description,
-				Room:              v.Room}
+				Room:              v.Room,
+				RakuMail:          v.RakuMail,
+				Relationship:      v.Relationship,
+				Children:          v.Children,
+				FirstNamePublic:    v.FirstNamePublic,
+				LastNamePublic:    v.LastNamePublic,
+				Password:          v.Password}
 
 			if person.PictureURL == "" {
 				person.PictureURL = endpoint.url() + "/images/default.png"
@@ -238,6 +252,8 @@ func issueSession() http.Handler {
 				GoogleID:          googleUser.Id,
 				UserID:            UserId(userID.String()),
 				Token:             secret.String(),
+				FirstNamePublic:    true,
+				LastNamePublic:     true,
 				Description:       "",
 				Room:              "Main"}
 

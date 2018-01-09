@@ -45,8 +45,12 @@ type Person struct {
 	Nic               string            `json:"nic"`
 	FirstName         string            `json:"firstName"`
 	LastName          string            `json:"lastName"`
-	Email             string            `json:"email"`
+	FirstNamePublic   bool              `json:"firstNamePublic"`
+	LastNamePublic    bool              `json:"lastNamePublic"`
+	Password          string            `json:"password"`
 	Gender            string            `json:"gender"`
+	Relationship      string            `json:"relationship"`
+	Children          int               `json:"children"`
 	Height            string            `json:"height,omitempty"`
 	Town              string            `json:"country"`
 	Country           string            `json:"town"`
@@ -64,6 +68,8 @@ type Person struct {
 	UserID            UserId            `json:"userId"`
 	Token             string            `json:"token,omitempty"`
 	Room              string            `json:"room"`
+	Email             string            `json:"rakumail"`
+	RakuMail          string            `json:"email"`
 	CamID             int               `json:"CamID"`
 	CamState          string            `json:"camState"`
 	LoggedIn          bool              `json:"loggedIn"`

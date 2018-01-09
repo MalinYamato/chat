@@ -37,12 +37,14 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 var (
 	LANGUAGES   = []string{"English", "Finnish", "Same", "Swedish", "German", "French", "Spannish", "Italian", "Portogese", "Russian", "Chinese", "Japanese", "Korean", "Thai"}
 	ORIENTATION = []string{"Straight", "Gay", "Lesbian", "BiSexual", "ASexual"}
-	GENDER      = []string{"Female", "Male", "TranssexualF", "TranssexualM", "CrossDresser", "None"}
+	GENDER      = []string{"Female", "Male", "TransF", "TransM", "Other"}
+	RELATION    = []string{"Single","Married","Partner","Divorced"}
 )
 
 
@@ -169,12 +171,14 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 		Languages          []string
 		Genders            []string
 		SexualOrientations []string
+		Relationship       []string
 		P                  Person
 		Host               string
 	}{
 		Languages:          LANGUAGES,
 		Genders:            GENDER,
 		SexualOrientations: ORIENTATION,
+		Relationship:       RELATION,
 		P:                  p,
 		Host:               r.Host,
 	})
@@ -245,14 +249,18 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			} else if op == "update" {
 
 				p.FirstName = r.Form.Get("FirstName")
-				p.PictureURL = r.Form.Get("PictureURL")
 				p.LastName = r.Form.Get("LastName")
+				p.FirstNamePublic, _= strconv.ParseBool( r.Form.Get("FirstNamePublic"))
+				p.LastNamePublic, _= strconv.ParseBool( r.Form.Get("LastNamePublic"))
+				p.PictureURL = r.Form.Get("PictureURL")
 				p.Gender = r.Form.Get("Gender")
 				p.Country = r.Form.Get("Country")
 				p.Town = r.Form.Get("Town")
 				p.Lat = r.Form.Get("Lat")
 				p.Long = r.Form.Get("Long")
 				//p.Nic = r.Form.Get("Nic")
+                p.Relationship = r.Form.Get("Relationship")
+                p.Children,_ = strconv.Atoi( r.Form.Get( "Children") )
 				p.Profession = r.Form.Get("Profession")
 				p.Education = r.Form.Get("Education")
 				p.SexualOrientation = r.Form.Get("SexualOrientation")

@@ -36,15 +36,15 @@
 <html>
 <head>
     <title>Rakuen Chat Profile</title>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="stylesheet" href="css/swiper.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="js/SVGButton.js"> </script>
-    <script src="js/map.js"> </script>
+    <script src="js/SVGButton.js"></script>
+    <script src="js/map.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/file.css" />
+    <link rel="stylesheet" href="css/file.css"/>
 
     <style>
 
@@ -52,7 +52,7 @@
             margin: 0;
             margin-left: 10px;
             text-shadow: 2px 2px 4px #000000;
-            font:  24px Comic Sans MS , cursive, sans-serif;
+            font: 24px Comic Sans MS, cursive, sans-serif;
         }
 
         .menu ul {
@@ -163,8 +163,7 @@
             height: 330px;
         }
 
-        .menu
-        {
+        .menu {
             margin-left: 10px;
             margin-top: 10px;
             display: flex;
@@ -207,25 +206,27 @@
         }
 
         .td_size {
-            width:  6em;
+            width: 6em;
         }
 
         .td_size span {
-            width:  6em;
+            width: 6em;
         }
-
 
         #Town, #Country {
             width: 10em;
         }
+
         #Longitude, #Latitude {
             width: 10em;
 
         }
+
         .location-languages {
             max-width: 380px;
             display: none;
         }
+
         .locationbutton {
             margin-left: 2px;
         }
@@ -239,11 +240,12 @@
             min-width: 80%;
             display: inline;
         }
+
         .status, .status-m {
             color: white;
-            -webkit-box-shadow:  10px 10px 5px gray;
-            -moz-box-shadow:  10px 10px 5px gray;
-            box-shadow:  8px 8px 5px gray;
+            -webkit-box-shadow: 10px 10px 5px gray;
+            -moz-box-shadow: 10px 10px 5px gray;
+            box-shadow: 8px 8px 5px gray;
             height: 4em;
             width: 415px;
             font: 18px Arial, Helvetica, sans-serif;
@@ -254,22 +256,24 @@
             background-color: #55aa2d;
         }
 
-
         @media only screen and (max-width: 735px) {
             .stuff-m {
-                 margin-top: 5px;
-                 height: 5em;
+                margin-top: 5px;
+                height: 5em;
             }
         }
+
         @media only screen and (min-width: 730px) {
             .stuff {
                 margin-top: 5px;
                 height: 5em;
             }
         }
+
         .Number {
             width: 4.5em;
         }
+
         .SmallNumber {
             width: 3.5em;
         }
@@ -280,23 +284,28 @@
             height: 63px;
             margin-right: -8px;
             margin-left: -8px;
-           //background-color: #bfbfbf;
+        / / background-color: #bfbfbf;
         }
 
         #stuff1 {
-          margin-right: -10px;
+            margin-right: -10px;
         }
-        #photographs  {
-        margin-left: -17px;
+
+        #photographs {
+            margin-left: -17px;
         }
+
         #saveButton {
             margin-left: 10px;
         }
+
         #logoutButton {
         }
+
         #locationButton {
             margin-left: 0;
         }
+
         #deleteButton {
             margin-top: -25px;
             margin-bottom: -40px;
@@ -304,12 +313,14 @@
             width: 110px;
             height: 63px;
         }
+
         #profilePictureButton {
             margin-top: -25px;
             margin-bottom: -40px;
             width: 120px;
             height: 100px;
         }
+
         .center {
             text-align: center;
         }
@@ -318,6 +329,7 @@
             position: relative;
             height: 100%;
         }
+
         body {
             margin: 0;
             padding: 0;
@@ -325,7 +337,7 @@
 
         .main-gallery {
 
-           width: 100%;
+            width: 100%;
 
         }
 
@@ -338,9 +350,9 @@
             width: 400px;
             min-height: 340px;
             min-width: 300px;
-           overflow: hidden;
-           resize: both;
-       }
+            overflow: hidden;
+            resize: both;
+        }
 
         .swiper-container {
             width: auto;
@@ -348,17 +360,17 @@
             margin-left: auto;
             margin-right: auto;
 
-
         }
+
         .swiper-slide {
             background-repeat: no-repeat;
-          background-size: contain;
-           background-position: left;
+            background-size: contain;
+            background-position: left;
             border-radius: 10px;
         }
 
         .gallery-top {
-           width: 100%;
+            width: 100%;
             height: 80%;
 
         }
@@ -379,11 +391,13 @@
             box-sizing: border-box;
 
         }
+
         .gallery-thumbs .swiper-slide {
             width: 50px;
             height: 50px;
             opacity: 1;
         }
+
         .gallery-thumbs .swiper-slide-active {
             opacity: 1;
             height: 50px;
@@ -397,7 +411,7 @@
             margin-top: 10px;
         }
 
-        #g, #fb, #e, #rakuID   {
+        #g, #fb, #e, #rakuID {
             color: rgb(212, 55, 30);
             font-weight: bold;
         }
@@ -412,7 +426,7 @@
             height: 0;
         }
 
-        
+
     </style>
 </head>
 
@@ -423,10 +437,10 @@
         Photos
     </object>
     <object id="stuff1" class="cloud" type="image/svg+xml" data="images/chat.svg">
-            Chat
+        Chat
     </object>
     <object id="photographs" class="cloud" type="image/svg+xml" data="images/chat.svg">
-            Photo
+        Photo
     </object>
     <object id="locationButton" class="cloud" type="image/svg+xml" data="images/chat.svg">
         fail
@@ -437,170 +451,201 @@
 </div>
 
 <div class="flex-row">
-<form id="ProfileForm" class="flex-row" action="https://{{.Host}}/ProfileUpdate">
-    <input hidden name="OP" value="update"/>
-    <div class="menu">
-        <div class=" picture">
-            <div class="flex-column">
-                <img id="PictureURL" src="{{.P.PictureURL}}"/>
-                <input hidden id="PictureURL_hidden" type="text" name="PictureURL" value="{{.P.PictureURL}}">
+    <form id="ProfileForm" class="flex-row" action="https://{{.Host}}/ProfileUpdate">
+        <input hidden name="OP" value="update"/>
+        <div class="menu">
+            <div class=" picture">
+                <div class="flex-column">
+                    <img id="PictureURL" src="{{.P.PictureURL}}"/>
+                    <input hidden id="PictureURL_hidden" type="text" name="PictureURL" value="{{.P.PictureURL}}">
+                </div>
             </div>
-        </div>
-        <ul>
-            <li>
-                <span for="Nic"><b>Nicname</b> <br> </span>
-                <input type="text" id="Nic" name="Nic" readonly  placeholder="Nicname used during chat" value="{{.P.Nic}}">
-            </li>
-            <li>
-                <span for="FirstName"><b>First Name </b>  </span>
-                <input onchange="changed()" type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
-            </li>
-            <li>
-                <span for="LastName"><b>Last Name </b></span>
-                <input onchange="changed()" type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
-            </li>
-            <li>
-                <span for="Gender"><b>Gender</b> </span>
-                <select onchange="changed()" id="Gender" name="Gender">
+            <ul>
+                <li>
+                    <span for="Nic"><b>Nicname</b> <br> </span>
+                    <input type="text" id="Nic" name="Nic" readonly placeholder="Nicname used during chat"
+                           value="{{.P.Nic}}">
+                </li>
+                <li>
+                    <span for="FirstName"><b>First Name </b>  </span> <input type="checkbox" name="FirstNamePublic" value="{{.P.FirstNamePublic}}">Public<br>
+                    <input onchange="changed()" type="text" id="FirstName" name="FirstName" value="{{.P.FirstName}}">
+                </li>
+                <li>
+                    <span for="LastName"><b>Last Name </b></span> </span> <input type="checkbox" name="LastNamePublic" value="{{.P.LastNamePublic}}">Public<br>
+                    <input onchange="changed()" type="text" id="LastName" name="LastName" value="{{.P.LastName}}">
+                </li>
+                <li>
+                    <span for="Gender"><b>Gender</b> </span>
+                    <select onchange="changed()" id="Gender" name="Gender">
                     {{ $gs := .Genders }} {{ $selected := .P.Gender }}{{ range $gs}}{{$v := .}}
-                    <option onchange="changed()" value="{{$v}}" {{ if eq $selected $v }} selected {{end}}>{{$v}}</option>
+                        <option onchange="changed()" value="{{$v}}" {{ if eq $selected $v }}
+                                selected {{end}}>{{$v}}</option>
                     {{end}}
-                </select>
-            </li>
-            <li>
+                    </select>
+                </li>
+                <li>
+                    <span for="Relationship"><b>Relationship</b> </span>
+                    <select onchange="changed()" id="Relationshiop" name="Relationship">
+                    {{ $gs := .Relationship }} {{ $selected := .P.Relationship }}{{ range $gs}}{{$v := .}}
+                        <option onchange="changed()" value="{{$v}}" {{ if eq $selected $v }}
+                                selected {{end}}>{{$v}}</option>
+                    {{end}}
+                    </select>
+                </li>
+                <li>
                     <div class="flex-row">
                         <div class="flex-column">
                             <span for="BirthDate"><b>Year</b> </span>
-                            <input onchange="changed()" class="Number" type="number" min="1900" max="2100" id="BirtYear" name="BirthYear" value="{{.P.BirthDate.Year}}">
+                            <input onchange="changed()" class="Number" type="number" min="1900" max="2100" id="BirtYear"
+                                   name="BirthYear" value="{{.P.BirthDate.Year}}">
                         </div>
                         <div class="flex-column">
                             <span for="BirthDate"><b>Month</b> </span>
-                            <input onchange="changed()" class="SmallNumber" type="number" min="1" max="12" id="BirthMonth" name="BirthMonth"  value="{{.P.BirthDate.Month}}">
+                            <input onchange="changed()" class="SmallNumber" type="number" min="1" max="12"
+                                   id="BirthMonth" name="BirthMonth" value="{{.P.BirthDate.Month}}">
                         </div>
                         <div class="flex-column">
                             <span for="BirthDate"><b>Day</b> </span>
-                            <input onchange="changed()"  class="SmallNumber" type="number" min="1" max="31" id="BirthDay" name="BirthDay" value="{{.P.BirthDate.Day}}">
+                            <input onchange="changed()" class="SmallNumber" type="number" min="1" max="31" id="BirthDay"
+                                   name="BirthDay" value="{{.P.BirthDate.Day}}">
                         </div>
                     </div>
                 </li>
                 <li>
                     <span for="SexualOrientation"><b>Orientation</b> </span>
                     <select onchange="changed()" id="SexualOrientation" name="SexualOrientation">
-                        {{ $os := .SexualOrientations }} {{ $selected := .P.SexualOrientation }}{{ range $os}}{{$ov:=.}}
-                        <option onchange="changed()"  value="{{$ov}}" {{ if eq $selected $ov }} selected {{end}}>{{$ov}}</option>
-                        {{end}}'
+                    {{ $os := .SexualOrientations }} {{ $selected := .P.SexualOrientation }}{{ range $os}}{{$ov:=.}}
+                        <option onchange="changed()" value="{{$ov}}" {{ if eq $selected $ov }}
+                                selected {{end}}>{{$ov}}</option>
+                    {{end}}'
                     </select>
                 </li>
                 <li>
                     <span for="Profession"><b>Profession</b></span>
-                    <input onchange="changed()"  placeholder="Profession" type="text" id="Profession" name="Profession"
+                    <input onchange="changed()" placeholder="Profession" type="text" id="Profession" name="Profession"
                            value="{{.P.Profession}}">
                 </li>
                 <li>
                     <span for="Education"><b>Education</b> </span>
-                    <input  onchange="changed()" placeholder="Education" type="text" id="Education" name="Education" value="{{.P.Education}}">
+                    <input onchange="changed()" placeholder="Education" type="text" id="Education" name="Education"
+                           value="{{.P.Education}}">
                 </li>
                 <li>
-                    <div id="fb" >Verified by Facebook</div>
+                    <div id="fb">Verified by Facebook</div>
                     <div id="fbValue">{{.P.FacebookID}}</div>
 
-                    <div id="g" >Verified by Google</div>
+                    <div id="g">Verified by Google</div>
                     <div id="gValue">{{.P.GoogleID}}</div>
 
-                    <div id="e" >Verified email</div>
+                    <div id="e">Verified email</div>
                     <div id="eValue">{{.P.Email}}</div>
 
-                    <div  id="rakuID">Your Raku ID</div>
+                    <div id="rakuID">Your Raku ID</div>
                     <div>{{.P.UserID}}</div>
 
                 </li>
                 <li class="submit">
-                    <input  id="submitbutton" formmethod="post" class="button" type="submit" value="Save">
+                    <input id="submitbutton" formmethod="post" class="button" type="submit" value="Save">
                 </li>
             </ul>
         </div>
 
-    <script>
-        function checkVerifications() {
-            var v = $("#fbValue").text();
-            if (v == undefined || v == "") {
-                $("#fbValue").text("Unverified");
-            } else {
-                $("#fbValue").text("Yes: " + v);
+        <script>
+            function checkVerifications() {
+                var v = $("#fbValue").text();
+                if (v == undefined || v == "") {
+                    $("#fbValue").text("Unverified");
+                } else {
+                    $("#fbValue").text("Yes: " + v);
+                }
+                v = $("#gValue").text();
+                if (v == undefined || v == "") {
+                    $("#gValue").text("Unverified");
+                } else {
+                    $("#gValue").text("Yes: " + v);
+                }
+                v = $("#eValue").text();
+                if (v == undefined || v == "") {
+                    $("#eValue").text("Unverified");
+                } else {
+                    $("#eValue").text("Yes: " + v);
+                }
             }
-            v = $("#gValue").text();
-            if(v == undefined || v == "") {
-                $("#gValue").text("Unverified");
-            }else {
-                $("#gValue").text("Yes: " + v);
-            }
-            v = $("#eValue").text();
-            if (v == undefined || v == "" ) {
-                $("#eValue").text("Unverified");
-            }else {
-                $("#eValue").text("Yes: " + v);
-            }
-        }
-    </script>
+        </script>
 
-    <div class="right-side">
-        <div id="location-languages" class="location-languages">
-            <fieldset>
-                <legend>Location and Languages</legend>
-                <div class="flex-columm ">
+        <div class="right-side">
+            <div id="location-languages" class="location-languages">
+                <fieldset>
+                    <legend>Location and Languages</legend>
+                    <div class="flex-columm ">
 
                         <div class="flex-column">
                             <table class="locationTable">
-                                <tr> <td colspan="2"> <button type="button" class="button locationbutton" onclick="getLocation()">Get Your Location </button> </td> </tr>
                                 <tr>
-                                    <td class="td_size">Country</td> <td class="td_size">Town</td>
+                                    <td colspan="2">
+                                        <button type="button" class="button locationbutton" onclick="getLocation()">Get
+                                            Your Location
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr>
-                                <td class="td_size"> <input  onchange="changed()" type="text" id="Country" name="Country" value="{{.P.Country}}"></td>
-                                <td class="td_size" > <input onchange="changed()" type="text" id="Town" name="Town" value="{{.P.Town}}"></td>
+                                    <td class="td_size">Country</td>
+                                    <td class="td_size">Town</td>
                                 </tr>
                                 <tr>
-                                    <td class="td_size">Longitude</td> <td class="td_size">Latitude</td>
+                                    <td class="td_size"><input onchange="changed()" type="text" id="Country"
+                                                               name="Country" value="{{.P.Country}}"></td>
+                                    <td class="td_size"><input onchange="changed()" type="text" id="Town" name="Town"
+                                                               value="{{.P.Town}}"></td>
                                 </tr>
                                 <tr>
-                                    <td class="td_size"><input  onchange="changed()" type="text" id="Longitude"  name="Long" value="{{.P.Long}}"></td>
-                                    <td class="td_size"><input onchange="changed()" type="text" id="Latitude" name="Lat" value="{{.P.Lat}}"> </td>
+                                    <td class="td_size">Longitude</td>
+                                    <td class="td_size">Latitude</td>
+                                </tr>
+                                <tr>
+                                    <td class="td_size"><input onchange="changed()" type="text" id="Longitude"
+                                                               name="Long" value="{{.P.Long}}"></td>
+                                    <td class="td_size"><input onchange="changed()" type="text" id="Latitude" name="Lat"
+                                                               value="{{.P.Lat}}"></td>
                                 </tr>
                             </table>
-                        <div class="checkbox-container languages">
-                            <!-- TEMPLATE CODE -->
+                            <div class="checkbox-container languages">
+                                <!-- TEMPLATE CODE -->
                             {{ $all := .Languages }} {{ $some := .P.Languages}}
                             {{ range $all}}{{$v := .}}
-                            <div><input onchange="changed()" type="checkbox" name="Language" value="{{$v}}" {{ if eq "checked" (index $some $v) }}checked {{end}}>{{$v}}</div>
+                                <div><input onchange="changed()" type="checkbox" name="Language"
+                                            value="{{$v}}" {{ if eq "checked" (index $some $v) }}checked {{end}}>{{$v}}
+                                </div>
                             {{end}}
-                            <!-- TEMPLATE CODE -->
+                                <!-- TEMPLATE CODE -->
+                            </div>
                         </div>
+                        <div id="MapHolder"></div>
                     </div>
-                    <div id="MapHolder"></div>
-                </div>
-            </fieldset>
+                </fieldset>
             </div>
         </div>
-   </form>
-<script>
-    $("#ProfileForm").submit(function (event) {
-    event.preventDefault();
-    var post_url = $(this).attr("action");
-    var form_data = $(this).serialize();
-    $.ajax({
-        url: post_url,
-        type: "post",
-        data: form_data
-    }).done(function (response) {
-        $("#mapholder").empty();
-        reportStatus(response.status, response.detail, response.detail)
-    });
-});
-</script>
+    </form>
+    <script>
+        $("#ProfileForm").submit(function (event) {
+            event.preventDefault();
+            var post_url = $(this).attr("action");
+            var form_data = $(this).serialize();
+            $.ajax({
+                url: post_url,
+                type: "post",
+                data: form_data
+            }).done(function (response) {
+                $("#mapholder").empty();
+                reportStatus(response.status, response.detail, response.detail)
+            });
+        });
+    </script>
     <div>
-    <div class="main-gallery" id="main-gallery">
-        <div id="StatusBox2"  hidden style="width:100%"   class="StatusMessage stuff-m"><p  class="status-m status" id="status2"></p></div>
-            <div class="slideshow" onmouseup="phtoBoxMouseUp()"  id="photos">
+        <div class="main-gallery" id="main-gallery">
+            <div id="StatusBox2" hidden style="width:100%" class="StatusMessage stuff-m"><p class="status-m status"
+                                                                                            id="status2"></p></div>
+            <div class="slideshow" onmouseup="phtoBoxMouseUp()" id="photos">
                 <!-- Swiper -->
                 <div class="swiper-container gallery-top">
                     <div class="swiper-wrapper">
@@ -614,35 +659,43 @@
                     </div>
                 </div>
             </div>
-        <div id="upload">
-            <table>
-                <tr>
-                    <td>
-                        <object id="profilePictureButton" class="profilePictureCloud" type="image/svg+xml" data="images/chat.svg"> fail
-                        </object>
-                    </td>
-                    <td> </td>
-                    <td>
-                        <object id="deleteButton" class="deleteCloud" type="image/svg+xml" data="images/chat.svg"> fail
-                        </object>
-                    </td>
-                </tr>
-                <tr><td colspan="3" class="center">Uload your photos here</td></tr>
-                <tr><td colspan="3" class="center">Supported formats jpeg, png and gif</td></tr>
-            </table>
-            <form id="uploader" method="post" enctype="multipart/form-data"  action="https://{{.Host}}/ImageManager">
-                <input accept="image/jpg, image/jpeg, image/gif, image/png" type="file" name="images" id="images" multiple />
-                <button type="submit" id="btn">Upload Files!</button>
-            </form>
-            <div id="response"></div>
-            <ul id="image-list">
-            </ul>
+            <div id="upload">
+                <table>
+                    <tr>
+                        <td>
+                            <object id="profilePictureButton" class="profilePictureCloud" type="image/svg+xml"
+                                    data="images/chat.svg"> fail
+                            </object>
+                        </td>
+                        <td></td>
+                        <td>
+                            <object id="deleteButton" class="deleteCloud" type="image/svg+xml" data="images/chat.svg">
+                                fail
+                            </object>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="center">Uload your photos here</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="center">Supported formats jpeg, png and gif</td>
+                    </tr>
+                </table>
+                <form id="uploader" method="post" enctype="multipart/form-data" action="https://{{.Host}}/ImageManager">
+                    <input accept="image/jpg, image/jpeg, image/gif, image/png" type="file" name="images" id="images"
+                           multiple/>
+                    <button type="submit" id="btn">Upload Files!</button>
+                </form>
+                <div id="response"></div>
+                <ul id="image-list">
+                </ul>
+            </div>
+        </div>
+        <div id="myStory" class="my-story">
+            <textarea id="introo" placeholder="My story" form="ProfileForm" name="Description"
+                      label="sdfsdf">{{.P.Description}}</textarea>
         </div>
     </div>
-        <div id="myStory" class="my-story">
-            <textarea id="introo" placeholder="My story" form="ProfileForm" name="Description" label="sdfsdf">{{.P.Description}}</textarea>
-        </div>
-</div>
 
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -650,8 +703,7 @@
     <script type="text/javascript">
 
 
-        function phtoBoxMouseUp(e)
-        {
+        function phtoBoxMouseUp(e) {
             galleryTop.update(true);
             galleryThumbs.update(true)
         }
@@ -664,18 +716,20 @@
         }
 
         var timeoutID;
+
         function hideStatus() {
             $("#StatusBox").hide();
             $("#StatusBox2").hide();
         }
+
         var timeoutDelayRemovalID;
+
         function delayRemoval() {
             $("#image-list").empty();
-            var gal  = document.getElementById("main-gallery");
+            var gal = document.getElementById("main-gallery");
         }
 
-        function reportStatus(status, message1, message2)
-        {
+        function reportStatus(status, message1, message2) {
             timeoutID = window.setTimeout(hideStatus, 2000);
             if (status == "ERROR" || status == "WARNING") {
                 $("#status2").css("background-color", "darkred");
@@ -708,18 +762,18 @@
         function getAllImages() {
             galleryTop.removeAllSlides();
             galleryThumbs.removeAllSlides();
-            request = {"op":"getMyImages"};
+            request = {"op": "getMyImages"};
             $.ajax({
                 url: 'https://{{.Host}}/ImageManagerGet',
                 type: 'post',
                 data: JSON.stringify(request),
                 contentType: 'application/json',
                 success: function (r) {
-                    console.log("Done......>! ", r.status + " " + r.images.length );
+                    console.log("Done......>! ", r.status + " " + r.images.length);
                     for (i = 0; i < (r.images).length; i++) {
-                        var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
+                        var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' + r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
                         galleryTop.appendSlide(s);
-                        galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["small"] + '") ></div>');
+                        galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' + r.images[i]["small"] + '") ></div>');
                         console.log(r.images[i]["small"]);
                     }
                     galleryTop.update(true);
@@ -735,16 +789,17 @@
         (function () {
             input = document.getElementById("images");
             bgn = document.getElementById("btn");
-                formdata = false;
+            formdata = false;
             if (window.FormData) {
                 formdata = new FormData();
                 document.getElementById("btn").style.display = "none";
             }
         })();
-        function showUploadedItem (source) {
+
+        function showUploadedItem(source) {
             var list = document.getElementById("image-list"),
-                li   = document.createElement("li"),
-                img  = document.createElement("img");
+                    li = document.createElement("li"),
+                    img = document.createElement("img");
             img.src = source;
             li.appendChild(img);
             list.appendChild(li);
@@ -755,7 +810,7 @@
                 var err = false;
                 var i = 0, len = this.files.length, img, reader, file;
                 document.getElementById("response").innerHTML = "Uploading . . . " + len;
-                console.log("Uploading ... "+ len);
+                console.log("Uploading ... " + len);
 
                 // collect all the requested files to send them all in one batch....
                 for (; i < len; i++) {
@@ -889,7 +944,7 @@
         }
 
     </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0&callback=myMap" ></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0&callback=myMap"></script>
 </div>
 </body>
 </html>
