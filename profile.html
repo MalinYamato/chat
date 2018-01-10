@@ -660,7 +660,7 @@
 
             var myStory = new nicEditors.findEditor('myStoryArea');
             var content = nicE.getContent();
-            Document.getElemetnById("introo").innerText = content;
+            Document.getElemetnById("introo").innerHTML = content;
             var post_url = $(this).attr("action");
             var form_data = $(this).serialize();
             $.ajax({
