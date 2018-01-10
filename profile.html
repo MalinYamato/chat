@@ -659,7 +659,7 @@
             event.preventDefault();
 
             var myStory = new nicEditors.findEditor('myStoryArea');
-            Document.getElemetnById("introo").innerText = myStory.getContent();
+            document.getElementById("introo").innerText = myStory.getContent();
             var post_url = $(this).attr("action");
             var form_data = $(this).serialize();
             $.ajax({
