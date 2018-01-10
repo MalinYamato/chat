@@ -43,6 +43,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="js/SVGButton.js"></script>
     <script src="js/map.js"></script>
+    <script src="js/nicEdit.js.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/file.css"/>
 
@@ -723,6 +724,13 @@
             <textarea id="introo" placeholder="My story" form="ProfileForm" name="Description"
                       label="sdfsdf">{{.P.Description}}</textarea>
         </div>
+
+        <script type="text/javascript">
+            bkLib.onDomLoaded(function() {
+                new nicEditor().panelInstance('myStoryArea');
+            });
+        </script>
+        <textarea cols="50" id="myStoryArea"></textarea>
     </div>
 
 
