@@ -657,6 +657,10 @@
     <script>
         $("#ProfileForm").submit(function (event) {
             event.preventDefault();
+
+            var myStory = new nicEditors.findEditor('myStoryArea');
+            var content = nicE.getContent();
+            Document.getElemetnById("introo").innerText = content;
             var post_url = $(this).attr("action");
             var form_data = $(this).serialize();
             $.ajax({
@@ -730,8 +734,6 @@
         </script>
         <textarea name="Description2"  form="ProfileForm"  cols="50" id="myStoryArea">hhh</textarea>
     </div>
-
-
 
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -919,6 +921,7 @@
             saveButton.Cloud_Text.onmousedown = function () {
                 saveButton.mouseDown();
                 console.log("SaveButton");
+
                 $("#submitbutton").submit();
             };
 
