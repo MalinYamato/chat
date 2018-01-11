@@ -767,7 +767,7 @@
         if  (user.description == undefined ) {
                   myStory.innerText = "";
         } else {
-            myStory.innerText =       user.description
+            myStory.innerHTML =       user.description
         }
         var profilePicture = document.getElementById("ProfilePicture");
         profilePicture.setAttribute("src", user.pictureURL );
