@@ -897,6 +897,8 @@
 
             getAllImages();
 
+            var myStory = new nicEditors.findEditor('myStoryArea');
+            myStory.setContent("{{.P.Description}}");
 
             checkVerifications();
 
