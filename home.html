@@ -659,6 +659,7 @@
                 <div class="flex-row">
                     <img class="Mail" src="/images/mail.svg"/>
                     <img id="privateChat" src=""/>
+                    <img  class="friends" src="/images/addfriends.svg"/>
                     <img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
                 </div>
             </div>
@@ -783,6 +784,7 @@
         privateChat.setAttribute("src", user.pictureURL );
         privateChat.setAttribute("onclick", "RequestToPublish('" + getUniqueID(user.userId) + "')");
         response = getImages({'op':'getImages', 'userID':userId});
+
         $("#profileArea").show();
     }
     function closeProfileView() {
