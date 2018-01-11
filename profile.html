@@ -570,21 +570,21 @@
             function checkVerifications() {
                 var v = $("#fbValue").text();
                 if (v == undefined || v == "") {
-                    $("#fbValue").text("Unverified");
+                    $("#fbValue").text("Not verified");
                 } else {
-                    $("#fbValue").text("Yes: " + v);
+                    $("#fbValue").text("Yes:" + v);
                 }
                 v = $("#gValue").text();
                 if (v == undefined || v == "") {
-                    $("#gValue").text("Unverified");
+                    $("#gValue").text("Not verified");
                 } else {
-                    $("#gValue").text("Yes: " + v);
+                    $("#gValue").text("Yes:" + v);
                 }
                 v = $("#eValue").text();
                 if (v == undefined || v == "") {
-                    $("#eValue").text("Unverified");
+                    $("#eValue").text("Not verified");
                 } else {
-                    $("#eValue").text("Yes: " + v);
+                    $("#eValue").text("Yes:" + v);
                 }
 
                 if ("{{.P.FirstNamePublic}}" == "true") {
