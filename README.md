@@ -59,11 +59,8 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     $ sudo certbot certonly --standalone --preferred-challenges tls-sni  -d yourhost.yourdomain
 
 #### Secondly, creat a certificte and DNS recorrds for janus as it needs to be run over SSL on a non-standard port 8089
-   
+    You need to add hostname media to your DNS server
     $ sudo certbot -d host.domain  --manual --preferred-challenges dns certonly
-
-    Note, you need to add hostname media to DNS as A record and a corresponding TXT record.
-    $
     -- You will be asked to createa a TXT record on your DNS server.
 
     $ sudo nano /opt/janus/etc/janus/janus.transport.http.cfg
