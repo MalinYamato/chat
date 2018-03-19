@@ -61,6 +61,8 @@ type Config struct {
 	ClientSecret    string
 	ChatHost        string
 	ChatPrivateKey  string
+	SSLPrivateKey   string
+	SSLCert  	string
 }
 
 type HTMLReplace struct {
@@ -401,7 +403,9 @@ func main() {
 		ClientID:        os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret:    os.Getenv("GOOGLE_CLIENT_SECRET"),
 		ChatHost:        os.Getenv("CHAT_HOST"),
-		ChatPrivateKey:  os.Getenv("CHAT_PRIVATE_KEY"),
+		ChatPrivateKey:  os.Getenv("CHAT_PRIVATE_KEY")
+		SSLPrivateKey    os.Getenv("PVTKEY"),
+		SSLCert          os.Getenv("CERT")
 	}
 	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
 	endpoint = Endpoint{"https", config.ChatHost, "443"}
