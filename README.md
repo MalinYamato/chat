@@ -63,7 +63,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
     $ sudo certbot -d host.domain  --manual --preferred-challenges dns certonly
     -- You will be asked to createa a TXT record on your DNS server.
 
-    $ sudo nano /opt/janus/etc/janus/janus.transport.http.cfg
+    $ sudo nano /opt/janus/etc/janus/janus.cfg and janus.transport.http.cfg
     #cert_pem = /opt/janus/share/janus/certs/mycert.pem
     #cert_key = /opt/janus/share/janus/certs/mycert.key
     cert_pem = /etc/letsencrypt/live/yourhostname.yourdomain/fullchain.pem
