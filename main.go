@@ -404,7 +404,7 @@ func main() {
 		ClientSecret:    os.Getenv("GOOGLE_CLIENT_SECRET"),
 		ChatHost:        os.Getenv("CHAT_HOST"),
 		ChatPrivateKey:  os.Getenv("CHAT_PRIVATE_KEY")
-		SSLPrivateKey    os.Getenv("PVTKEY"),
+		SSLPrivateKey    os.Getenv("PKEY"),
 		SSLCert          os.Getenv("CERT"),
 	}
 	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
