@@ -32,8 +32,9 @@
 package main
 
 import (
+	//"code.google.com/p/graphics-go/graphics/interp"
 	"encoding/json"
-	"github.com/robfig/graphics-go/graphics"
+	"github.com/satori/go.uuid"
 	"image"
 	"image/gif"
 	"image/jpeg"
@@ -45,8 +46,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/satori/go.uuid"
+	//"code.google.com/p/graphics-go"
+	"github.com/nfnt/resize"
 )
 
 type ImagesResponse struct {
@@ -80,8 +81,9 @@ func cropImage(fileroot string, inputFile string, extension string) Status {
 	if err != nil {
 		log.Fatal(err)
 	}
-	dst := image.NewRGBA(image.Rect(0, 0, 150, 160))
-	graphics.Thumbnail(dst, src)
+	dst := resize.Thumbnail(150, 160, src, resize.Lanczos3)
+	//dst := image.NewRGBA(image.Rect(0, 0, 150, 160))
+	//graphics.Thumbnail(dst, src)
 
 	toimg, err := os.Create(fileroot + "/small." + "jpg")
 	if err != nil {
@@ -141,7 +143,6 @@ func ImageManager_DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(json_response)
 }
 
-
 func ImageManger_GetHandler(w http.ResponseWriter, r *http.Request) {
 	var images ImagesResponse
 	defer r.Body.Close()
@@ -157,7 +158,7 @@ func ImageManger_GetHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if request.Op == "getImages" {
 			person, _ = _persons.findPersonByUserId(request.UserID)
-		} else if request.Op == "getMyImages"{
+		} else if request.Op == "getMyImages" {
 			person, _ = _persons.findPersonByCookie(r)
 		}
 		if person.Keep == false {
