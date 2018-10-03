@@ -34,13 +34,14 @@ package main
 
 import (
 	"flag"
+	"github.com/kabukky/httpscerts"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	//"github.com/kabukky/httpscerts"
 	"github.com/dghubble/gologin"
 	"github.com/dghubble/gologin/google"
-	"github.com/kabukky/httpscerts"
 	"golang.org/x/oauth2"
 	googleOAuth2 "golang.org/x/oauth2/google"
 	"strings"
@@ -49,9 +50,7 @@ import (
 	"github.com/dghubble/gologin/facebook"
 	"github.com/dghubble/sessions"
 	facebookOAuth2 "golang.org/x/oauth2/facebook"
-	"os"
 	"path"
-
 )
 
 type Config struct {
@@ -62,7 +61,7 @@ type Config struct {
 	ChatHost        string
 	ChatPrivateKey  string
 	SSLPrivateKey   string
-	SSLCert  	string
+	SSLCert         string
 }
 
 type HTMLReplace struct {
@@ -232,7 +231,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	var none []Person
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	homeTemplate.Execute(w, struct {
+	template.Must(template.ParseFiles(base)).Execute(w, struct {
 		Host      string
 		LoggedIn  string
 		LoggedOut string
@@ -288,7 +287,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	homeTemplate.Execute(w, struct {
+	template.Must(template.ParseFiles(base)).Execute(w, struct {
 		Host      string
 		LoggedIn  string
 		LoggedOut string
@@ -388,11 +387,14 @@ var _persons Persons
 var hub *Hub
 var DocumentRoot string
 var endpoint Endpoint
-var homeTemplate = template.Must(template.ParseFiles("/var/www/raku/home.html"))
+
+//var base = "/var/www/raku/home.html"
+var base = "home.html"
 var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
 
 func main() {
+	fmt.Println("Loading persons database..")
 
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
@@ -403,10 +405,11 @@ func main() {
 		ClientID:        os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret:    os.Getenv("GOOGLE_CLIENT_SECRET"),
 		ChatHost:        os.Getenv("CHAT_HOST"),
-		ChatPrivateKey:  os.Getenv("CHAT_PRIVATE_KEY")
-		SSLPrivateKey    os.Getenv("PKEY"),
-		SSLCert          os.Getenv("CERT"),
+		ChatPrivateKey:  os.Getenv("CHAT_PRIVATE_KEY"),
+		SSLPrivateKey:   os.Getenv("PKEY"),
+		SSLCert:         os.Getenv("CERT"),
 	}
+	log.Println("creating http path..")
 	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
 	endpoint = Endpoint{"https", config.ChatHost, "443"}
 	dir, _ := os.Getwd()
