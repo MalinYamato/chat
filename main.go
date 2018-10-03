@@ -34,23 +34,21 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"github.com/dghubble/gologin"
+	"github.com/dghubble/gologin/facebook"
+	"github.com/dghubble/gologin/google"
+	"github.com/dghubble/sessions"
 	"github.com/kabukky/httpscerts"
+	"golang.org/x/oauth2"
+	facebookOAuth2 "golang.org/x/oauth2/facebook"
+	googleOAuth2 "golang.org/x/oauth2/google"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
-	//"github.com/kabukky/httpscerts"
-	"github.com/dghubble/gologin"
-	"github.com/dghubble/gologin/google"
-	"golang.org/x/oauth2"
-	googleOAuth2 "golang.org/x/oauth2/google"
-	"strings"
-	//"path"
-	"fmt"
-	"github.com/dghubble/gologin/facebook"
-	"github.com/dghubble/sessions"
-	facebookOAuth2 "golang.org/x/oauth2/facebook"
 	"path"
+	"strings"
 )
 
 type Config struct {
@@ -64,12 +62,12 @@ type Config struct {
 	SSLCert         string
 }
 
-type HTMLReplace struct {
-	Host      string
-	LoggedIn  string
-	LoggedOut string
-	Person    Person
-}
+//type HTMLReplace struct {
+//	Host      string
+//	LoggedIn  string
+//	LoggedOut string
+//	Person    Person
+//}
 
 type Endpoint struct {
 	protocol string
@@ -91,7 +89,7 @@ const (
 const (
 	GREEN = "GREEN" // sender and target are sending pvt messages to each other
 	BLUE  = "BLUE"  // sender sends pvt messages to the target but not the other way around
-	BLACK = "BLACK" // The target is blocking, black listening the sender
+	//BLACK = "BLACK" // The target is blocking, black listening the sender
 )
 
 type Status struct {
@@ -141,6 +139,7 @@ type MediaSession struct {
 // received and decide to reply with a MediaStatus response or not based on that.
 // Most of media information is included in SDP and are therefore omitted except for video hight and width.
 
+/*
 type MediaStatus struct {
 	MedaiServerURL string `json:"mediaServerURL"` // The url of SFU and MediaGateway
 	OnOff          string `json:"onOff"`
@@ -152,7 +151,7 @@ type MediaStatus struct {
 	VideoHeight    int16  `json:"videoHeight"` // Pixels. hint how to arrange the GUI to present video
 	VideoWidth     int16  `json:"videoWidth"`  // Pixels. hint how to arrange the GUI to present video
 }
-
+*/
 //   AnyPuiblishers, broadcasted when interresed in knowing who is/are publishing.
 //   MediaStatus     sent as a response upon reception of AnyPublishers if
 //                          publishing, not blocking prospective subscribers or when start or stop publishing.
@@ -232,6 +231,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	template.Must(template.ParseFiles(base)).Execute(w, struct {
+		PROTOCOL  string
 		Host      string
 		LoggedIn  string
 		LoggedOut string
@@ -240,6 +240,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		Persons   []Person
 		Targets   []GreenBlue
 	}{
+		PROTOCOL:  protocol,
 		Host:      r.Host,
 		LoggedIn:  "none",
 		LoggedOut: "flex",
@@ -288,6 +289,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	template.Must(template.ParseFiles(base)).Execute(w, struct {
+		PROTOCOL  string
 		Host      string
 		LoggedIn  string
 		LoggedOut string
@@ -296,6 +298,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		Persons   []Person
 		Targets   []GreenBlue
 	}{
+		PROTOCOL:  protocol,
 		Host:      r.Host,
 		LoggedIn:  "flex",
 		LoggedOut: "none",
@@ -392,20 +395,18 @@ var endpoint Endpoint
 var base = "home.html"
 var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
+var protocol = "https"
+var port = "443"
+var testMode = 0
 
 func main() {
-
-	var protocol = "https"
-	var port = "443"
-	var testMode = 0
 
 	if os.Getenv("RakuRunMode") == "Test" {
 		TestInit()
 		protocol = "http"
-		port = "80"
+		port = "9090"
 		testMode = 1
 	}
-
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
 
