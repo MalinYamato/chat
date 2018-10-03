@@ -88,7 +88,7 @@
         function getUser(op) {
             var res = null;
             $.ajax({
-                url: 'https://{{.Host}}/profile',
+                url: '{{.PROTOCOL}}://{{.Host}}/profile',
                 type: 'post',
                 async: false,
                 data: JSON.stringify(op),
@@ -108,7 +108,7 @@
             var res = null;
             var request = {"op": "getAllPublishers"};
             $.ajax({
-                url: 'https://{{.Host}}/VideoManager',
+                url: '{{.PROTOCOL}}://{{.Host}}/VideoManager',
                 type: 'post',
                 async: false,
                 data: JSON.stringify(request),
@@ -206,7 +206,7 @@
             profile.s.onmouseup = function () {
                 profile.mouseDown();
                 console.log("profile clicekd ");
-                window.location = "https://{{.Host}}/MainProfile";
+                window.location = "{{.PROTOCOL}}://{{.Host}}/MainProfile";
             };
 
             if (loggedIn()) {
@@ -216,7 +216,7 @@
                     $.ajax({
                         type: "POST",
                         async: false,
-                        url: "https://{{.Host}}/logout",
+                        url: "{{.PROTOCOL}}://{{.Host}}/logout",
                         data: {token: "{{.Person.Token }}"},
                         success: function (result) {
                             window.location = "https://{{.Host}}/";
@@ -276,12 +276,12 @@
                 var google = new SVGImageButton("#google", "google", "S");
                 google.s.onmousedown = function () {
                     google.mouseDown();
-                    window.location = "https://{{.Host}}/google/login";
+                    window.location = "{{.PROTOCOL}}://{{.Host}}/google/login";
                 };
                 var facebook = new SVGImageButton("#facebook", "facebook", "S");
                 facebook.s.onmousedown = function () {
                     facebook.mouseDown();
-                    window.location = "https://{{.Host}}/facebook/login";
+                    window.location = "{{.PROTOCOL}}://{{.Host}}/facebook/login";
                 };
                 var loginLabel = new SVGButton("#loginLabel", " Login", "S");
             }
@@ -413,7 +413,10 @@
             /////////////////
             if (window["WebSocket"]) {
                 console.log("try to open connection wesbocket!");
-                conn = new WebSocket("wss://{{.Host}}/ws");
+                var conn = new WebSocket("ws://{{.Host}}/ws");
+                if ("{{.PROTOCOL}}" == "https") {
+                    conn = new WebSocket("wss://{{.Host}}/ws");
+                }
 
                 conn.onopen = function (evt) {
                     if (loggedIn()) {
@@ -558,7 +561,7 @@
     function changeRoom(room) {
         $.ajax({
             type: "POST",
-            url: "https://{{.Host}}/RoomManager",
+            url: "{{.PROTOCOL}}://{{.Host}}/RoomManager",
             data: JSON.stringify({"Op": "ChangeRoom", "Room": room}),
             contentType: 'application/json',
             success: function (result) {
@@ -638,7 +641,7 @@
                 </li>
                 <li>
                     <object class="webcam" id="webcam" type="image/svg+xml"
-                            data="https://{{.Host}}/images/webcam.svg"></object>
+                            data="{{.PROTOCOL}}://{{.Host}}/images/webcam.svg"></object>
             </ul>
         </div>
     </div>
@@ -711,7 +714,7 @@
         galleryTop.removeAllSlides();
         galleryThumbs.removeAllSlides();
         $.ajax({
-            url: 'https://{{.Host}}/ImageManagerGet',
+            url: '{{.PROTOCOL}}://{{.Host}}/ImageManagerGet',
             type: 'post',
             data: JSON.stringify(request),
             contentType: 'application/json',
@@ -1034,7 +1037,7 @@
             return; // dupplicate
         }
         $.ajax({
-            url: 'https://{{.Host}}/TargetManager',
+            url: '{{.PROTOCOL}}{{.Host}}/TargetManager',
             type: 'post',
             data: JSON.stringify(message),
             contentType: 'application/json',
@@ -1046,7 +1049,7 @@
     function RemoveTarget(targetId) {
         var message = {"op": "RemoveTarget", "ids": [targetId]};
         $.ajax({
-            url: 'https://{{.Host}}/TargetManager',
+            url: '{{.PROTOCOL}}//{{.Host}}/TargetManager',
             type: 'post',
             data: JSON.stringify(message),
             contentType: 'application/json',
