@@ -30,7 +30,6 @@ func testA() {
 				log.Printf(">> %s %s\n", t, tt)
 			}
 		}
-
 	}
 
 	log.Println("TEST B ##############")
