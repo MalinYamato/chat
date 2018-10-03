@@ -394,7 +394,17 @@ var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
 
 func main() {
-	fmt.Println("Loading persons database..")
+
+	var protocol = "https"
+	var port = "443"
+	var testMode = 0
+
+	if os.Getenv("RakuRunMode") == "Test" {
+		TestInit()
+		protocol = "http"
+		port = "80"
+		testMode = 1
+	}
 
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
@@ -411,7 +421,7 @@ func main() {
 	}
 	log.Println("creating http path..")
 	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
-	endpoint = Endpoint{"https", config.ChatHost, "443"}
+	endpoint = Endpoint{protocol, config.ChatHost, port}
 	dir, _ := os.Getwd()
 	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
 	queue := new(QueueStack)
@@ -453,9 +463,16 @@ func main() {
 	log.Println("Start RTC manager ")
 	startRTCManager()
 	log.Println("Starting service at ", endpoint.url())
-	err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(config, hub))
-	//err = http.ListenAndServe(*addr, NewMux(config, hub) )
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+	if testMode == 1 {
+		err = http.ListenAndServe(*addr, NewMux(config, hub))
+		if err != nil {
+			log.Fatal("ListenAndServe: ", err)
+		}
+	} else {
+		err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(config, hub))
+		if err != nil {
+			log.Fatal("ListenAndServe: ", err)
+		}
 	}
+
 }
