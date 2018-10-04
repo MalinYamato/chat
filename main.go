@@ -56,10 +56,15 @@ type Config struct {
 	ClientSecret_FB string
 	ClientID        string
 	ClientSecret    string
-	ChatHost        string
 	ChatPrivateKey  string
 	SSLPrivateKey   string
 	SSLCert         string
+	Protocol        string
+	Host            string
+	Port            string
+	VideoHost       string
+	VideoPort       string
+	VideoProtocol   string
 }
 
 //type HTMLReplace struct {
@@ -231,23 +236,31 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	template.Must(template.ParseFiles(base)).Execute(w, struct {
-		PROTOCOL  string
-		Host      string
-		LoggedIn  string
-		LoggedOut string
-		Person    Person
-		Messages  []Message
-		Persons   []Person
-		Targets   []GreenBlue
+		Protocol      string
+		Host          string
+		Port          string
+		VideoProtocol string
+		VideoHost     string
+		VideoPort     string
+		LoggedIn      string
+		LoggedOut     string
+		Person        Person
+		Messages      []Message
+		Persons       []Person
+		Targets       []GreenBlue
 	}{
-		PROTOCOL:  protocol,
-		Host:      r.Host,
-		LoggedIn:  "none",
-		LoggedOut: "flex",
-		Person:    Person{},
-		Messages:  msgs,
-		Persons:   none,
-		Targets:   nil,
+		Protocol:      _config.Protocol,
+		Host:          _config.Host,
+		Port:          _config.Port,
+		VideoProtocol: _config.VideoProtocol,
+		VideoHost:     _config.VideoHost,
+		VideoPort:     _config.VideoPort,
+		LoggedIn:      "none",
+		LoggedOut:     "flex",
+		Person:        Person{},
+		Messages:      msgs,
+		Persons:       none,
+		Targets:       nil,
 	})
 }
 
@@ -289,23 +302,31 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	template.Must(template.ParseFiles(base)).Execute(w, struct {
-		PROTOCOL  string
-		Host      string
-		LoggedIn  string
-		LoggedOut string
-		Person    Person
-		Messages  []Message
-		Persons   []Person
-		Targets   []GreenBlue
+		Protocol      string
+		Host          string
+		Port          string
+		VideoProtocol string
+		VideoHost     string
+		VideoPort     string
+		LoggedIn      string
+		LoggedOut     string
+		Person        Person
+		Messages      []Message
+		Persons       []Person
+		Targets       []GreenBlue
 	}{
-		PROTOCOL:  protocol,
-		Host:      r.Host,
-		LoggedIn:  "flex",
-		LoggedOut: "none",
-		Person:    person,
-		Messages:  msgs,
-		Persons:   _persons.getAllInRoom(person.Room),
-		Targets:   targets,
+		Protocol:      _config.Protocol,
+		Host:          _config.Host,
+		Port:          _config.Port,
+		VideoProtocol: _config.VideoProtocol,
+		VideoHost:     _config.VideoHost,
+		VideoPort:     _config.VideoPort,
+		LoggedIn:      "flex",
+		LoggedOut:     "none",
+		Person:        person,
+		Messages:      msgs,
+		Persons:       _persons.getAllInRoom(person.Room),
+		Targets:       targets,
 	})
 }
 
@@ -330,8 +351,8 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.HandleFunc("/logout", logoutHandler)
 
 	oauth2Config := &oauth2.Config{
-		ClientID:     config.ClientID,
-		ClientSecret: config.ClientSecret,
+		ClientID:     _config.ClientID,
+		ClientSecret: _config.ClientSecret,
 		RedirectURL:  endpoint.url() + "/google/callback",
 		Endpoint:     googleOAuth2.Endpoint,
 		Scopes:       []string{"profile", "email"},
@@ -342,8 +363,8 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.Handle("/google/callback", google.StateHandler(stateConfig, google.CallbackHandler(oauth2Config, issueSession(), nil)))
 
 	oauth2ConfigFB := &oauth2.Config{
-		ClientID:     config.ClientID_FB,
-		ClientSecret: config.ClientSecret_FB,
+		ClientID:     _config.ClientID_FB,
+		ClientSecret: _config.ClientSecret_FB,
 		RedirectURL:  endpoint.url() + "/facebook/callback",
 		Endpoint:     facebookOAuth2.Endpoint,
 		//Scopes:       []string{"profile", "email"},
@@ -354,12 +375,10 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	stateConfigFB := gologin.DefaultCookieConfig
 	mux.Handle("/facebook/login", facebook.StateHandler(stateConfigFB, facebook.LoginHandler(oauth2ConfigFB, nil)))
 	mux.Handle("/facebook/callback", facebook.StateHandler(stateConfigFB, facebook.CallbackHandler(oauth2ConfigFB, issueSessionFB(), nil)))
-
 	return mux
 }
 
 func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token string, cookie string, err error) {
-
 	if !onlyTooken {
 		//retrieve encrypted cookie
 		cookieInfo, err := r.Cookie(sessionName)
@@ -368,7 +387,6 @@ func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token strin
 		}
 		cookie = cookieInfo.Value
 	}
-
 	session, err := sessionStore.Get(r, sessionName)
 	if err != nil {
 		return "", "", fmt.Errorf("Fail to retrieve cookie to create session %s detail %s", sessionName, err)
@@ -390,39 +408,36 @@ var _persons Persons
 var hub *Hub
 var DocumentRoot string
 var endpoint Endpoint
-
-//var base = "/var/www/raku/home.html"
 var base = "home.html"
 var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
-var protocol = "https"
-var port = "443"
-var testMode = 0
+var _config *Config
 
 func main() {
-
-	if os.Getenv("RakuRunMode") == "Test" {
-		TestInit()
-		protocol = "http"
-		port = "9090"
-		testMode = 1
-	}
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
-
-	config := &Config{
+	if os.Getenv("RakuRunMode") == "Test" {
+		TestInit()
+	}
+	_config = &Config{
 		ClientID_FB:     os.Getenv("FACEBOOK_CLIENT_ID"),
 		ClientSecret_FB: os.Getenv("FACEBOOK_CLIENT_SECRET"),
 		ClientID:        os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret:    os.Getenv("GOOGLE_CLIENT_SECRET"),
-		ChatHost:        os.Getenv("CHAT_HOST"),
 		ChatPrivateKey:  os.Getenv("CHAT_PRIVATE_KEY"),
 		SSLPrivateKey:   os.Getenv("PKEY"),
 		SSLCert:         os.Getenv("CERT"),
+		Host:            os.Getenv("HOST"),
+		Port:            os.Getenv("PORT"),
+		Protocol:        os.Getenv("PROTOCOL"),
+		VideoProtocol:   os.Getenv("VIDEO_PROTOCOL"),
+		VideoHost:       os.Getenv("VIDEO_HOST"),
+		VideoPort:       os.Getenv("VIDEO_PORT"),
 	}
+
 	log.Println("creating http path..")
-	sessionStore = sessions.NewCookieStore([]byte(config.ChatPrivateKey), nil)
-	endpoint = Endpoint{protocol, config.ChatHost, port}
+	sessionStore = sessions.NewCookieStore([]byte(_config.ChatPrivateKey), nil)
+	endpoint = Endpoint{_config.Protocol, _config.Host, _config.Port}
 	dir, _ := os.Getwd()
 	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
 	queue := new(QueueStack)
@@ -438,24 +453,22 @@ func main() {
 			log.Fatal("Error: Couldn't create https certs.")
 		}
 	}
-
 	// allow consumer credential flags to override config fields
 	clientID := flag.String("client-id", "", "Google Client ID")
 	clientSecret := flag.String("client-secret", "", "Google Client Secret")
 	flag.Parse()
 	if *clientID != "" {
-		config.ClientID = *clientID
+		_config.ClientID = *clientID
 	}
 	if *clientSecret != "" {
-		config.ClientSecret = *clientSecret
+		_config.ClientSecret = *clientSecret
 	}
-	if config.ClientID == "" {
+	if _config.ClientID == "" {
 		log.Fatal("Missing Google Client ID")
 	}
-	if config.ClientSecret == "" {
+	if _config.ClientSecret == "" {
 		log.Fatal("Missing Google Client Secret")
 	}
-
 	flag.Parse()
 	hub = newHub(*queue)
 	go hub.run()
@@ -464,16 +477,15 @@ func main() {
 	log.Println("Start RTC manager ")
 	startRTCManager()
 	log.Println("Starting service at ", endpoint.url())
-	if testMode == 1 {
-		err = http.ListenAndServe(*addr, NewMux(config, hub))
+	if endpoint.protocol == "http" {
+		err = http.ListenAndServe(*addr, NewMux(_config, hub))
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}
-	} else {
-		err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(config, hub))
+	} else { // https
+		err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(_config, hub))
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}
 	}
-
 }
