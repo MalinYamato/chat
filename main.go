@@ -417,7 +417,7 @@ func main() {
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
 	if os.Getenv("RakuRunMode") == "Test" {
-		TestInit()
+		TestEnvInit()
 	}
 	_config = &Config{
 		ClientID_FB:     os.Getenv("FACEBOOK_CLIENT_ID"),
