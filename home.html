@@ -133,10 +133,17 @@
                 return "T";
             }
         }
-
+        function getURL(protocol, host, port) {
+         return   protocol + "://" + host + ":" + port;
+        }
         ///// end utilities
 
+        var ChatURL = null;
         window.onload = function () {
+
+            setVideoURL(getURL("{{.VideoProtocol}}","{{.VideoHost}}","{{.VideoPort}}"));
+            ChatURL = getURL("{{.Protocol}}","{{.Host}}","{{.Port}}");
+            setChatURL(ChatURL);
 
             var el = $("#msg").emojioneArea({
                 placeholder: "伝言入力",
@@ -216,7 +223,7 @@
                     $.ajax({
                         type: "POST",
                         async: false,
-                        url: "{{.PROTOCOL}}://{{.Host}}/logout",
+                        url: ChatURL + "/logout",
                         data: {token: "{{.Person.Token }}"},
                         success: function (result) {
                             window.location = "https://{{.Host}}/";
@@ -281,7 +288,7 @@
                 var facebook = new SVGImageButton("#facebook", "facebook", "S");
                 facebook.s.onmousedown = function () {
                     facebook.mouseDown();
-                    window.location = "{{.PROTOCOL}}://{{.Host}}/facebook/login";
+                    window.location =  ChatURL + "/facebook/login";
                 };
                 var loginLabel = new SVGButton("#loginLabel", " Login", "S");
             }
@@ -412,11 +419,14 @@
             /////////////////////////////////////////////////// WEBSOCKET ///////////////////////////////////////
             /////////////////
             if (window["WebSocket"]) {
-                console.log("try to open connection wesbocket!");
-                var conn = new WebSocket("ws://{{.Host}}/ws");
-                if ("{{.PROTOCOL}}" == "https") {
-                    conn = new WebSocket("wss://{{.Host}}/ws");
+                var wsProtocol = null;
+                console.log("try to open connection wesbocket! " + "{{.PROTOCOL}}");
+                if ("{{.Protocol}}" == "https") {
+                    wsProtocol = "wss";
+                } else {
+                    wsProtocol = "ws";
                 }
+                conn = new WebSocket(wsProtocol +"://{{.Host}}"  + ":" + "{{.Port}}" + "/ws");
 
                 conn.onopen = function (evt) {
                     if (loggedIn()) {
@@ -561,7 +571,7 @@
     function changeRoom(room) {
         $.ajax({
             type: "POST",
-            url: "{{.PROTOCOL}}://{{.Host}}/RoomManager",
+            url: ChatURL + "/RoomManager",
             data: JSON.stringify({"Op": "ChangeRoom", "Room": room}),
             contentType: 'application/json',
             success: function (result) {
@@ -714,7 +724,7 @@
         galleryTop.removeAllSlides();
         galleryThumbs.removeAllSlides();
         $.ajax({
-            url: '{{.PROTOCOL}}://{{.Host}}/ImageManagerGet',
+            url: ChatURL + '/ImageManagerGet',
             type: 'post',
             data: JSON.stringify(request),
             contentType: 'application/json',
@@ -1037,7 +1047,7 @@
             return; // dupplicate
         }
         $.ajax({
-            url: '{{.PROTOCOL}}{{.Host}}/TargetManager',
+            url: ChatURL + '/TargetManager',
             type: 'post',
             data: JSON.stringify(message),
             contentType: 'application/json',
@@ -1049,7 +1059,7 @@
     function RemoveTarget(targetId) {
         var message = {"op": "RemoveTarget", "ids": [targetId]};
         $.ajax({
-            url: '{{.PROTOCOL}}//{{.Host}}/TargetManager',
+            url: ChatURL + '/TargetManager',
             type: 'post',
             data: JSON.stringify(message),
             contentType: 'application/json',
