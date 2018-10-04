@@ -85,10 +85,10 @@
         function getUniqueID(id) {
             return id + "@" + getID();
         }
-        function getUser(op) {
+        function getUser(url, op) {
             var res = null;
             $.ajax({
-                url: '{{.PROTOCOL}}://{{.Host}}/profile',
+                url: url + '/profile',
                 type: 'post',
                 async: false,
                 data: JSON.stringify(op),
@@ -104,11 +104,11 @@
             });
             return res;
         }
-        function getAllPublishers() {
+        function getAllPublishers(url) {
             var res = null;
             var request = {"op": "getAllPublishers"};
             $.ajax({
-                url: '{{.PROTOCOL}}://{{.Host}}/VideoManager',
+                url: url + '/VideoManager',
                 type: 'post',
                 async: false,
                 data: JSON.stringify(request),
@@ -134,11 +134,12 @@
             }
         }
         function getURL(protocol, host, port) {
-         return   protocol + "://" + host + ":" + port;
+            return   protocol + "://" + host + ":" + port;
         }
         ///// end utilities
 
         var ChatURL = null;
+
         window.onload = function () {
 
             setVideoURL(getURL("{{.VideoProtocol}}","{{.VideoHost}}","{{.VideoPort}}"));
@@ -213,7 +214,7 @@
             profile.s.onmouseup = function () {
                 profile.mouseDown();
                 console.log("profile clicekd ");
-                window.location = "{{.PROTOCOL}}://{{.Host}}/MainProfile";
+                window.location = ChatURL + "/MainProfile";
             };
 
             if (loggedIn()) {
@@ -267,7 +268,7 @@
                     tcam.mouseDown();
                     tcam.toggle();
                     if (tcam.isOn()) {
-                        var response = getUser({"op": "getMyself", "UserID": "unknown"});
+                        var response = getUser(ChatURL, {"op": "getMyself", "UserID": "unknown"});
                         if (response.status.status == "SUCCESS") {
                             join("{{.Host}}", "{{.Host}}", response.person.nic);
                         } else {
@@ -283,7 +284,7 @@
                 var google = new SVGImageButton("#google", "google", "S");
                 google.s.onmousedown = function () {
                     google.mouseDown();
-                    window.location = "{{.PROTOCOL}}://{{.Host}}/google/login";
+                    window.location = ChatURL + "/google/login";
                 };
                 var facebook = new SVGImageButton("#facebook", "facebook", "S");
                 facebook.s.onmousedown = function () {
@@ -420,7 +421,7 @@
             /////////////////
             if (window["WebSocket"]) {
                 var wsProtocol = null;
-                console.log("try to open connection wesbocket! " + "{{.PROTOCOL}}");
+                console.log("try to open connection wesbocket! " + ChatURL);
                 if ("{{.Protocol}}" == "https") {
                     wsProtocol = "wss";
                 } else {
@@ -651,7 +652,7 @@
                 </li>
                 <li>
                     <object class="webcam" id="webcam" type="image/svg+xml"
-                            data="{{.PROTOCOL}}://{{.Host}}/images/webcam.svg"></object>
+                            data="{{.Protocol}}://{{.Host}}:{{.Port}}/images/webcam.svg"></object>
             </ul>
         </div>
     </div>
@@ -761,7 +762,7 @@
     }
     function FillPersonalProfile(userId) {
         console.log("UserID >> " + userId);
-        var response = getUser( {"op": "getUserByID", "userID": userId});
+        var response = getUser(ChatURL, {"op": "getUserByID", "userID": userId});
         var user = response.person;
         var list = document.getElementById("profileItems");
         var listOthers = document.getElementById("profileItemsOther");
@@ -894,7 +895,7 @@
     function attachTheVideo(videoId) {
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
-        var result = getAllPublishers();
+        var result = getAllPublishers(ChatURL);
         $("#publishers").empty();
         var list = document.createElement("ul");
         list.setAttribute("class", "PublisherList");
@@ -984,7 +985,7 @@
         if (x.className.indexOf("w3-show") == -1) {
             // json format
             var request = {"op": "getUserByID", "userID": userId};
-            var response = getUser(request);
+            var response = getUser(ChatURL, request);
             if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
                 var person = response.person;
                 var age = getAge(person);
