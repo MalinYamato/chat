@@ -43,8 +43,8 @@
 // the whole session.
 //
 
-var server = "https://" + "media.raku.cloud" + ":8089/janus";
-var _rakuhost = "secure.raku.cloud";
+var server = null; //= "https://" + "media.raku.cloud" + ":8089/janus";
+var _rakuhost = null; //= "secure.raku.cloud";
 var _mediahost = null;
 
 var janus = null;
@@ -62,15 +62,21 @@ var mypvtid = null;
 
 var feeds = [];
 var bitrateTimer = [];
-
 var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
+
+function setVideoURL(url) {
+    server = url + "/janus";
+}
+function setChatURL(url) {
+    _rakuhost = url;
+}
 
 function publishMe(id) {
     request = {"Op":"publish", "CamID" : id};
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://"+_rakuhost +"/VideoManager",
+        url: _rakuhost +"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
@@ -83,7 +89,7 @@ function unpublishMe(id) {
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://"+_rakuhost +"/VideoManager",
+        url: _rakuhost + "/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
@@ -96,7 +102,7 @@ function setMyCamID(id) {
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://"+_rakuhost +"/VideoManager",
+        url: _rakuhost +"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
@@ -110,7 +116,7 @@ function getCamId(userID) {
     $.ajax({
         type: "POST",
         async: false,
-        url: "https://" + _rakuhost + "/VideoManager",
+        url: _rakuhost + "/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
