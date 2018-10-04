@@ -176,7 +176,7 @@ func ImageManger_GetHandler(w http.ResponseWriter, r *http.Request) {
 					log.Fatal(err)
 				}
 				for _, file2 := range files2 {
-					url := "https://" + endpoint.host + strings.Trim(path, ".") + file.Name() + "/" + file2.Name()
+					url := _config.Protocol + "://" + _config.Host + ":" + _config.Port + strings.Trim(path, ".") + file.Name() + "/" + file2.Name()
 					log.Println("Path " + url)
 					if strings.Contains(file2.Name(), "small") {
 						elem["small"] = url
