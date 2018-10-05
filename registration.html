@@ -225,7 +225,7 @@
 
 </p>
 
-<form id="ProfileForm" action="https://{{.Host}}//ProfileUpdate" style="border:1px solid #ccc">
+<form id="ProfileForm" action="{{.Protocol}}://{{.Host}}/ProfileUpdate" style="border:1px solid #ccc">
     <input hidden name="OP" value="register"/>
     <div class="container">
         <label><b>Nicname</b></label>
@@ -248,7 +248,7 @@
         </div>
         <div id="GoToChat" style="display:none;">
             <form>
-                <button formaction="https://{{.Host}}/session">Go to Chat!</button>
+                <button formaction="{{.Protocol}}://{{.Host}}/session">Go to Chat!</button>
             </form>
         </div>
 
@@ -285,13 +285,13 @@
         $.ajax({
             type: "POST",
             async: false,
-            url: "https://{{.Host}}/ProfileUpdate",
+            url: "{{.Protocol}}://{{.Host}}/ProfileUpdate",
             data: {"OP": "cancel", "NicName": name},
             success: function (result) {
                 console.log("Cancel mess " + result);
                 }
         })
-        window.location.href = 'https://{{.Host}}';
+        window.location.href = '{{.Protocol}}://{{.Host}}';
     }
 
     function verifyNicName() {
@@ -300,7 +300,7 @@
         $.ajax({
             type: "POST",
             async: false,
-            url: "https://{{.Host}}/ProfileUpdate",
+            url: "{{.Protocol}}://{{.Host}}/ProfileUpdate",
             data: {"OP": "checkNicname", "NicName": name},
                 success: function (result) {
                     console.log("mess " + result);
@@ -322,7 +322,7 @@
         $.ajax({
             type: "POST",
             async: false,
-            url: "https://{{.Host}}/ProfileUpdate",
+            url: "{{.Protocol}}://{{.Host}}/ProfileUpdate",
             data: {"OP": "register", "NicName": name},
             success: function (result) {
                 console.log("mess " + result);
