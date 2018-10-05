@@ -44,9 +44,8 @@ var (
 	LANGUAGES   = []string{"English", "Finnish", "Same", "Swedish", "German", "French", "Spannish", "Italian", "Portogese", "Russian", "Chinese", "Japanese", "Korean", "Thai"}
 	ORIENTATION = []string{"Straight", "Gay", "Lesbian", "BiSexual", "ASexual"}
 	GENDER      = []string{"Female", "Male", "TransF", "TransM", "Other"}
-	RELATION    = []string{"Single","Married","Partner","Divorced"}
+	RELATION    = []string{"Single", "Married", "Partner", "Divorced"}
 )
-
 
 type PersonResponse struct {
 	Status Status `json:"status"`
@@ -74,12 +73,18 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	p, _ := _persons.findPersonByToken(token)
 	t := template.New("fieldname example")
 	t = template.Must(template.ParseFiles(homepath + "registration.html"))
+	var prot = "https"
+	if r.Proto == "HTTP/1.1" {
+		prot = "http"
+	}
 	t.Execute(w, struct {
-		P    Person
-		Host string
+		P        Person
+		Host     string
+		Protocol string
 	}{
-		P:    p,
-		Host: r.Host,
+		P:        p,
+		Protocol: prot,
+		Host:     r.Host,
 	})
 }
 
@@ -165,6 +170,10 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	token := session.Values[sessionToken].(string)
 	p, _ := _persons.findPersonByToken(token)
+	var prot = "https"
+	if r.Proto == "HTTP/1.1" {
+		prot = "http"
+	}
 	t := template.New("fieldname example")
 	t = template.Must(template.ParseFiles(homepath + "profile.html"))
 	t.Execute(w, struct {
@@ -173,6 +182,7 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 		SexualOrientations []string
 		Relationship       []string
 		P                  Person
+		Protocol           string
 		Host               string
 	}{
 		Languages:          LANGUAGES,
@@ -180,6 +190,7 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 		SexualOrientations: ORIENTATION,
 		Relationship:       RELATION,
 		P:                  p,
+		Protocol:           prot,
 		Host:               r.Host,
 	})
 }
@@ -250,8 +261,8 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 
 				p.FirstName = r.Form.Get("FirstName")
 				p.LastName = r.Form.Get("LastName")
-				p.FirstNamePublic, _= strconv.ParseBool( r.Form.Get("FirstNamePublic"))
-				p.LastNamePublic, _= strconv.ParseBool( r.Form.Get("LastNamePublic"))
+				p.FirstNamePublic, _ = strconv.ParseBool(r.Form.Get("FirstNamePublic"))
+				p.LastNamePublic, _ = strconv.ParseBool(r.Form.Get("LastNamePublic"))
 				p.PictureURL = r.Form.Get("PictureURL")
 				p.Gender = r.Form.Get("Gender")
 				p.Country = r.Form.Get("Country")
@@ -259,8 +270,8 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				p.Lat = r.Form.Get("Lat")
 				p.Long = r.Form.Get("Long")
 				//p.Nic = r.Form.Get("Nic")
-                p.Relationship = r.Form.Get("Relationship")
-                p.Children,_ = strconv.Atoi( r.Form.Get( "Children") )
+				p.Relationship = r.Form.Get("Relationship")
+				p.Children, _ = strconv.Atoi(r.Form.Get("Children"))
 				p.Profession = r.Form.Get("Profession")
 				p.Education = r.Form.Get("Education")
 				p.SexualOrientation = r.Form.Get("SexualOrientation")

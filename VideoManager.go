@@ -35,9 +35,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 	"sync"
-
+	"time"
 )
 
 type WebRTCSubscribe struct {
@@ -57,7 +56,6 @@ type WebRTCUser struct {
 
 type WebRTC map[string]WebRTCUser
 
-
 type SinglePublisherResponse struct {
 	Status   Status   `json:"status"`
 	CamID    int      `json:"camID"`
@@ -66,12 +64,12 @@ type SinglePublisherResponse struct {
 }
 
 type PublishersResponse struct {
-	Status   Status   `json:"status"`
-	Persons  []Person `json:"persons"`
+	Status  Status   `json:"status"`
+	Persons []Person `json:"persons"`
 }
 
 type StatusResponse struct {
-Status   Status   `json:"status"`
+	Status Status `json:"status"`
 }
 
 type VideoRequest struct {
@@ -88,15 +86,16 @@ var netClient = &http.Client{
 //////////// RTC ////////////////
 
 type RTCManager struct {
-	hub *Hub
+	hub        *Hub
 	publishers MediaUsers
 }
 
 var __mediaUsers MediaUsers
-func getMediaUsers() (*MediaUsers) {
-	return  &__mediaUsers
+
+func getMediaUsers() *MediaUsers {
+	return &__mediaUsers
 }
-func unlockMediaUsers()  {
+func unlockMediaUsers() {
 	_mutex.Unlock()
 }
 func lockMediaUsers() {
@@ -104,6 +103,7 @@ func lockMediaUsers() {
 }
 
 var _mutex sync.Mutex
+
 func setMediaUsers(mediaUsers MediaUsers) {
 	lockMediaUsers()
 	__mediaUsers = mediaUsers
@@ -115,21 +115,23 @@ func (manager *RTCManager) start() {
 		time.Sleep(5 * time.Second)
 		publishers := JanusCapture()
 
-		lockMediaUsers()   ////////////// LOCK
+		lockMediaUsers() ////////////// LOCK
 		mus := __mediaUsers.getAll()
-		new_mus := publishers.getAll();
+		new_mus := publishers.getAll()
 		for k, _ := range new_mus {
-			_, ok := mus[k];
-			if ! ok {
+			_, ok := mus[k]
+			if !ok {
 				p, _ := _persons.findPersonByNickName(k)
 				hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Video ON!"}
 			}
 		}
-		unlockMediaUsers()  ////////////// UN LOCK
+		unlockMediaUsers() ////////////// UN LOCK
 		manager.hub.updateMediaUsers <- publishers
 	}
 }
+
 var __rtcManager RTCManager
+
 func startRTCManager() {
 	__rtcManager := &RTCManager{hub: hub}
 	go __rtcManager.start()
@@ -148,8 +150,8 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 			_, ok = _persons.findPersonByToken(token)
-			if ! ok {
-				json_response, err = json.Marshal(StatusResponse{Status{ERROR, "fail to find person by token" }})
+			if !ok {
+				json_response, err = json.Marshal(StatusResponse{Status{ERROR, "fail to find person by token"}})
 			} else {
 				decoder := json.NewDecoder(r.Body)
 				err = decoder.Decode(&request)
@@ -160,7 +162,7 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 
 				if request.Op == "getCamID" {
 					var response SinglePublisherResponse
-					publisher, ok := _persons.findPersonByToken( request.UserID)
+					publisher, ok := _persons.findPersonByToken(request.UserID)
 					if !ok {
 						response.Status = Status{ERROR, "Could not find person"}
 					} else {
@@ -168,13 +170,13 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 						pubs := getMediaUsers().getAll()
 						unlockMediaUsers()
 						mu, ok := pubs[publisher.Nic]
-						if ! ok {
+						if !ok {
 							response.Status = Status{WARNING, "Publisher not found!"}
 							log.Println("user " + request.UserID + " not found")
 						} else {
 							response.CamID = mu.ID
 							response.Status = Status{SUCCESS, ""}
-							log.Printf("camid %d\n",response.CamID)
+							log.Printf("camid %d\n", response.CamID)
 						}
 					}
 					json_response, err = json.Marshal(response)
@@ -182,7 +184,6 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 						panic(err)
 					}
 				}
-
 				if request.Op == "getAllPublishers" {
 					log.Println("getAllPublishers")
 					response := PublishersResponse{}
@@ -190,12 +191,12 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 					pubs := getMediaUsers().getAll()
 					unlockMediaUsers()
 					response.Persons = nil
-					response.Status = Status{ SUCCESS, "No publishers"}
+					response.Status = Status{SUCCESS, "No publishers"}
 					for _, v := range pubs {
-						person, ok := _persons.findPersonByNickName(v.Display);
+						person, ok := _persons.findPersonByNickName(v.Display)
 						if ok {
 							response.Persons = append(response.Persons, person)
-							response.Status = Status{ SUCCESS, ""}
+							response.Status = Status{SUCCESS, ""}
 						}
 					}
 					json_response, err = json.Marshal(response)
@@ -203,18 +204,16 @@ func VideoManager_handler(w http.ResponseWriter, r *http.Request) {
 						panic(err)
 					}
 				}
-
 			}
 		}
 	} else {
 		var err error
-		json_response, err = json.Marshal(StatusResponse{Status{ERROR, "Wrong HTTP method" }})
+		json_response, err = json.Marshal(StatusResponse{Status{ERROR, "Wrong HTTP method"}})
 		if err != nil {
 			panic(err)
 		}
 		log.Println("ImageManager: Unknown HTTP method ", r.Method)
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json_response)
 }

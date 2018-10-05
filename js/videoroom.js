@@ -43,10 +43,8 @@
 // the whole session.
 //
 
-var server = null; //= "https://" + "media.raku.cloud" + ":8089/janus";
-var _rakuhost = null; //= "secure.raku.cloud";
-var _mediahost = null;
-
+var server = null; // example = "https://" + "media.raku.cloud" + ":8089/janus";
+var _chaServertURL = null;
 var janus = null;
 var sfutest = null;
 var opaqueId = "videoroomtest-"+Janus.randomString(12);
@@ -66,9 +64,11 @@ var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringV
 
 function setVideoURL(url) {
     server = url + "/janus";
+    console.log("server URL " + server);
 }
 function setChatURL(url) {
-    _rakuhost = url;
+    _chaServertURL = url;
+    console.log("chathost URL " + _chaServertURL);
 }
 
 function publishMe(id) {
@@ -76,7 +76,7 @@ function publishMe(id) {
     $.ajax({
         type: "POST",
         async: false,
-        url: _rakuhost +"/VideoManager",
+        url: _chaServertURL +"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
@@ -89,7 +89,7 @@ function unpublishMe(id) {
     $.ajax({
         type: "POST",
         async: false,
-        url: _rakuhost + "/VideoManager",
+        url: _chaServertURL + "/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
@@ -102,7 +102,7 @@ function setMyCamID(id) {
     $.ajax({
         type: "POST",
         async: false,
-        url: _rakuhost +"/VideoManager",
+        url: _chaServertURL +"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
@@ -113,10 +113,11 @@ function setMyCamID(id) {
 function getCamId(userID) {
     var camId = null;
     request = {"Op":"getCamID", "UserID" : userID};
+    console.log( ">>> " + _chaServertURL);
     $.ajax({
         type: "POST",
         async: false,
-        url: _rakuhost + "/VideoManager",
+        url: _chaServertURL + "/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
         success: function (result) {
@@ -160,9 +161,9 @@ function unpub()
     camUser.style.visibility = "hidden";
     unpublishMe(myid);
 }
-function join(host, mediahost, name) {
-    _rakuhost  = host;
-    _mediahost = mediahost;
+function join(name) {
+     //_rakuhost  = host;
+    //_mediahost = mediahost;
     myusername = name;
     document.getElementById("camArea").style.height = "278px";
     $(".screen").css("height", "260px");
