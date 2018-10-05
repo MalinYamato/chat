@@ -1,3 +1,5 @@
+
+
 <!--
 //
 // Copyright 2017 Malin Yamato Lääkkö --  All rights reserved.
@@ -29,7 +31,6 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 -->
 
 <!DOCTYPE html>
@@ -47,21 +48,18 @@
     <link rel="stylesheet" href="css/file.css"/>
 
     <style>
-
         .ProfileLabel {
             margin: 0;
             margin-left: 10px;
             text-shadow: 2px 2px 4px #000000;
             font: 24px Comic Sans MS, cursive, sans-serif;
         }
-
         .menu ul {
             margin-top: 8px;
             max-width: 200px;
             list-style-type: none;
             padding: 0;
         }
-
         .menu li {
             padding: 4px;
             margin-bottom: 7px;
@@ -72,7 +70,6 @@
             flex-direction: column;
             border-radius: 8px;
         }
-
         input, select {
             padding: 4px;
             margin-bottom: 5px;
@@ -83,13 +80,11 @@
             border-radius: 8px;
             font: 16px Arial, Helvetica, sans-serif;
         }
-
         .menu span {
             margin-bottom: 2px;
             margin-left: 2px;
             color: rgb(74, 74, 74);
         }
-
         .header {
             background-color: #9cb8f5;
             color: #ffffff;
@@ -97,7 +92,6 @@
             font-size: 12px;
             padding: 2px;
         }
-
         textarea {
             width: 100%;
             height: 12em;
@@ -112,7 +106,6 @@
             font: 18px Arial, Helvetica, sans-serif;
             resize: both;
         }
-
         .button {
             background-color: #9cb8f5; /* Green */
             border-style: solid;
@@ -128,41 +121,34 @@
             display: table;
             margin: 0 auto
         }
-
         .button:hover {
             background-color: #88a3df;
             color: white;
         }
-
         fieldset {
             height: auto;
             width: 100%;
             border: 2px solid #9cb8f5;
             border-radius: 12px;
         }
-
         .flex-column {
             display: flex;
             flex-direction: column;
         }
-
         .flex-row {
             display: flex;
             flex-direction: row;
             align-content: flex-start;
             flex-wrap: wrap;
         }
-
         .flexrow span {
             margin-bottom: 2px;
             margin-left: 2px;
             color: rgb(74, 74, 74);
         }
-
         #MapHolder {
             height: 330px;
         }
-
         .menu {
             margin-left: 10px;
             margin-top: 10px;
@@ -171,7 +157,6 @@
             align-content: flex-start;
             flex-wrap: wrap;
         }
-
         .picture {
             background-color: #9cb8f5;
             padding: 5px;
@@ -182,7 +167,6 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             width: auto;
         }
-
         .picture img {
             margin: 3px;
             width: 180px;
@@ -192,55 +176,43 @@
             border-style: solid;
             border-width: 2px;
         }
-
         .checkbox-container {
             display: flex;
             flex-wrap: wrap;
             margin-left: 14px;
             align-content: flex-start;
         }
-
         .checkbox-container div {
             text-align: left;
             width: 7em;
         }
-
         .td_size {
             width: 6em;
         }
-
         .td_size span {
             width: 6em;
         }
-
         #Town, #Country {
             width: 10em;
         }
-
         #Longitude, #Latitude {
             width: 10em;
-
         }
-
         .location-languages {
             max-width: 380px;
             display: none;
         }
-
         .locationbutton {
             margin-left: 2px;
         }
-
         .right-side {
             margin-top: 5px;
             margin-left: 10px;
         }
-
         .my-story {
             min-width: 80%;
             display: inline;
         }
-
         .status, .status-m {
             color: white;
             -webkit-box-shadow: 10px 10px 5px gray;
@@ -255,29 +227,24 @@
             border-radius: 12px;
             background-color: #55aa2d;
         }
-
         @media only screen and (max-width: 735px) {
             .stuff-m {
                 margin-top: 5px;
                 height: 5em;
             }
         }
-
         @media only screen and (min-width: 730px) {
             .stuff {
                 margin-top: 5px;
                 height: 5em;
             }
         }
-
         .Number {
             width: 4.5em;
         }
-
         .SmallNumber {
             width: 3.5em;
         }
-
         .cloud {
             margin-top: -10px;
             width: 110px;
@@ -286,26 +253,20 @@
             margin-left: -8px;
         / / background-color: #bfbfbf;
         }
-
         #stuff1 {
             margin-right: -10px;
         }
-
         #photographs {
             margin-left: -17px;
         }
-
         #saveButton {
             margin-left: 10px;
         }
-
         #logoutButton {
         }
-
         #locationButton {
             margin-left: 0;
         }
-
         #deleteButton {
             margin-top: -25px;
             margin-bottom: -40px;
@@ -313,34 +274,26 @@
             width: 110px;
             height: 63px;
         }
-
         #profilePictureButton {
             margin-top: -25px;
             margin-bottom: -40px;
             width: 120px;
             height: 100px;
         }
-
         .center {
             text-align: center;
         }
-
         html, body {
             position: relative;
             height: 100%;
         }
-
         body {
             margin: 0;
             padding: 0;
         }
-
         .main-gallery {
-
             width: 100%;
-
         }
-
         #photos {
             background-color: #9cb8f5;
             margin-top: 10px;
@@ -353,80 +306,63 @@
             overflow: hidden;
             resize: both;
         }
-
         .swiper-container {
             width: auto;
             height: auto;
             margin-left: auto;
             margin-right: auto;
-
         }
-
         .swiper-slide {
             background-repeat: no-repeat;
             background-size: contain;
             background-position: left;
             border-radius: 10px;
         }
-
         .gallery-top {
             width: 100%;
             height: 80%;
-
         }
-
         .gallery-top img {
             min-width: 100px;
             min-height: 70px;
             max-width: 6000px;
             max-height: 4000px;
             visibility: hidden;
-
         }
-
         .gallery-thumbs {
             margin-top: 10px;
             height: 60px;
             width: 400px;
             box-sizing: border-box;
-
         }
-
         .gallery-thumbs .swiper-slide {
             width: 50px;
             height: 50px;
             opacity: 1;
         }
-
         .gallery-thumbs .swiper-slide-active {
             opacity: 1;
             height: 50px;
             border-width: 5px;
             border-style: solid;
         }
-
         #StatusBox2 {
             height: 80px;
             width: 200px;
             margin-top: 10px;
         }
-
         #g, #fb, #e, #rakuID {
             color: rgb(212, 55, 30);
             font-weight: bold;
         }
-
         .submit {
             visibility: hidden;
         }
-
         .submit {
             padding: 0;
             margin: 0;
             height: 0;
         }
-
-
     </style>
 </head>
 
@@ -451,7 +387,7 @@
 </div>
 
 <div class="flex-row">
-    <form id="ProfileForm" class="flex-row" action="https://{{.Host}}/ProfileUpdate">
+    <form id="ProfileForm" class="flex-row" action="{{.Protocol}}://{{.Host}}/ProfileUpdate">
         <input hidden name="OP" value="update"/>
         <div class="menu">
             <div class=" picture">
@@ -558,7 +494,6 @@
 
 
         <script>
-
             function toggleCheckBox(id) {
                 var elem = document.getElementById(id);
                 if (elem.checked) {
@@ -586,7 +521,6 @@
                 } else {
                     $("#eValue").text("Yes:" + v);
                 }
-
                 if ("{{.P.FirstNamePublic}}" == "true") {
                     $('#FirstNamePublic').prop('checked', true);
                 } else {
@@ -597,7 +531,6 @@
                 } else {
                     $('#LastNamePublic').prop('checked', false);
                 }
-
             }
         </script>
 
@@ -654,24 +587,7 @@
             </div>
         </div>
     </form>
-    <script>
-        $("#ProfileForm").submit(function (event) {
-            event.preventDefault();
 
-            var myStory = new nicEditors.findEditor('myStoryArea');
-            document.getElementById("introo").setAttribute("value", myStory.getContent());
-            var post_url = $(this).attr("action");
-            var form_data = $(this).serialize();
-            $.ajax({
-                url: post_url,
-                type: "post",
-                data: form_data
-            }).done(function (response) {
-                $("#mapholder").empty();
-                reportStatus(response.status, response.detail, response.detail)
-            });
-        });
-    </script>
     <div>
         <div class="main-gallery" id="main-gallery">
             <div id="StatusBox2" hidden style="width:100%" class="StatusMessage stuff-m"><p class="status-m status"
@@ -712,7 +628,7 @@
                         <td colspan="3" class="center">Supported formats jpeg, png and gif</td>
                     </tr>
                 </table>
-                <form id="uploader" method="post" enctype="multipart/form-data" action="https://{{.Host}}/ImageManager">
+                <form id="uploader" method="post" enctype="multipart/form-data" action="{{.Protocol}}://{{.Host}}/ImageManager">
                     <input accept="image/jpg, image/jpeg, image/gif, image/png" type="file" name="images" id="images"
                            multiple/>
                     <button type="submit" id="btn">Upload Files!</button>
@@ -736,34 +652,26 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="js/swiper.js"></script>
     <script type="text/javascript">
-
-
         function phtoBoxMouseUp(e) {
             galleryTop.update(true);
             galleryThumbs.update(true)
         }
-
         function changed() {
             $("#StatusBox2").show()
             timeoutID = window.setTimeout(hideStatus, 2000);
             $("#status2").html("Your changes have not been saved yet!");
             $("#status2").css("background-color", "darkred")
         }
-
         var timeoutID;
-
         function hideStatus() {
             $("#StatusBox").hide();
             $("#StatusBox2").hide();
         }
-
         var timeoutDelayRemovalID;
-
         function delayRemoval() {
             $("#image-list").empty();
             var gal = document.getElementById("main-gallery");
         }
-
         function reportStatus(status, message1, message2) {
             timeoutID = window.setTimeout(hideStatus, 2000);
             if (status == "ERROR" || status == "WARNING") {
@@ -775,7 +683,6 @@
             }
             $("#StatusBox2").show();
         }
-
         var galleryTop = new Swiper('.gallery-top', {
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
@@ -793,13 +700,12 @@
         });
         galleryTop.params.control = galleryThumbs;
         galleryThumbs.params.control = galleryTop;
-
         function getAllImages() {
             galleryTop.removeAllSlides();
             galleryThumbs.removeAllSlides();
             request = {"op": "getMyImages"};
             $.ajax({
-                url: 'https://{{.Host}}/ImageManagerGet',
+                url: 'http://{{.Host}}/ImageManagerGet',
                 type: 'post',
                 data: JSON.stringify(request),
                 contentType: 'application/json',
@@ -816,9 +722,7 @@
                 }
             });
         }
-
         //////////////////////////////////////////////////////////////////////////////
-
         var input;
         var formdata;
         (function () {
@@ -830,7 +734,6 @@
                 document.getElementById("btn").style.display = "none";
             }
         })();
-
         function showUploadedItem(source) {
             var list = document.getElementById("image-list"),
                     li = document.createElement("li"),
@@ -839,14 +742,12 @@
             li.appendChild(img);
             list.appendChild(li);
         }
-
         if (input.addEventListener) {
             input.addEventListener("change", function (evt) {
                 var err = false;
                 var i = 0, len = this.files.length, img, reader, file;
                 document.getElementById("response").innerHTML = "Uploading . . . " + len;
                 console.log("Uploading ... " + len);
-
                 // collect all the requested files to send them all in one batch....
                 for (; i < len; i++) {
                     if (err) {
@@ -869,7 +770,7 @@
                 // all files collected into images[],,, time to send them to the server
                 if (formdata) {
                     $.ajax({
-                        url: "https://{{.Host}}/ImageManager",
+                        url: "{{.Protocol}}://{{.Host}}/ImageManager",
                         type: "POST",
                         data: formdata,
                         async: false,
@@ -886,27 +787,21 @@
                         }
                     });
                 }
-
             }, false);
         }
-
         window.onload = function () {
 
             getAllImages();
-
             var myStory = new nicEditors.findEditor('myStoryArea');
             myStory.setContent("{{.P.Description}}");
-
             checkVerifications();
 
             ///////////// All buttons ///////////////
-
             var chatButton = new SVGButton("#stuff1", "  Chat ", "S");
             chatButton.Cloud_Text.onmousedown = function () {
                 chatButton.mouseDown();
-                window.location = "https://{{.Host}}/session";
+                window.location = "{{.Protocol}}://{{.Host}}/session";
             };
-
             var photosButton = new SVGButton("#photographs", "  Photos", "L");
             photosButton.Cloud_Text.onmousedown = function () {
                 photosButton.mouseDown();
@@ -916,11 +811,25 @@
                 document.getElementById("upload").style.display = "block"
             };
 
+            $("#ProfileForm").submit(function (event) {
+                event.preventDefault();
+                var myStory = new nicEditors.findEditor('myStoryArea');
+                document.getElementById("introo").setAttribute("value", myStory.getContent());
+                var post_url = $(this).attr("action");
+                var form_data = $(this).serialize();
+                $.ajax({
+                    url: post_url,
+                    type: "post",
+                    data: form_data
+                }).done(function (response) {
+                    $("#mapholder").empty();
+                    reportStatus(response.status, response.detail, response.detail)
+                });
+            });
             var saveButton = new SVGButton("#saveButton", " Save Profile", "XL");
             saveButton.Cloud_Text.onmousedown = function () {
                 saveButton.mouseDown();
                 console.log("SaveButton");
-
                 $("#submitbutton").submit();
             };
 
@@ -932,24 +841,21 @@
                 document.getElementById("photos").style.display = "none";
                 document.getElementById("upload").style.display = "none";
             };
-
             var logoutButton = new SVGButton("#logoutButton", "  Logout", "L");
             logoutButton.Cloud_Text.onmousedown = function () {
                 logoutButton.mouseDown();
                 galleryTop.update(true);
             };
-
             var deletetButton = new SVGButton("#deleteButton", "  Delete", "L");
             deletetButton.Cloud_Text.onmousedown = function () {
                 deletetButton.mouseDown();
-
                 var node = galleryThumbs.clickedSlide;
                 var url = node.getAttribute("id");
                 console.log(">>> " + url);
                 if (url != null) {
                     request = {"Op": "Delete", "ImageURL": url};
                     $.ajax({
-                        url: 'https://{{.Host}}/ImageManagerDelete',
+                        url: '{{.Protocol}}://{{.Host}}/ImageManagerDelete',
                         type: 'post',
                         data: JSON.stringify(request),
                         contentType: 'application/json',
@@ -964,7 +870,6 @@
                     });
                 }
             };
-
             var profilePictureSelectButton = new SVGButton("#profilePictureButton", "Profile picture", "XL");
             profilePictureSelectButton.Cloud_Text.onmousedown = function () {
                 profilePictureSelectButton.mouseDown();
@@ -973,16 +878,15 @@
                 document.getElementById("PictureURL").setAttribute("src", url);
                 document.getElementById("PictureURL_hidden").setAttribute("value", url);
             };
-
             //////////////////////////////////////////
-
             $("#StatusBox").hide();
             var town = document.getElementById("town");
             var city = document.getElementById("city");
         }
-
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrYkUfGTpmGzVusIoGtCvwK-0Q6RzGHL0&callback=myMap"></script>
 </div>
 </body>
 </html>
+
+
