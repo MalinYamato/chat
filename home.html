@@ -74,7 +74,12 @@
         /// utilities
         ///
 
+        function ChatURL() {
+            return "{{.Protocol}}://{{.Host}}:{{.Port}}";
+        }
+
         var _id = 0;
+
         function getID() {
             if (_id > 1000) {
                 _id = 0;
@@ -82,9 +87,11 @@
             _id++;
             return _id;
         }
+
         function getUniqueID(id) {
             return id + "@" + getID();
         }
+
         function getUser(url, op) {
             var res = null;
             $.ajax({
@@ -104,6 +111,7 @@
             });
             return res;
         }
+
         function getAllPublishers(url) {
             var res = null;
             var request = {"op": "getAllPublishers"};
@@ -124,6 +132,7 @@
             });
             return res;
         }
+
         function genderShort(gender) {
             if (gender == "Female") {
                 return "F"
@@ -133,18 +142,13 @@
                 return "T";
             }
         }
-        function getURL(protocol, host, port) {
-            return   protocol + "://" + host + ":" + port;
-        }
-        ///// end utilities
 
-        var ChatURL = null;
+        //////////////////////////////////// end utilities /////////////////////////////////////////////
 
         window.onload = function () {
 
-            setVideoURL(getURL("{{.VideoProtocol}}","{{.VideoHost}}","{{.VideoPort}}"));
-            ChatURL = getURL("{{.Protocol}}","{{.Host}}","{{.Port}}");
-            setChatURL(ChatURL);
+            setVideoURL("{{.VideoProtocol}}://{{.VideoHost}}:{{.VideoPort}}");
+            setChatURL(ChatURL());
 
             var el = $("#msg").emojioneArea({
                 placeholder: "伝言入力",
@@ -187,6 +191,7 @@
                 newUser.appendChild(name);
                 currentUsers.appendChild(newUser);
             }
+
             function appendNewPerson(person) {
                 var newUser = document.createElement("span");
                 newUser.setAttribute("id", person.userId);
@@ -201,6 +206,7 @@
                 currentUsers.appendChild(newUser);
                 console.log("added user with " + person.userId)
             }
+
             function refreshRoomUsers(users) {
                 $("#CurrentUsers").empty();
                 for (key in users) {
@@ -210,24 +216,26 @@
 
             //////////////////////// Button actions settings ///////////////////////////////
 
-            var profile = new SVGButton("#profile", "  Profile", "L");
-            profile.s.onmouseup = function () {
-                profile.mouseDown();
-                console.log("profile clicekd ");
-                window.location = ChatURL + "/MainProfile";
-            };
 
             if (loggedIn()) {
+
+                var profile = new SVGButton("#profile", "  Profile", "L");
+                profile.s.onmouseup = function () {
+                    profile.mouseDown();
+                    console.log("profile clicekd ");
+                    window.location = ChatURL() + "/MainProfile";
+                };
+
                 var logout = new SVGButton("#logoutButton", " Logout", "S");
                 logout.Cloud_Text.onmousedown = function () {
                     logout.mouseDown();
                     $.ajax({
                         type: "POST",
                         async: false,
-                        url: ChatURL + "/logout",
+                        url: ChatURL() + "/logout",
                         data: {token: "{{.Person.Token }}"},
                         success: function (result) {
-                            window.location = "https://{{.Host}}/";
+                            window.location = ChatURL() + "/";
                         }
                     });
                 };
@@ -268,9 +276,9 @@
                     tcam.mouseDown();
                     tcam.toggle();
                     if (tcam.isOn()) {
-                        var response = getUser(ChatURL, {"op": "getMyself", "UserID": "unknown"});
+                        var response = getUser(ChatURL(), {"op": "getMyself", "UserID": "unknown"});
                         if (response.status.status == "SUCCESS") {
-                            join("{{.Host}}", "{{.Host}}", response.person.nic);
+                            join(response.person.nic);
                         } else {
                             console.log("getUser returned " + response.status.status + " " + response.status.detail);
                         }
@@ -284,21 +292,23 @@
                 var google = new SVGImageButton("#google", "google", "S");
                 google.s.onmousedown = function () {
                     google.mouseDown();
-                    window.location = ChatURL + "/google/login";
+                    window.location = ChatURL() + "/google/login";
                 };
                 var facebook = new SVGImageButton("#facebook", "facebook", "S");
                 facebook.s.onmousedown = function () {
                     facebook.mouseDown();
-                    window.location =  ChatURL + "/facebook/login";
+                    window.location = ChatURL() + "/facebook/login";
                 };
                 var loginLabel = new SVGButton("#loginLabel", " Login", "S");
             }
+
             function removeUser(message) {
                 var child = document.getElementById(message.sender);
                 if (child != null) {
                     var status = currentUsers.removeChild(child);
                 }
             }
+
             function appendLog(item) {
                 var doScroll = log.scrollTop === log.scrollHeight - log.clientHeight;
 
@@ -316,6 +326,7 @@
                 }
                 $("#log").scrollTop(0);
             }
+
             function sendMessage(op, msg) {
                 var t = new Date();
                 var time = t.getDate() + " " + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
@@ -341,6 +352,7 @@
                 }
                 return true;
             }
+
             document.getElementById("form").onsubmit = function () {
                 if (!conn) {
                     return false;
@@ -353,6 +365,7 @@
                 $(".emojionearea-editor").empty();
                 return false;
             };
+
             function myFunction(id) {
                 var x = document.getElementById(id);
                 if (x.className.indexOf("w3-show") == -1) {
@@ -361,6 +374,7 @@
                     x.className = x.className.replace(" w3-show", "");
                 }
             }
+
             function targetStatus(message, targetID) {
                 var status;
                 var a_to_b = false;
@@ -385,6 +399,7 @@
                     return status;
                 }
             }
+
             function UpdateTargetGraph(message) {
                 var publist = document.getElementById("PublishList");
                 $(publist).empty();
@@ -421,14 +436,13 @@
             /////////////////
             if (window["WebSocket"]) {
                 var wsProtocol = null;
-                console.log("try to open connection wesbocket! " + ChatURL);
+                console.log("try to open connection wesbocket! " + ChatURL());
                 if ("{{.Protocol}}" == "https") {
                     wsProtocol = "wss";
                 } else {
                     wsProtocol = "ws";
                 }
-                conn = new WebSocket(wsProtocol +"://{{.Host}}"  + ":" + "{{.Port}}" + "/ws");
-
+                conn = new WebSocket(wsProtocol + "://{{.Host}}" + ":" + "{{.Port}}" + "/ws");
                 conn.onopen = function (evt) {
                     if (loggedIn()) {
                         $("#SelectedRoom").text(RoomDefs["{{.Person.Room}}"]);
@@ -461,7 +475,6 @@
                     if (message.op == "VideoStopped") {
                         console.log("Video Stopped");
                     }
-
                     if (message.token == "flash" && message.op != "Message" && message.op != "NewUser") {
                         return;
                     } else {
@@ -491,7 +504,6 @@
                     }
 
                     console.log("Create message ", message);
-
                     var uberdiv = document.createElement("div");
                     // only show details for logged in users
                     if (loggedIn()) {
@@ -556,23 +568,25 @@
         }
 
     </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
 </head>
 
 <body>
 <script>
     var RoomDefs = {
-        "Main":     "Main本館",
-        "Private":  "Private 秘密屋",
+        "Main": "Main本館",
+        "Private": "Private 秘密屋",
         "Japanese": "日本語屋",
-        "Gay":      "Gayゲイ屋",
-        "Lesbian":  "Lesbianレズ屋",
-        "Trans":    "Trans　性転換屋",
+        "Gay": "Gayゲイ屋",
+        "Lesbian": "Lesbianレズ屋",
+        "Trans": "Trans　性転換屋",
     };
+
     function changeRoom(room) {
         $.ajax({
             type: "POST",
-            url: ChatURL + "/RoomManager",
+            url: ChatURL() + "/RoomManager",
             data: JSON.stringify({"Op": "ChangeRoom", "Room": room}),
             contentType: 'application/json',
             success: function (result) {
@@ -582,7 +596,8 @@
             }
         });
     }
-    function  SwitchRoom(room) {
+
+    function SwitchRoom(room) {
         $("#SelectedRoom").text(RoomDefs[room]);
         $("#log").empty();
         changeRoom(room);
@@ -673,7 +688,7 @@
                 <div class="flex-row">
                     <img class="Mail" src="/images/mail.svg"/>
                     <img id="privateChat" src=""/>
-                    <img  class="friends" src="/images/addfriends.svg"/>
+                    <img class="friends" src="/images/addfriends.svg"/>
                     <img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
                 </div>
             </div>
@@ -717,24 +732,25 @@
     });
     galleryThumbs.params.control = galleryTop;
     galleryTop.params.control = galleryThumbs;
-    function phtoBoxMouseUp(e)
-    {
+
+    function phtoBoxMouseUp(e) {
         galleryTop.update(true);
     }
+
     function getImages(request) {
         galleryTop.removeAllSlides();
         galleryThumbs.removeAllSlides();
         $.ajax({
-            url: ChatURL + '/ImageManagerGet',
+            url: ChatURL() + '/ImageManagerGet',
             type: 'post',
             data: JSON.stringify(request),
             contentType: 'application/json',
             success: function (r) {
-                console.log("Done......>! ", r.status + " " + r.images.length );
+                console.log("Done......>! ", r.status + " " + r.images.length);
                 for (i = 0; i < (r.images).length; i++) {
-                    var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
+                    var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' + r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
                     galleryTop.appendSlide(s);
-                    galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' +  r.images[i]["small"] + '") ></div>');
+                    galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' + r.images[i]["small"] + '") ></div>');
                     console.log(r.images[i]["small"]);
                 }
                 galleryTop.update(true);
@@ -742,12 +758,13 @@
             }
         });
     }
+
     function creeteListItem(label_text, item_data) {
         if (item_data == undefined) {
             item_data = "";
         }
         var item = document.createElement("li");
-        item.setAttribute("class","flex-row");
+        item.setAttribute("class", "flex-row");
         if (label_text != "" || label_text == undefined) {
             var label = document.createElement("div");
             label.setAttribute("class", "ProfileItemLabel");
@@ -755,20 +772,21 @@
             item.appendChild(label);
         }
         var text = document.createElement("div");
-        text.setAttribute("class","ProfileItemValue");
+        text.setAttribute("class", "ProfileItemValue");
         text.innerText = item_data;
         item.appendChild(text)
         return item;
     }
+
     function FillPersonalProfile(userId) {
         console.log("UserID >> " + userId);
-        var response = getUser(ChatURL, {"op": "getUserByID", "userID": userId});
+        var response = getUser(ChatURL(), {"op": "getUserByID", "userID": userId});
         var user = response.person;
         var list = document.getElementById("profileItems");
         var listOthers = document.getElementById("profileItemsOther");
         $("#profileItems").empty();
         $("#profileItemsOther").empty();
-        list.appendChild( creeteListItem("",user.nic + " " + getAge(user)));
+        list.appendChild(creeteListItem("", user.nic + " " + getAge(user)));
         var name = "";
         if (user.firstNamePublic == true) {
             name = user.firstName;
@@ -777,30 +795,31 @@
             name = name + " " + user.lastName;
         }
         if (name != undefined || name != "") {
-            list.appendChild( creeteListItem("",name));
+            list.appendChild(creeteListItem("", name));
         }
-        list.appendChild( creeteListItem("",user.gender));
-        list.appendChild( creeteListItem("",user.town + " " + user.country));
-        listOthers.appendChild( creeteListItem("Style ",user.sexualOrientation));
-        listOthers.appendChild( creeteListItem("Status ",user.relationship));
-        listOthers.appendChild( creeteListItem("Work ",user.profession));
-        listOthers.appendChild( creeteListItem("Education ",user.education));
+        list.appendChild(creeteListItem("", user.gender));
+        list.appendChild(creeteListItem("", user.town + " " + user.country));
+        listOthers.appendChild(creeteListItem("Style ", user.sexualOrientation));
+        listOthers.appendChild(creeteListItem("Status ", user.relationship));
+        listOthers.appendChild(creeteListItem("Work ", user.profession));
+        listOthers.appendChild(creeteListItem("Education ", user.education));
         var myStory = document.getElementById("description");
 
-        if  (user.description == undefined ) {
-                  myStory.innerText = "";
+        if (user.description == undefined) {
+            myStory.innerText = "";
         } else {
-            myStory.innerHTML =       user.description
+            myStory.innerHTML = user.description
         }
         var profilePicture = document.getElementById("ProfilePicture");
-        profilePicture.setAttribute("src", user.pictureURL );
+        profilePicture.setAttribute("src", user.pictureURL);
         var privateChat = document.getElementById("privateChat");
-        privateChat.setAttribute("src", user.pictureURL );
+        privateChat.setAttribute("src", user.pictureURL);
         privateChat.setAttribute("onclick", "RequestToPublish('" + getUniqueID(user.userId) + "')");
-        response = getImages({'op':'getImages', 'userID':userId});
+        response = getImages({'op': 'getImages', 'userID': userId});
 
         $("#profileArea").show();
     }
+
     function closeProfileView() {
         $("#profileArea").hide();
     }
@@ -878,24 +897,29 @@
             menu.className += " w3-show";
         }
     }
+
     function toggleInfo(videoId) {
         toggleOnOffVideoInfo(videoId);
     }
+
     function publisherSelected(value) {
         removePublisherMenu();
         setRemoteCam(value);
     }
+
     function removePublisherMenu() {
         $("#publishers").empty();
     }
+
     function hideVideoMenu(videoId) {
         var menu = document.getElementById("VideoMenu" + videoId);
         menu.className = menu.className.replace("w3-show", "");
     }
+
     function attachTheVideo(videoId) {
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
-        var result = getAllPublishers(ChatURL);
+        var result = getAllPublishers(ChatURL());
         $("#publishers").empty();
         var list = document.createElement("ul");
         list.setAttribute("class", "PublisherList");
@@ -914,13 +938,13 @@
         img.setAttribute("src", "/images/error.png");
         img.setAttribute("onclick", "removePublisherMenu()");
 
-
         cancel.appendChild(img);
-       // cancel.setAttribute("class", "PublisherListItem");
+        // cancel.setAttribute("class", "PublisherListItem");
 
         cancel.setAttribute("onclick", "removePublisherMenu()");
         list.appendChild(cancel);
     }
+
     function detachTheVideo(videoId) {
         hideVideoMenu(videoId);
         detachVideo(videoId);
@@ -985,7 +1009,7 @@
         if (x.className.indexOf("w3-show") == -1) {
             // json format
             var request = {"op": "getUserByID", "userID": userId};
-            var response = getUser(ChatURL, request);
+            var response = getUser(ChatURL(), request);
             if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
                 var person = response.person;
                 var age = getAge(person);
@@ -1048,7 +1072,7 @@
             return; // dupplicate
         }
         $.ajax({
-            url: ChatURL + '/TargetManager',
+            url: ChatURL() + '/TargetManager',
             type: 'post',
             data: JSON.stringify(message),
             contentType: 'application/json',
@@ -1057,10 +1081,11 @@
             }
         });
     }
+
     function RemoveTarget(targetId) {
         var message = {"op": "RemoveTarget", "ids": [targetId]};
         $.ajax({
-            url: ChatURL + '/TargetManager',
+            url: ChatURL() + '/TargetManager',
             type: 'post',
             data: JSON.stringify(message),
             contentType: 'application/json',
