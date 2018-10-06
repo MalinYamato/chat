@@ -482,7 +482,7 @@ func main() {
 			log.Fatal("ListenAndServe: ", err)
 		}
 	} else { // https
-		err = http.ListenAndServeTLS(*addr, "fullchain.pem", "privkey.pem", NewMux(_config, hub))
+		err = http.ListenAndServeTLS(*addr, _config.SSLCert, _config.SSLPrivateKey, NewMux(_config, hub))
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}
