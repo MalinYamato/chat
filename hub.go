@@ -83,14 +83,14 @@ type Command struct {
 func newHub(stack QueueStack) *Hub {
 	return &Hub{
 
-		broadcast:  make(chan Message),
-		multicast:  make(chan Message),
-		register:   make(chan *Client),
-		unregister: make(chan *Client),
-		clients:    make(map[*Client]bool),
-		rooms:      make(map[string]Room),
-		command:    make(chan Command),
-		messages:   RoomManager_getRooms(),
+		broadcast:        make(chan Message),
+		multicast:        make(chan Message),
+		register:         make(chan *Client),
+		unregister:       make(chan *Client),
+		clients:          make(map[*Client]bool),
+		rooms:            make(map[string]Room),
+		command:          make(chan Command),
+		messages:         RoomManager_getRooms(),
 		updateMediaUsers: make(chan MediaUsers),
 	}
 }
@@ -125,8 +125,6 @@ func (h *Hub) run() {
 				}
 			}
 
-
-
 		case message := <-h.broadcast:
 			room := h.messages[message.Room]
 			room.Push(message)
@@ -150,7 +148,7 @@ func (h *Hub) run() {
 			}
 
 		case mediaUsers := <-h.updateMediaUsers:
-			 setMediaUsers(mediaUsers)
+			setMediaUsers(mediaUsers)
 
 		}
 	}

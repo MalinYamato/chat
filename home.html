@@ -214,8 +214,7 @@
                 }
             }
 
-            //////////////////////// Button actions settings ///////////////////////////////
-
+            //////////////////////// Button and actions settings ///////////////////////////////
 
             if (loggedIn()) {
 
@@ -675,7 +674,6 @@
 
 <button hidden class="btn btn-default" autocomplete="off" id="start">Start</button>
 
-
 <div id="profileArea" hidden>
     <div class="ProfileArea">
         <div class="flex-row">
@@ -683,14 +681,20 @@
                 <div class="flex-row">
                     <img id="ProfilePicture" src=""/>
                     <ul id="profileItems"></ul>
+                    <div class="flex-row">
+                        <span>Private <br/> Chat</span><img id="privateChat" src=""/>
+                        <img class="Mail" src="/images/mail.svg"/>
+                    </div>
                 </div>
-                <ul id="profileItemsOther"></ul>
                 <div class="flex-row">
-                    <img class="Mail" src="/images/mail.svg"/>
-                    <img id="privateChat" src=""/>
-                    <img class="friends" src="/images/addfriends.svg"/>
-                    <img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
+                    <ul id="profileItemsOther"></ul>
+                    <div>
+
+                        <!-- <img class="friends" src="/images/addfriends.svg"/> -->
+                    </div>
                 </div>
+                <p id="description"></p>
+
             </div>
 
             <div id="pictures" class="ProfilePictures">
@@ -710,8 +714,9 @@
                 </div>
 
             </div>
+            <span>Close</span><img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
         </div>
-        <p id="description"></p>
+
     </div>
 </div>
 <script>

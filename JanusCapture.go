@@ -32,22 +32,22 @@
 package main
 
 import (
-"github.com/jmoiron/jsonq"
-"net/http"
-"encoding/json"
-"bytes"
-"fmt"
-"strconv"
-"io/ioutil"
-"strings"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"github.com/jmoiron/jsonq"
+	"io/ioutil"
 	"log"
+	"net/http"
+	"strconv"
+	"strings"
 )
 
 const http_server = "http://media.raku.cloud:7088"
 const encrypted_server = "https://media.raku.cloud:7889"
 const server = encrypted_server
-var _debug = false
 
+var _debug = false
 
 type JanusRequest struct {
 	Janus      string `json:"janus"`
@@ -97,7 +97,7 @@ func (mus *MediaUsers) findByDisplay(display string) (MediaUser, bool) {
 func (mus *MediaUsers) update(mu MediaUser) {
 	mus.__mus[mu.Display] = mu
 }
-func (mus *MediaUsers) listenersOf(display string) ([]MediaUser) {
+func (mus *MediaUsers) listenersOf(display string) []MediaUser {
 	result := []MediaUser{}
 	for _, mediaUser := range mus.__mus {
 		for _, aSubby := range mediaUser.Subscriptions {
@@ -109,10 +109,10 @@ func (mus *MediaUsers) listenersOf(display string) ([]MediaUser) {
 	return result
 }
 
-func (mus *MediaUsers) getAll() (map[string]MediaUser) {
+func (mus *MediaUsers) getAll() map[string]MediaUser {
 	return mus.__mus
 }
-func (mus *MediaUsers) count() (int) {
+func (mus *MediaUsers) count() int {
 	return len(mus.__mus)
 }
 
@@ -120,24 +120,25 @@ func recover() {
 	log.Println("getDocument failed, Janus server problaby donw")
 }
 
-
 func getDocument(mess string, path string) (r *http.Response, e error) {
-   // defer recover()
+	// defer recover()
 
 	url := server + "/admin" + "/" + path
 	message := JanusRequest{Janus: mess, Transation: "123", Secret: "janusoverlord"}
 
-	if _debug == true { fmt.Println(url) }
+	if _debug == true {
+		fmt.Println(url)
+	}
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(message)
 	res, err := http.Post(url, "application/json; charset=utf-8", b)
-	if (err != nil) {
+	if err != nil {
 		log.Println("http.post returned error " + err.Error())
-		return nil,  err
+		return nil, err
 	}
 	return res, nil
 }
-func JanusCapture() (MediaUsers) {
+func JanusCapture() MediaUsers {
 
 	//defer recover()
 
@@ -174,7 +175,7 @@ func JanusCapture() (MediaUsers) {
 			dec.Decode(&data)
 			jq := jsonq.NewQuery(data)
 			pubsub, _ := jq.String("info", "plugin_specific", "type")
-			if (pubsub == "publisher") {
+			if pubsub == "publisher" {
 				display, _ := jq.String("info", "plugin_specific", "display")
 				var aPublisher MediaUser
 				_, err := jq.Int("info", "streams", "0", "id")
@@ -183,7 +184,7 @@ func JanusCapture() (MediaUsers) {
 				} else {
 					// the publisher is broadcasting
 					_, ok := publishers.findByDisplay(display)
-					if ! ok {
+					if !ok {
 						aPublisher := MediaUser{}
 						aPublisher.Display = display
 						aPublisher.Publishments = map[handleID]Publishment{}
@@ -200,7 +201,7 @@ func JanusCapture() (MediaUsers) {
 					aPublisher.Publishments[handle_id] = Publishment{room}
 					publishers.update(aPublisher)
 				}
-			} else if (pubsub == "listener") {
+			} else if pubsub == "listener" {
 				id, _ := jq.Int("handle_id")
 				handle_id := handleID(id)
 				_, err := jq.Int("info", "streams", "0", "id")
@@ -209,7 +210,7 @@ func JanusCapture() (MediaUsers) {
 					//fmt.Println("no listening streams")
 				} else {
 					_, ok := subscriptions[handle_id]
-					if ! ok {
+					if !ok {
 						subscriptions[handle_id] = Subscription{}
 					}
 					subby := subscriptions[handle_id]
@@ -226,7 +227,7 @@ func JanusCapture() (MediaUsers) {
 	for _, user := range publishers.__mus {
 		for _, subby := range subscriptions {
 			if user.PrivateID == subby.PrivateID {
-				if (user.Subscriptions == nil) {
+				if user.Subscriptions == nil {
 					user.Subscriptions = map[handleID]Subscription{}
 				}
 				user.Subscriptions[subby.HandleID] = subby
@@ -235,16 +236,17 @@ func JanusCapture() (MediaUsers) {
 		}
 	}
 
-	if _debug == true { testJanusCapture()}
+	if _debug == true {
+		testJanusCapture()
+	}
 
 	return publishers
 }
 
-
 func testJanusCapture() {
 
 	publishers := JanusCapture()
-	fmt.Printf("count %d\n",  publishers.count() )
+	fmt.Printf("count %d\n", publishers.count())
 	for _, user := range publishers.__mus {
 		fmt.Print("User: ")
 		fmt.Printf("Display %s ID %d PvtID %d  Session %d\n", user.Display, user.ID, user.PrivateID, user.SessionID)
@@ -264,4 +266,3 @@ func testJanusCapture() {
 		fmt.Println()
 	}
 }
-
