@@ -435,6 +435,9 @@ func main() {
 		VideoPort:       os.Getenv("VIDEO_PORT"),
 	}
 
+	log.Println("Protocol ", _config.Protocol)
+	log.Println("Host     ", _config.Host)
+	log.Println("Port     ", _config.Port)
 	log.Println("creating http path..")
 	sessionStore = sessions.NewCookieStore([]byte(_config.ChatPrivateKey), nil)
 	endpoint = Endpoint{_config.Protocol, _config.Host, _config.Port}
