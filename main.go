@@ -434,7 +434,8 @@ func main() {
 		VideoHost:       os.Getenv("VIDEO_HOST"),
 		VideoPort:       os.Getenv("VIDEO_PORT"),
 	}
-
+	log.Println("Chat pvt key ", _config.ChatPrivateKey)
+	log.Println("SSL ", _config.SSLCert)
 	log.Println("Protocol ", _config.VideoProtocol)
 	log.Println("Host     ", _config.VideoHost)
 	log.Println("Port     ", _config.Port)
