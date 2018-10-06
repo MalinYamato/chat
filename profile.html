@@ -649,7 +649,7 @@
         </script>
         <textarea name="Description2"  form="ProfileForm" style="width: 400px; height: 100px;" cols="100" id="myStoryArea">hhh</textarea>
     </div>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{{.Protocol}}//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="js/swiper.js"></script>
     <script type="text/javascript">
         function phtoBoxMouseUp(e) {
@@ -705,7 +705,7 @@
             galleryThumbs.removeAllSlides();
             request = {"op": "getMyImages"};
             $.ajax({
-                url: 'http://{{.Host}}/ImageManagerGet',
+                url: '{{.Protocol}}//{{.Host}}/ImageManagerGet',
                 type: 'post',
                 data: JSON.stringify(request),
                 contentType: 'application/json',
