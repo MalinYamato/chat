@@ -460,6 +460,9 @@ visibility: hidden;
 	margin: 5px;
 	width: 100%;
 }
+.ProfileAreaLeft {
+    width: 30%;
+}
 
 .ProfilePictures {
 	background-color: transparent;
@@ -468,6 +471,7 @@ visibility: hidden;
 	width: 220px;
 	overflow: hidden;
 	resize: both;
+    margin-left:2px;
 }
 .ProfileItemValue {
 	margin-left : 5px;
