@@ -12,7 +12,6 @@ bin=/usr/local/bin
 packages=("MalinYamato/chat")
 dirs=("css"  "images"  "js")
 
-
 if [ ! -d "$document_root" ]; then
         echo "creating $document_root"
         mkdir $document_root
@@ -36,9 +35,7 @@ do
            echo "deleting package $i"
            rm -fr $src/$i
     fi
-
    echo "Installing $i"
-
    /usr/local/go/bin/go get github.com/$i
 done
 
