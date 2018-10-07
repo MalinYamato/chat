@@ -35,6 +35,7 @@ import (
 	//"code.google.com/p/graphics-go/graphics/interp"
 	"encoding/json"
 	"github.com/satori/go.uuid"
+
 	"image"
 	"image/gif"
 	"image/jpeg"
@@ -245,7 +246,8 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 				extension := res[1]
 
 				log.Println("file " + files[i].Filename)
-				fileroot := person.path() + "/img/" + uuid.NewV4().String()
+				u := uuid.Must(uuid.NewV4(), err)
+				fileroot := person.path() + "/img/" + u.String()
 				err = os.Mkdir(fileroot, 0777)
 				if err != nil {
 					panic(err)
