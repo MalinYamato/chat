@@ -6,17 +6,17 @@
 SITE="secure.raku.cloud"
 document_root="/var/www/$SITE"
 src=$GOPATH/src/github.com
-
 bin=/usr/local/bin
+packages="MalinYamato/chat"
+dirs=("css"  "images"  "js" )
 
-packages=("MalinYamato/chat")
-dirs=("css"  "images"  "js")
-
+echo "If missing, Create document root $document_root"
 if [ ! -d "$document_root" ]; then
         echo "creating $document_root"
         mkdir $document_root
 fi
 
+echo "If missing, create subdirs of document_root"
 for d in  "${dirs[@]}"
 do
 	echo  $d
@@ -26,30 +26,31 @@ do
     fi
 done
 
+echo "Deleting old package, if one"
+if [ -d "$src/$package" ]; then
+           echo "deleting package $package"
+           rm -fr $src/$package
+fi
 
-echo "getting, building and installing packages"
+echo "Installing and compiling $package"
+$GOROOT/bin/go get github.com/$package
 
-for i in "${packages[@]}"
-do
-    if [ -d "$src/$i" ]; then
-           echo "deleting package $i"
-           rm -fr $src/$i
-    fi
-   echo "Installing $i"
-   /usr/local/go/bin/go get github.com/$i
-done
-
-for i in "${packages[@]}"
-do
-   install -v -m +r $src/$i/etc/*.conf /etc/supervisor/conf.d
-   install -v -m +r $src/$i/*.html $document_root
-   install -v -m +r $src/$i/js/* $document_root/js
-   install -v -m +r $src/$i/css/* $document_root/css
-   install -v -m +r $src/$i/images/* $document_root/images
-   install -v -m +r $src/$i/*.html $document_root
-done
-
+echo "Installing main program binary chat"
 install -v -m +x $GOPATH/bin/* $document_root
+
+echo "Moving files from $package to $document_root"
+install -v -m +r $src/$package/etc/*.conf /etc/supervisor/conf.d
+install -v -m +r $src/$package/*.html $document_root
+install -v -m +r $src/$package/js/* $document_root/js
+install -v -m +r $src/$package/css/* $document_root/css
+install -v -m +r $src/$package/images/* $document_root/images
+install -v -m +r $src/$package/*.html $document_root
+if [ $1 = "c" ]; then
+    echo "Installing default config files"
+    install -v -m +r $src/$package/*.conf $document_root
+fi
+
+
 
 
 
