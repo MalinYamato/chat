@@ -7,7 +7,7 @@ SITE="secure.raku.cloud"
 document_root="/var/www/$SITE"
 src=$GOPATH/src/github.com
 bin=/usr/local/bin
-package="MalinYamato/chat"
+$package="MalinYamato/chat"
 dirs=("css"  "images"  "js" )
 
 echo "If missing, Create document root $document_root"
