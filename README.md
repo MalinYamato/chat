@@ -47,7 +47,10 @@ youll upset those guys Opera and Chrome too much.
 Started](http://golang.org/doc/install) page describes how to install the development environment.
 
 ## Test without HTTPS
-    To run the sever in test mode with HTTP only, change the file TestEnvironment.go according to your test environment and set the environment variable RakuRunMode to "Test". You may skip Setup SSL/HTTPS and Domain name setups would you choose to run the server on your localhost instead,such as http://localhost:port.
+    To run the sever in test mode with HTTP only, change the file TestEnvironment.go according to
+    your test environment and set the environment variable RakuRunMode to "Test". You may skip
+    Setup SSL/HTTPS and Domain name setups would you choose to run the server on your localhost
+    instead,such as http://localhost:port.
 
 ## Setup SSL/HTTPS
 
