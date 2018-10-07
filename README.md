@@ -100,8 +100,6 @@ according to your test environment and set the environment variable RakuRunMode 
             Settings
               Enter into "Valid OAuth redirect URIs"
               https://yourhonst.yourdomain:443/facebook/callback
-### Finally
-     Enter all corresponding keys into the file raku.conf
 
 ### Running rakuen
 The default target of installation is: /var/www/raku.
