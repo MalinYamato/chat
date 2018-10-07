@@ -31,12 +31,19 @@ The sofware is based on work by the follwing excellent contributors
    
    Malin Yamato Lääkkö, Tokyo Japan
 
-### SSL, HTTPS, TLS, DTLS, WSS, etc 
+## Test environment
+    To run the sever in test mode with HTTP only, change the file TestEnvironment.go according to
+    your test environment and set the environment variable RakuRunMode to "Test". You may skip
+    Setup SSL/HTTPS and Domain name setups would you choose to run the server on your localhost
+    instead,such as http://localhost:port. Would you require video chat as well, pls follow
+    instructions as below to set up Janus media server.
+
+## SSL, HTTPS, TLS, DTLS, WSS, etc for Production
 The server expects SSL keys and certificates. If there are no corresponding key cert files, those are self signed and generated automatically. 
 This is for testing purposes only and may only work with Firefox as a browser. For Opera and Chrome, however,  I recoomend "lets encrypt" or 
 youll upset those guys Opera and Chrome too much. 
 
-## prerequisits
+### prerequisits
 - A domain name
 - A DNS server
 - $ npm install -g emojionearea@^3.0.0
@@ -45,12 +52,6 @@ youll upset those guys Opera and Chrome too much.
   For installation, go to: https://github.com/meetecho/janus-gateway
 - The example requires a working Go development environment. The [Getting
 Started](http://golang.org/doc/install) page describes how to install the development environment.
-
-## Test without HTTPS
-    To run the sever in test mode with HTTP only, change the file TestEnvironment.go according to
-    your test environment and set the environment variable RakuRunMode to "Test". You may skip
-    Setup SSL/HTTPS and Domain name setups would you choose to run the server on your localhost
-    instead,such as http://localhost:port.
 
 ## Setup SSL/HTTPS
 
@@ -103,7 +104,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
               Enter into "Valid OAuth redirect URIs"
               https://yourhonst.yourdomain:443/facebook/callback
 
-### Running rakuen
+### Running Production
 The default target of installation is: /var/www/raku.
 Once you have Go up and running, you can download, build and run the servers
 by using the following commands.

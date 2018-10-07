@@ -61,9 +61,9 @@ type Config struct {
 	Protocol        string
 	Host            string
 	Port            string
+	VideoProtocol   string
 	VideoHost       string
 	VideoPort       string
-	VideoProtocol   string
 }
 
 //type HTMLReplace struct {
@@ -416,24 +416,10 @@ func main() {
 	_publishers = make(PublishersTargets)
 	_persons = Persons{__pers: make(map[UserId]Person)}
 	if os.Getenv("RakuRunMode") == "Test" {
-		TestEnvInit()
+		_config = LoadConfig("raku_test.conf")
+	} else {
+		_config = LoadConfig("raku.conf")
 	}
-	_config = &Config{
-		ClientID_FB:     os.Getenv("FACEBOOK_CLIENT_ID"),
-		ClientSecret_FB: os.Getenv("FACEBOOK_CLIENT_SECRET"),
-		ClientID:        os.Getenv("GOOGLE_CLIENT_ID"),
-		ClientSecret:    os.Getenv("GOOGLE_CLIENT_SECRET"),
-		ChatPrivateKey:  os.Getenv("CHAT_PRIVATE_KEY"),
-		SSLPrivateKey:   os.Getenv("PKEY"),
-		SSLCert:         os.Getenv("CERT"),
-		Host:            os.Getenv("HOST"),
-		Port:            os.Getenv("PORT"),
-		Protocol:        os.Getenv("PROTOCOL"),
-		VideoProtocol:   os.Getenv("VIDEO_PROTOCOL"),
-		VideoHost:       os.Getenv("VIDEO_HOST"),
-		VideoPort:       os.Getenv("VIDEO_PORT"),
-	}
-
 	sessionStore = sessions.NewCookieStore([]byte(_config.ChatPrivateKey), nil)
 	endpoint = Endpoint{_config.Protocol, _config.Host, _config.Port}
 	dir, _ := os.Getwd()

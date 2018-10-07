@@ -34,7 +34,7 @@ package main
 import (
 	"github.com/dghubble/gologin/facebook"
 	"github.com/dghubble/gologin/google"
-	"github.com/satori/go.uuid"
+	"github.com/rs/xid"
 	"log"
 	"net/http"
 
@@ -73,8 +73,8 @@ func issueSessionFB() http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		secret := uuid.NewV4() // used as a secret to verify identity of users who sends websocket messages from the brwoser to the server
-		userID := uuid.NewV4() // used to identify a user to all other users, not a secret.
+		secret := xid.New() // used as a secret to verify identity of users who sends websocket messages from the brwoser to the server
+		userID := xid.New() // used to identify a user to all other users, not a secret.
 		// remove possible old cookies
 		if isAuthenticated(req) {
 			log.Println("Login: There was an old cookie. Removing it")
@@ -177,8 +177,8 @@ func issueSession() http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		secret := uuid.NewV4() // used as a secret to verify identity of users who sends websocket messages from the brwoser to the server
-		userID := uuid.NewV4() // used to identify a user to all other users, not a secret.
+		secret := xid.New() // used as a secret to verify identity of users who sends websocket messages from the brwoser to the server
+		userID := xid.New() // used to identify a user to all other users, not a secret.
 		// remove possible old cookies
 		if isAuthenticated(req) {
 			log.Println("Login: There was an old cookie. Removing it")
