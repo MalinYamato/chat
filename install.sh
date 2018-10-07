@@ -16,7 +16,7 @@ if [ ! -d "$document_root" ]; then
         mkdir $document_root
 fi
 
-echo "If missing, create subdirs of document_root"
+echo "If missing, create subdirs of $document_root"
 for d in  "${dirs[@]}"
 do
 	echo  $d
