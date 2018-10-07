@@ -46,22 +46,26 @@ youll upset those guys Opera and Chrome too much.
 - The example requires a working Go development environment. The [Getting
 Started](http://golang.org/doc/install) page describes how to install the development environment.
 
-## Setting up certificates
+## Setup SSL/HTTPS
+
+To run the sever in test mode with HTTP only, change the file TestEnvironment.go
+according to your test environment and set the environment variable RakuRunMode to
+"Test".
 
 ### install certbot of Letsencrypt
     $ sudo add-apt-repository ppa:certbot/certbot
     $ sudo apt-get update
     $ sudo apt-get install certbot
 
-### Create two cectificates:
+### Create Certificates
 
 #### First, create certificates for your chat server, which must run on port 443
     $ sudo certbot certonly --standalone --preferred-challenges tls-sni  -d yourhost.yourdomain
 
-#### Secondly, creat a certificte and DNS recorrds for janus as it needs to be run over SSL on a non-standard port 8089
+#### Secondly, Create a certificate and DNS records for janus as it needs to be run over SSL on a non-standard port 8089
     You need to add hostname media to your DNS server
     $ sudo certbot -d host.domain  --manual --preferred-challenges dns certonly
-    -- You will be asked to createa a TXT record on your DNS server.
+    -- You will be asked to create a TXT record on your DNS server.
 
     $ sudo nano /opt/janus/etc/janus/janus.cfg and janus.transport.http.cfg
     #cert_pem = /opt/janus/share/janus/certs/mycert.pem
