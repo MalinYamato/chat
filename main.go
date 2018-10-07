@@ -39,7 +39,6 @@ import (
 	"github.com/dghubble/gologin/facebook"
 	"github.com/dghubble/gologin/google"
 	"github.com/dghubble/sessions"
-	"github.com/kabukky/httpscerts"
 	"golang.org/x/oauth2"
 	facebookOAuth2 "golang.org/x/oauth2/facebook"
 	googleOAuth2 "golang.org/x/oauth2/google"
@@ -442,16 +441,6 @@ func main() {
 	queue := new(QueueStack)
 	var addr = flag.String("addr", ":"+endpoint.port, "http service address")
 
-	// Check if the cert files are available.
-	err := httpscerts.Check("fullchain.pem", "privkey.pem")
-	//f they are not available, generate new ones.
-	if err != nil {
-		log.Println("Issuing autosigned Certs..")
-		err = httpscerts.Generate("fullchain.pem", "privkey.pem", endpoint.host)
-		if err != nil {
-			log.Fatal("Error: Couldn't create https certs.")
-		}
-	}
 	// allow consumer credential flags to override config fields
 	clientID := flag.String("client-id", "", "Google Client ID")
 	clientSecret := flag.String("client-secret", "", "Google Client Secret")
@@ -477,12 +466,12 @@ func main() {
 	startRTCManager()
 	log.Println("Starting service at ", endpoint.url())
 	if endpoint.protocol == "http" {
-		err = http.ListenAndServe(*addr, NewMux(_config, hub))
+		err := http.ListenAndServe(*addr, NewMux(_config, hub))
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}
 	} else { // https
-		err = http.ListenAndServeTLS(*addr, _config.SSLCert, _config.SSLPrivateKey, NewMux(_config, hub))
+		err := http.ListenAndServeTLS(*addr, _config.SSLCert, _config.SSLPrivateKey, NewMux(_config, hub))
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}
