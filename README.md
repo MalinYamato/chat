@@ -32,7 +32,7 @@ The sofware is based on work by the follwing excellent contributors
    Malin Yamato Lääkkö, Tokyo Japan
 
 ## Test environment
-    To run the sever in test mode with HTTP only, change the file TestEnvironment.go according to
+    To run the server in test mode with HTTP only, change the file TestEnvironment.go according to
     your test environment and set the environment variable RakuRunMode to "Test". You may skip
     Setup SSL/HTTPS and Domain name setups would you choose to run the server on your localhost
     instead,such as http://localhost:port. Would you require video chat as well, pls follow
@@ -114,6 +114,8 @@ by using the following commands.
         set SITE="yourhostname.yourdomain"
     $ sudo chmod +x install.sh
     $ sudo ./install.sh
+    To install default configfiles, run with parameter "c" such as
+    $ sudo ./install.sh c
     $ sudo nano /etc/supervisor/conf.d/startup_rakuen.conf
         ### Get application keys and secrets at Facebook and Google
         1. Aquire Google and Facebook applikation keys and secrets <br>

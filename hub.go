@@ -1,5 +1,5 @@
 //
-// This work is mostly done by the Gorilla team with some modificaiton by
+// This work is mostly done by the Gorilla team with some mods done by
 // Malin Lääkkö
 
 // Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
@@ -82,7 +82,6 @@ type Command struct {
 
 func newHub(stack QueueStack) *Hub {
 	return &Hub{
-
 		broadcast:        make(chan Message),
 		multicast:        make(chan Message),
 		register:         make(chan *Client),

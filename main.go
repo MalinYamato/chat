@@ -66,17 +66,8 @@ type Config struct {
 	VideoPort       string
 }
 
-//type HTMLReplace struct {
-//	Host      string
-//	LoggedIn  string
-//	LoggedOut string
-//	Person    Person
-//}
-
-type Endpoint struct {
-	protocol string
-	host     string
-	port     string
+func (endpoint *Config) url() string {
+	return endpoint.Protocol + "://" + endpoint.Host + ":" + endpoint.Port
 }
 
 type Date struct {
@@ -134,34 +125,6 @@ type MediaSession struct {
 	AudioFormat    AudioFormat `json:"AudioFormast,omitempty"`
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Simplifed protocol and structure when handshake and interpreation of SDP
-// (Session Description Protocol) is supported by another layer such as JANUS. The purpose of the protocol
-// is to let users know without maintaning state on the server-side who are currently publishing video, audio
-// or both as well as control of whom is allwoed to se certain other users broadcasts. To dissalov certain users
-// from subscribing a certain stream, the normal procedure is to look up the UserId of the AnyPublishers package
-// received and decide to reply with a MediaStatus response or not based on that.
-// Most of media information is included in SDP and are therefore omitted except for video hight and width.
-
-/*
-type MediaStatus struct {
-	MedaiServerURL string `json:"mediaServerURL"` // The url of SFU and MediaGateway
-	OnOff          string `json:"onOff"`
-	JanusId        string `json:"janusId"`  // the Id used by JAnus to identify streams
-	PubOrSub       string `json:"pubOrSub"` // Janus room
-	Room           string `json:"room"`
-	Audio          bool   `json:"audio"`
-	Video          bool   `json:"video"`
-	VideoHeight    int16  `json:"videoHeight"` // Pixels. hint how to arrange the GUI to present video
-	VideoWidth     int16  `json:"videoWidth"`  // Pixels. hint how to arrange the GUI to present video
-}
-*/
-//   AnyPuiblishers, broadcasted when interresed in knowing who is/are publishing.
-//   MediaStatus     sent as a response upon reception of AnyPublishers if
-//                          publishing, not blocking prospective subscribers or when start or stop publishing.
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 type Message struct {
 	Op         string  `json:"op"`
 	Token      string  `json:"token"`
@@ -177,10 +140,6 @@ type Message struct {
 	Graph        Graph        `json:"graph,omitempty"`
 	RoomUsers    []Person     `json:"roomUsers,omitempty"`
 	MediaSession MediaSession `json:"mediaSession,omitempty"`
-}
-
-func (endpoint *Endpoint) url() string {
-	return endpoint.protocol + "://" + endpoint.host + ":" + endpoint.port
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
@@ -352,7 +311,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	oauth2Config := &oauth2.Config{
 		ClientID:     _config.ClientID,
 		ClientSecret: _config.ClientSecret,
-		RedirectURL:  endpoint.url() + "/google/callback",
+		RedirectURL:  _config.url() + "/google/callback",
 		Endpoint:     googleOAuth2.Endpoint,
 		Scopes:       []string{"profile", "email"},
 	}
@@ -364,7 +323,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	oauth2ConfigFB := &oauth2.Config{
 		ClientID:     _config.ClientID_FB,
 		ClientSecret: _config.ClientSecret_FB,
-		RedirectURL:  endpoint.url() + "/facebook/callback",
+		RedirectURL:  _config.url() + "/facebook/callback",
 		Endpoint:     facebookOAuth2.Endpoint,
 		//Scopes:       []string{"profile", "email"},
 	}
@@ -406,7 +365,6 @@ var homepath = ""
 var _persons Persons
 var hub *Hub
 var DocumentRoot string
-var endpoint Endpoint
 var base = "home.html"
 var sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
@@ -414,28 +372,11 @@ var _config *Config
 
 func main() {
 	_publishers = make(PublishersTargets)
-	_persons = Persons{__pers: make(map[UserId]Person)}
+	_persons = Persons{make(map[UserId]Person)}
 	if os.Getenv("RakuRunMode") == "Test" {
 		_config = LoadConfig("raku_test.conf")
 	} else {
 		_config = LoadConfig("raku.conf")
-	}
-	sessionStore = sessions.NewCookieStore([]byte(_config.ChatPrivateKey), nil)
-	endpoint = Endpoint{_config.Protocol, _config.Host, _config.Port}
-	dir, _ := os.Getwd()
-	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
-	queue := new(QueueStack)
-	var addr = flag.String("addr", ":"+endpoint.port, "http service address")
-
-	// allow consumer credential flags to override config fields
-	clientID := flag.String("client-id", "", "Google Client ID")
-	clientSecret := flag.String("client-secret", "", "Google Client Secret")
-	flag.Parse()
-	if *clientID != "" {
-		_config.ClientID = *clientID
-	}
-	if *clientSecret != "" {
-		_config.ClientSecret = *clientSecret
 	}
 	if _config.ClientID == "" {
 		log.Fatal("Missing Google Client ID")
@@ -443,15 +384,21 @@ func main() {
 	if _config.ClientSecret == "" {
 		log.Fatal("Missing Google Client Secret")
 	}
+	sessionStore = sessions.NewCookieStore([]byte(_config.ChatPrivateKey), nil)
+	dir, _ := os.Getwd()
+	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
+	queue := new(QueueStack)
+	var addr = flag.String("addr", ":"+_config.Port, "http service address")
 	flag.Parse()
+	log.Println("Create the hub and run it in a different thread")
 	hub = newHub(*queue)
 	go hub.run()
-	log.Println("Loading persons database..")
+	log.Println("Load persons database..")
 	_persons.load()
-	log.Println("Start RTC manager ")
+	log.Println("Create RTC manager and run it in a different thread")
 	startRTCManager()
-	log.Println("Starting service at ", endpoint.url())
-	if endpoint.protocol == "http" {
+	log.Println("Starting service at ", _config.url())
+	if _config.Protocol == "http" {
 		err := http.ListenAndServe(*addr, NewMux(_config, hub))
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
@@ -459,7 +406,7 @@ func main() {
 	} else { // https
 		err := http.ListenAndServeTLS(*addr, _config.SSLCert, _config.SSLPrivateKey, NewMux(_config, hub))
 		if err != nil {
-			log.Fatal("ListenAndServe: ", err)
+			log.Fatal("ListenAndServe TLS: ", err)
 		}
 	}
 }

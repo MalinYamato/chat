@@ -151,7 +151,7 @@ func issueSessionFB() http.Handler {
 				Room:              "Main"}
 
 			if person.PictureURL == "" {
-				person.PictureURL = endpoint.url() + "/images/default.png"
+				person.PictureURL = _config.url() + "/images/default.png"
 			}
 			person.LoggedIn = true
 			_persons.Add(person)
@@ -226,7 +226,7 @@ func issueSession() http.Handler {
 				Password:          v.Password}
 
 			if person.PictureURL == "" {
-				person.PictureURL = endpoint.url() + "/images/default.png"
+				person.PictureURL = _config.url() + "/images/default.png"
 			}
 
 			person.LoggedIn = true

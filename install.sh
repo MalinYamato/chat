@@ -33,23 +33,23 @@ if [ -d "$src/$package" ]; then
 fi
 
 echo "Installing and compiling $package"
-$GOROOT/bin/go get github.com/$package
-
+    $GOROOT/bin/go get github.com/$package
 echo "Installing main program binary chat"
-install -v -m +x $GOPATH/bin/* $document_root
+    install -v -m +x $GOPATH/bin/* $document_root
 
 echo "Moving files from $package to $document_root"
-install -v -m +r $src/$package/etc/*.conf /etc/supervisor/conf.d
-install -v -m +r $src/$package/*.html $document_root
-install -v -m +r $src/$package/js/* $document_root/js
-install -v -m +r $src/$package/css/* $document_root/css
-install -v -m +r $src/$package/images/* $document_root/images
-install -v -m +r $src/$package/*.html $document_root
-if [ $1 = "c" ]; then
-    echo "Installing default config files"
-    install -v -m +r $src/$package/*.conf $document_root
+    install -v -m +r $src/$package/etc/*.conf /etc/supervisor/conf.d
+    install -v -m +r $src/$package/*.html $document_root
+    install -v -m +r $src/$package/js/* $document_root/js
+    install -v -m +r $src/$package/css/* $document_root/css
+    install -v -m +r $src/$package/images/* $document_root/images
+    install -v -m +r $src/$package/*.html $document_root
+if [ $# -gt 0 ]; then
+    if [[ $1 = "c" ]]; then
+        echo "Deleting current config files and installing default configs"
+        install -v -m +r $src/$package/*.conf $document_root
+    fi
 fi
-
 
 
 

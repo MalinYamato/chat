@@ -10,7 +10,7 @@ import (
 // refer to README.md for setting up Google and Facebook logins
 
 func LoadConfig(file string) *Config {
-	var conf *Config
+	conf := new(Config)
 	jsonFile, err := os.Open(file)
 	// if we os.Open returns an error then handle it
 	if err != nil {
