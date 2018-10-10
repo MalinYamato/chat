@@ -60,7 +60,7 @@ type PersonRequest struct {
 }
 
 func registrationHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := sessionStore.Get(r, sessionName)
+	session, err := _sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Main: mainProfileHandler() Call to sessionStore.Get returned ", err)
 		return
@@ -72,7 +72,7 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	token := session.Values[sessionToken].(string)
 	p, _ := _persons.findPersonByToken(token)
 	t := template.New("fieldname example")
-	t = template.Must(template.ParseFiles(homepath + "registration.html"))
+	t = template.Must(template.ParseFiles("registration.html"))
 	var prot = "https"
 	if r.Proto == "HTTP/1.1" {
 		prot = "http"
@@ -159,7 +159,7 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 // case a   CLIENT ---> TARGET
 
 func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := sessionStore.Get(r, sessionName)
+	session, err := _sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Main: mainProfileHandler() Call to sessionStore.Get returned ", err)
 		return
@@ -175,7 +175,7 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 		prot = "http"
 	}
 	t := template.New("fieldname example")
-	t = template.Must(template.ParseFiles(homepath + "profile.html"))
+	t = template.Must(template.ParseFiles("profile.html"))
 	t.Execute(w, struct {
 		Languages          []string
 		Genders            []string
@@ -217,11 +217,10 @@ func checkNicname(nic string) Status {
 }
 
 func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
-
 	r.ParseForm()
 	var status Status
 	if r.Method == "POST" {
-		session, err := sessionStore.Get(r, sessionName)
+		session, err := _sessionStore.Get(r, sessionName)
 		if err != nil {
 			log.Println("Main: UpdateProfileHandler() Call to sessionStore.Get returned ", err)
 			status.Status = ERROR
@@ -242,7 +241,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 			if op == "cancel" {
 				log.Println("User Deleted, session destroyed")
 				_persons.Delete(p)
-				sessionStore.Destroy(w, sessionName)
+				_sessionStore.Destroy(w, sessionName)
 			}
 
 			if op == "checkNicname" {
@@ -254,7 +253,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 					p.Nic = nic
 					_persons.Save(p)
 					status.Detail = "Registration successful"
-					hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic()}
+					_hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic()}
 				}
 
 			} else if op == "update" {

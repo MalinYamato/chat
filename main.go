@@ -80,10 +80,8 @@ const (
 	ERROR   = "ERROR"
 	WARNING = "WARNING"
 	SUCCESS = "SUCCESS"
-)
-const (
-	GREEN = "GREEN" // sender and target are sending pvt messages to each other
-	BLUE  = "BLUE"  // sender sends pvt messages to the target but not the other way around
+	GREEN   = "GREEN" // sender and target are sending pvt messages to each other
+	BLUE    = "BLUE"  // sender sends pvt messages to the target but not the other way around
 	//BLACK = "BLACK" // The target is blocking, black listening the sender
 )
 
@@ -148,31 +146,30 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = "/"
 	} else if strings.Contains(r.URL.Path, "/user") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
-		fp := path.Join(DocumentRoot + r.URL.Path)
+		fp := path.Join(_documentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	} else if strings.Contains(r.URL.Path, "/test") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
-		fp := path.Join(DocumentRoot + r.URL.Path)
+		fp := path.Join(_documentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	} else if strings.Contains(r.URL.Path, "/css") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
-		fp := path.Join(DocumentRoot + r.URL.Path)
+		fp := path.Join(_documentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	} else if strings.Contains(r.URL.Path, "/js") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
-		fp := path.Join(DocumentRoot + r.URL.Path)
+		fp := path.Join(_documentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	} else if strings.Contains(r.URL.Path, "/images") {
 		//log.Println("Serve ", DocumentRoot+r.URL.Path)
-		fp := path.Join(DocumentRoot + r.URL.Path)
+		fp := path.Join(_documentRoot + r.URL.Path)
 		http.ServeFile(w, r, fp)
 		return
 	}
-
 	if r.URL.Path != "/" {
 		http.Error(w, "Main: Illegal path "+r.URL.Path, 404)
 		return
@@ -182,7 +179,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	room := hub.messages["Main"]
+	room := _hub.messages["Main"]
 	ifs := room.GetAllAsList()
 	var msgs []Message
 	msgs = make([]Message, len(ifs), len(ifs))
@@ -193,7 +190,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	var none []Person
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Must(template.ParseFiles(base)).Execute(w, struct {
+	template.Must(template.ParseFiles(_home)).Execute(w, struct {
 		Protocol      string
 		Host          string
 		Port          string
@@ -229,7 +226,7 @@ type GreenBlue struct {
 
 func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
-	sess, err := sessionStore.Get(r, sessionName)
+	sess, err := _sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Main: sessionHandler: Error in getting and verifying coookie ", err)
 	}
@@ -242,7 +239,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Main: sessionHandler: User does not exist for token ", person.Token)
 		w.Write([]byte("Authorization Failure! User does not exist, The following token is invalid: " + token))
 	}
-	room := hub.messages[person.Room]
+	room := _hub.messages[person.Room]
 	ifs := room.GetAllAsList()
 	var msgs []Message
 	msgs = make([]Message, len(ifs), len(ifs))
@@ -259,7 +256,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	template.Must(template.ParseFiles(base)).Execute(w, struct {
+	template.Must(template.ParseFiles(_home)).Execute(w, struct {
 		Protocol      string
 		Host          string
 		Port          string
@@ -298,7 +295,7 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.Handle("/MainProfile", requireLogin(http.HandlerFunc(mainProfileHandler)))
 	mux.Handle("/TargetManager", requireLogin(http.HandlerFunc(TargetManagerHandler)))
 	mux.Handle("/RoomManager", requireLogin(http.HandlerFunc(RoomManagerHandler)))
-	mux.Handle("/ImageManager", requireLogin(http.HandlerFunc(ImageManager_UploadHandler)))
+	mux.Handle("/ImageManagerSave", requireLogin(http.HandlerFunc(ImageManager_SaveHandler)))
 	mux.Handle("/ImageManagerGet", requireLogin(http.HandlerFunc(ImageManger_GetHandler)))
 	mux.Handle("/ImageManagerDelete", requireLogin(http.HandlerFunc(ImageManager_DeleteHandler)))
 	mux.Handle("/VideoManager", requireLogin(http.HandlerFunc(VideoManager_handler)))
@@ -309,9 +306,9 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.HandleFunc("/logout", logoutHandler)
 
 	oauth2Config := &oauth2.Config{
-		ClientID:     _config.ClientID,
-		ClientSecret: _config.ClientSecret,
-		RedirectURL:  _config.url() + "/google/callback",
+		ClientID:     config.ClientID,
+		ClientSecret: config.ClientSecret,
+		RedirectURL:  config.url() + "/google/callback",
 		Endpoint:     googleOAuth2.Endpoint,
 		Scopes:       []string{"profile", "email"},
 	}
@@ -321,9 +318,9 @@ func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux.Handle("/google/callback", google.StateHandler(stateConfig, google.CallbackHandler(oauth2Config, issueSession(), nil)))
 
 	oauth2ConfigFB := &oauth2.Config{
-		ClientID:     _config.ClientID_FB,
-		ClientSecret: _config.ClientSecret_FB,
-		RedirectURL:  _config.url() + "/facebook/callback",
+		ClientID:     config.ClientID_FB,
+		ClientSecret: config.ClientSecret_FB,
+		RedirectURL:  config.url() + "/facebook/callback",
 		Endpoint:     facebookOAuth2.Endpoint,
 		//Scopes:       []string{"profile", "email"},
 	}
@@ -345,7 +342,7 @@ func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token strin
 		}
 		cookie = cookieInfo.Value
 	}
-	session, err := sessionStore.Get(r, sessionName)
+	session, err := _sessionStore.Get(r, sessionName)
 	if err != nil {
 		return "", "", fmt.Errorf("Fail to retrieve cookie to create session %s detail %s", sessionName, err)
 	}
@@ -361,12 +358,12 @@ func getCookieAndTokenfromRequest(r *http.Request, onlyTooken bool) (token strin
 	return token, cookie, nil
 }
 
-var homepath = ""
+const _home = "home.html"
+
 var _persons Persons
-var hub *Hub
-var DocumentRoot string
-var base = "home.html"
-var sessionStore *sessions.CookieStore
+var _hub *Hub
+var _documentRoot string
+var _sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
 var _config *Config
 
@@ -384,27 +381,27 @@ func main() {
 	if _config.ClientSecret == "" {
 		log.Fatal("Missing Google Client Secret")
 	}
-	sessionStore = sessions.NewCookieStore([]byte(_config.ChatPrivateKey), nil)
+	_sessionStore = sessions.NewCookieStore([]byte(_config.ChatPrivateKey), nil)
 	dir, _ := os.Getwd()
-	DocumentRoot = strings.Replace(dir, " ", "\\ ", -1)
+	_documentRoot = strings.Replace(dir, " ", "\\ ", -1)
 	queue := new(QueueStack)
 	var addr = flag.String("addr", ":"+_config.Port, "http service address")
 	flag.Parse()
 	log.Println("Create the hub and run it in a different thread")
-	hub = newHub(*queue)
-	go hub.run()
+	_hub = newHub(*queue)
+	go _hub.run()
 	log.Println("Load persons database..")
 	_persons.load()
 	log.Println("Create RTC manager and run it in a different thread")
 	startRTCManager()
 	log.Println("Starting service at ", _config.url())
 	if _config.Protocol == "http" {
-		err := http.ListenAndServe(*addr, NewMux(_config, hub))
+		err := http.ListenAndServe(*addr, NewMux(_config, _hub))
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}
 	} else { // https
-		err := http.ListenAndServeTLS(*addr, _config.SSLCert, _config.SSLPrivateKey, NewMux(_config, hub))
+		err := http.ListenAndServeTLS(*addr, _config.SSLCert, _config.SSLPrivateKey, NewMux(_config, _hub))
 		if err != nil {
 			log.Fatal("ListenAndServe TLS: ", err)
 		}

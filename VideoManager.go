@@ -122,7 +122,7 @@ func (manager *RTCManager) start() {
 			_, ok := mus[k]
 			if !ok {
 				p, _ := _persons.findPersonByNickName(k)
-				hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Video ON!"}
+				_hub.broadcast <- Message{Op: "VideoStarted", Token: "", Timestamp: timestamp(), Room: p.Room, Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "映像放送開始 Video ON!"}
 			}
 		}
 		unlockMediaUsers() ////////////// UN LOCK
@@ -133,7 +133,7 @@ func (manager *RTCManager) start() {
 var __rtcManager RTCManager
 
 func startRTCManager() {
-	__rtcManager := &RTCManager{hub: hub}
+	__rtcManager := &RTCManager{hub: _hub}
 	go __rtcManager.start()
 }
 

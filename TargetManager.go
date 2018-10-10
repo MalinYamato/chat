@@ -166,9 +166,9 @@ func TargetManagerHandler(w http.ResponseWriter, r *http.Request) {
 					}
 
 					targetgraph := Graph{Basenode: target.UserID, PublishersTargets: _publishers, Pictures: pictures}
-					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: target.Room, Sender: client.UserID, Targets: Targets{target.UserID: true}, Nic: "", Timestamp: timestamp(), Content: "UpdateGraph", Graph: targetgraph}
+					_hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: target.Room, Sender: client.UserID, Targets: Targets{target.UserID: true}, Nic: "", Timestamp: timestamp(), Content: "UpdateGraph", Graph: targetgraph}
 					clientgraph := Graph{Basenode: client.UserID, PublishersTargets: _publishers, Pictures: pictures}
-					hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{client.UserID: true}, Nic: "", Timestamp: timestamp(), Content: "UpdateGraph", Graph: clientgraph}
+					_hub.multicast <- Message{Op: "UpdateTargetGraph", Token: "", Room: client.Room, Sender: client.UserID, Targets: Targets{client.UserID: true}, Nic: "", Timestamp: timestamp(), Content: "UpdateGraph", Graph: clientgraph}
 
 					response.Status = Status{SUCCESS, "DONT"}
 					response.Person = target

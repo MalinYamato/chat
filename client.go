@@ -86,8 +86,8 @@ func (c *Client) validSession() bool {
 		log.Println("Client: Empty! Client does not have a Cookie yet.")
 		return false
 	}
-	sess := sessionStore.New(sessionName)
-	err := securecookie.DecodeMulti(sessionName, c.Cookie, &sess.Values, sessionStore.Codecs...)
+	sess := _sessionStore.New(sessionName)
+	err := securecookie.DecodeMulti(sessionName, c.Cookie, &sess.Values, _sessionStore.Codecs...)
 	if err != nil {
 		log.Println("Cookie was invalid, perhaps expired")
 		return false

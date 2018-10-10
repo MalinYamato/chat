@@ -43,7 +43,7 @@ type RoomRequest struct {
 }
 
 func flushMessagesInRoom(person Person, targets Targets) {
-	theRoom := hub.messages[person.Room]
+	theRoom := _hub.messages[person.Room]
 	list := theRoom.GetAllAsList()
 	//log.Println("Room List length ",len(list))
 	for i := 0; i < len(list); i++ {
@@ -51,17 +51,17 @@ func flushMessagesInRoom(person Person, targets Targets) {
 		msg = list[i].(Message)
 		msg.Token = "flash"
 		msg.Targets = targets
-		hub.multicast <- msg
+		_hub.multicast <- msg
 	}
 }
 
 func RoomManager_getRooms() map[string]QueueStack {
 	queueStack := map[string]QueueStack{
-		"Main":         QueueStack{},
-		"Japanese":     QueueStack{},
-		"Lesbian":      QueueStack{},
-		"Gay":          QueueStack{},
-		"Trans":        QueueStack{}}
+		"Main":     QueueStack{},
+		"Japanese": QueueStack{},
+		"Lesbian":  QueueStack{},
+		"Gay":      QueueStack{},
+		"Trans":    QueueStack{}}
 	return queueStack
 }
 
@@ -94,9 +94,9 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 					targets[person.UserID] = true
 					flushMessagesInRoom(person, targets)
 					RoomUsers := _persons.getAllInRoom(person.Room)
-					hub.broadcast <- Message{Op: "LeaveRoom", Token: "", Room: leavingRoom, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Leaving " + person.getNic()}
-					hub.broadcast <- Message{Op: "EnterRoom", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Entering " + person.getNic()}
-					hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "", Room: person.Room, Timestamp: timestamp(), Targets: targets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "RoomUsers" + person.getNic(), RoomUsers: RoomUsers}
+					_hub.broadcast <- Message{Op: "LeaveRoom", Token: "", Room: leavingRoom, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Leaving " + person.getNic()}
+					_hub.broadcast <- Message{Op: "EnterRoom", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Entering " + person.getNic()}
+					_hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "", Room: person.Room, Timestamp: timestamp(), Targets: targets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "RoomUsers" + person.getNic(), RoomUsers: RoomUsers}
 					status = Status{Status: SUCCESS}
 				} else if request.Op == "RefressAllMessages" {
 					targets := make(Targets)

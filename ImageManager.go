@@ -214,11 +214,11 @@ type ImageInfo struct {
 	Variants         []ImageFile `json:"variants"`
 }
 
-func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
+func ImageManager_SaveHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("got ...image!")
 	defer r.Body.Close()
 	var status Status
-	var lenght = 0
+	var length = 0
 
 	if r.Method == "POST" {
 		person, _ := _persons.findPersonByCookie(r)
@@ -233,7 +233,7 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			m := r.MultipartForm
 			files := m.File["images[]"]
-			lenght = len(files)
+			length = len(files)
 			for i, _ := range files {
 				file, err := files[i].Open()
 				defer file.Close()
@@ -269,7 +269,7 @@ func ImageManager_UploadHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if status.Status == SUCCESS {
-			status = Status{Status: SUCCESS, Detail: strconv.Itoa(lenght) + " file(s) uploaded!"}
+			status = Status{Status: SUCCESS, Detail: strconv.Itoa(length) + " file(s) uploaded!"}
 		}
 	} else {
 		status = Status{Status: ERROR}

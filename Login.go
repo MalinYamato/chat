@@ -78,9 +78,9 @@ func issueSessionFB() http.Handler {
 		// remove possible old cookies
 		if isAuthenticated(req) {
 			log.Println("Login: There was an old cookie. Removing it")
-			sessionStore.Destroy(w, sessionName)
+			_sessionStore.Destroy(w, sessionName)
 		}
-		session := sessionStore.New(sessionName)
+		session := _sessionStore.New(sessionName)
 		session.Values[sessionUserKey] = facebookUser.ID
 		session.Values[sessionToken] = secret.String()
 		err = session.Save(w)
@@ -125,7 +125,7 @@ func issueSessionFB() http.Handler {
 			person.LoggedIn = true
 			_persons.Save(person)
 			user = "registred user"
-			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic()}
+			_hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic()}
 		} else if !ok {
 			person := Person{
 				//Nic:               s[0],
@@ -182,9 +182,9 @@ func issueSession() http.Handler {
 		// remove possible old cookies
 		if isAuthenticated(req) {
 			log.Println("Login: There was an old cookie. Removing it")
-			sessionStore.Destroy(w, sessionName)
+			_sessionStore.Destroy(w, sessionName)
 		}
-		session := sessionStore.New(sessionName)
+		session := _sessionStore.New(sessionName)
 		session.Values[sessionUserKey] = googleUser.Id
 		session.Values[sessionToken] = secret.String()
 		err = session.Save(w)
@@ -232,7 +232,7 @@ func issueSession() http.Handler {
 			person.LoggedIn = true
 			_persons.Save(person)
 			user = "registred user"
-			hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic()}
+			_hub.broadcast <- Message{Op: "UserLoggedIn", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "入室 Enter" + person.getNic()}
 		} else if !ok {
 			person := Person{
 				//Nic:               googleUser.GivenName,
@@ -273,14 +273,14 @@ func issueSession() http.Handler {
 func logoutHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "POST" {
 		req.ParseForm()
-		session, _ := sessionStore.Get(req, sessionName)
+		session, _ := _sessionStore.Get(req, sessionName)
 		token := session.Values[sessionToken].(string)
 		var person Person
 		person, ok := _persons.findPersonByToken(token)
 		if ok {
 			person.LoggedIn = false
 			_persons.Save(person)
-			hub.broadcast <- Message{Op: "UserLoggedOut", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "出室、またね " + person.getNic()}
+			_hub.broadcast <- Message{Op: "UserLoggedOut", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "出室、またね " + person.getNic()}
 			if person.Keep == false {
 				log.Printf("Login: Logout user and remove Remove her profile Email %s  UserId %s Token %s", person.Email, person.UserID, person.Token)
 				_persons.Delete(person)
@@ -289,7 +289,7 @@ func logoutHandler(w http.ResponseWriter, req *http.Request) {
 				log.Printf("Login: Logout user but keep her Profile Email %s  UserId %s Token %s", person.Email, person.UserID, person.Token)
 			}
 		}
-		sessionStore.Destroy(w, sessionName)
+		_sessionStore.Destroy(w, sessionName)
 	}
 	// redirect does not work for AJAX calls. Redirects have to be implemtend by client
 	w.Write([]byte(SUCCESS))
@@ -309,7 +309,7 @@ func requireLoginNonMember(next http.Handler) http.Handler {
 func requireLogin(next http.Handler) http.Handler {
 
 	fn := func(w http.ResponseWriter, req *http.Request) {
-		session, _ := sessionStore.Get(req, sessionName)
+		session, _ := _sessionStore.Get(req, sessionName)
 		token := session.Values[sessionToken].(string)
 		var person Person
 		person.Keep = false
@@ -317,7 +317,7 @@ func requireLogin(next http.Handler) http.Handler {
 		log.Println(" ok %s  %s", person.FirstName, person.Token, token, strconv.FormatBool(ok), strconv.FormatBool(person.Keep))
 		if person.Keep == false {
 			_persons.Delete(person)
-			sessionStore.Destroy(w, sessionName)
+			_sessionStore.Destroy(w, sessionName)
 			http.Redirect(w, req, "/", http.StatusFound)
 			return
 		}
@@ -331,7 +331,7 @@ func requireLogin(next http.Handler) http.Handler {
 }
 
 func isAuthenticated(req *http.Request) bool {
-	_, err := sessionStore.Get(req, sessionName)
+	_, err := _sessionStore.Get(req, sessionName)
 	if err == nil {
 		return true
 	}

@@ -71,8 +71,7 @@
 
     <script>
 
-        /// utilities
-        ///
+        /// utilities ///
 
         function ChatURL() {
             return "{{.Protocol}}://{{.Host}}:{{.Port}}";
@@ -218,6 +217,8 @@
 
             if (loggedIn()) {
 
+              $(".dropdown").show();
+
                 var profile = new SVGButton("#profile", "  Profile", "L");
                 profile.s.onmouseup = function () {
                     profile.mouseDown();
@@ -288,6 +289,9 @@
             }
 
             if (!loggedIn()) {
+
+                $(".dropdown").hide();
+
                 var google = new SVGImageButton("#google", "google", "S");
                 google.s.onmousedown = function () {
                     google.mouseDown();
@@ -604,7 +608,7 @@
 </script>
 <div id="menu">
     <div id="leftMenu">
-        <div class="flex-row">
+        <div class="flex-row" display="none">
             <img id="rakurakuen" src="/images/rakurakuen.png"/>
             <div class="flex-column">
                 <object id="profile" class="cstuff" type="image/svg+xml" data="/images/chat.svg">
@@ -612,18 +616,18 @@
                 </object>
                 <span id="me">{{ with .Person}}{{.Nic}} {{end}}</span>
             </div>
-        </div>
-        <div class="dropdown flex-row">
-            <a href="javascript:void(0)" class="dropbtn">Room:</a>
-            <div class="dropdown-content">
-                <button onclick="SwitchRoom('Main')" id="MainButton">Main 本館</button>
-                <button onclick="SwitchRoom('Private')" id="PrivateButton">Instant Private 秘密屋</button>
-                <button onclick="SwitchRoom('Japanese')" id="JapaneseButton">日本語屋</button>
-                <button onclick="SwitchRoom('Gay')" id="GayButton">Gay ゲイ屋</button>
-                <button onclick="SwitchRoom('Lesbian')" id="LesbianButton">Lesbian レズ屋</button>
-                <button onclick="SwitchRoom('Trans')" id="TransButton">Trans 性転換屋</button>
+            <div class=" dropdown flex-column">
+                <a href="javascript:void(0)" class="dropbtn">Room:</a>
+                <div class="dropdown-content">
+                    <button onclick="SwitchRoom('Main')" id="MainButton">Main 本館</button>
+                    <button onclick="SwitchRoom('Private')" id="PrivateButton">Instant Private 秘密屋</button>
+                    <button onclick="SwitchRoom('Japanese')" id="JapaneseButton">日本語屋</button>
+                    <button onclick="SwitchRoom('Gay')" id="GayButton">Gay ゲイ屋</button>
+                    <button onclick="SwitchRoom('Lesbian')" id="LesbianButton">Lesbian レズ屋</button>
+                    <button onclick="SwitchRoom('Trans')" id="TransButton">Trans 性転換屋</button>
+                </div>
+                <div id="SelectedRoom"></div>
             </div>
-            <div id="SelectedRoom"></div>
         </div>
     </div>
 
