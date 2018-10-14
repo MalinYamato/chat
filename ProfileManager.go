@@ -243,10 +243,8 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				_persons.Delete(p)
 				_sessionStore.Destroy(w, sessionName)
 			}
-
 			if op == "checkNicname" {
 				status = checkNicname(nic)
-
 			} else if op == "register" {
 				status = checkNicname(nic)
 				if status.Status == "SUCCESS" {
@@ -255,9 +253,7 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 					status.Detail = "Registration successful"
 					_hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic()}
 				}
-
 			} else if op == "update" {
-
 				p.FirstName = r.Form.Get("FirstName")
 				p.LastName = r.Form.Get("LastName")
 				p.FirstNamePublic, _ = strconv.ParseBool(r.Form.Get("FirstNamePublic"))
@@ -280,11 +276,15 @@ func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
 				p.BirthDate.Day = r.Form.Get("BirthDay")
 				p.LoggedIn = true
 				fmt.Printf("%+v\n", r.Form)
-				productsSelected := r.Form["Language"]
-				log.Println(Contains(productsSelected, "English"))
+				p.Languages = make(map[string]string)
+				//
+				//Patch. Could not get map to work on the javascript side forcing me to use list for languages
+				//instead of map.
+				p.LanguagesList = []string{}
 				for i := 0; i < len(LANGUAGES); i++ {
 					if Contains(r.Form["Language"], LANGUAGES[i]) {
 						p.Languages[LANGUAGES[i]] = "checked"
+						p.LanguagesList = append(p.LanguagesList, LANGUAGES[i])
 					}
 				}
 				_persons.Save(p)

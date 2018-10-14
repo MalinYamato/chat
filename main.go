@@ -50,26 +50,6 @@ import (
 	"strings"
 )
 
-type Config struct {
-	ClientID_FB     string
-	ClientSecret_FB string
-	ClientID        string
-	ClientSecret    string
-	ChatPrivateKey  string
-	SSLPrivateKey   string
-	SSLCert         string
-	Protocol        string
-	Host            string
-	Port            string
-	VideoProtocol   string
-	VideoHost       string
-	VideoPort       string
-}
-
-func (endpoint *Config) url() string {
-	return endpoint.Protocol + "://" + endpoint.Host + ":" + endpoint.Port
-}
-
 type Date struct {
 	Year  string `json:"year"`
 	Month string `json:"month"`
@@ -365,15 +345,15 @@ var _hub *Hub
 var _documentRoot string
 var _sessionStore *sessions.CookieStore
 var _publishers PublishersTargets
-var _config *Config
+var _config Config
 
 func main() {
 	_publishers = make(PublishersTargets)
 	_persons = Persons{make(map[UserId]Person)}
 	if os.Getenv("RakuRunMode") == "Test" {
-		_config = LoadConfig("raku_test.conf")
+		_config.load("raku_test.conf")
 	} else {
-		_config = LoadConfig("raku.conf")
+		_config.load("raku.conf")
 	}
 	if _config.ClientID == "" {
 		log.Fatal("Missing Google Client ID")
@@ -396,12 +376,12 @@ func main() {
 	startRTCManager()
 	log.Println("Starting service at ", _config.url())
 	if _config.Protocol == "http" {
-		err := http.ListenAndServe(*addr, NewMux(_config, _hub))
+		err := http.ListenAndServe(*addr, NewMux(&_config, _hub))
 		if err != nil {
 			log.Fatal("ListenAndServe: ", err)
 		}
 	} else { // https
-		err := http.ListenAndServeTLS(*addr, _config.SSLCert, _config.SSLPrivateKey, NewMux(_config, _hub))
+		err := http.ListenAndServeTLS(*addr, _config.SSLCert, _config.SSLPrivateKey, NewMux(&_config, _hub))
 		if err != nil {
 			log.Fatal("ListenAndServe TLS: ", err)
 		}

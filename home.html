@@ -616,7 +616,7 @@
                 </object>
                 <span id="me">{{ with .Person}}{{.Nic}} {{end}}</span>
             </div>
-            <div class=" dropdown flex-column">
+            <div class=" dropdown flex-row">
                 <a href="javascript:void(0)" class="dropbtn">Room:</a>
                 <div class="dropdown-content">
                     <button onclick="SwitchRoom('Main')" id="MainButton">Main 本館</button>
@@ -812,8 +812,15 @@
         listOthers.appendChild(creeteListItem("Status ", user.relationship));
         listOthers.appendChild(creeteListItem("Work ", user.profession));
         listOthers.appendChild(creeteListItem("Education ", user.education));
+        var languages = "";
+        if (user.LanguagesList != null) {
+            for (var lan of user.LanguagesList)
+            {
+             languages = languages + " " + lan;
+            }
+        }
+        listOthers.appendChild(creeteListItem("Speaks ", languages));
         var myStory = document.getElementById("description");
-
         if (user.description == undefined) {
             myStory.innerText = "";
         } else {

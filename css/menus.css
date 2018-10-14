@@ -14,9 +14,9 @@
 
 #me {
     color: white;
-    font-size: 15px;
+    font-size: 16px;
     text-align: left;
-    margin-left: 4px;
+    margin-left: 8px;
     margin-top: -6px;
     margin-bottom: 2px;
     width: 6em;
@@ -127,7 +127,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #a9c2e9;
+    background-color: #9cb8f5;
 }
 li span {
 
@@ -140,7 +140,7 @@ li span {
 }
 
 li a:hover {
-    background-color: #a9c2e9;
+    background-color: #9cb8f5;
 }
 
 ul {
@@ -157,10 +157,10 @@ li {
 }
 
 .dropdown {
-    color: #a9c2e9;
-    margin-top: 0px;
-    margin-left: 2px;
-    width: 100%;
+    color: #9cb8f5;
+    margin-top: 1px;
+    margin-left: -26px;
+
 }
 
 #SelectedRoom {
@@ -183,19 +183,19 @@ div button, .dropbtn {
     display: inline-block;
     color: white;
     text-align: center;
-    #padding: 14px 16px;
+    margin-top: 5px;
+    margin-right: 5px;
     text-decoration: none;
 }
 
 div.dropbtn {
     display: inline-block;
+    margin-top: 5%;
 }
 
 div button:hover, .dropdown:hover .dropbtn {
     background-color: rgb(169, 194, 233);
 }
-
-
 
 .dropdown-content {
     margin-left: 5%;
@@ -218,7 +218,7 @@ div button:hover, .dropdown:hover .dropbtn {
     width: 14em;
     #text-shadow: 2px 2px 4px #000000;
     color: #333333;
-    background-color: #a9c2e9;
+    background-color: #9cb8f5;
     padding: 2px;
     text-decoration: none;
     display: block;
@@ -226,7 +226,7 @@ div button:hover, .dropdown:hover .dropbtn {
     border-radius: 10%;
 }
 
-.dropdown-content button:hover {background-color: #a9c2e9
+.dropdown-content button:hover {background-color: #9cb8f5
 }
 
 .dropdown:hover .dropdown-content {

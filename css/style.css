@@ -13,7 +13,7 @@ body {
 	height: 100%;
 	bottom: 0;
 	//background: #9cb8f5;
-	background: #a9c2e9;
+	background: #9cb8f5;
 }
 
 .flex-container {
@@ -475,7 +475,7 @@ visibility: hidden;
 }
 .ProfileItemValue {
 	margin-left : 5px;
-	width: 10em;
+	width: 16em;
 	font-size: 14px;
 }
 .ProfileItemLabel {

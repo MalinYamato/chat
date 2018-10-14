@@ -60,6 +60,7 @@ type Person struct {
 	SexualOrientation string            `json:"sexualOrientation"`
 	BirthDate         Date              `json:"birthDate"`
 	Languages         map[string]string `json:"Languages,omitempty"`
+	LanguagesList     []string          `json:"LanguagesList,omitempty"`
 	Profession        string            `json:"profession"`
 	Education         string            `json:"education"`
 	Description       string            `json:"description,omitempty"`

@@ -770,7 +770,7 @@
                 // all files collected into images[],,, time to send them to the server
                 if (formdata) {
                     $.ajax({
-                        url: "{{.Protocol}}://{{.Host}}/ImageManager",
+                        url: "{{.Protocol}}://{{.Host}}/ImageManagerSave",
                         type: "POST",
                         data: formdata,
                         async: false,
