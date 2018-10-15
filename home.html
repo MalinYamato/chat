@@ -217,7 +217,7 @@
 
             if (loggedIn()) {
 
-              $(".dropdown").show();
+                $(".dropdown").show();
 
                 var profile = new SVGButton("#profile", "  Profile", "L");
                 profile.s.onmouseup = function () {
@@ -321,7 +321,6 @@
                 else {
                     log.insertBefore(item, log.childNodes[0]);
                 }
-
                 if (log.childNodes.length > 30) {
                     for (i = 30; i < log.childNodes.length; i++) {
                         log.removeChild(log.childNodes[i]);
@@ -585,7 +584,6 @@
         "Lesbian": "Lesbianレズ屋",
         "Trans": "Trans　性転換屋",
     };
-
     function changeRoom(room) {
         $.ajax({
             type: "POST",
@@ -599,7 +597,6 @@
             }
         });
     }
-
     function SwitchRoom(room) {
         $("#SelectedRoom").text(RoomDefs[room]);
         $("#log").empty();
@@ -686,7 +683,7 @@
                     <img id="ProfilePicture" src=""/>
                     <ul id="profileItems"></ul>
                     <div class="flex-row">
-                        <span>Private <br/> Chat</span><img id="privateChat" src=""/>
+                        <span class="ProfileActionLabel">Private <br/> Chat</span><img id="privateChat" src=""/>
                         <img class="Mail" src="/images/mail.svg"/>
                     </div>
                 </div>
@@ -718,7 +715,8 @@
                 </div>
 
             </div>
-            <span>Close</span><img onclick="closeProfileView()" class="CloseProfileViewBtn" src="/images/error.png"/>
+            <span class="ProfileActionLabel">Close</span><img onclick="closeProfileView()" class="CloseProfileViewBtn"
+                                                              src="/images/error.png"/>
         </div>
 
     </div>
@@ -806,17 +804,15 @@
         if (name != undefined || name != "") {
             list.appendChild(creeteListItem("", name));
         }
-        list.appendChild(creeteListItem("", user.gender));
+        list.appendChild(creeteListItem("", user.gender + " " + user.sexualOrientation));
         list.appendChild(creeteListItem("", user.town + " " + user.country));
-        listOthers.appendChild(creeteListItem("Style ", user.sexualOrientation));
         listOthers.appendChild(creeteListItem("Status ", user.relationship));
         listOthers.appendChild(creeteListItem("Work ", user.profession));
         listOthers.appendChild(creeteListItem("Education ", user.education));
         var languages = "";
         if (user.LanguagesList != null) {
-            for (var lan of user.LanguagesList)
-            {
-             languages = languages + " " + lan;
+            for (var lan of user.LanguagesList) {
+                languages = languages + " " + lan;
             }
         }
         listOthers.appendChild(creeteListItem("Speaks ", languages));
@@ -981,7 +977,7 @@
         <div id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;"
                                                  onclick="RemoveTarget({{.Target.UserID}})"
                                                  src="{{.Target.PictureURL}}"> </img>
-            <!--<span>{{.Target.Nic}}</span>--> </div>
+        </div>
     {{end}}
         <!-- TEMPLATE CODE -->
     </div>
@@ -1085,7 +1081,7 @@
         var message = {"op": "AddTarget", "ids": [targetID]};
         console.log("message> " + message["ids"]);
         if ($("li[id='" + "Target:" + targetID + "']").length > 0) {
-            return; // dupplicate
+            return;
         }
         $.ajax({
             url: ChatURL() + '/TargetManager',
