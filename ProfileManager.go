@@ -59,7 +59,48 @@ type PersonRequest struct {
 	Nic    string `json:"nic"`
 }
 
-func registrationHandler(w http.ResponseWriter, r *http.Request) {
+func Contains(slice []string, item string) bool {
+	set := make(map[string]struct{}, len(slice))
+	for _, s := range slice {
+		set[s] = struct{}{}
+	}
+	_, ok := set[item]
+	return ok
+}
+
+func getSessionUser(r *http.Request) (p Person, s Status) {
+	var status Status
+	var person Person
+	token, _, err := getCookieAndTokenfromRequest(r, true)
+	status = Status{SUCCESS, ""}
+	var ok bool = false
+	if err != nil {
+		status = Status{ERROR, err.Error()}
+	} else {
+		person, ok = _persons.findPersonByToken(token)
+		if !ok {
+			status = Status{ERROR, err.Error()}
+		}
+	}
+	return person, status
+}
+
+func checkNewNicname(nic string) Status {
+	var status Status
+	var _, found = _persons.findPersonByNickName(nic)
+	if found == true {
+		status.Status = WARNING
+		status.Detail = "Nicname is taken"
+	} else {
+		status.Status = SUCCESS
+		status.Detail = "Nicname is unique and valid"
+	}
+	return status
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+func LaunchRegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := _sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Main: mainProfileHandler() Call to sessionStore.Get returned ", err)
@@ -88,24 +129,7 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func getSessionUser(r *http.Request) (p Person, s Status) {
-	var status Status
-	var person Person
-	token, _, err := getCookieAndTokenfromRequest(r, true)
-	status = Status{SUCCESS, ""}
-	var ok bool = false
-	if err != nil {
-		status = Status{ERROR, err.Error()}
-	} else {
-		person, ok = _persons.findPersonByToken(token)
-		if !ok {
-			status = Status{ERROR, err.Error()}
-		}
-	}
-	return person, status
-}
-
-func profileHandler(w http.ResponseWriter, r *http.Request) {
+func ProfileHandler(w http.ResponseWriter, r *http.Request) {
 	var request PersonRequest
 	var response PersonResponse
 	if r.Method == "POST" {
@@ -158,7 +182,7 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 
 // case a   CLIENT ---> TARGET
 
-func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
+func LaunchProfileHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := _sessionStore.Get(r, sessionName)
 	if err != nil {
 		log.Println("Main: mainProfileHandler() Call to sessionStore.Get returned ", err)
@@ -194,66 +218,52 @@ func mainProfileHandler(w http.ResponseWriter, r *http.Request) {
 		Host:               r.Host,
 	})
 }
-func Contains(slice []string, item string) bool {
-	set := make(map[string]struct{}, len(slice))
-	for _, s := range slice {
-		set[s] = struct{}{}
-	}
-	_, ok := set[item]
-	return ok
-}
 
-func checkNicname(nic string) Status {
+func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	var status Status
-	var _, found = _persons.findPersonByNickName(nic)
-	if found == true {
-		status.Status = "WARNING"
-		status.Detail = "Nicna me is taken"
-	} else {
-		status.Status = "SUCCESS"
-		status.Detail = "Nicname is valid"
-	}
-	return status
-}
-
-func updateProfileHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	var status Status
+	var p Person
 	if r.Method == "POST" {
-		session, err := _sessionStore.Get(r, sessionName)
-		if err != nil {
-			log.Println("Main: UpdateProfileHandler() Call to sessionStore.Get returned ", err)
-			status.Status = ERROR
-			status.Detail = "Failed to get a valid cookie!"
-		} else if session == nil {
-			log.Println("Main: UpdateProfileHandler() returned session was nil")
-			status.Status = ERROR
-			status.Detail = "The session is not valid!"
-		} else {
-			token := session.Values[sessionToken].(string)
-			var p Person
-			p, _ = _persons.findPersonByToken(token)
-			var op = r.FormValue("OP")
-			var nic = r.FormValue("NicName")
-
-			log.Println("Here " + op + " " + nic)
-
-			if op == "cancel" {
-				log.Println("User Deleted, session destroyed")
-				_persons.Delete(p)
-				_sessionStore.Destroy(w, sessionName)
+		var op = r.FormValue("OP")
+		var nic = r.FormValue("NicName")
+		p, status = getSessionUser(r)
+		if op == "checkNewNicname" {
+			status = checkNewNicname(nic)
+		} else if op == "register" {
+			status = checkNewNicname(nic)
+			if status.Status == SUCCESS {
+				p.Nic = nic
+				_persons.Save(p)
+				status.Detail = "Registration successful"
+				_hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic()}
 			}
-			if op == "checkNicname" {
-				status = checkNicname(nic)
-			} else if op == "register" {
-				status = checkNicname(nic)
-				if status.Status == "SUCCESS" {
-					p.Nic = nic
-					_persons.Save(p)
-					status.Detail = "Registration successful"
-					_hub.broadcast <- Message{Op: "NewUser", Token: "", Room: p.Room, Timestamp: timestamp(), Sender: p.UserID, Nic: p.getNic(), PictureURL: p.PictureURL, Content: "新入社員　" + p.getNic()}
-				}
-			} else if op == "update" {
+		} else if op == "cancel" {
+			log.Println("User Deleted, session destroyed")
+			_persons.Delete(p)
+			_sessionStore.Destroy(w, sessionName)
+		}
+	} else {
+		status.Status = ERROR
+		status.Detail = "Wrong HTTPS Method. Reqire POST but you sent: " + r.Method
+		log.Println(status.Detail + " method " + r.Method)
+	}
+	data, err := json.Marshal(status)
+	if err != nil {
+		panic(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+}
+
+func UpdateProfileHandler(w http.ResponseWriter, r *http.Request) {
+	var status = Status{SUCCESS, ""}
+	var p Person
+	r.ParseForm()
+	if r.Method == "POST" {
+		p, status = getSessionUser(r)
+		if status.Status == SUCCESS {
+			var op = r.FormValue("OP")
+			if op == "update" {
 				p.FirstName = r.Form.Get("FirstName")
 				p.LastName = r.Form.Get("LastName")
 				p.FirstNamePublic, _ = strconv.ParseBool(r.Form.Get("FirstNamePublic"))

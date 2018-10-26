@@ -108,7 +108,7 @@ func issueSessionFB() http.Handler {
 				PictureURL:        checkSet(v.PictureURL, ""),
 				SexualOrientation: v.SexualOrientation,
 				Languages:         v.Languages,
-				LanguagesList:     []string{},
+				LanguagesList:     v.LanguagesList,
 				Profession:        v.Profession,
 				Education:         v.Education,
 				FacebookID:        v.FacebookID,
@@ -157,7 +157,7 @@ func issueSessionFB() http.Handler {
 			}
 			person.LoggedIn = true
 			_persons.Add(person)
-			http.Redirect(w, req, "/registration", http.StatusFound)
+			http.Redirect(w, req, "/LaunchRegistration", http.StatusFound)
 			return
 		}
 		person, _ := _persons.findPersonByFacebookID(facebookUser.ID)
@@ -213,7 +213,7 @@ func issueSession() http.Handler {
 				PictureURL:        checkSet(v.PictureURL, googleUser.Picture),
 				SexualOrientation: v.SexualOrientation,
 				Languages:         v.Languages,
-				LanguagesList:     []string{},
+				LanguagesList:     v.LanguagesList,
 				Profession:        v.Profession,
 				Education:         v.Education,
 				GoogleID:          googleUser.Id,
@@ -263,7 +263,7 @@ func issueSession() http.Handler {
 
 			person.LoggedIn = true
 			_persons.Add(person)
-			http.Redirect(w, req, "/registration", http.StatusFound)
+			http.Redirect(w, req, "/LaunchRegistration", http.StatusFound)
 			return
 		}
 		person, _ := _persons.findPersonByGoogleID(googleUser.Id)
@@ -311,7 +311,6 @@ func requireLoginNonMember(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 func requireLogin(next http.Handler) http.Handler {
-
 	fn := func(w http.ResponseWriter, req *http.Request) {
 		session, _ := _sessionStore.Get(req, sessionName)
 		token := session.Values[sessionToken].(string)

@@ -75,7 +75,6 @@ function publishMe(id) {
     request = {"Op":"publish", "CamID" : id};
     $.ajax({
         type: "POST",
-        async: false,
         url: _chaServertURL +"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
@@ -88,7 +87,6 @@ function unpublishMe(id) {
     request = {"Op":"unpublish", "CamID" : id};
     $.ajax({
         type: "POST",
-        async: false,
         url: _chaServertURL + "/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',
@@ -101,7 +99,6 @@ function setMyCamID(id) {
     request = {"Op":"setMyCamID", "CamID" : id};
     $.ajax({
         type: "POST",
-        async: false,
         url: _chaServertURL +"/VideoManager",
         data: JSON.stringify(request),
         contentType: 'application/json',

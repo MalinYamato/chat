@@ -1,5 +1,5 @@
 
-html {
+tml {
 	overflow: hidden;
 }
 
@@ -12,7 +12,7 @@ body {
 	width: 100%;
 	height: 100%;
 	bottom: 0;
-	//background: #9cb8f5;
+//background: #9cb8f5;
 	background: #9cb8f5;
 }
 
@@ -27,11 +27,10 @@ body {
 
 .flexer {
 	display: flex;
-
 }
 
 .panel-title {
-visibility: hidden;
+	visibility: hidden;
 	width: 0;
 }
 .btn-xs {
@@ -40,15 +39,12 @@ visibility: hidden;
 	left: -4px;
 }
 
-
-#waitingvideo {}
-
 #curbitrate, #curbitrate2 {
 	position: relative;
 	bottom: 0;
 	color: red;
 }
- #curres, #curres2 {
+#curres, #curres2 {
 	position: relative;
 	bottom: 0;
 	color: red;
@@ -62,10 +58,9 @@ visibility: hidden;
 #camArea {
 	visibility: hidden;
 	position: sticky;
-
 	display:block;
-     //display: flex;
-    //width: auto;
+//display: flex;
+//width: auto;
 	border-radius: 10px;
 	background-color: #ad242c;
 	transition: width 0s, height 2s;
@@ -107,12 +102,11 @@ visibility: hidden;
 
 #localCam, #rCam1, #rCam2 {
 	position: absolute;
-    visibility: hidden;
+	visibility: hidden;
 	transform: scale(0.85, 0.85);
 	top: -5px;
 	left: -5px;
 }
-
 
 #localMic, #rMic1, #rMic2 {
 	visibility: hidden;
@@ -121,7 +115,6 @@ visibility: hidden;
 	height: 60px;
 	bottom: -2px;
 	right: -24px;
-
 }
 
 #camUser1, #camUser2, #camUser3 {
@@ -133,13 +126,9 @@ visibility: hidden;
 	top:  0.5em;
 	left: 3em;
 	text-align: left;
-
 }
 
-
-
 #log {
-
 	background: white;
 	margin: 0;
 	padding: 0.1em 0.1em 0.1em 0.1em;
@@ -151,9 +140,7 @@ visibility: hidden;
 	resize: both;
 	overflow: scroll;
 	border-radius: 1%;
-
 }
-
 
 #chatform {
 	position: relative;
@@ -163,20 +150,6 @@ visibility: hidden;
 	height: auto;
 	margin-left: 0.5em;
 }
-
-#divv {
-	border: 1px solid #aaaaaa;
-	padding: 0 0.5em 0 0.5em;
-	margin: 0;
-	position: absolute;
-	bottom: 1em;
-	right: 0px;
-	width: 45px;
-	height: 45px;
-	overflow: hidden;
-}
-
-
 
 .fmt-row  {
 
@@ -194,7 +167,7 @@ visibility: hidden;
 	-webkit-box-shadow:  10px 10px 5px gray;
 	-moz-box-shadow:  10px 10px 5px gray;
 	box-shadow:  8px 8px 5px gray;
-    float: left;
+	float: left;
 	height: 138px;
 	border-style: solid;
 	border-width: 2px;
@@ -282,7 +255,7 @@ visibility: hidden;
 
 #messageText {
 	font: 18px Arial, Helvetica, sans-serif;
-    height: auto;
+	height: auto;
 	white-space: normal;
 	word-break: break-all;
 	margin-left: 6px;
@@ -294,9 +267,8 @@ visibility: hidden;
 	padding-left: 2px;
 }
 
-
 #form {
-	margin: 0;
+	margin: 0.5em;
 	height: 2em;
 	left: 0px;
 	width: 80%;
@@ -314,8 +286,7 @@ visibility: hidden;
 	border-radius: 50%;
 	width: 2.5em;
 	display: block;
-    margin-bottom: 5px;
-
+	margin-bottom: 5px;
 }
 
 #PublishList img:hover {
@@ -333,7 +304,7 @@ visibility: hidden;
 .row_elem  {
 	float: left;
 	width: 80%;
-    margin-left: 2px;
+	margin-left: 2px;
 }
 
 .row_elem  div {
@@ -343,7 +314,7 @@ visibility: hidden;
 }
 
 #submit {
-	height: 2em;
+	height: 2.25em;
 	width: 4em;
 	-webkit-border-radius:20px;
 	-moz-border-radius:20px;
@@ -412,10 +383,7 @@ visibility: hidden;
 }
 
 .PublisherList {
-	margin: 2px;
-	padding: 2px;
 	color: #ad242c;
-
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
@@ -430,7 +398,6 @@ visibility: hidden;
 	margin: 2px;
 	margin-bottom: 4px;
 	border-color: white;
-
 }
 
 .PublisherList img {
@@ -460,7 +427,7 @@ visibility: hidden;
 	width: 100%;
 }
 .ProfileAreaLeft {
-    width: 30%;
+	width: 30%;
 }
 .ProfilePictures {
 	background-color: transparent;
@@ -469,7 +436,7 @@ visibility: hidden;
 	width: 220px;
 	overflow: hidden;
 	resize: both;
-    margin-left:2px;
+	margin-left:2px;
 }
 .ProfileItemValue {
 	margin-left : 5px;
@@ -479,7 +446,7 @@ visibility: hidden;
 .ProfileItemLabel {
 	color: #474747;
 	width: 5.5em;
-    font-size:13px;
+	font-size:13px;
 }
 
 .ProfileActionLabel {
@@ -500,33 +467,21 @@ visibility: hidden;
 	height: 100%;
 	min-width: 100px;
 	min-height: 70px;
-	//max-width:  px;
-	//max-height: 4000px;
 	visibility: hidden;
 }
 .swiper-slide {
-	 background-repeat: no-repeat;
-	 background-size: contain;
-	 background-position: left;
-	 border-radius: 10px;
- }
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: left;
+	border-radius: 10px;
+}
 .swiper-container {
 	width: auto;
 	height: auto;
 	margin-left: auto;
 	margin-right: auto;
 }
-.gallery-thumbs {
-	margin-top: 10px;
-	height: 60px;
-	width: 400px;
-	box-sizing: border-box;
-}
-.gallery-thumbs .swiper-slide {
-	width: 50px;
-	height: 50px;
-	opacity: 1;
-}
+
 #ProfilePicture {
 	height: 60px;
 	width: 60px;
@@ -539,8 +494,8 @@ visibility: hidden;
 	margin-right: 6px;
 	margin-top: 9px;
 	margin-left: 4px;
-
 }
+
 #privateChat {
 	height: 40px;
 	width: 40px;

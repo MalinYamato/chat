@@ -230,43 +230,43 @@
         Malin Yamato Lääkkö -- malin@yamato.xyz </br>
         Enjoy!
     </p>
-<div class="flex-column">
-    <form id="ProfileForm" action="{{.Protocol}}://{{.Host}}/ProfileUpdate" style="border:1px solid #ccc">
-        <input hidden name="OP" value="register"/>
-        <div class="container">
-            <label><b>Nicname</b></label>
-            <input maxlength="12" id="NicName" type="text" placeholder="Unique name" name="NicName" required>
+    <div class="flex-column">
+        <form id="ProfileForm" action="{{.Protocol}}://{{.Host}}/Registration" style="border:1px solid #ccc">
+            <input hidden name="OP" value="register"/>
+            <div class="container">
+                <label><b>Nicname</b></label>
+                <input maxlength="12" id="NicName" type="text" placeholder="Unique name" name="NicName" required>
 
-            <div class="result">
-                <img id="validNameImg" src="images/yes.png" style="display:none;">
-                <img id="invalidNameImg" src="images/no.png" style="display:none;">
+                <div class="result">
+                    <img id="validNameImg" src="images/yes.png" style="display:none;">
+                    <img id="invalidNameImg" src="images/no.png" style="display:none;">
+                </div>
+                <button type="button" onclick="verifyNicName()" class="verifyButton">Verify</button>
+
+                <div id="validName" style="display:none;"><span> Congratuation! The name is OK!</span></div>
+                <div id="invalidName" style="display:none;"><span> Invalid name! -- The name is taken!</span></div>
+
+                <p class="agree">By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
+
             </div>
-            <button type="button" onclick="verifyNicName()" class="verifyButton">Verify</button>
 
-            <div id="validName" style="display:none;"><span> Congratuation! The name is OK!</span></div>
-            <div id="invalidName" style="display:none;"><span> Invalid name! -- The name is taken!</span></div>
-
-            <p class="agree">By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
-
-        </div>
-
-    </form>
-
-
-    <div class="clearfix" id="signIn" style="display:block;">
-        <div class="flex-row">
-            <button type="button" onclick="register()" class="signupbtn">Sign Up</button>
-            <button type="button" class="cancelbtn" onclick="cancel()">Cancel</button>
-        </div>
-
-    </div>
-    <div id="GoToChat" class="flex-column" style="display:none;">
-        <div><p id="message">C</div>
-        <form>
-            <button formaction="{{.Protocol}}://{{.Host}}/MainProfile">Complete your profile!</button>
         </form>
+
+
+        <div class="clearfix" id="signIn" style="display:block;">
+            <div class="flex-row">
+                <button type="button" onclick="register()" class="signupbtn">Sign Up</button>
+                <button type="button" class="cancelbtn" onclick="cancel()">Cancel</button>
+            </div>
+
+        </div>
+        <div id="GoToChat" class="flex-column" style="display:none;">
+            <div><p id="message">C</div>
+            <form>
+                <button formaction="{{.Protocol}}://{{.Host}}/MainProfile">Complete your profile!</button>
+            </form>
+        </div>
     </div>
-</div>
 </div>
 </body>
 
@@ -296,7 +296,7 @@
         $.ajax({
             type: "POST",
             async: false,
-            url: "{{.Protocol}}://{{.Host}}/ProfileUpdate",
+            url: "{{.Protocol}}://{{.Host}}/RegistrationManager",
             data: {"OP": "cancel", "NicName": name},
             success: function (result) {
                 console.log("Cancel mess " + result);
@@ -311,8 +311,8 @@
         $.ajax({
             type: "POST",
             async: false,
-            url: "{{.Protocol}}://{{.Host}}/ProfileUpdate",
-            data: {"OP": "checkNicname", "NicName": name},
+            url: "{{.Protocol}}://{{.Host}}/RegistrationManager",
+            data: {"OP": "checkNewNicname", "NicName": name},
             success: function (result) {
                 console.log("mess " + result);
                 if (result.status == "SUCCESS") {
@@ -333,7 +333,7 @@
         $.ajax({
             type: "POST",
             async: false,
-            url: "{{.Protocol}}://{{.Host}}/ProfileUpdate",
+            url: "{{.Protocol}}://{{.Host}}/RegistrationManager",
             data: {"OP": "register", "NicName": name},
             success: function (result) {
                 console.log("mess " + result);
@@ -348,7 +348,6 @@
                     singin.style.display = "block";
                     goChat.style.display = "none"
                 }
-
             }
         })
     }

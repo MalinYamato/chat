@@ -267,12 +267,14 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 
 func NewMux(config *Config, hub *Hub) *http.ServeMux {
 	mux := http.NewServeMux()
+
 	mux.HandleFunc("/", serveHome)
 	mux.Handle("/session/", requireLogin(http.HandlerFunc(sessionHandler)))
-	mux.Handle("/profile", requireLogin(http.HandlerFunc(profileHandler)))
-	mux.Handle("/registration", requireLoginNonMember(http.HandlerFunc(registrationHandler)))
-	mux.Handle("/ProfileUpdate", requireLoginNonMember(http.HandlerFunc(updateProfileHandler)))
-	mux.Handle("/MainProfile", requireLogin(http.HandlerFunc(mainProfileHandler)))
+	mux.Handle("/profile", requireLogin(http.HandlerFunc(ProfileHandler)))
+	mux.Handle("/LaunchRegistration", requireLoginNonMember(http.HandlerFunc(LaunchRegistrationHandler)))
+	mux.Handle("/RegistrationManager", requireLoginNonMember(http.HandlerFunc(RegistrationHandler)))
+	mux.Handle("/ProfileUpdate", requireLoginNonMember(http.HandlerFunc(UpdateProfileHandler)))
+	mux.Handle("/MainProfile", requireLogin(http.HandlerFunc(LaunchProfileHandler)))
 	mux.Handle("/TargetManager", requireLogin(http.HandlerFunc(TargetManagerHandler)))
 	mux.Handle("/RoomManager", requireLogin(http.HandlerFunc(RoomManagerHandler)))
 	mux.Handle("/ImageManagerSave", requireLogin(http.HandlerFunc(ImageManager_SaveHandler)))

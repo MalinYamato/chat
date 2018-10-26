@@ -123,12 +123,11 @@ func (h *Hub) run() {
 					}
 				}
 			}
-
 		case message := <-h.broadcast:
 			room := h.messages[message.Room]
 			room.Push(message)
 			h.messages[message.Room] = room
-			log.Printf("Hub: broadcast to all from %s in room %s", message.Sender, message.Room)
+			log.Printf("Hub: multicast to all from %s in room %s", message.Sender, message.Room)
 
 			if room.Len() > 50 {
 				room.TailPop()

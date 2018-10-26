@@ -65,20 +65,46 @@ func RoomManager_getRooms() map[string]QueueStack {
 	return queueStack
 }
 
+type RoomElem struct {
+	Name     string `json:"name"`
+	Japanese string `json:"japanese"`
+	Owner    UserId `json:"owner"`
+}
+
+type Response struct {
+	Status Status     `json:"status"`
+	Rooms  []RoomElem `json:"rooms"`
+}
+
+var rooms = []RoomElem{
+	{"Main", "本館", ""},
+	{"Private", "秘密屋", ""},
+	{"Japanese", "日本語屋", ""},
+	{"Gay", "ゲイ屋", ""},
+	{"Lesbian", "レス屋", ""},
+	{"Trans", "性転換屋", ""},
+}
+
+func roomUsersToTargets(rooms string) {
+
+}
+
 func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var status Status
+	var response Response
+	response.Rooms = rooms
+	response.Status = Status{"SUCCESS", ""}
 	var request RoomRequest
 	if r.Method == "POST" {
 		var person Person
 		var ok bool
 		token, _, err := getCookieAndTokenfromRequest(r, true)
 		if err != nil {
-			status = Status{ERROR, err.Error()}
+			response.Status = Status{ERROR, err.Error()}
 		} else {
 			person, ok = _persons.findPersonByToken(token)
 			if !ok {
-				status = Status{ERROR, err.Error()}
+				response.Status = Status{ERROR, err.Error()}
 			} else {
 				decoder := json.NewDecoder(r.Body)
 				err = decoder.Decode(&request)
@@ -86,33 +112,55 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 					log.Println("Json decoder error> ", err.Error())
 					panic(err)
 				}
-				if request.Op == "ChangeRoom" {
+				if request.Op == "GetAllRooms" {
+					response.Status = Status{Status: SUCCESS} // not implemented
+				} else if request.Op == "ChangeRoom" {
 					leavingRoom := person.Room
-					person.Room = request.Room
+					enterRoom := request.Room
+
+					person.Room = enterRoom
 					_persons.Save(person)
+
 					targets := make(Targets)
 					targets[person.UserID] = true
 					flushMessagesInRoom(person, targets)
-					RoomUsers := _persons.getAllInRoom(person.Room)
-					_hub.broadcast <- Message{Op: "LeaveRoom", Token: "", Room: leavingRoom, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Leaving " + person.getNic()}
-					_hub.broadcast <- Message{Op: "EnterRoom", Token: "", Room: person.Room, Timestamp: timestamp(), Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "Entering " + person.getNic()}
-					_hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "", Room: person.Room, Timestamp: timestamp(), Targets: targets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL, Content: "RoomUsers" + person.getNic(), RoomUsers: RoomUsers}
-					status = Status{Status: SUCCESS}
+
+					EnterRoomUsers := _persons.getAllInRoom(enterRoom)
+					LeavingRoomUsers := _persons.getAllInRoom(leavingRoom)
+					EnterRoomTargets := make(Targets)
+					LeavingRoomTargets := make(Targets)
+					for i := 0; i < len(EnterRoomUsers); i++ {
+						EnterRoomTargets[EnterRoomUsers[i].UserID] = true
+					}
+					for i := 0; i < len(LeavingRoomUsers); i++ {
+						LeavingRoomTargets[LeavingRoomUsers[i].UserID] = true
+					}
+
+					_hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "UserEnteredRoom", Room: person.Room, Timestamp: timestamp(),
+						Targets: EnterRoomTargets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL,
+						Content: "RoomUsers" + person.getNic(), RoomUsers: EnterRoomUsers}
+					response.Status = Status{Status: SUCCESS}
+
+					_hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "UserLeftRoom", Room: person.Room, Timestamp: timestamp(),
+						Targets: LeavingRoomTargets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL,
+						Content: "RoomUsers" + person.getNic(), RoomUsers: LeavingRoomUsers}
+					response.Status = Status{Status: SUCCESS}
+
 				} else if request.Op == "RefressAllMessages" {
 					targets := make(Targets)
 					targets[person.UserID] = true
 					flushMessagesInRoom(person, targets)
-					status = Status{Status: SUCCESS}
+					response.Status = Status{Status: SUCCESS}
 				} else {
-					status = Status{Status: ERROR, Detail: "Unknown operation > " + request.Op}
+					response.Status = Status{Status: ERROR, Detail: "Unknown operation > " + request.Op}
 				}
 			}
 		}
 	} else {
-		status = Status{Status: ERROR}
+		response.Status = Status{Status: ERROR}
 		log.Println("Main Unknown HTTP method ", r.Method)
 	}
-	json_response, err := json.Marshal(status)
+	json_response, err := json.Marshal(response)
 	if err != nil {
 		panic(err)
 	}

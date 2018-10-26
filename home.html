@@ -38,25 +38,28 @@
     <title>Raku Rakuen</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css"> -->
     <link href="/css/style.css" rel="stylesheet" type="text/css"/>
     <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
     <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="/css/emojionearea.min.css">
     <link rel="stylesheet" href="/css/swiper.css">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+   <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> -->
     <!-- ---------------------------------------->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.0.3/adapter.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
     <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.2/js/bootstrap.min.js"></script>
+            src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
@@ -86,50 +89,117 @@
             _id++;
             return _id;
         }
-
         function getUniqueID(id) {
             return id + "@" + getID();
         }
 
-        function getUser(url, op) {
-            var res = null;
-            $.ajax({
-                url: url + '/profile',
-                type: 'post',
-                async: false,
-                data: JSON.stringify(op),
-                contentType: 'application/json',
-                success: function (response) {
-                    if (response.status.status != "SUCCESS") {
-                        console.log("getUser failed> " + response.status + " " + response)
+        function getAsync(op,url,cb) {
+                var request = new XMLHttpRequest();
+                request.open("POST",  ChatURL() + url, true);
+                request.setRequestHeader('Content-Type', 'application/json');
+                request.responseType = 'json';
+                request.onload = function () {
+                    status = request.status;
+                    if (status == 200) {
+                        //var json_res =  JSON.parse(request.responseText);
+                        cb && cb(request.response);
                     } else {
-                        console.log("getUser successul> " + response.status.status + " " + response.person.userID)
+                        console.log("getAsync problem " + op + " " + status)
                     }
-                    res = response;
-                }
-            });
-            return res;
+                };
+                request.send(JSON.stringify(op));
         }
 
-        function getAllPublishers(url) {
-            var res = null;
-            var request = {"op": "getAllPublishers"};
-            $.ajax({
-                url: url + '/VideoManager',
-                type: 'post',
-                async: false,
-                data: JSON.stringify(request),
-                contentType: 'application/json',
-                success: function (response) {
-                    if (response.status.status != "SUCCESS") {
-                        console.log("getAllPublishes failed> " + response.response.status + " " + response.status.detail)
-                    } else {
-                        console.log("getAllPublishers successul>")
-                    }
-                    res = response;
+        function getUser(op) {
+            var request = new XMLHttpRequest();
+            request.open("POST",  ChatURL() + "/profile", false);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify(op));
+                if (request.status == 200) {
+                    json_response = JSON.parse(request.response);
+                    return json_response;
+                } else {
+                    console.log("getUser problem " + status)
                 }
-            });
-            return res;
+        }
+
+        function logoutAction(op) {
+            var request = new XMLHttpRequest();
+            request.open("POST",  ChatURL() + "/logout", false);
+            request.onload = function () {
+                status = request.status;
+                if (status == 200) {
+                    window.location = ChatURL() + "/";
+                } else {
+                    console.log("logoutAction problem " + status)
+                }
+            };
+            request.send({token: "{{.Person.Token }}"});
+        }
+
+        function changeRoom(op, cb) {
+            var request = new XMLHttpRequest();
+            request.open("POST", ChatURL() + "/RoomManager", true);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.responseType = 'json';
+            request.onload = function () {
+                status = request.status;
+                if (status == 200) {
+                    //var json_res =  JSON.parse(request.responseText);
+                    var info = request.response;
+                    if (info.status.status != "SUCCESS") {
+                        console.log("Calling RooomManger::ChangeRoom returned " + info.status.status + " " + info.status.detail);
+                    }
+                        cb && cb(request.response);
+                } else {
+                    console.log("changeRoom problem " + status)
+                }
+            };
+            request.send(JSON.stringify(op));
+        }
+
+        function AddTarget(op, cb) {
+            var request = new XMLHttpRequest();
+            request.open("POST", ChatURL() + "/TargetManager", true);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.responseType = 'json';
+            request.onload = function () {
+                status = request.status;
+                if (status == 200) {
+                    //var json_res =  JSON.parse(request.responseText);
+                    var info = request.response;
+                    if (info.status.status != "SUCCESS") {
+                        console.log("Calling TargetManager::Add returned " + info.status.status + " " + info.status.detail);
+                    }
+                    cb && cb(request.response);
+                } else {
+                    console.log("Target::Add problem " + status)
+                }
+            };
+            request.send(JSON.stringify(op));
+        }
+
+        function RemoveTarget(targetId, cb) {
+            var op = {"op": "RemoveTarget", "ids": [targetId]};
+            var request = new XMLHttpRequest();
+            request.open("POST", ChatURL() + "/TargetManager", true);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.responseType = 'json';
+            request.onload = function () {
+                status = request.status;
+                if (status == 200) {
+                    var info = request.response;
+                    if (info.status.status!= "SUCCESS") {
+                        console.log("Calling TargetManager::RemoveTarget returned " + info.status.status + " " + info.status.detail);
+                    } else {
+                        console.log("Delete target requested /targetManager: " + info.status.detail);
+                    }
+                    cb && cb(request.response);
+                } else {
+                    console.log("Target::RemoveTarget problem " + status)
+                }
+            };
+            request.send(JSON.stringify(op))
         }
 
         function genderShort(gender) {
@@ -189,6 +259,7 @@
                 name.innerText = message.nic;
                 newUser.appendChild(name);
                 currentUsers.appendChild(newUser);
+                console.log("appended user with " + message.sender)
             }
 
             function appendNewPerson(person) {
@@ -229,15 +300,7 @@
                 var logout = new SVGButton("#logoutButton", " Logout", "S");
                 logout.Cloud_Text.onmousedown = function () {
                     logout.mouseDown();
-                    $.ajax({
-                        type: "POST",
-                        async: false,
-                        url: ChatURL() + "/logout",
-                        data: {token: "{{.Person.Token }}"},
-                        success: function (result) {
-                            window.location = ChatURL() + "/";
-                        }
-                    });
+                    logoutAction("");
                 };
                 //  var lcam = new SVGWebcamButton("#localCam", "x", "x");
                 var lcam = new SVGWebcamButton("#localCam", "x", "x");
@@ -276,16 +339,19 @@
                     tcam.mouseDown();
                     tcam.toggle();
                     if (tcam.isOn()) {
-                        var response = getUser(ChatURL(), {"op": "getMyself", "UserID": "unknown"});
-                        if (response.status.status == "SUCCESS") {
-                            join(response.person.nic);
-                        } else {
-                            console.log("getUser returned " + response.status.status + " " + response.status.detail);
-                        }
+                        getAsync({"op": "getMyself", "UserID": "unknown"}, "/profile", SVGWebcamButtonCB);
                     } else if (!tcam.isOn()) {
                         leave();
                     }
                 };
+
+                function SVGWebcamButtonCB(response) {
+                    if (response.status.status == "SUCCESS") {
+                        join(response.person.nic);
+                    } else {
+                        console.log("getUser returned " + response.status.status + " " + response.status.detail);
+                    }
+                }
             }
 
             if (!loggedIn()) {
@@ -369,7 +435,7 @@
             };
 
             function myFunction(id) {
-                var x = document.getElementById(id);
+               var x = document.getElementById(id);
                 if (x.className.indexOf("w3-show") == -1) {
                     x.className += " w3-show";
                 } else {
@@ -410,9 +476,7 @@
                     if (key1 == message.graph.basenode) {
                         for (var key2 in message.graph.publishersTargets[key1]) {
                             console.log("key2:" + key2 + ":");
-
                             stat = targetStatus(message, key2);
-
                             var liIten = document.createElement("li");
                             liIten.setAttribute("id", "Target:" + key2);
                             liIten.setAttribute("style", "list-style-type:none");
@@ -448,7 +512,8 @@
                 conn.onopen = function (evt) {
                     if (loggedIn()) {
                         $("#SelectedRoom").text(RoomDefs["{{.Person.Room}}"]);
-                        changeRoom("{{.Person.Room}}");
+                        var room = "{{.Person.Room}}";
+                        changeRoom({"Op": "ChangeRoom", "Room": room}, null);
                     }
                     console.log("Websocket connection opened!");
                 };
@@ -467,7 +532,6 @@
                         modal.style.display = "block";
                         return;
                     }
-
                     console.log("New message", message);
                     var uniqueID = message.sender + "@" + getID();
 
@@ -481,37 +545,25 @@
                         return;
                     } else {
                         switch (message.op) {
-                            case "EnterRoom":
-                                appendNewUser(message, uniqueID);
-                                return;
-                            case "LeaveRoom":
-                                removeUser(message, uniqueID);
-                                return;
-                            case "UserLoggedIn" :
-                                appendNewUser(message, uniqueID);
-                                return;
+
                             case "UserLoggedOut" :
                                 removeUser(message, uniqueID);
                                 return;
                             case "RefreshRoomUsers":
                                 refreshRoomUsers(message.roomUsers);
                                 return;
-                            case "NewUser":
-                                appendNewUser(message, uniqueID);
-                                break;
                             case "UpdateTargetGraph" :
                                 UpdateTargetGraph(message);
                                 return;
                         }
                     }
 
-                    console.log("Create message ", message);
                     var uberdiv = document.createElement("div");
                     // only show details for logged in users
                     if (loggedIn()) {
                         var diven = document.createElement("div");
                         diven.setAttribute("id", uniqueID);
-                        diven.setAttribute("class", "w3-hide w3-container w3-ligth-grey fmt-row");
+                        diven.setAttribute("class", "w3-hide w3-container w3-light-grey fmt-row");
                     }
                     var picture_elem = document.createElement("img");
                     picture_elem.setAttribute("src", message.pictureURL);
@@ -531,9 +583,7 @@
                     message_item.setAttribute("id", "message");
                     var text_item = document.createElement("span");
                     text_item.setAttribute("id", "messageText");
-
                     text_item.innerHTML = message.content;
-
                     message_item.appendChild(text_item);
                     var item = document.createElement("ul");
                     item.setAttribute("id", "postitem");
@@ -546,7 +596,7 @@
                     btn.appendChild(item);
                     // only show details for logged in users
                     if (loggedIn()) {
-                        btn.setAttribute("onclick", "myFunction('" + uniqueID + "')");
+                        btn.setAttribute("onclick", "popupProfile('" + uniqueID + "')");
                     }
                     uberdiv.appendChild(btn);
                     if (loggedIn()) {
@@ -584,23 +634,11 @@
         "Lesbian": "Lesbianレズ屋",
         "Trans": "Trans　性転換屋",
     };
-    function changeRoom(room) {
-        $.ajax({
-            type: "POST",
-            url: ChatURL() + "/RoomManager",
-            data: JSON.stringify({"Op": "ChangeRoom", "Room": room}),
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.status.status != "SUCCESS") {
-                    console.log("Calling RooomManger::ChangeRoom returned " + result.status + " " + result.detail);
-                }
-            }
-        });
-    }
+
     function SwitchRoom(room) {
         $("#SelectedRoom").text(RoomDefs[room]);
         $("#log").empty();
-        changeRoom(room);
+        changeRoom({"Op": "ChangeRoom", "Room": room},null);
     }
 </script>
 <div id="menu">
@@ -630,7 +668,6 @@
 
     <div id="centerMenu">
         <div id="CurrentUsers">
-            <!-- oyeaa, no more JSP, PHP or other stoneage server side stuff!!! Go Lang templating...-->
             <!-- TEMPLATE CODE -->
         {{ range .Persons}}
             <div id="{{.UserID}}"><img onclick="RequestToPublish({{.UserID}})" src="{{.PictureURL}}"> </img>
@@ -689,13 +726,8 @@
                 </div>
                 <div class="flex-row">
                     <ul id="profileItemsOther"></ul>
-                    <div>
-
-                        <!-- <img class="friends" src="/images/addfriends.svg"/> -->
-                    </div>
                 </div>
                 <p id="description"></p>
-
             </div>
 
             <div id="pictures" class="ProfilePictures">
@@ -713,12 +745,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <span class="ProfileActionLabel">Close</span><img onclick="closeProfileView()" class="CloseProfileViewBtn"
                                                               src="/images/error.png"/>
         </div>
-
     </div>
 </div>
 <script>
@@ -744,26 +774,13 @@
         galleryTop.update(true);
     }
 
-    function getImages(request) {
-        galleryTop.removeAllSlides();
-        galleryThumbs.removeAllSlides();
-        $.ajax({
-            url: ChatURL() + '/ImageManagerGet',
-            type: 'post',
-            data: JSON.stringify(request),
-            contentType: 'application/json',
-            success: function (r) {
-                console.log("Done......>! ", r.status + " " + r.images.length);
-                for (i = 0; i < (r.images).length; i++) {
-                    var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' + r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
-                    galleryTop.appendSlide(s);
-                    galleryThumbs.appendSlide('<div id="' + r.images[i]["small"] + '" class="swiper-slide" style="background-image:url(' + r.images[i]["small"] + '") ></div>');
-                    console.log(r.images[i]["small"]);
-                }
-                galleryTop.update(true);
-                galleryThumbs.update(true);
-            }
-        });
+    function getImagesCB(r) {
+        console.log("Done......>! ", r.status + " " + r.images.length);
+        for (i = 0; i < (r.images).length; i++) {
+            var s = '<div id="' + r.images[i]["normal"] + '" class="swiper-slide" style="background-image:url(' + r.images[i]["normal"] + '") >  <img src=" ' + r.images[i]["normal"] + '" /></div>';
+            galleryTop.appendSlide(s);
+        }
+        galleryTop.update(true);
     }
 
     function creeteListItem(label_text, item_data) {
@@ -787,7 +804,16 @@
 
     function FillPersonalProfile(userId) {
         console.log("UserID >> " + userId);
-        var response = getUser(ChatURL(), {"op": "getUserByID", "userID": userId});
+        var response = getAsync( {"op": "getUserByID", "userID": userId}, "/profile",FillPersonalProfileCB);
+    }
+
+    function FillPersonalProfileCB(response) {
+        if (response.status.status != "SUCCESS") {
+            console.log("getUser failed> " + response.status + " " + response)
+        } else {
+            console.log("getUser successul> " + response.status.status + " " + response.person.userId)
+        }
+        var userId = response.person.userId;
         var user = response.person;
         var list = document.getElementById("profileItems");
         var listOthers = document.getElementById("profileItemsOther");
@@ -827,11 +853,11 @@
         var privateChat = document.getElementById("privateChat");
         privateChat.setAttribute("src", user.pictureURL);
         privateChat.setAttribute("onclick", "RequestToPublish('" + getUniqueID(user.userId) + "')");
-        response = getImages({'op': 'getImages', 'userID': userId});
-
+        galleryTop.removeAllSlides();
+        galleryThumbs.removeAllSlides();
+        getAsync({'op': 'getImages', 'userID': userId}, "/ImageManagerGet", getImagesCB);
         $("#profileArea").show();
     }
-
     function closeProfileView() {
         $("#profileArea").hide();
     }
@@ -928,10 +954,20 @@
         menu.className = menu.className.replace("w3-show", "");
     }
 
-    function attachTheVideo(videoId) {
+    var videoId
+    function attachTheVideo(id) {
+        videoId = id;
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
-        var result = getAllPublishers(ChatURL());
+        getAsync({"op": "getAllPublishers"},"/VideoManager",  getAllPublishersCB);
+    }
+
+    function getAllPublishersCB(result) {
+        if (result.status.status != "SUCCESS") {
+            console.log("getAllPublishes failed> " + result.status + " " + result.status.detail)
+        } else {
+            console.log("getAllPublishers success. ")
+        }
         $("#publishers").empty();
         var list = document.createElement("ul");
         list.setAttribute("class", "PublisherList");
@@ -949,10 +985,8 @@
         var img = document.createElement("img");
         img.setAttribute("src", "/images/error.png");
         img.setAttribute("onclick", "removePublisherMenu()");
-
         cancel.appendChild(img);
         // cancel.setAttribute("class", "PublisherListItem");
-
         cancel.setAttribute("onclick", "removePublisherMenu()");
         list.appendChild(cancel);
     }
@@ -975,7 +1009,7 @@
         <!-- TEMPLATE CODE -->
     {{ range .Targets}}
         <div id="Target:{{.Target.UserID}}"><img style="border-color:{{.Color}}; border-width: 4px; border-style:solid;"
-                                                 onclick="RemoveTarget({{.Target.UserID}})"
+                                                 onclick="RemoveTarget({{.Target.UserID}},null)"
                                                  src="{{.Target.PictureURL}}"> </img>
         </div>
     {{end}}
@@ -1013,15 +1047,15 @@
         return age;
     }
 
-    function myFunction(myid) {
-        console.log("clicked" + myid);
+    function popupProfile(myid) {
+        console.log("clicked " + myid);
         userId = myid.split("@")[0];
         var x = document.getElementById(myid);
         console.log(x);
         if (x.className.indexOf("w3-show") == -1) {
             // json format
             var request = {"op": "getUserByID", "userID": userId};
-            var response = getUser(ChatURL(), request);
+            var response = getUser( request);
             if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
                 var person = response.person;
                 var age = getAge(person);
@@ -1066,6 +1100,7 @@
                 x.className += " w3-show";
             }
         } else {
+            console.log("else ");
             while (x.lastChild) {
                 x.removeChild(x.lastChild);
             }
@@ -1083,32 +1118,9 @@
         if ($("li[id='" + "Target:" + targetID + "']").length > 0) {
             return;
         }
-        $.ajax({
-            url: ChatURL() + '/TargetManager',
-            type: 'post',
-            data: JSON.stringify(message),
-            contentType: 'application/json',
-            success: function (r) {
-                console.log("Add of target requested /targetManager: " + r.status.detail + " " + r.person.email);
-            }
-        });
+        AddTarget({"op": "AddTarget", "ids": [targetID]},null);
     }
 
-    function RemoveTarget(targetId) {
-        var message = {"op": "RemoveTarget", "ids": [targetId]};
-        $.ajax({
-            url: ChatURL() + '/TargetManager',
-            type: 'post',
-            data: JSON.stringify(message),
-            contentType: 'application/json',
-            success: function (r) {
-                console.log("Delete of target requested /targetManager: " + r.status.detail + " " + r.person.email);
-                //   var elem = document.getElementById("PublishList");
-                //   var child = document.getElementById("Target:"+targetId);
-                //   elem.removeChild(child);
-            }
-        });
-    }
 </script>
 
 <button id="myBtn">Open Modal</button>
