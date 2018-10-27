@@ -547,7 +547,7 @@
                     // performance enhancement> group messages of a room into a batch of messsages
                     // typically after a room change to get and display all past messages
                     //
-                    if (message.op == "Message") {
+                    if (message.op == "Message" || message.op == "PrivateMessage" ) {
                         createAndAppendMessage(message);
                     } else if (message.op == "MessageOfMessages") {
                         messages = message.Messages;
