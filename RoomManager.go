@@ -136,12 +136,12 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 						LeavingRoomTargets[LeavingRoomUsers[i].UserID] = true
 					}
 
-					_hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "UserEnteredRoom", Room: person.Room, Timestamp: timestamp(),
+					_hub.multicast <- Message{Op: "UserEnteredRoom", Token: "UserEnteredRoom", Room: person.Room, Timestamp: timestamp(),
 						Targets: EnterRoomTargets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL,
 						Content: "RoomUsers" + person.getNic(), RoomUsers: EnterRoomUsers}
 					response.Status = Status{Status: SUCCESS}
 
-					_hub.multicast <- Message{Op: "RefreshRoomUsers", Token: "UserLeftRoom", Room: person.Room, Timestamp: timestamp(),
+					_hub.multicast <- Message{Op: "UserLeftRoom", Token: "UserLeftRoom", Room: person.Room, Timestamp: timestamp(),
 						Targets: LeavingRoomTargets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL,
 						Content: "RoomUsers" + person.getNic(), RoomUsers: LeavingRoomUsers}
 					response.Status = Status{Status: SUCCESS}

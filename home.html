@@ -244,25 +244,7 @@
             var currentUsers = document.getElementById("CurrentUsers");
             modal.style.display = "none";
 
-            function appendNewUser(message, uniqueID) {
-                var child = document.getElementById(message.sender);
-                if (child != null) {
-                    var status = currentUsers.removeChild(child);
-                }
-                var newUser = document.createElement("span");
-                newUser.setAttribute("id", message.sender);
-                image = document.createElement("img");
-                image.setAttribute("src", message.pictureURL);
-                image.setAttribute("onclick", "RequestToPublish('" + uniqueID + "')");
-                newUser.appendChild(image);
-                var name = document.createElement("span");
-                name.innerText = message.nic;
-                newUser.appendChild(name);
-                currentUsers.appendChild(newUser);
-                console.log("appended user with " + message.sender)
-            }
-
-            function appendNewPerson(person) {
+            function appendNewUser(person) {
                 var newUser = document.createElement("span");
                 newUser.setAttribute("id", person.userId);
                 image = document.createElement("img");
@@ -280,7 +262,7 @@
             function refreshRoomUsers(users) {
                 $("#CurrentUsers").empty();
                 for (key in users) {
-                    appendNewPerson(users[key]);
+                    appendNewUser(users[key]);
                 }
             }
 
@@ -549,7 +531,10 @@
                             case "UserLoggedOut" :
                                 removeUser(message, uniqueID);
                                 return;
-                            case "RefreshRoomUsers":
+                            case "UserEnteredRoom":
+                                refreshRoomUsers(message.roomUsers);
+                                return;
+                            case "UserLeftRoom":
                                 refreshRoomUsers(message.roomUsers);
                                 return;
                             case "UpdateTargetGraph" :
