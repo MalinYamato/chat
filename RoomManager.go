@@ -42,19 +42,6 @@ type RoomRequest struct {
 	Room string
 }
 
-func flushMessagesInRoom(person Person, targets Targets) {
-	theRoom := _hub.messages[person.Room]
-	list := theRoom.GetAllAsList()
-	//log.Println("Room List length ",len(list))
-	for i := 0; i < len(list); i++ {
-		var msg Message
-		msg = list[i].(Message)
-		msg.Token = "flash"
-		msg.Targets = targets
-		_hub.multicast <- msg
-	}
-}
-
 func RoomManager_getRooms() map[string]QueueStack {
 	queueStack := map[string]QueueStack{
 		"Main":     QueueStack{},
@@ -85,8 +72,21 @@ var rooms = []RoomElem{
 	{"Trans", "性転換屋", ""},
 }
 
-func roomUsersToTargets(rooms string) {
+func flushMessagesInRoom(person Person, targets Targets) {
+	theRoom := _hub.messages[person.Room]
+	list := theRoom.GetAllAsList()
+	//log.Println("Room List length ",len(list))
 
+	var flushmsg Message
+	flushmsg.Op = "MessageOfMessages"
+	flushmsg.Token = ""
+	flushmsg.Targets = targets
+	for i := 0; i < len(list); i++ {
+		var msg Message
+		msg = list[i].(Message)
+		flushmsg.Messages = append(flushmsg.Messages, msg)
+	}
+	_hub.multicast <- flushmsg
 }
 
 func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
@@ -123,7 +123,6 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 
 					targets := make(Targets)
 					targets[person.UserID] = true
-					flushMessagesInRoom(person, targets)
 
 					EnterRoomUsers := _persons.getAllInRoom(enterRoom)
 					LeavingRoomUsers := _persons.getAllInRoom(leavingRoom)
@@ -145,6 +144,8 @@ func RoomManagerHandler(w http.ResponseWriter, r *http.Request) {
 						Targets: LeavingRoomTargets, Sender: person.UserID, Nic: person.getNic(), PictureURL: person.PictureURL,
 						Content: "RoomUsers" + person.getNic(), RoomUsers: LeavingRoomUsers}
 					response.Status = Status{Status: SUCCESS}
+
+					flushMessagesInRoom(person, targets)
 
 				} else if request.Op == "RefressAllMessages" {
 					targets := make(Targets)

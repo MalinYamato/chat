@@ -46,7 +46,7 @@
     <link rel="stylesheet" href="/css/swiper.css">
 
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-   <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> -->
+    <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> -->
     <!-- ---------------------------------------->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
@@ -89,43 +89,44 @@
             _id++;
             return _id;
         }
+
         function getUniqueID(id) {
             return id + "@" + getID();
         }
 
-        function getAsync(op,url,cb) {
-                var request = new XMLHttpRequest();
-                request.open("POST",  ChatURL() + url, true);
-                request.setRequestHeader('Content-Type', 'application/json');
-                request.responseType = 'json';
-                request.onload = function () {
-                    status = request.status;
-                    if (status == 200) {
-                        //var json_res =  JSON.parse(request.responseText);
-                        cb && cb(request.response);
-                    } else {
-                        console.log("getAsync problem " + op + " " + status)
-                    }
-                };
-                request.send(JSON.stringify(op));
+        function getAsync(op, url, cb) {
+            var request = new XMLHttpRequest();
+            request.open("POST", ChatURL() + url, true);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.responseType = 'json';
+            request.onload = function () {
+                status = request.status;
+                if (status == 200) {
+                    //var json_res =  JSON.parse(request.responseText);
+                    cb && cb(request.response);
+                } else {
+                    console.log("getAsync problem " + op + " " + status)
+                }
+            };
+            request.send(JSON.stringify(op));
         }
 
         function getUser(op) {
             var request = new XMLHttpRequest();
-            request.open("POST",  ChatURL() + "/profile", false);
+            request.open("POST", ChatURL() + "/profile", false);
             request.setRequestHeader('Content-Type', 'application/json');
             request.send(JSON.stringify(op));
-                if (request.status == 200) {
-                    json_response = JSON.parse(request.response);
-                    return json_response;
-                } else {
-                    console.log("getUser problem " + status)
-                }
+            if (request.status == 200) {
+                json_response = JSON.parse(request.response);
+                return json_response;
+            } else {
+                console.log("getUser problem " + status)
+            }
         }
 
         function logoutAction(op) {
             var request = new XMLHttpRequest();
-            request.open("POST",  ChatURL() + "/logout", false);
+            request.open("POST", ChatURL() + "/logout", false);
             request.onload = function () {
                 status = request.status;
                 if (status == 200) {
@@ -150,7 +151,7 @@
                     if (info.status.status != "SUCCESS") {
                         console.log("Calling RooomManger::ChangeRoom returned " + info.status.status + " " + info.status.detail);
                     }
-                        cb && cb(request.response);
+                    cb && cb(request.response);
                 } else {
                     console.log("changeRoom problem " + status)
                 }
@@ -189,7 +190,7 @@
                 status = request.status;
                 if (status == 200) {
                     var info = request.response;
-                    if (info.status.status!= "SUCCESS") {
+                    if (info.status.status != "SUCCESS") {
                         console.log("Calling TargetManager::RemoveTarget returned " + info.status.status + " " + info.status.detail);
                     } else {
                         console.log("Delete target requested /targetManager: " + info.status.detail);
@@ -417,7 +418,7 @@
             };
 
             function myFunction(id) {
-               var x = document.getElementById(id);
+                var x = document.getElementById(id);
                 if (x.className.indexOf("w3-show") == -1) {
                     x.className += " w3-show";
                 } else {
@@ -515,7 +516,7 @@
                         return;
                     }
                     console.log("New message", message);
-                    var uniqueID = message.sender + "@" + getID();
+
 
                     if (message.op == "VideoStarted") {
                         console.log("Video Started");
@@ -527,9 +528,9 @@
                         return;
                     } else {
                         switch (message.op) {
-
                             case "UserLoggedOut" :
-                                removeUser(message, uniqueID);
+                                removeUser(message);
+                               // refreshRoomUsers(message.roomUsers);
                                 return;
                             case "UserEnteredRoom":
                                 refreshRoomUsers(message.roomUsers);
@@ -542,65 +543,83 @@
                                 return;
                         }
                     }
-
-                    var uberdiv = document.createElement("div");
-                    // only show details for logged in users
-                    if (loggedIn()) {
-                        var diven = document.createElement("div");
-                        diven.setAttribute("id", uniqueID);
-                        diven.setAttribute("class", "w3-hide w3-container w3-light-grey fmt-row");
+                    //
+                    // performance enhancement> group messages of a room into a batch of messsages
+                    // typically after a room change to get and display all past messages
+                    //
+                    if (message.op == "Message") {
+                        createAndAppendMessage(message);
+                    } else if (message.op == "MessageOfMessages") {
+                        messages = message.Messages;
+                        if (messages != null) {
+                            for (i = 0; i < messages.length; i++) {
+                                createAndAppendMessage(messages[i]);
+                            }
+                        }
                     }
-                    var picture_elem = document.createElement("img");
-                    picture_elem.setAttribute("src", message.pictureURL);
-                    var pictureURL_item = document.createElement("li");
-                    pictureURL_item.setAttribute("id", "pictureURL");
-                    pictureURL_item.appendChild(picture_elem);
-                    var from_span = document.createElement("span");
-                    from_span.setAttribute("id", "from");
-                    from_span.innerText = message.nic;
-                    var time_span = document.createElement("span");
-                    time_span.setAttribute("id", "timestamp");
-                    time_span.innerText = "[" + message.timestamp + "]";
-                    var li_item = document.createElement("li");
-                    li_item.appendChild(from_span);
-                    li_item.appendChild(time_span);
-                    var message_item = document.createElement("li");
-                    message_item.setAttribute("id", "message");
-                    var text_item = document.createElement("span");
-                    text_item.setAttribute("id", "messageText");
-                    text_item.innerHTML = message.content;
-                    message_item.appendChild(text_item);
-                    var item = document.createElement("ul");
-                    item.setAttribute("id", "postitem");
-                    item.appendChild((pictureURL_item));
-                    item.appendChild(li_item);
-                    item.appendChild(message_item);
-                    var btn = document.createElement("button");
-                    btn.setAttribute("class", "w3-btn");
-                    btn.setAttribute("id", "postbutton");
-                    btn.appendChild(item);
-                    // only show details for logged in users
-                    if (loggedIn()) {
-                        btn.setAttribute("onclick", "popupProfile('" + uniqueID + "')");
-                    }
-                    uberdiv.appendChild(btn);
-                    if (loggedIn()) {
-                        uberdiv.appendChild(diven);
-                    }
-                    uberdiv.setAttribute("id", "post");
-                    if (message.op == "PrivateMessage") {
-                        message_item.setAttribute("style", "background-color:#DEDEDE;");
-                        uberdiv.setAttribute("style", "background-color:#DEDEDE;");
-                        item.setAttribute("style", "background-color:#DEDEDE;");
-                        btn.setAttribute("style", "background-color:#DEDEDE;");
-                    }
-                    appendLog(uberdiv);
                 }
             } else {
                 console.log("failed to connect to websocket");
                 var item = document.createElement("div");
                 item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
                 appendLog(item);
+            }
+
+            function createAndAppendMessage(message) {
+                console.log("message " + message.content);
+                var uniqueID = message.sender + "@" + getID();
+                var uberdiv = document.createElement("div");
+                // only show details for logged in users
+                if (loggedIn()) {
+                    var diven = document.createElement("div");
+                    diven.setAttribute("id", uniqueID);
+                    diven.setAttribute("class", "w3-hide w3-container w3-light-grey fmt-row");
+                }
+                var picture_elem = document.createElement("img");
+                picture_elem.setAttribute("src", message.pictureURL);
+                var pictureURL_item = document.createElement("li");
+                pictureURL_item.setAttribute("id", "pictureURL");
+                pictureURL_item.appendChild(picture_elem);
+                var from_span = document.createElement("span");
+                from_span.setAttribute("id", "from");
+                from_span.innerText = message.nic;
+                var time_span = document.createElement("span");
+                time_span.setAttribute("id", "timestamp");
+                time_span.innerText = "[" + message.timestamp + "]";
+                var li_item = document.createElement("li");
+                li_item.appendChild(from_span);
+                li_item.appendChild(time_span);
+                var message_item = document.createElement("li");
+                message_item.setAttribute("id", "message");
+                var text_item = document.createElement("span");
+                text_item.setAttribute("id", "messageText");
+                text_item.innerHTML = message.content;
+                message_item.appendChild(text_item);
+                var item = document.createElement("ul");
+                item.setAttribute("id", "postitem");
+                item.appendChild((pictureURL_item));
+                item.appendChild(li_item);
+                item.appendChild(message_item);
+                var btn = document.createElement("button");
+                btn.setAttribute("class", "w3-btn");
+                btn.setAttribute("id", "postbutton");
+                btn.appendChild(item);
+                // only show details for logged in users
+                if (loggedIn()) {
+                    btn.setAttribute("onclick", "popupProfile('" + uniqueID + "')");
+                }
+                uberdiv.appendChild(btn);
+                if (loggedIn()) {
+                    uberdiv.appendChild(diven);
+                }
+                uberdiv.setAttribute("id", "post");
+                if (message.op == "PrivateMessage") {
+                    message_item.setAttribute("style", "background-color:#DEDEDE;");
+                    uberdiv.setAttribute("style", "background-color:#DEDEDE;");
+                    item.setAttribute("style", "background-color:#DEDEDE;");
+                    btn.setAttribute("style", "background-color:#DEDEDE;");
+                }
+                appendLog(uberdiv);
             }
         }
 
@@ -623,7 +642,7 @@
     function SwitchRoom(room) {
         $("#SelectedRoom").text(RoomDefs[room]);
         $("#log").empty();
-        changeRoom({"Op": "ChangeRoom", "Room": room},null);
+        changeRoom({"Op": "ChangeRoom", "Room": room}, null);
     }
 </script>
 <div id="menu">
@@ -789,7 +808,7 @@
 
     function FillPersonalProfile(userId) {
         console.log("UserID >> " + userId);
-        var response = getAsync( {"op": "getUserByID", "userID": userId}, "/profile",FillPersonalProfileCB);
+        var response = getAsync({"op": "getUserByID", "userID": userId}, "/profile", FillPersonalProfileCB);
     }
 
     function FillPersonalProfileCB(response) {
@@ -843,6 +862,7 @@
         getAsync({'op': 'getImages', 'userID': userId}, "/ImageManagerGet", getImagesCB);
         $("#profileArea").show();
     }
+
     function closeProfileView() {
         $("#profileArea").hide();
     }
@@ -940,11 +960,12 @@
     }
 
     var videoId
+
     function attachTheVideo(id) {
         videoId = id;
         hideVideoMenu(videoId);
         console.log("attachVideo " + videoId);
-        getAsync({"op": "getAllPublishers"},"/VideoManager",  getAllPublishersCB);
+        getAsync({"op": "getAllPublishers"}, "/VideoManager", getAllPublishersCB);
     }
 
     function getAllPublishersCB(result) {
@@ -1040,7 +1061,7 @@
         if (x.className.indexOf("w3-show") == -1) {
             // json format
             var request = {"op": "getUserByID", "userID": userId};
-            var response = getUser( request);
+            var response = getUser(request);
             if (response.status.status == "SUCCESS" && response.person != null && response.person != "") {
                 var person = response.person;
                 var age = getAge(person);
@@ -1103,7 +1124,7 @@
         if ($("li[id='" + "Target:" + targetID + "']").length > 0) {
             return;
         }
-        AddTarget({"op": "AddTarget", "ids": [targetID]},null);
+        AddTarget({"op": "AddTarget", "ids": [targetID]}, null);
     }
 
 </script>

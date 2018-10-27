@@ -115,6 +115,7 @@ type Message struct {
 
 	//payload
 	Content      string       `json:"content"`
+	Messages     []Message    `json:messages,omitempty`
 	Graph        Graph        `json:"graph,omitempty"`
 	RoomUsers    []Person     `json:"roomUsers,omitempty"`
 	MediaSession MediaSession `json:"mediaSession,omitempty"`
