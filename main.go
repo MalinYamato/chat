@@ -1,5 +1,5 @@
 //
-// Copyright 2017 Malin Yamato Lääkkö --  All rights reserved.
+// Copyright 2018 Malin Yamato Lääkkö --  All rights reserved.
 // https://github.com/MalinYamato
 //
 // MIT License
@@ -69,7 +69,7 @@ type Status struct {
 	Status string `json:"status"`
 	Detail string `json:"detail"`
 }
-
+/*
 type VideoFormat struct {
 	Codec   string `json:"codec"`
 	Width   int16  `json:"width"`   // in pixels
@@ -84,12 +84,13 @@ type AudioFormat struct {
 	BitDepth   int16  `json:"bitDepth"`   // vertical resolution,  PCM
 	SampleRate int32  `json:"sampleRate"` // Number of vertical snapshots per second, PCM
 }
-
+*/
 // publishers[].Targets[]
 
 // Media Session Protocol
 //
-type MediaSession struct {
+/*
+ type MediaSession struct {
 	MediaServerURL string      `json:"idMediaServerURL"`
 	IdMediaSession string      `json:"idHandle"`
 	IdHandle       string      `json:"id"`
@@ -102,6 +103,7 @@ type MediaSession struct {
 	VideoFormat    VideoFormat `json:"VideoFormat,omitempty"`
 	AudioFormat    AudioFormat `json:"AudioFormast,omitempty"`
 }
+*/
 
 type Message struct {
 	Op         string  `json:"op"`
@@ -370,10 +372,10 @@ func main() {
 	queue := new(QueueStack)
 	var addr = flag.String("addr", ":"+_config.Port, "http service address")
 	flag.Parse()
-	log.Println("Create the hub and run it in a different thread")
+	log.Println("Create a hub and run it in a different thread")
 	_hub = newHub(*queue)
 	go _hub.run()
-	log.Println("Load persons database..")
+	log.Println("Load persons database...")
 	_persons.load()
 	log.Println("Create RTC manager and run it in a different thread")
 	startRTCManager()
