@@ -7,8 +7,8 @@ thanks to the team of Janus, who greately facilitate the management of video and
 Janus WebRTC. The photo albume carousel is based on work by Vladimir Kharlampidi. </br>
 Raku Rakuen is basically a non-commercial playground to test and learn new technology and solutions. It has not gone serious through regular testing and is not at all readt for
 productio; it should be regarded as a demo of how things work or may be done. My job is to design automated trading systems in Asia, which is totally unrelated to work on this project and corresponsing technologies.  
-Some points:
-Installation and setup are very primitive at this point.
+#### Some points:
+Installation and setup are very primitive at this point. 
 No standard database! Raku Rakuen uses a file based database solution where it stores data as serialized JSON, pictures, IMs and vids organized into directory structures.  
   
 ### Screeshots
