@@ -69,27 +69,31 @@ type Status struct {
 	Status string `json:"status"`
 	Detail string `json:"detail"`
 }
-/*
-type VideoFormat struct {
-	Codec   string `json:"codec"`
-	Width   int16  `json:"width"`   // in pixels
-	Height  int16  `json:"height"`  // in pixels
-	BitRate int16  `json:"bitRate"` // bits per second
-}
+//
+//type VideoFormat struct {
+//	Codec   string `json:"codec"`
+//	Width   int16  `json:"width"`   // in pixels
+//	Height  int16  `json:"height"`  // in pixels
+//	BitRate int16  `json:"bitRate"` // bits per second
+//}
 
-type AudioFormat struct {
-	Codec      string `json:"codec"`
-	Channels   int16  `json:"channels"`
-	BitRate    int16  `json:"bitRate"`    // bits per second
-	BitDepth   int16  `json:"bitDepth"`   // vertical resolution,  PCM
-	SampleRate int32  `json:"sampleRate"` // Number of vertical snapshots per second, PCM
-}
-*/
+//type AudioFormat struct {
+//	Codec      string `json:"codec"`
+//	Channels   int16  `json:"channels"`
+//	BitRate    int16  `json:"bitRate"`    // bits per second
+//	BitDepth   int16  `json:"bitDepth"`   // vertical resolution,  PCM
+//	SampleRate int32  `json:"sampleRate"` // Number of vertical snapshots per second, PCM
+//}
+
 // publishers[].Targets[]
 
 // Media Session Protocol
 //
-/*
+//
+
+// Revert audio and video formats
+// into user changeable parameters.
+
  type MediaSession struct {
 	MediaServerURL string      `json:"idMediaServerURL"`
 	IdMediaSession string      `json:"idHandle"`
@@ -100,10 +104,10 @@ type AudioFormat struct {
 	Video          bool        `json:"video"`
 	PubOrSub       string      `json:"pubOrSub"`
 	OnOrOff        string      `json:"onOrOff"`
-	VideoFormat    VideoFormat `json:"VideoFormat,omitempty"`
-	AudioFormat    AudioFormat `json:"AudioFormast,omitempty"`
+//	VideoFormat    VideoFormat `json:"VideoFormat,omitempty"`
+//	AudioFormat    AudioFormat `json:"AudioFormast,omitempty"`
 }
-*/
+
 
 type Message struct {
 	Op         string  `json:"op"`
