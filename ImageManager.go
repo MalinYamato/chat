@@ -1,5 +1,5 @@
 //
-// Copyright 2018 Malin Yamato Lääkkö --  All rights reserved.
+// Copyright 2018 Malin Yamato --  All rights reserved.
 // https://github.com/MalinYamato
 //
 // MIT License
