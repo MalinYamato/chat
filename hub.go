@@ -1,12 +1,12 @@
 //
 // This work is mostly done by the Gorilla team with some mods done by
-// Malin Lääkkö
+// Malin Yamato
 
 // Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 //
-// Copyright 2017 Malin Yamato Lääkkö --  All rights reserved.
+// Copyright 2018 Malin Yamato --  All rights reserved.
 // https://github.com/MalinYamato
 //
 // MIT License
