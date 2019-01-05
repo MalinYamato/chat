@@ -1,3 +1,4 @@
+<!-- 
 //
 // Copyright 2018 Malin Yamato --  All rights reserved.
 // https://github.com/MalinYamato
@@ -28,9 +29,24 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+    <link href="/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/menus.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/modal.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/css/emojionearea.min.css">
+    <link rel="stylesheet" href="/css/swiper.css">
 
-// Utilities. 
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+   
+    <!-- ---------------------------------------->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.0.3/adapter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script type="text/javascript"
