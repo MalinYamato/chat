@@ -31,6 +31,19 @@
 
 // Utilities. 
 
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <script type="text/javascript" src="/js/janus.js"></script>
+    <script type="text/javascript" src="/js/videoroom.js"></script>
+    <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
+    <script src="/js/SVGButton.js"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript" src="/js/emojionearea.min.js"></script>
+    <script src="/js/swiper.js"></script>
+
  function ChatURL() {
             return "{{.Protocol}}://{{.Host}}:{{.Port}}";
         }
