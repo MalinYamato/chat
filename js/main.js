@@ -61,7 +61,7 @@
     <script src="/js/swiper.js"></script>
 
  function ChatURL() {
-            return "{{.Protocol}}://{{.Host}}:{{.Port}}";
+            return "not implemented";
         }
 
         var _id = 0;
