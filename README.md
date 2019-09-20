@@ -57,7 +57,7 @@ Started](http://golang.org/doc/install) page describes how to install the develo
 
 ### Create Certificates
 
-Alternativee if you are yousing digitalocean: https://certbot-dns-digitalocean.readthedocs.io/en/stable/. If so skip the following instructionsl.
+Alternative if you are using digitalocean: https://certbot-dns-digitalocean.readthedocs.io/en/stable/. If so skip the following instructions.
 
 #### First, create certificates for your chat server, which must run on port 443
     $ sudo certbot certonly --standalone --preferred-challenges tls-sni  -d yourhost.yourdomain
