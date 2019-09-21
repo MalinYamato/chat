@@ -59,13 +59,12 @@ Started](http://golang.org/doc/install) page describes how to install the develo
 
 Alternative if you are using digitalocean: https://certbot-dns-digitalocean.readthedocs.io/en/stable/. If so skip the following instructions.
 
-#### First, create certificates for your chat server, which must run on port 443
-    $ sudo certbot certonly --standalone --preferred-challenges tls-sni  -d yourhost.yourdomain
 
-#### Secondly, Create a certificate and DNS records for janus as it needs to be run over SSL on a non-standard port 8089
+#### Create a certificate and DNS records for janus as it needs to be run over SSL on a non-standard port 8089
     You need to add hostname media to your DNS server
     $ sudo certbot -d host.domain  --manual --preferred-challenges dns certonly
     -- You will be asked to create a TXT record on your DNS server.
+       Add the string to your TXT record on your DNS servers zone
 
     $ sudo nano /opt/janus/etc/janus/janus.cfg and janus.transport.http.cfg
     #cert_pem = /opt/janus/share/janus/certs/mycert.pem
@@ -76,7 +75,7 @@ Alternative if you are using digitalocean: https://certbot-dns-digitalocean.read
 ## Setting upp application keys and callback
 ### Google login
      go to> https://console.cloud.google.com/apis
-     Gp tp OAuth agree screen to add your domain
+     go to OAuth agree screen to add your domain
      Go to Credentials
      Create credentials
      Select "OAuth client ID"
