@@ -76,6 +76,7 @@ Alternative if you are using digitalocean: https://certbot-dns-digitalocean.read
 ## Setting upp application keys and callback
 ### Google login
      go to> https://console.cloud.google.com/apis
+     Gp tp OAuth agree screen to add your domain
      Go to Credentials
      Create credentials
      Select "OAuth client ID"
